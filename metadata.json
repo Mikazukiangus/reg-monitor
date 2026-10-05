@@ -1,0 +1,6 @@
+{
+  "name": "RegPulse - APAC & Global Regulatory Intelligence",
+  "description": "Institutional-grade regulatory intelligence sentinel monitoring statutory notices, MAS/HKMA/ASIC/JFSA directives, consultation deadlines, and automated compliance risk synthesis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

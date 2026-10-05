@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #FAF7F2;
+  --color-surface-dim: #F4EFE6;
+  --color-surface-bright: #FFFFFF;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-surface-container-low: #F5F1E8;
+  --color-surface-container: #EFEBE0;
+  --color-surface-container-high: #E8E2D5;
+  --color-surface-container-highest: #DDD6C8;
+  --color-surface-panel: #FFFFFF;
+  --color-surface-panel-elevated: #FAF8F5;
+  --color-border-subtle: #E5DFD5;
+  --color-border-strong: #D8D0C2;
+  
+  /* Darker Teal Accent & Warm Colors */
+  --color-primary: #0D5C63;
+  --color-primary-container: #0D5C63;
+  --color-secondary-container: #09454A;
+  --color-on-primary-container: #FFFFFF;
+  --color-secondary: #78716C;
+  --color-tertiary: #15803D;
+
+  /* Semantic Status Colors with light beige backgrounds */
+  --color-status-in-force: #15803D;
+  --color-status-in-force-bg: #DCFCE7;
+  --color-status-pending: #0D5C63;
+  --color-status-pending-bg: #E6F4F4;
+  --color-status-enforcement: #DC2626;
+  --color-status-enforcement-bg: #FEE2E2;
+  --color-status-consultation: #6D28D9;
+  --color-status-consultation-bg: #EDE9FE;
+
+  /* Typography Colors */
+  --color-text-primary: #1E1B18;
+  --color-text-secondary: #57534E;
+  --color-text-muted: #857F74;
+  --color-on-surface: #1E1B18;
+  --color-on-surface-variant: #44403C;
+  --color-error: #DC2626;
+
+  --font-headline-xl: "Hanken Grotesk", sans-serif;
+  --font-headline-lg: "Hanken Grotesk", sans-serif;
+  --font-headline-sm: "Hanken Grotesk", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-body-sm: "Inter", sans-serif;
+  --font-label-lg: "Inter", sans-serif;
+  --font-label-md: "Inter", sans-serif;
+  --font-metadata-code: "JetBrains Mono", monospace;
+  --font-metadata-badge: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    background-color: #FAF7F2;
+    color: #1E1B18;
+    font-family: "Inter", sans-serif;
+  }
+}
+
+/* Custom scrollbar matching warm beige tone */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF7F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #DDD6C8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C8BFB0;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+

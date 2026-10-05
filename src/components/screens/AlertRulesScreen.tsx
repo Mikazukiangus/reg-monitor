@@ -1,0 +1,204 @@
+import React, { useState } from 'react';
+import { INITIAL_ALERT_RULES } from '../../data/regulatoryData';
+import { CustomAlertRule } from '../../types/regulatory';
+
+export const AlertRulesScreen: React.FC = () => {
+  const [rules, setRules] = useState<CustomAlertRule[]>(INITIAL_ALERT_RULES);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [ruleName, setRuleName] = useState('');
+  const [minImpact, setMinImpact] = useState(8.0);
+  const [keywords, setKeywords] = useState('');
+
+  const handleToggleRule = (id: string) => {
+    setRules(prev =>
+      prev.map(r => (r.id === id ? { ...r, enabled: !r.enabled } : r))
+    );
+  };
+
+  const handleCreateRule = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ruleName.trim()) return;
+
+    const newRule: CustomAlertRule = {
+      id: `rule-${Date.now()}`,
+      name: ruleName,
+      jurisdictions: ['MAS', 'HKMA'],
+      minImpact: minImpact,
+      keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
+      channels: ['slack', 'webhook'],
+      enabled: true,
+      triggerCount: 0
+    };
+
+    setRules([newRule, ...rules]);
+    setRuleName('');
+    setKeywords('');
+    setShowCreateModal(false);
+  };
+
+  return (
+    <div className="w-full px-4 sm:px-6 py-6 space-y-6">
+      {/* Header */}
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="material-symbols-outlined text-[#0D5C63] text-2xl">tune</span>
+            <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-[#1E1B18]">
+              Custom Statutory Alert Rules &amp; Triggers
+            </h1>
+          </div>
+          <p className="font-['Inter'] text-[13px] text-[#57534E]">
+            Configure automated escalation pipelines for high-severity notices, CISO liability triggers, and consultation deadlines.
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="px-4 py-2 bg-[#0D5C63] hover:bg-[#0A474D] text-white text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
+        >
+          <span className="material-symbols-outlined text-base">add</span>
+          <span>New Alert Rule</span>
+        </button>
+      </div>
+
+      {/* Rules Grid */}
+      <div className="space-y-4">
+        {rules.map((rule) => (
+          <div
+            key={rule.id}
+            className="p-5 bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl hover:bg-[#FAF8F5] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
+          >
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-3">
+                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                  {rule.name}
+                </h3>
+                <span
+                  className={`px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border ${
+                    rule.enabled
+                      ? 'bg-[#DCFCE7] text-[#15803D] border-[#86EFAC]'
+                      : 'bg-[#F5F1E8] text-[#857F74] border-[#E5DFD5]'
+                  }`}
+                >
+                  {rule.enabled ? 'ACTIVE' : 'PAUSED'}
+                </span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
+                  Min Impact: ≥ {rule.minImpact}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] font-['JetBrains_Mono'] text-[#857F74]">Agencies:</span>
+                {rule.jurisdictions.map(j => (
+                  <span key={j} className="px-2 py-0.5 bg-[#FAF7F2] text-[#0D5C63] border border-[#E5DFD5] rounded text-[10px] font-['JetBrains_Mono'] font-bold">
+                    {j}
+                  </span>
+                ))}
+
+                <span className="text-[11px] font-['JetBrains_Mono'] text-[#857F74] ml-2">Keywords:</span>
+                {rule.keywords.map(k => (
+                  <span key={k} className="px-2 py-0.5 bg-[#FAF7F2] text-[#57534E] border border-[#E5DFD5] rounded text-[10px] font-['JetBrains_Mono'] font-medium">
+                    {k}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3 text-[11px] font-['JetBrains_Mono'] text-[#857F74]">
+                <span>Channels: <strong className="text-[#1E1B18]">{rule.channels.join(', ').toUpperCase()}</strong></span>
+                <span>•</span>
+                <span>Lifetime Triggers: <strong className="text-[#15803D]">{rule.triggerCount} dispatched</strong></span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={() => handleToggleRule(rule.id)}
+                className={`px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${
+                  rule.enabled
+                    ? 'border-[#FECACA] bg-[#FEF2F2] text-[#DC2626] hover:bg-[#FEE2E2]'
+                    : 'border-[#BBF7D0] bg-[#F0FDF4] text-[#15803D] hover:bg-[#DCFCE7]'
+                }`}
+              >
+                {rule.enabled ? 'Pause Rule' : 'Resume Rule'}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Create Rule Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <div className="bg-[#FFFFFF] border border-[#D8D0C2] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
+              <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1E1B18]">
+                Create Statutory Alert Rule
+              </h3>
+              <button onClick={() => setShowCreateModal(false)} className="text-[#857F74] hover:text-[#1E1B18]">
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateRule} className="space-y-3 font-['Inter'] text-[12px]">
+              <div>
+                <label className="block text-[#857F74] font-['JetBrains_Mono'] mb-1 font-medium">Rule Name</label>
+                <input
+                  type="text"
+                  value={ruleName}
+                  onChange={(e) => setRuleName(e.target.value)}
+                  placeholder="e.g. Real-Time DPT & Stablecoin Mandates"
+                  className="w-full bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#857F74] font-['JetBrains_Mono'] mb-1 font-medium">
+                  Minimum Impact Threshold: {minImpact} / 10
+                </label>
+                <input
+                  type="range"
+                  min="5.0"
+                  max="10.0"
+                  step="0.1"
+                  value={minImpact}
+                  onChange={(e) => setMinImpact(parseFloat(e.target.value))}
+                  className="w-full accent-[#0D5C63]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#857F74] font-['JetBrains_Mono'] mb-1 font-medium">
+                  Trigger Keywords (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
+                  placeholder="e.g. CISO, Zero-day, Custody, Stablecoin, Scope 3"
+                  className="w-full bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-3.5 py-1.5 text-[#57534E] hover:text-[#1E1B18] font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-[#0D5C63] text-white font-semibold rounded hover:bg-[#0A474D] shadow-xs"
+                >
+                  Create &amp; Deploy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

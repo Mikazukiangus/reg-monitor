@@ -1,0 +1,223 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { AlertNotification } from '../types/regulatory';
+
+interface HeaderProps {
+  searchQuery: string;
+  onSearchChange: (val: string) => void;
+  selectedJurisdictionFilter: string;
+  onJurisdictionFilterChange: (val: string) => void;
+  onOpenExport: () => void;
+  notifications: AlertNotification[];
+  onSelectNotice: (noticeId: string) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  searchQuery,
+  onSearchChange,
+  selectedJurisdictionFilter,
+  onJurisdictionFilterChange,
+  onOpenExport,
+  notifications,
+  onSelectNotice
+}) => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  const unreadCount = notifications.filter(n => n.unread).length;
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifications(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E5DFD5] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="h-14 w-full px-4 sm:px-6 flex items-center justify-between gap-4">
+        {/* Brand / Logo */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <img
+              alt="RegSonar APAC Regulatory Logo"
+              className="h-8 w-auto object-contain cursor-pointer"
+              src="https://lh3.googleusercontent.com/aida/AEtjO1WqTvLdQl_IMZ0jnfuyfBhwV9yP0z46r_GR8vYW7is_oWJTWU6HbsT8TTRjAAFLrbFNEpdRuccJ5YYvVbXQ5x9Jvy_HkTSXxNmSJr4V8G2F3mUX6xsP-9vXPsc6S48uyKyv7vaa_jXGAZPTA8teELaSAylEEovWZ54H5ImXJnZ_KgTAOGWwp2onVP45wnA1t3vwu22Qvu_xrX6Le_L1rfImvOeYCoMqNwPeFVHb6TCq_mxP9qxZtk4jl1s"
+              onClick={() => onJurisdictionFilterChange('All APAC')}
+            />
+            <div className="flex flex-col">
+              <span className="font-['Hanken_Grotesk'] text-[19px] text-[#1E1B18] tracking-tight font-bold leading-none">
+                RegSonar
+              </span>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74] tracking-wider uppercase mt-0.5 font-medium">
+                Intelligence APAC &amp; Global
+              </span>
+            </div>
+          </div>
+
+          <div className="hidden xl:flex items-center ml-3">
+            <select
+              value={selectedJurisdictionFilter}
+              onChange={(e) => onJurisdictionFilterChange(e.target.value)}
+              className="bg-[#FFFFFF] border border-[#E5DFD5] text-[#44403C] font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-[#0D5C63] focus:text-[#1E1B18] cursor-pointer transition-colors shadow-xs"
+            >
+              <option value="All APAC">All APAC</option>
+              <option value="Singapore MAS">Singapore MAS</option>
+              <option value="Hong Kong HKMA/SFC">Hong Kong HKMA/SFC</option>
+              <option value="Australia ASIC">Australia ASIC</option>
+              <option value="Japan JFSA">Japan JFSA</option>
+              <option value="Global Cross-Border">Global Cross-Border</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Global Search Bar */}
+        <div className="flex-1 max-w-2xl mx-3 hidden md:block">
+          <div className="relative flex items-center w-full">
+            <span className="material-symbols-outlined absolute left-3 text-[#857F74] text-lg pointer-events-none">
+              search
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Search 142,000+ regulatory notices, circulars, consultations, enforcement actions..."
+              className="w-full h-9 pl-10 pr-10 bg-[#FFFFFF] border border-[#E5DFD5] text-[#1E1B18] placeholder:text-[#857F74] font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:bg-[#FAF8F5] focus:border-[#0D5C63] transition-all shadow-xs"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => onSearchChange('')}
+                className="absolute right-3 text-[#857F74] hover:text-[#1E1B18]"
+                title="Clear search"
+              >
+                <span className="material-symbols-outlined text-base">close</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Right Action Cluster */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#F0FDF4] border border-[#BBF7D0] rounded-lg">
+            <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse"></span>
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#15803D] uppercase tracking-wide">
+              Live Syncing 24 Regulators
+            </span>
+          </div>
+
+          {/* Notifications Dropdown */}
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              aria-label="Notifications"
+              className="relative p-1.5 text-[#57534E] hover:text-[#1E1B18] bg-[#FFFFFF] hover:bg-[#F5F1E8] rounded-lg border border-[#E5DFD5] transition-colors shadow-xs"
+            >
+              <span className="material-symbols-outlined text-xl">notifications</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#DC2626] text-white font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#FFFFFF] border border-[#D8D0C2] rounded-lg shadow-xl p-3 z-50">
+                <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
+                  <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-[#1E1B18] flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span>
+                    Critical Regulatory Alerts
+                  </span>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">Real-Time Webhook</span>
+                </div>
+                <div className="divide-y divide-[#E5DFD5] max-h-72 overflow-y-auto mt-1">
+                  {notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      onClick={() => {
+                        onSelectNotice(n.linkId);
+                        setShowNotifications(false);
+                      }}
+                      className="py-2 px-1.5 hover:bg-[#FAF8F5] rounded cursor-pointer transition-colors"
+                    >
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span className="font-['JetBrains_Mono'] font-bold text-[#0D5C63]">
+                          {n.regulator}
+                        </span>
+                        <span className="font-['JetBrains_Mono'] text-[#857F74]">{n.time}</span>
+                      </div>
+                      <p className="font-['Inter'] text-[12px] text-[#1E1B18] line-clamp-2">
+                        {n.title}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Export Button */}
+          <button
+            onClick={onOpenExport}
+            className="hidden sm:flex items-center gap-1.5 px-3 h-8 bg-[#FFFFFF] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#57534E] hover:text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs"
+          >
+            <span className="material-symbols-outlined text-base">download</span>
+            <span>Export</span>
+          </button>
+
+          {/* User Profile */}
+          <div className="relative" ref={profileRef}>
+            <div
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="flex items-center gap-2 pl-1 cursor-pointer group"
+            >
+              <img
+                alt="Sarah Chen"
+                className="w-8 h-8 rounded-full object-cover shrink-0 ring-1 ring-[#E5DFD5] group-hover:ring-[#0D5C63] transition-all"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27a8tm9ynn1zNKr2gDLscahCIAvx7s5dGlEeP1f2f4ojcUDVwF1az6V1F0Hti9JbrJGe1D6CMJLthWRFi-cS1oKzYfNmbnSCI0sd1zpQ9tTp9XgyercsR7BKazmoWE3pQXLCpaLwBcPCvDaQYyiNXEQwjwe3IdbPxBaUHSllCImd1GM5H_eBqyFrxrGdKWhIIfI3vl81wbhdzBvOnjkhH6PSkCHKbQqTE_5h2ZxGcfjy_lHwa4roA"
+              />
+              <div className="hidden 2xl:flex flex-col text-left">
+                <span className="font-['Inter'] text-[11px] font-semibold text-[#1E1B18] leading-tight truncate max-w-[140px]">
+                  Sarah Chen
+                </span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] leading-none truncate max-w-[140px]">
+                  Head of Reg Affairs
+                </span>
+              </div>
+            </div>
+
+            {showProfileMenu && (
+              <div className="absolute right-0 mt-2 w-64 bg-[#FFFFFF] border border-[#D8D0C2] rounded-lg shadow-xl p-3 z-50 text-[12px]">
+                <div className="pb-2 border-b border-[#E5DFD5]">
+                  <p className="font-semibold text-[#1E1B18]">Sarah Chen</p>
+                  <p className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">carbonfibre@gmail.com</p>
+                  <p className="text-[10px] text-[#15803D] mt-1 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
+                    Enterprise Legal Seat • Active
+                  </p>
+                </div>
+                <div className="pt-2 space-y-1">
+                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
+                    Regulatory Mandate Subscriptions
+                  </div>
+                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
+                    Audit Trail &amp; Access Logs
+                  </div>
+                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
+                    API &amp; Webhook Credentials
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
