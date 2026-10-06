@@ -17,10 +17,11 @@ This document records the full chronological instructions, technical requirement
     * MAS news search API (media releases and enforcement actions; undocumented): ingested
     * BIS media releases RSS (includes Basel Committee): ingested
     * Bank of England PRA publications RSS: ingested (UK coverage)
-    * UK FCA news RSS: attempted, but usually blocked by a Cloudflare bot check (HTTP 403)
+    * UK FCA news RSS: ingested on Vercel; blocked by a Cloudflare bot check (HTTP 403) when run locally
     * Australia ASIC: status check only, no ingestion
     * Japan JFSA: not connected (no sample data is shown; see Request 9)
 * **Repository:** `https://github.com/Mikazukiangus/reg-monitor.git` (branch: `main`)
+* **Hosting:** Vercel project `reg-monitor`, live at `https://reg-monitor-beta.vercel.app`. Every push to `main` deploys to production. The frontend is served as static files and the API runs as a Vercel function (`api/index.ts`), see Request 10.
 
 ---
 
@@ -161,9 +162,22 @@ This document records the full chronological instructions, technical requirement
   6. **Gemini removed:** `@google/genai`, `/api/feeds/synthesize`, `GEMINI_API_KEY` and the AI Studio capability flag were removed. Added `linkedom` and `@mozilla/readability`.
 * **Verified:** `tsc --noEmit` and `vite build` pass; clean `npm install` works; `bun.lock` regenerated. A full sync took about 2s and returned key points for every source. Browser check: filter counts add up to the notice total, all tabs render, no console errors.
 * **Known limitations:**
-  * FCA is still blocked; PRA covers the UK.
+  * FCA is blocked when run locally; PRA covers the UK. (On Vercel the FCA feed works, see Request 10.)
   * HKMA's firewall blocks frequent requests, so it is polled at most every 30 minutes.
   * Key points are only as good as the sentence ranking; they are quotes, so they can be checked but may miss context. Sector and impact score are keyword heuristics.
+
+### Request 10: Empty Hosted Site, API Deployed to Vercel (Claude Code, 2026-10-06)
+* **Instruction:** "now the site has no information due to removal of the unverified claims?", then "Push to main now", then "yes, update the log and push".
+* **Diagnosis:** removing the claims was not the cause. The Vercel deployment had only ever served the static frontend from `vite build`; `server.ts` never ran there, so `/api/health` and `/api/feeds/sync` returned 404. Before Request 9 the hosted site showed the sample notices bundled into the page, so this was not noticed. Live data had only ever worked locally.
+* **Changes:**
+  1. `server.ts` exports `createApp()` with the API routes only. The local server (Vite middleware or static files, plus `listen`) only starts when `VERCEL` is not set. It imports `./summarize.js` (resolved to `summarize.ts` by tsx and TypeScript) so the compiled function can find it.
+  2. `api/index.ts` exports the Express app as a Vercel function. `vercel.json` rewrites `/api/*` to it and sets `maxDuration` to 60s.
+  3. The feed shows "Live notices could not be loaded" with a "Retry sync" button when the API is unreachable, instead of loading forever.
+* **Verified:** locally, the app imported with `VERCEL=1` serves the API without listening (cold sync with key points about 1.8s), and a static-only build shows the new error state. In production after deploy, `/api/health` returned 200 and a sync returned 19 notices, all with key points; the page showed 7/7 sources up.
+* **Production behaviour:**
+  * From Vercel's servers the FCA RSS loads, unlike locally.
+  * HKMA sometimes times out from Vercel; a failed source is retried after 30 minutes and keeps its last good notices.
+  * Caches live in each function instance's memory. A fresh instance needs about 15s for its first sync because it fetches every source document.
 
 ---
 
@@ -174,6 +188,8 @@ This document records the full chronological instructions, technical requirement
 | `server.ts` | **Enhanced** | Express full-stack backend with live endpoints (`/api/feeds/status`, `/api/feeds/sync`, `/api/health`), real health probes, cached ingestion from Federal Register, PRA, HKMA, MAS and BIS (FCA attempted), and extractive key points per notice. |
 | `summarize.ts` | **Created** | Article text extraction, TextRank sentence ranking, dated-statement and reference extraction. No AI model. |
 | `src/lib/derived.ts` | **Created** | Deadlines, notifications and sorting derived from live notices. |
+| `api/index.ts` | **Created** | Vercel function that serves the Express API (Request 10). |
+| `vercel.json` | **Created** | Routes `/api/*` to the function and sets its maximum duration. |
 | `src/App.tsx` | **Updated** | Integrated dynamic KPI metrics, real-time feed synchronization, endpoint status tracking, density toggle, and sanitized client loggers. |
 | `src/data/regulatoryData.ts` | **Deleted** | Sample notices removed in Request 9; all data now comes from live sources. |
 | `src/components/modals/LiveEndpointsModal.tsx` | **Created** | Gateway status modal displaying latency metrics, protocols, and endpoint architecture for 6 regulatory ports. |
@@ -187,9 +203,9 @@ This document records the full chronological instructions, technical requirement
 
 ## 4. Verification & Health Status
 
-* **Endpoint Ingestion Status (2026-10-06):** 6 of 7 endpoints Operational; UK FCA Degraded (HTTP 403, Cloudflare challenge). Notices ingested from Federal Register, PRA, HKMA, MAS and BIS.
+* **Endpoint Ingestion Status (2026-10-06):** Production (Vercel): 7 of 7 sources up, 19 notices. Locally: 6 of 7, with UK FCA Degraded (HTTP 403, Cloudflare challenge).
 * **API Health Check (`/api/health`):** `healthy` (HTTP 200).
 * **Build Status:** `vite build` passes.
 * **Lint Status:** `tsc --noEmit` exits with 0 errors.
 * **Git Synchronization:** All commits synced to `main` at `https://github.com/Mikazukiangus/reg-monitor.git`.
-* **Runtime Status:** Full-stack server active on port 3000 with real-time feed polling enabled.
+* **Runtime Status:** Production runs on Vercel (`https://reg-monitor-beta.vercel.app`). Locally, `npm run dev` serves the app and API on port 3000, or the next free port.
