@@ -9,6 +9,10 @@ interface HeaderProps {
   onOpenExport: () => void;
   notifications: AlertNotification[];
   onSelectNotice: (noticeId: string) => void;
+  onOpenEndpointsModal?: () => void;
+  isSyncing?: boolean;
+  onTriggerSync?: () => void;
+  lastSyncTime?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,7 +22,11 @@ export const Header: React.FC<HeaderProps> = ({
   onJurisdictionFilterChange,
   onOpenExport,
   notifications,
-  onSelectNotice
+  onSelectNotice,
+  onOpenEndpointsModal,
+  isSyncing = false,
+  onTriggerSync,
+  lastSyncTime
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -104,13 +112,38 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Right Action Cluster */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#F0FDF4] border border-[#BBF7D0] rounded-lg">
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Live Ingestion Indicator & Gateway Trigger */}
+          <button
+            onClick={onOpenEndpointsModal}
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#BBF7D0] hover:border-[#86EFAC] rounded-lg cursor-pointer transition-colors shadow-2xs"
+            title="Click to view connected government endpoints & live API status"
+          >
             <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse"></span>
             <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#15803D] uppercase tracking-wide">
-              Live Syncing 24 Regulators
+              Live APIs Connected
             </span>
-          </div>
+            <span className="material-symbols-outlined text-[13px] text-[#15803D] ml-0.5">
+              sensors
+            </span>
+          </button>
+
+          {/* Quick Manual Sync Button */}
+          {onTriggerSync && (
+            <button
+              onClick={onTriggerSync}
+              disabled={isSyncing}
+              className="flex items-center gap-1.5 px-2.5 h-8 bg-[#0D5C63] hover:bg-[#0A474D] text-white font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
+              title="Poll live regulatory APIs for latest circulars and rules"
+            >
+              <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`}>
+                sync
+              </span>
+              <span className="hidden sm:inline">
+                {isSyncing ? 'Syncing...' : 'Sync Feeds'}
+              </span>
+            </button>
+          )}
 
           {/* Notifications Dropdown */}
           <div className="relative" ref={notifRef}>

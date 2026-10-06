@@ -23,7 +23,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: 'item-1',
       requirement: 'Establish 4-hour max RTO for fiat & stablecoin custodial on-ramps',
       owner: 'Head of Custody Operations',
-      deadline: '2024-11-15',
+      deadline: '2026-11-15',
       status: 'In-Progress',
       notes: 'Disaster recovery failover simulation scheduled for SG primary hot-wallet nodes.'
     },
@@ -31,7 +31,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: 'item-2',
       requirement: 'Commission SOC2 Type II or ISO 27001 statutory penetration audit',
       owner: 'Chief Information Security Officer (CISO)',
-      deadline: '2024-11-20',
+      deadline: '2026-11-20',
       status: 'Action-Required',
       notes: 'RFP drafted; reviewing 3 external accredited statutory cybersecurity auditors.'
     },
@@ -39,7 +39,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: 'item-3',
       requirement: 'Update Senior Executive Accountability Regime (SEAR) CISO liability charter',
       owner: 'General Counsel & Board Governance',
-      deadline: '2024-11-30',
+      deadline: '2026-11-30',
       status: 'In-Progress',
       notes: 'Board resolution drafted to formalize 72h zero-day statutory remediation escalation.'
     },
@@ -47,7 +47,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: 'item-4',
       requirement: 'Implement multi-sig cold-storage quorum policy (3 of 5 hardware keys)',
       owner: 'Treasury & Key Management Group',
-      deadline: '2024-11-10',
+      deadline: '2026-11-10',
       status: 'Compliant',
       notes: 'Hardware security modules (HSMs) deployed in geographically segregated vaults.'
     }
@@ -70,7 +70,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: `item-${Date.now()}`,
       requirement: newRequirement,
       owner: newOwner,
-      deadline: '2024-11-30',
+      deadline: '2026-11-30',
       status: 'Action-Required',
       notes: 'New statutory compliance requirement logged.'
     };

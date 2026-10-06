@@ -2,8 +2,8 @@ import { RegulatoryNotice, DeadlineItem, LatencyMetric, TrendBrief, AlertNotific
 
 export const INITIAL_NOTICES: RegulatoryNotice[] = [
   {
-    id: 'mas-dpt-2024',
-    ref: 'Ref: MAS-FSG-2024-C08',
+    id: 'mas-dpt-2026',
+    ref: 'Ref: MAS-FSG-2026-C08',
     title: 'Circular on Operational Resilience and Technology Risk Management for Digital Payment Token (DPT) Licensees',
     regulator: 'MAS',
     jurisdiction: 'SINGAPORE',
@@ -15,10 +15,10 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 9.4,
     issuedTimeAgo: '2 hours ago',
-    statutoryDeadline: '30 Nov 2024',
-    deadlineDate: '2024-11-30',
+    statutoryDeadline: '30 Nov 2026',
+    deadlineDate: '2026-11-30',
     statusBadge: {
-      text: 'Statutory Deadline: 30 Nov 2024',
+      text: 'Statutory Deadline: 30 Nov 2026',
       type: 'deadline'
     },
     aiSynthesis: {
@@ -36,8 +36,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'critical'
   },
   {
-    id: 'hkma-sfc-tokenised-2024',
-    ref: 'Ref: SFC/HKMA/2024/09-TK',
+    id: 'hkma-sfc-tokenised-2026',
+    ref: 'Ref: SFC/HKMA/2026/09-TK',
     title: "Joint Consultation Conclusions on Intermediaries' Virtual Asset Activities and Tokenised Securities Distribution",
     regulator: 'HKMA & SFC',
     jurisdiction: 'HONG KONG',
@@ -50,7 +50,7 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     impactScore: 8.8,
     issuedTimeAgo: '4 hours ago',
     statutoryDeadline: 'Effective Immediately',
-    deadlineDate: '2024-10-05',
+    deadlineDate: '2026-10-05',
     statusBadge: {
       text: 'Effective Immediately',
       type: 'immediate'
@@ -62,8 +62,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'high'
   },
   {
-    id: 'asic-greenwashing-2024',
-    ref: 'Ref: ASIC-MR-24-188',
+    id: 'asic-greenwashing-2026',
+    ref: 'Ref: ASIC-MR-26-188',
     title: 'Enforcement Direction on Greenwashing Disclosures in Wholesale & Institutional Fund Prospectuses',
     regulator: 'ASIC',
     jurisdiction: 'AUSTRALIA',
@@ -87,8 +87,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'high'
   },
   {
-    id: 'jfsa-hft-2024',
-    ref: 'Ref: FSA-CP-2024-FIEA',
+    id: 'jfsa-hft-2026',
+    ref: 'Ref: FSA-CP-2026-FIEA',
     title: 'Draft Amendments to the Financial Instruments and Exchange Act regarding High-Frequency Algorithmic Reporting',
     regulator: 'JFSA',
     jurisdiction: 'JAPAN',
@@ -100,10 +100,10 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 7.6,
     issuedTimeAgo: '10 hours ago',
-    statutoryDeadline: 'Open until 15 Dec 2024',
-    deadlineDate: '2024-12-15',
+    statutoryDeadline: 'Open until 15 Dec 2026',
+    deadlineDate: '2026-12-15',
     statusBadge: {
-      text: 'Open until 15 Dec 2024',
+      text: 'Open until 15 Dec 2026',
       type: 'deadline'
     },
     summary: 'Proposes expanded mandatory intraday order-to-trade ratio disclosures for foreign high-frequency trading (HFT) participants registered with the Kanto Local Finance Bureau, introducing automated trade halts during Tokyo Stock Exchange derivatives volatility spikes.',
@@ -113,8 +113,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'high'
   },
   {
-    id: 'uk-fca-emir-apac-2024',
-    ref: 'Ref: EMIR-APAC-2024-X',
+    id: 'uk-fca-emir-apac-2026',
+    ref: 'Ref: EMIR-APAC-2026-X',
     title: 'Interoperability & Equivalence Protocol for Cross-Border APAC OTC Derivatives Central Clearing',
     regulator: 'UK FCA & ESMA',
     jurisdiction: 'CROSS-BORDER',
@@ -138,8 +138,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'info'
   },
   {
-    id: 'hkma-ai-governance-2024',
-    ref: 'Ref: HKMA/CIR/2024/11-AI',
+    id: 'hkma-ai-governance-2027',
+    ref: 'Ref: HKMA/CIR/2026/11-AI',
     title: 'Supervisory Policy Manual (SPM) on Generative AI and Algorithmic Credit Decisioning in Retail Banking',
     regulator: 'HKMA',
     jurisdiction: 'HONG KONG',
@@ -151,10 +151,10 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 8.5,
     issuedTimeAgo: '16 hours ago',
-    statutoryDeadline: 'Open until 20 Jan 2025',
-    deadlineDate: '2025-01-20',
+    statutoryDeadline: 'Open until 20 Jan 2027',
+    deadlineDate: '2027-01-20',
     statusBadge: {
-      text: 'Open until 20 Jan 2025',
+      text: 'Open until 20 Jan 2027',
       type: 'deadline'
     },
     aiSynthesis: {
@@ -172,8 +172,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'high'
   },
   {
-    id: 'mas-aml-cft-crossborder-2024',
-    ref: 'Ref: MAS-AML-NOT-2024-03',
+    id: 'mas-aml-cft-crossborder-2027',
+    ref: 'Ref: MAS-AML-NOT-2026-03',
     title: 'Notice on Prevention of Money Laundering and Countering the Financing of Terrorism for Wealth Managers',
     regulator: 'MAS',
     jurisdiction: 'SINGAPORE',
@@ -185,10 +185,10 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 9.1,
     issuedTimeAgo: '18 hours ago',
-    statutoryDeadline: 'Statutory Deadline: 15 Jan 2025',
-    deadlineDate: '2025-01-15',
+    statutoryDeadline: 'Statutory Deadline: 15 Jan 2027',
+    deadlineDate: '2027-01-15',
     statusBadge: {
-      text: 'Statutory Deadline: 15 Jan 2025',
+      text: 'Statutory Deadline: 15 Jan 2027',
       type: 'deadline'
     },
     summary: 'Stricter source-of-wealth evidentiary requirements mandated for Single Family Offices (SFOs) enjoying tax incentive schemes under Section 13O and 13U. Financial institutions must implement real-time beneficial ownership verification against international PEP registries.',
@@ -198,7 +198,7 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'critical'
   },
   {
-    id: 'sec-cftc-apac-swap-2024',
+    id: 'sec-cftc-apac-swap-2026',
     ref: 'Ref: SEC-REL-34-99801',
     title: 'Exemptive Order Concerning Cross-Border Security-Based Swap Execution Facilities with Singapore and Tokyo',
     regulator: 'US SEC & CFTC',
@@ -212,7 +212,7 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     impactScore: 6.8,
     issuedTimeAgo: '1 day ago',
     statutoryDeadline: 'Effective Immediately',
-    deadlineDate: '2024-10-04',
+    deadlineDate: '2026-10-04',
     statusBadge: {
       text: 'Effective Immediately',
       type: 'immediate'
@@ -224,7 +224,7 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'info'
   },
   {
-    id: 'asic-corp-governance-2024',
+    id: 'asic-corp-governance-2027',
     ref: 'Ref: ASIC-CP-390',
     title: 'Consultation on Climate-Related Financial Disclosures: Mandatory Australian Sustainability Reporting Standards',
     regulator: 'ASIC',
@@ -237,10 +237,10 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 8.6,
     issuedTimeAgo: '1 day ago',
-    statutoryDeadline: 'Open until 28 Feb 2025',
-    deadlineDate: '2025-02-28',
+    statutoryDeadline: 'Open until 28 Feb 2027',
+    deadlineDate: '2027-02-28',
     statusBadge: {
-      text: 'Open until 28 Feb 2025',
+      text: 'Open until 28 Feb 2027',
       type: 'deadline'
     },
     summary: 'Defines phase-in timetables for Group 1 entities ($500M+ revenue) to provide verified Scope 1, 2 and 3 emissions reports, climate scenario stress tests, and director climate competency declarations in annual statutory financial reports.',
@@ -250,8 +250,8 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     severity: 'high'
   },
   {
-    id: 'jfsa-crypto-tax-2024',
-    ref: 'Ref: JFSA-CIRC-2024-88',
+    id: 'jfsa-crypto-tax-2026',
+    ref: 'Ref: JFSA-CIRC-2026-88',
     title: 'Supervisory Guidelines for Crypto-Asset Exchange Service Providers (CAESPs) Regarding Segregated Reserve Ratios',
     regulator: 'JFSA',
     jurisdiction: 'JAPAN',
@@ -263,16 +263,84 @@ export const INITIAL_NOTICES: RegulatoryNotice[] = [
     },
     impactScore: 9.0,
     issuedTimeAgo: '1 day ago',
-    statutoryDeadline: 'Statutory Deadline: 31 Dec 2024',
-    deadlineDate: '2024-12-31',
+    statutoryDeadline: 'Statutory Deadline: 31 Dec 2026',
+    deadlineDate: '2026-12-31',
     statusBadge: {
-      text: 'Statutory Deadline: 31 Dec 2024',
+      text: 'Statutory Deadline: 31 Dec 2026',
       type: 'deadline'
     },
     summary: 'Requires CAESPs in Japan to hold at least 95% of customer digital assets in non-network connected cold storage, with statutory capital reserves equal to 100% of any hot-wallet float to protect against cybersecurity compromise.',
     tags: ['Cold Storage', 'CAESP', 'Reserve Ratios', 'Cybersecurity'],
     sector: 'FinTech & Digital Assets',
     format: 'Circulars',
+    severity: 'critical'
+  },
+  {
+    id: 'mas-genai-risk-2027',
+    ref: 'Ref: MAS-AI-MANDATE-2027-01',
+    title: 'Mandatory Supervisory Standard on Agentic AI and Autonomous Algorithmic Credit Decisioning',
+    regulator: 'MAS',
+    jurisdiction: 'SINGAPORE',
+    jurisdictionCode: 'SG',
+    type: 'TECHNICAL STANDARD',
+    typeColorClass: {
+      bg: 'bg-[#FEE2E2]',
+      text: 'text-[#B91C1C]'
+    },
+    impactScore: 9.6,
+    issuedTimeAgo: 'Just now',
+    statutoryDeadline: 'Compliance Date: 31 Mar 2027',
+    deadlineDate: '2027-03-31',
+    statusBadge: {
+      text: 'Compliance Date: 31 Mar 2027',
+      type: 'deadline'
+    },
+    aiSynthesis: {
+      title: 'Agentic AI Model Governance Mandate',
+      points: [
+        'Requires all Tier-1 banks and capital market services licensees to register autonomous agent workflows and automated order execution loops with MAS by Q1 2027.',
+        'Imposes mandatory algorithmic kill-switches with sub-second failover for any LLM system handling automated OTC swaps, treasury execution, or credit scoring.',
+        'Extends personal liability to the Chief Risk Officer (CRO) and Chief Technology Officer (CTO) for systemic hallucinatory credit allocation.'
+      ]
+    },
+    impactedUnits: ['Algorithmic Trading', 'Credit Risk', 'AI Ethics Board', 'Compliance Tech'],
+    tags: ['Agentic AI', 'Autonomous Systems', 'Kill-Switch', 'Model Risk'],
+    sector: 'AI Governance & Ethics',
+    format: 'Technical Standards',
+    severity: 'critical'
+  },
+  {
+    id: 'hkma-dora-resilience-2027',
+    ref: 'Ref: HKMA/SPM/2027/02-OR',
+    title: 'Supervisory Policy Manual (SPM) on ICT Third-Party Operational Risk & Multi-Cloud Concentration',
+    regulator: 'HKMA',
+    jurisdiction: 'HONG KONG',
+    jurisdictionCode: 'HK',
+    type: 'CONSULTATION PAPER',
+    typeColorClass: {
+      bg: 'bg-[#EDE9FE]',
+      text: 'text-[#6D28D9]'
+    },
+    impactScore: 9.2,
+    issuedTimeAgo: 'Just now',
+    statutoryDeadline: 'Open until 15 Mar 2027',
+    deadlineDate: '2027-03-15',
+    statusBadge: {
+      text: 'Open until 15 Mar 2027',
+      type: 'deadline'
+    },
+    aiSynthesis: {
+      title: 'ICT Cloud Concentration & Outage Contingency',
+      points: [
+        'Requires Authorized Institutions (AIs) to implement multi-cloud failover architectures with proven secondary provider switchover tested bi-annually.',
+        'Mandates standard exit strategies and data portability guarantees for any critical ICT vendor providing core settlement or KYC screening engines.',
+        'Introduces direct HKMA inspection rights over offshore third-party data center operators servicing Hong Kong retail banks.'
+      ]
+    },
+    impactedUnits: ['Enterprise Architecture', 'Cloud Infrastructure', 'Vendor Risk Management'],
+    tags: ['Operational Resilience', 'Cloud Concentration', 'Vendor Risk', 'SPM'],
+    sector: 'Banking & Capital Markets',
+    format: 'Consultations',
     severity: 'critical'
   }
 ];
@@ -282,51 +350,61 @@ export const DEADLINES: DeadlineItem[] = [
     id: 'd1',
     title: 'MAS DPT Circular',
     subtitle: 'Gap Analysis sign-off',
-    daysRemaining: 12,
-    dateStr: '30 Nov',
+    daysRemaining: 56,
+    dateStr: '30 Nov 2026',
     colorClass: 'text-[#DC2626]',
     textColorClass: 'text-[#DC2626]',
-    noticeId: 'mas-dpt-2024'
+    noticeId: 'mas-dpt-2026'
   },
   {
     id: 'd2',
     title: 'JFSA Algo Consultation',
     subtitle: 'Public Comments Due',
-    daysRemaining: 27,
-    dateStr: '15 Dec',
+    daysRemaining: 71,
+    dateStr: '15 Dec 2026',
     colorClass: 'text-[#0D5C63]',
     textColorClass: 'text-[#0D5C63]',
-    noticeId: 'jfsa-hft-2024'
+    noticeId: 'jfsa-hft-2026'
   },
   {
     id: 'd3',
     title: 'HKMA Stablecoin Sandbox',
-    subtitle: 'Cohort 2 Submissions',
-    daysRemaining: 45,
-    dateStr: '31 Dec',
+    subtitle: 'Cohort 2 Finalization',
+    daysRemaining: 87,
+    dateStr: '31 Dec 2026',
     colorClass: 'text-[#1E1B18]',
     textColorClass: 'text-[#1E1B18]',
-    noticeId: 'hkma-sfc-tokenised-2024'
+    noticeId: 'hkma-sfc-tokenised-2026'
   },
   {
     id: 'd4',
     title: 'MAS SFO AML Overhaul',
     subtitle: 'Beneficial Owner Audit',
-    daysRemaining: 60,
-    dateStr: '15 Jan',
+    daysRemaining: 102,
+    dateStr: '15 Jan 2027',
     colorClass: 'text-[#0D5C63]',
     textColorClass: 'text-[#0D5C63]',
-    noticeId: 'mas-aml-cft-crossborder-2024'
+    noticeId: 'mas-aml-cft-crossborder-2027'
   },
   {
     id: 'd5',
     title: 'ASIC Scope 3 Disclosure',
-    subtitle: 'Phase 1 Working Group',
-    daysRemaining: 104,
-    dateStr: '28 Feb',
+    subtitle: 'Mandatory Baseline Start',
+    daysRemaining: 146,
+    dateStr: '28 Feb 2027',
     colorClass: 'text-[#15803D]',
     textColorClass: 'text-[#15803D]',
-    noticeId: 'asic-corp-governance-2024'
+    noticeId: 'asic-corp-governance-2027'
+  },
+  {
+    id: 'd6',
+    title: 'MAS Agentic AI Standard',
+    subtitle: 'Model Risk Validation Filings',
+    daysRemaining: 177,
+    dateStr: '31 Mar 2027',
+    colorClass: 'text-[#DC2626]',
+    textColorClass: 'text-[#DC2626]',
+    noticeId: 'mas-genai-risk-2027'
   }
 ];
 
@@ -342,7 +420,7 @@ export const TREND_BRIEFS: TrendBrief[] = [
     id: 't1',
     tag: 'Trend 1: Dual-Licensing Squeeze',
     title: 'MAS & HKMA Operational Risk Harmonisation',
-    summary: 'MAS & HKMA are synchronizing operational risk thresholds for custodial digital assets. Entities with dual Singapore/HK licenses face harmonized audit disclosures starting Q4.',
+    summary: 'MAS & HKMA are synchronizing operational risk thresholds for custodial digital assets. Entities with dual Singapore/HK licenses face harmonized audit disclosures starting Q4 2026 through Q1 2027.',
     severityColor: 'text-[#0D5C63]',
     jurisdictions: ['MAS', 'HKMA']
   },
@@ -350,13 +428,13 @@ export const TREND_BRIEFS: TrendBrief[] = [
     id: 't2',
     tag: 'Trend 2: Greenwashing Liability',
     title: 'Federal Enforcement vs Wholesale Safe-Harbors',
-    summary: "ASIC's enforcement signals wholesale ESG safe-harbor clauses are obsolete. Global cross-border syndicates must reconcile Aussie disclosures with EU SFDR Article 8/9 classifications.",
+    summary: "ASIC's enforcement signals wholesale ESG safe-harbor clauses are obsolete. Global cross-border syndicates must reconcile Aussie disclosures with EU SFDR Article 8/9 classifications ahead of mandatory 2027 statutory reporting.",
     severityColor: 'text-[#DC2626]',
     jurisdictions: ['ASIC', 'ESMA']
   },
   {
     id: 't3',
-    tag: 'Trend 3: Algorithmic Microstructure Volatility',
+    tag: 'Trend 3: Algorithmic & Agentic Volatility',
     title: 'Tokyo & Singapore Coordinated Flash-Halt Standards',
     summary: 'JFSA and SGX are aligning circuit breaker parameters on algorithmic HFT order flows to curb contagion during cross-asset volatility spikes across Nikkei and STI futures.',
     severityColor: 'text-[#15803D]',
@@ -367,12 +445,12 @@ export const TREND_BRIEFS: TrendBrief[] = [
 export const INITIAL_NOTIFICATIONS: AlertNotification[] = [
   {
     id: 'notif-1',
-    title: 'MAS issued Mandatory Circular MAS-FSG-2024-C08 (DPT Resilience)',
+    title: 'MAS issued Mandatory Circular MAS-FSG-2026-C08 (DPT Resilience)',
     regulator: 'MAS Singapore',
     time: '2h ago',
     severity: 'critical',
     unread: true,
-    linkId: 'mas-dpt-2024'
+    linkId: 'mas-dpt-2026'
   },
   {
     id: 'notif-2',
@@ -381,7 +459,7 @@ export const INITIAL_NOTIFICATIONS: AlertNotification[] = [
     time: '6h ago',
     severity: 'high',
     unread: true,
-    linkId: 'asic-greenwashing-2024'
+    linkId: 'asic-greenwashing-2026'
   },
   {
     id: 'notif-3',
@@ -390,7 +468,16 @@ export const INITIAL_NOTIFICATIONS: AlertNotification[] = [
     time: '10h ago',
     severity: 'info',
     unread: true,
-    linkId: 'jfsa-hft-2024'
+    linkId: 'jfsa-hft-2026'
+  },
+  {
+    id: 'notif-4',
+    title: 'MAS Mandates Agentic AI Governance & Kill-Switches for Q1 2027',
+    regulator: 'MAS Singapore',
+    time: 'Just now',
+    severity: 'critical',
+    unread: true,
+    linkId: 'mas-genai-risk-2027'
   }
 ];
 
@@ -430,7 +517,7 @@ export const INITIAL_ALERT_RULES: CustomAlertRule[] = [
 export const RADAR_MATRIX = [
   {
     domain: 'FinTech & Digital Assets',
-    mas: { level: 'Strict Mandate', desc: '4h RTO, CISO SEAR liability, Cold-storage split', color: 'text-red-700 bg-red-50 border-red-200' },
+    mas: { level: 'Strict Mandate', desc: '4h RTO, CISO SEAR liability, Cold-storage split (Q4 2026)', color: 'text-red-700 bg-red-50 border-red-200' },
     hkma: { level: 'Retail Expansion', desc: 'Tokenised bond retail distribution unlocked', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
     asic: { level: 'Product Monitoring', desc: 'Unlicensed crypto yield enforcement', color: 'text-[#0D5C63] bg-[#E6F4F4] border-[#B2DFDB]' },
     jfsa: { level: 'Reserve Mandate', desc: '95% cold storage, 100% hot float backed', color: 'text-red-700 bg-red-50 border-red-200' }
@@ -438,27 +525,27 @@ export const RADAR_MATRIX = [
   {
     domain: 'Banking & Capital Markets',
     mas: { level: 'Equivalence', desc: 'SGX QCCP mutual recognition with ESMA', color: 'text-blue-700 bg-blue-50 border-blue-200' },
-    hkma: { level: 'Stablecoin Sandbox', desc: 'Cohort 2 sandbox issuer testing', color: 'text-blue-700 bg-blue-50 border-blue-200' },
+    hkma: { level: 'Stablecoin Sandbox', desc: 'Cohort 2 sandbox issuer testing into Q1 2027', color: 'text-blue-700 bg-blue-50 border-blue-200' },
     asic: { level: 'Market Microstructure', desc: 'High-frequency order cancellation caps', color: 'text-[#0D5C63] bg-[#E6F4F4] border-[#B2DFDB]' },
     jfsa: { level: 'Order-to-Trade', desc: 'Mandatory intraday ratios for foreign HFT', color: 'text-purple-700 bg-purple-50 border-purple-200' }
   },
   {
     domain: 'ESG & Climate Disclosures',
-    mas: { level: 'Phased IFRS S1/S2', desc: 'Listed issuers mandatory FY25', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+    mas: { level: 'Phased IFRS S1/S2', desc: 'Listed issuers mandatory FY26 / Q1 2027', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
     hkma: { level: 'Climate Risk SPM', desc: 'Portfolio stress test disclosures', color: 'text-blue-700 bg-blue-50 border-blue-200' },
-    asic: { level: 'Civil Penalties', desc: 'Scope 3 enforcement actions initiated', color: 'text-red-700 bg-red-50 border-red-200' },
+    asic: { level: 'Civil Penalties', desc: 'Scope 3 enforcement actions active in Federal Court', color: 'text-red-700 bg-red-50 border-red-200' },
     jfsa: { level: 'Code of Conduct', desc: 'ESG rating agencies voluntary framework', color: 'text-stone-700 bg-stone-100 border-stone-200' }
   },
   {
     domain: 'AI Governance & Ethics',
-    mas: { level: 'FEAT Principles', desc: 'Veritas toolkit validation benchmark', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
-    hkma: { level: 'SPM Consultation', desc: 'Human-in-the-loop credit & model risk', color: 'text-purple-700 bg-purple-50 border-purple-200' },
+    mas: { level: 'Agentic AI Standard', desc: 'Mandatory kill-switches & CRO liability (Q1 2027)', color: 'text-red-700 bg-red-50 border-red-200' },
+    hkma: { level: 'SPM Consultation', desc: 'Human-in-the-loop credit & model risk closing Jan 2027', color: 'text-purple-700 bg-purple-50 border-purple-200' },
     asic: { level: 'Algorithmic Duty', desc: 'Directors responsible for AI output harms', color: 'text-[#0D5C63] bg-[#E6F4F4] border-[#B2DFDB]' },
     jfsa: { level: 'Governance Study', desc: 'Joint panel with METI on GenAI trading', color: 'text-blue-700 bg-blue-50 border-blue-200' }
   },
   {
     domain: 'AML / CFT & Sanctions',
-    mas: { level: 'SFO Overhaul', desc: 'S13O/U family office PEP verification', color: 'text-red-700 bg-red-50 border-red-200' },
+    mas: { level: 'SFO Overhaul', desc: 'S13O/U family office PEP verification (Jan 2027)', color: 'text-red-700 bg-red-50 border-red-200' },
     hkma: { level: 'AMLO Licensing', desc: 'Virtual asset service provider registration', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
     asic: { level: 'Austrac Alignment', desc: 'Remittance and bullion dealer reporting', color: 'text-[#0D5C63] bg-[#E6F4F4] border-[#B2DFDB]' },
     jfsa: { level: 'FATF Follow-up', desc: 'Travel rule strict API interoperability', color: 'text-[#0D5C63] bg-[#E6F4F4] border-[#B2DFDB]' }
@@ -468,49 +555,49 @@ export const RADAR_MATRIX = [
 export const ENFORCEMENT_RECORDS = [
   {
     id: 'enf-1',
-    ref: 'ASIC-MR-24-188',
+    ref: 'ASIC-MR-26-188',
     regulator: 'ASIC',
     entity: 'Pacific Crest Asset Management & Aurora Funds Ltd',
     penalty: 'AUD $14.2M sought in Federal Court',
     actionType: 'Civil Penalty & Remediation Order',
     category: 'Greenwashing / Misleading Scope 3 PDS',
-    date: '2024-10-04',
+    date: '2026-10-04',
     status: 'In Proceedings',
     summary: 'Alleged misleading representations regarding carbon neutral portfolios and third-party scoring methodologies without independent primary verification.'
   },
   {
     id: 'enf-2',
-    ref: 'MAS-ENF-2024-09',
+    ref: 'MAS-ENF-2026-09',
     entity: 'Zenith Prime Capital Pte Ltd (CMS Licensee)',
     regulator: 'MAS',
     penalty: 'SGD $3.8M Fine & Prohibition Orders',
     actionType: 'Statutory Fine & 5-Year Ban',
     category: 'AML/CFT & Unverified SFO Inflows',
-    date: '2024-09-22',
+    date: '2026-09-22',
     status: 'Concluded',
     summary: 'Failure to perform customer due diligence on high net-worth individuals holding complex offshore trust structures.'
   },
   {
     id: 'enf-3',
-    ref: 'SFC-ENF-2024-04',
+    ref: 'SFC-ENF-2026-04',
     entity: 'Apex Global Markets Hong Kong Ltd',
     regulator: 'HKMA & SFC',
     penalty: 'HKD $21.5M Reprimand & Fine',
     actionType: 'Regulatory Reprimand',
     category: 'Electronic Trading System Outage',
-    date: '2024-08-30',
+    date: '2026-08-30',
     status: 'Concluded',
     summary: 'System resilience breakdown during extreme Hang Seng index volatility causing 90-minute client execution freeze without backup failover.'
   },
   {
     id: 'enf-4',
-    ref: 'FSA-ENF-2024-12',
+    ref: 'FSA-ENF-2026-12',
     entity: 'Nippon Algorithmic Arbitrage KK',
     regulator: 'JFSA',
     penalty: 'JPY 450M Administrative Surcharge',
     actionType: 'Business Improvement Order',
     category: 'Spoofing & Algorithmic Market Manipulation',
-    date: '2024-08-15',
+    date: '2026-08-15',
     status: 'Under Remediation',
     summary: 'Submitting layered fictitious orders on Tokyo Stock Exchange Topix futures to induce artificial market movements.'
   }

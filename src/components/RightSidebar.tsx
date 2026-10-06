@@ -9,6 +9,9 @@ interface RightSidebarProps {
   onOpenExportJson: () => void;
   onOpenWebhookModal: () => void;
   onSelectDeadlineNotice: (noticeId: string) => void;
+  onOpenLiveEndpointsModal?: () => void;
+  onTriggerSync?: () => void;
+  isSyncing?: boolean;
 }
 
 export const RightSidebar: React.FC<RightSidebarProps> = ({
@@ -18,7 +21,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onOpenExportCsv,
   onOpenExportJson,
   onOpenWebhookModal,
-  onSelectDeadlineNotice
+  onSelectDeadlineNotice,
+  onOpenLiveEndpointsModal,
+  onTriggerSync,
+  isSyncing = false
 }) => {
   const [copiedAuditId, setCopiedAuditId] = useState(false);
   const auditId = 'RS-APAC-SYNC-99201-LIVE';
@@ -111,6 +117,66 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Live Feeds Sentinel */}
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
+        <div className="flex items-center justify-between mb-2 pb-1 border-b border-[#E5DFD5]">
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[#0D5C63] text-lg">sensors</span>
+            <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1E1B18] font-bold">
+              Live Feeds Gateway
+            </span>
+          </div>
+          <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] px-2 py-0.5 rounded border border-[#86EFAC] flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"></span>
+            6 Connected
+          </span>
+        </div>
+
+        <div className="space-y-1.5 mb-3 text-[11px]">
+          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
+            <span className="font-['JetBrains_Mono'] text-[#57534E]">US Federal Register (SEC)</span>
+            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
+          </div>
+          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
+            <span className="font-['JetBrains_Mono'] text-[#57534E]">HKMA Open API Portal</span>
+            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
+          </div>
+          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
+            <span className="font-['JetBrains_Mono'] text-[#57534E]">UK FCA Regulatory RSS</span>
+            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
+          </div>
+          <div className="flex items-center justify-between py-1">
+            <span className="font-['JetBrains_Mono'] text-[#57534E]">MAS &amp; ASIC Gateways</span>
+            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Active</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {onOpenLiveEndpointsModal && (
+            <button
+              onClick={onOpenLiveEndpointsModal}
+              className="flex-1 py-1.5 bg-[#FAF8F5] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
+            >
+              <span className="material-symbols-outlined text-sm text-[#0D5C63]">hub</span>
+              <span>Manage APIs</span>
+            </button>
+          )}
+
+          {onTriggerSync && (
+            <button
+              onClick={onTriggerSync}
+              disabled={isSyncing}
+              className="flex-1 py-1.5 bg-[#0D5C63] hover:bg-[#0A474D] text-white font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
+            >
+              <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`}>
+                sync
+              </span>
+              <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+            </button>
+          )}
         </div>
       </div>
 

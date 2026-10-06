@@ -21,7 +21,7 @@ export const CaseBriefModal: React.FC<CaseBriefModalProps> = ({ notice, onClose 
                 ASIC Enforcement Precedent Case Brief
               </h2>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
-                Federal Court Docket: VID 442/2024 • Corporations Act 2001 (Cth) s.1041H
+                Federal Court Docket: VID 442/2026 • Corporations Act 2001 (Cth) s.1041H
               </span>
             </div>
           </div>

@@ -107,6 +107,13 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
             {notice.ref}
           </span>
+
+          {notice.isLiveFeed && (
+            <span className="px-1.5 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"></span>
+              Live Feed
+            </span>
+          )}
         </div>
 
         {/* Impact Score */}
@@ -236,7 +243,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           </button>
 
           {/* Conditional Action Buttons based on item */}
-          {notice.id === 'mas-dpt-2024' && (
+          {(notice.id === 'mas-dpt-2026' || notice.id.startsWith('mas-dpt') || notice.id.includes('dpt')) && (
             <>
               <button
                 onClick={() => onOpenGapAnalysis(notice)}
@@ -255,7 +262,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </>
           )}
 
-          {notice.id === 'hkma-sfc-tokenised-2024' && (
+          {(notice.id === 'hkma-sfc-tokenised-2026' || notice.id.includes('tokenised')) && (
             <button
               onClick={() => onOpenDiffRedline(notice)}
               className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
@@ -265,7 +272,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </button>
           )}
 
-          {notice.id === 'asic-greenwashing-2024' && (
+          {(notice.id === 'asic-greenwashing-2026' || notice.id.includes('greenwashing')) && (
             <button
               onClick={() => onOpenCaseBrief(notice)}
               className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
@@ -275,7 +282,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </button>
           )}
 
-          {notice.id === 'jfsa-hft-2024' && (
+          {(notice.id === 'jfsa-hft-2026' || notice.id.includes('hft')) && (
             <button
               onClick={() => onOpenDraftResponse(notice)}
               className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
@@ -285,7 +292,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </button>
           )}
 
-          {notice.id === 'uk-fca-emir-apac-2024' && (
+          {(notice.id === 'uk-fca-emir-apac-2026' || notice.id.includes('emir')) && (
             <button
               onClick={() => onOpenPdfDossier(notice)}
               className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
@@ -296,11 +303,11 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
 
           {/* Fallback actions for other items */}
-          {notice.id !== 'mas-dpt-2024' &&
-            notice.id !== 'hkma-sfc-tokenised-2024' &&
-            notice.id !== 'asic-greenwashing-2024' &&
-            notice.id !== 'jfsa-hft-2024' &&
-            notice.id !== 'uk-fca-emir-apac-2024' && (
+          {!notice.id.includes('dpt') &&
+            !notice.id.includes('tokenised') &&
+            !notice.id.includes('greenwashing') &&
+            !notice.id.includes('hft') &&
+            !notice.id.includes('emir') && (
               <>
                 <button
                   onClick={() => onOpenGapAnalysis(notice)}

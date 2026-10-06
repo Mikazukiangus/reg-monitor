@@ -22,6 +22,7 @@ import { DraftResponseModal } from './components/modals/DraftResponseModal';
 import { FullDigestModal } from './components/modals/FullDigestModal';
 import { WebhookModal } from './components/modals/WebhookModal';
 import { ExportModal } from './components/modals/ExportModal';
+import { LiveEndpointsModal, EndpointMetric } from './components/modals/LiveEndpointsModal';
 
 // Data
 import {
@@ -37,8 +38,88 @@ import {
   UrgencySeverity
 } from './types/regulatory';
 
+const DEFAULT_ENDPOINTS: EndpointMetric[] = [
+  {
+    id: 'fed-reg',
+    name: 'US Federal Register API',
+    agency: 'SEC & CFTC',
+    jurisdiction: 'US Federal',
+    url: 'https://www.federalregister.gov/api/v1/documents.json',
+    protocol: 'REST JSON v1',
+    auth: 'Public / None',
+    status: 'Operational',
+    pingMs: 142
+  },
+  {
+    id: 'hkma-api',
+    name: 'HKMA Open API Portal',
+    agency: 'HKMA (Hong Kong)',
+    jurisdiction: 'Hong Kong',
+    url: 'https://api.hkma.gov.hk/public/...',
+    protocol: 'REST JSON',
+    auth: 'Public / Open',
+    status: 'Operational',
+    pingMs: 78
+  },
+  {
+    id: 'fca-rss',
+    name: 'UK FCA Regulatory Feed',
+    agency: 'FCA (United Kingdom)',
+    jurisdiction: 'UK / Cross-Border',
+    url: 'https://www.fca.org.uk/news/rss.xml',
+    protocol: 'RSS XML v2.0',
+    auth: 'Public / Open',
+    status: 'Operational',
+    pingMs: 69
+  },
+  {
+    id: 'mas-gov',
+    name: 'Singapore MAS & Data Portal',
+    agency: 'MAS (Singapore)',
+    jurisdiction: 'Singapore',
+    url: 'https://www.mas.gov.sg/news',
+    protocol: 'Web Gateway / JSON',
+    auth: 'Public / Open',
+    status: 'Operational',
+    pingMs: 54
+  },
+  {
+    id: 'asic-gov',
+    name: 'Australia ASIC Regulatory Tracker',
+    agency: 'ASIC (Australia)',
+    jurisdiction: 'Australia',
+    url: 'https://asic.gov.au',
+    protocol: 'Open Data CKAN',
+    auth: 'Public / Open',
+    status: 'Operational',
+    pingMs: 110
+  },
+  {
+    id: 'bis-portal',
+    name: 'Bank for International Settlements',
+    agency: 'BIS & Basel Committee',
+    jurisdiction: 'Global Cross-Border',
+    url: 'https://www.bis.org',
+    protocol: 'Prudential Gateway',
+    auth: 'Public / Open',
+    status: 'Operational',
+    pingMs: 96
+  }
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('feed');
+
+  // Notices state (persists initial + live-synced items)
+  const [notices, setNotices] = useState<RegulatoryNotice[]>(INITIAL_NOTICES);
+
+  // Live Endpoints & Ingestion Gateway State
+  const [endpoints, setEndpoints] = useState<EndpointMetric[]>(DEFAULT_ENDPOINTS);
+  const [isEndpointsModalOpen, setIsEndpointsModalOpen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isPinging, setIsPinging] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const [autoSyncInterval, setAutoSyncInterval] = useState(180); // 3 minutes
 
   // Search & Global Jurisdiction Filter
   const [searchQuery, setSearchQuery] = useState('');
@@ -151,9 +232,74 @@ export default function App() {
     setCurrentPage(1);
   };
 
+  // Live Feed Ingestion handlers
+  const handleSyncFeeds = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch('/api/feeds/sync', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.notices && Array.isArray(data.notices) && data.notices.length > 0) {
+          setNotices(prev => {
+            const existingIds = new Set(prev.map(n => n.id));
+            const newItems = data.notices.filter((n: RegulatoryNotice) => !existingIds.has(n.id));
+            return [...newItems, ...prev];
+          });
+        }
+        if (data.latencyMetrics && Array.isArray(data.latencyMetrics)) {
+          setEndpoints(prev =>
+            prev.map(ep => {
+              const match = data.latencyMetrics.find((m: any) =>
+                m.agency?.toLowerCase().includes(ep.agency.toLowerCase().slice(0, 3)) ||
+                m.jurisdiction?.toLowerCase().includes(ep.jurisdiction.toLowerCase().slice(0, 3))
+              );
+              return match ? { ...ep, pingMs: match.pingMs, status: match.status } : ep;
+            })
+          );
+        }
+        const now = new Date();
+        setLastSyncTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' SGT');
+      }
+    } catch (err) {
+      console.error('[RegSonar] Live feed sync error:', err);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handlePingEndpoints = async () => {
+    setIsPinging(true);
+    try {
+      const res = await fetch('/api/feeds/status');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.endpoints && Array.isArray(data.endpoints)) {
+          setEndpoints(data.endpoints);
+        }
+      }
+    } catch (err) {
+      console.error('[RegSonar] Endpoint ping error:', err);
+    } finally {
+      setIsPinging(false);
+    }
+  };
+
+  // Automated background polling
+  React.useEffect(() => {
+    handlePingEndpoints();
+    handleSyncFeeds();
+
+    if (!autoSyncInterval || autoSyncInterval <= 0) return;
+    const intervalId = setInterval(() => {
+      handleSyncFeeds();
+    }, autoSyncInterval * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [autoSyncInterval]);
+
   // Filter Notices
   const filteredNotices = useMemo(() => {
-    return INITIAL_NOTICES.filter(notice => {
+    return notices.filter(notice => {
       // Header dropdown filter
       if (headerJurisdiction === 'Singapore MAS' && notice.jurisdictionCode !== 'SG') return false;
       if (headerJurisdiction === 'Hong Kong HKMA/SFC' && notice.jurisdictionCode !== 'HK') return false;
@@ -209,6 +355,7 @@ export default function App() {
       return 0;
     });
   }, [
+    notices,
     headerJurisdiction,
     selectedSeverities,
     selectedJurisdictions,
@@ -225,7 +372,7 @@ export default function App() {
 
   const handleSelectNoticeById = (id: string) => {
     setActiveTab('feed');
-    const target = INITIAL_NOTICES.find(n => n.id === id);
+    const target = notices.find(n => n.id === id);
     if (target) {
       setActiveNoticeForDossier(target);
     }
@@ -245,6 +392,10 @@ export default function App() {
         }}
         notifications={INITIAL_NOTIFICATIONS}
         onSelectNotice={handleSelectNoticeById}
+        onOpenEndpointsModal={() => setIsEndpointsModalOpen(true)}
+        isSyncing={isSyncing}
+        onTriggerSync={handleSyncFeeds}
+        lastSyncTime={lastSyncTime}
       />
 
       {/* Navigation Sub-bar & Real-Time Wire */}
@@ -260,9 +411,9 @@ export default function App() {
           <div className="flex flex-col w-full">
             {/* Executive KPI Ribbon */}
             <KpiRibbon
-              totalNoticesCount={38}
-              criticalCount={4}
-              consultationsCount={9}
+              totalNoticesCount={notices.length}
+              criticalCount={notices.filter(n => n.severity === 'critical').length}
+              consultationsCount={notices.filter(n => n.format === 'Consultations').length}
               onFilterBySeverity={(sev) => {
                 if (sev === 'critical') {
                   setSelectedSeverities(['critical']);
@@ -293,6 +444,33 @@ export default function App() {
 
                 {/* Center Feed (6 cols): Active Notices Feed */}
                 <section className="lg:col-span-6 flex flex-col gap-3">
+                  {/* Live Feeds Connected Status Strip */}
+                  <div className="bg-[#FFFFFF] border border-[#E5DFD5] px-3.5 py-2 rounded-lg flex items-center justify-between text-[11px] shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse"></span>
+                      <span className="font-['JetBrains_Mono'] font-bold text-[#1E1B18]">
+                        Automated Feed Ingestion
+                      </span>
+                      <span className="text-[#857F74] hidden sm:inline">•</span>
+                      <span className="text-[#857F74] hidden sm:inline">
+                        US Federal Register (SEC/CFTC), HKMA, UK FCA, MAS &amp; ASIC
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">
+                        {lastSyncTime}
+                      </span>
+                      <button
+                        onClick={() => setIsEndpointsModalOpen(true)}
+                        className="text-[#0D5C63] hover:text-[#0A474D] font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
+                      >
+                        <span>Endpoints Gateway</span>
+                        <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Feed Search & Sort Bar */}
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#FFFFFF] border border-[#E5DFD5] p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
@@ -439,6 +617,9 @@ export default function App() {
                   }}
                   onOpenWebhookModal={() => setIsWebhookModalOpen(true)}
                   onSelectDeadlineNotice={handleSelectNoticeById}
+                  onOpenLiveEndpointsModal={() => setIsEndpointsModalOpen(true)}
+                  onTriggerSync={handleSyncFeeds}
+                  isSyncing={isSyncing}
                 />
               </div>
             </div>
@@ -521,6 +702,19 @@ export default function App() {
         onClose={() => setIsExportModalOpen(false)}
         notices={filteredNotices}
         initialFormat={exportFormat}
+      />
+
+      <LiveEndpointsModal
+        isOpen={isEndpointsModalOpen}
+        onClose={() => setIsEndpointsModalOpen(false)}
+        endpoints={endpoints}
+        onPingAll={handlePingEndpoints}
+        onSyncAll={handleSyncFeeds}
+        isSyncing={isSyncing}
+        isPinging={isPinging}
+        lastSyncTime={lastSyncTime}
+        autoSyncInterval={autoSyncInterval}
+        onChangeAutoSyncInterval={setAutoSyncInterval}
       />
 
       {/* Info Notice Modal */}

@@ -54,6 +54,7 @@ export interface RegulatoryNotice {
   severity: UrgencySeverity;
   bookmarked?: boolean;
   dossierUrl?: string;
+  isLiveFeed?: boolean;
 }
 
 export interface DeadlineItem {

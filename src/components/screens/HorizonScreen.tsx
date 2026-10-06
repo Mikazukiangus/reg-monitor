@@ -19,8 +19,8 @@ export const HorizonScreen: React.FC = () => {
   const events: HorizonEvent[] = [
     {
       id: 'h1',
-      date: '2024-11-30',
-      quarter: 'Q4 2024',
+      date: '2026-11-30',
+      quarter: 'Q4 2026',
       regulator: 'MAS',
       jurisdiction: 'Singapore',
       title: 'DPT Technology Risk Management & 4h RTO Implementation Deadline',
@@ -31,8 +31,8 @@ export const HorizonScreen: React.FC = () => {
     },
     {
       id: 'h2',
-      date: '2024-12-15',
-      quarter: 'Q4 2024',
+      date: '2026-12-15',
+      quarter: 'Q4 2026',
       regulator: 'JFSA',
       jurisdiction: 'Japan',
       title: 'Consultation Period Closes on HFT Order-to-Trade Ratios',
@@ -43,20 +43,20 @@ export const HorizonScreen: React.FC = () => {
     },
     {
       id: 'h3',
-      date: '2024-12-31',
-      quarter: 'Q4 2024',
+      date: '2026-12-31',
+      quarter: 'Q4 2026',
       regulator: 'HKMA',
       jurisdiction: 'Hong Kong',
-      title: 'Stablecoin Sandbox Cohort 2 Intake Closes',
+      title: 'Stablecoin Licensing & Cold-Storage Segregation Mandate',
       category: 'FinTech & Digital Assets',
-      impactScore: 8.2,
-      status: 'Consultation Close',
+      impactScore: 8.9,
+      status: 'Critical Deadline',
       actionRequired: 'File application dossier with proof of segregated fiat reserves in HK licensed banks.'
     },
     {
       id: 'h4',
-      date: '2025-01-15',
-      quarter: 'Q1 2025',
+      date: '2027-01-15',
+      quarter: 'Q1 2027',
       regulator: 'MAS',
       jurisdiction: 'Singapore',
       title: 'Single Family Office (SFO) S13O/U Strict Beneficial Ownership Verification',
@@ -67,11 +67,11 @@ export const HorizonScreen: React.FC = () => {
     },
     {
       id: 'h5',
-      date: '2025-02-28',
-      quarter: 'Q1 2025',
+      date: '2027-02-28',
+      quarter: 'Q1 2027',
       regulator: 'ASIC',
       jurisdiction: 'Australia',
-      title: 'ASRS Climate Disclosure Group 1 Mandatory Baseline Starts',
+      title: 'ASRS Climate Disclosure Group 1 Mandatory Baseline Phase-in',
       category: 'ESG & Sustainability',
       impactScore: 8.6,
       status: 'Phase-in Starts',
@@ -79,15 +79,27 @@ export const HorizonScreen: React.FC = () => {
     },
     {
       id: 'h6',
-      date: '2025-06-30',
-      quarter: 'Q2 2025',
-      regulator: 'Global (BCBS/ESMA/SGX)',
-      jurisdiction: 'Cross-Border',
-      title: 'Basel III Output Floor Central Clearing Margin Harmonization',
+      date: '2027-03-15',
+      quarter: 'Q1 2027',
+      regulator: 'HKMA',
+      jurisdiction: 'Hong Kong',
+      title: 'ICT Third-Party Cloud Concentration & Vendor Resilience Consultation Closure',
       category: 'Banking & Capital Markets',
-      impactScore: 7.8,
-      status: 'Standard Effective',
-      actionRequired: 'Verify QCCP mutual margin offsets between SGX, ASX, and European counterparties.'
+      impactScore: 9.2,
+      status: 'Consultation Close',
+      actionRequired: 'Complete vendor concentration impact review and multi-cloud secondary switchover testing.'
+    },
+    {
+      id: 'h7',
+      date: '2027-03-31',
+      quarter: 'Q1 2027',
+      regulator: 'MAS',
+      jurisdiction: 'Singapore',
+      title: 'Agentic AI & Autonomous Algorithmic Credit Decisioning Compliance Deadline',
+      category: 'AI Governance & Ethics',
+      impactScore: 9.6,
+      status: 'Critical Deadline',
+      actionRequired: 'File mandatory algorithmic kill-switch architectures and CRO model validation declarations with MAS.'
     }
   ];
 
@@ -113,7 +125,7 @@ export const HorizonScreen: React.FC = () => {
 
         {/* Quarter Filter Chips */}
         <div className="flex items-center gap-1.5 bg-[#FAF7F2] p-1 rounded-lg border border-[#E5DFD5]">
-          {['all', 'Q4 2024', 'Q1 2025', 'Q2 2025'].map((q) => (
+          {['all', 'Q4 2026', 'Q1 2027'].map((q) => (
             <button
               key={q}
               onClick={() => setFilterQuarter(q)}

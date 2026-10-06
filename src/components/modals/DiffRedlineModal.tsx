@@ -22,7 +22,7 @@ export const DiffRedlineModal: React.FC<DiffRedlineModalProps> = ({ notice, onCl
                 Statutory Redline &amp; Diff Comparison
               </h2>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
-                {notice.ref} • Comparing Q4 2023 Circular vs Current Amendment (Oct 2024)
+                {notice.ref} • Comparing Prior Baseline Circular vs Current Amendment (Oct 2026)
               </span>
             </div>
           </div>
@@ -100,7 +100,7 @@ export const DiffRedlineModal: React.FC<DiffRedlineModalProps> = ({ notice, onCl
               <div className="bg-[#FFFFFF] border border-[#BBF7D0] rounded-lg p-4 shadow-2xs">
                 <div className="pb-2 mb-3 border-b border-[#E5DFD5] flex items-center justify-between">
                   <span className="font-['JetBrains_Mono'] text-[11px] text-[#15803D] font-bold">
-                    NEW STATUTORY DIRECTIVE (OCTOBER 2024)
+                    NEW STATUTORY DIRECTIVE (OCTOBER 2026)
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-[#15803D] font-bold bg-[#DCFCE7] px-1.5 py-0.5 rounded">In Force</span>
                 </div>
