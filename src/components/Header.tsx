@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AlertNotification } from '../types/regulatory';
+import { EndpointMetric } from './modals/LiveEndpointsModal';
 
 interface HeaderProps {
   searchQuery: string;
@@ -13,6 +14,7 @@ interface HeaderProps {
   isSyncing?: boolean;
   onTriggerSync?: () => void;
   lastSyncTime?: string;
+  endpoints?: EndpointMetric[];
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,7 +28,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenEndpointsModal,
   isSyncing = false,
   onTriggerSync,
-  lastSyncTime
+  lastSyncTime,
+  endpoints = []
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -47,6 +50,10 @@ export const Header: React.FC<HeaderProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const operationalCount = endpoints.filter(e => e.status === 'Operational').length;
+  const checking = endpoints.some(e => e.status === 'Checking');
+  const allOperational = !checking && operationalCount === endpoints.length;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E5DFD5] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
@@ -116,14 +123,18 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Live Ingestion Indicator & Gateway Trigger */}
           <button
             onClick={onOpenEndpointsModal}
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#BBF7D0] hover:border-[#86EFAC] rounded-lg cursor-pointer transition-colors shadow-2xs"
-            title="Click to view connected government endpoints & live API status"
+            className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 border rounded-lg cursor-pointer transition-colors shadow-2xs ${
+              allOperational
+                ? 'bg-[#F0FDF4] hover:bg-[#DCFCE7] border-[#BBF7D0] text-[#15803D]'
+                : 'bg-[#FFFBEB] hover:bg-[#FEF3C7] border-[#FDE68A] text-[#B45309]'
+            }`}
+            title="View monitored government endpoints and their current status"
           >
-            <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse"></span>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#15803D] uppercase tracking-wide">
-              Live APIs Connected
+            <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-[#15803D]' : 'bg-[#B45309]'}`}></span>
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wide">
+              {checking ? 'Checking Sources' : `${operationalCount}/${endpoints.length} Sources Up`}
             </span>
-            <span className="material-symbols-outlined text-[13px] text-[#15803D] ml-0.5">
+            <span className="material-symbols-outlined text-[13px] ml-0.5">
               sensors
             </span>
           </button>

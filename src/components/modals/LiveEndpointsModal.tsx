@@ -8,10 +8,23 @@ export interface EndpointMetric {
   url: string;
   protocol: string;
   auth: string;
-  status: 'Operational' | 'Degraded';
-  statusCode?: number;
-  pingMs: number;
+  status: EndpointStatus;
+  statusCode?: number | null;
+  pingMs: number | null;
+  detail?: string;
+  ingests?: boolean;
+  // Result of the most recent notice sync for sources read from this endpoint
+  sync?: { ok: boolean; count: number; error?: string };
 }
+
+export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';
+
+export const STATUS_STYLES: Record<EndpointStatus, { badge: string; text: string; dot: string }> = {
+  Operational: { badge: 'bg-[#DCFCE7] text-[#15803D] border-[#86EFAC]', text: 'text-[#15803D]', dot: 'bg-[#15803D]' },
+  Degraded: { badge: 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]', text: 'text-[#B45309]', dot: 'bg-[#B45309]' },
+  Down: { badge: 'bg-[#FEF2F2] text-[#DC2626] border-[#FCA5A5]', text: 'text-[#DC2626]', dot: 'bg-[#DC2626]' },
+  Checking: { badge: 'bg-[#F5F1E8] text-[#857F74] border-[#E5DFD5]', text: 'text-[#857F74]', dot: 'bg-[#857F74]' }
+};
 
 interface LiveEndpointsModalProps {
   isOpen: boolean;
@@ -44,9 +57,11 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
   if (!isOpen) return null;
 
   const operationalCount = endpoints.filter(e => e.status === 'Operational').length;
-  const avgPing = Math.round(
-    endpoints.reduce((acc, e) => acc + (e.pingMs || 0), 0) / (endpoints.length || 1)
-  );
+  const responded = endpoints.filter(e => e.pingMs !== null);
+  const avgPing = responded.length
+    ? Math.round(responded.reduce((acc, e) => acc + (e.pingMs ?? 0), 0) / responded.length)
+    : null;
+  const headerTone = operationalCount === endpoints.length ? STATUS_STYLES.Operational : STATUS_STYLES.Degraded;
 
   const handleCopy = (url: string) => {
     navigator.clipboard.writeText(url);
@@ -68,13 +83,13 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                 <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1E1B18]">
                   Automated Feeds &amp; Live API Gateway
                 </h3>
-                <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"></span>
-                  {operationalCount}/{endpoints.length} Active
+                <span className={`font-['JetBrains_Mono'] text-[10px] font-bold border px-2 py-0.5 rounded-full flex items-center gap-1 ${headerTone.badge}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${headerTone.dot}`}></span>
+                  {operationalCount}/{endpoints.length} Operational
                 </span>
               </div>
               <p className="font-['Inter'] text-[11px] text-[#857F74]">
-                Continuous real-time ingestion from US Federal Register, HKMA Open API, UK FCA, MAS &amp; ASIC
+                Notices ingested from US Federal Register, HKMA, MAS and BIS. UK FCA attempted; ASIC status only.
               </p>
             </div>
           </div>
@@ -102,7 +117,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             <div>
               <span className="text-[#857F74] font-medium mr-1.5">Average Latency:</span>
               <span className="font-['JetBrains_Mono'] font-bold text-[#0D5C63]">
-                {avgPing}ms
+                {avgPing !== null ? `${avgPing}ms` : 'n/a'}
               </span>
             </div>
             <div className="h-3 w-px bg-[#D8D0C2]"></div>
@@ -195,11 +210,8 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
 
                       <div className="flex items-center gap-1.5 shrink-0">
                         <span
-                          className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded border ${
-                            ep.status === 'Operational'
-                              ? 'bg-[#DCFCE7] text-[#15803D] border-[#86EFAC]'
-                              : 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]'
-                          }`}
+                          className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded border ${STATUS_STYLES[ep.status].badge}`}
+                          title={ep.detail}
                         >
                           {ep.status}
                         </span>
@@ -222,7 +234,27 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       <div className="flex items-center justify-between">
                         <span className="text-[#857F74]">Round-Trip Ping:</span>
                         <span className="font-['JetBrains_Mono'] font-bold text-[#0D5C63]">
-                          {ep.pingMs ? `${ep.pingMs} ms` : 'Testing...'}
+                          {ep.status === 'Checking' ? 'Testing...' : ep.pingMs !== null ? `${ep.pingMs} ms` : 'No response'}
+                        </span>
+                      </div>
+                      {ep.detail && (
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[#857F74] shrink-0">Last Check:</span>
+                          <span className={`font-['JetBrains_Mono'] text-right ${STATUS_STYLES[ep.status].text}`}>
+                            {ep.detail}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[#857F74] shrink-0">Notice Ingestion:</span>
+                        <span className="font-['JetBrains_Mono'] text-right text-[#1E1B18]">
+                          {!ep.ingests
+                            ? 'Status check only'
+                            : !ep.sync
+                              ? 'Not synced yet'
+                              : ep.sync.ok
+                                ? `${ep.sync.count} notices last sync`
+                                : `Failed: ${ep.sync.error}${ep.sync.count ? ` (showing ${ep.sync.count} cached)` : ''}`}
                         </span>
                       </div>
                     </div>
@@ -255,7 +287,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   <span>Automated Continuous Ingestion Loop</span>
                 </h4>
                 <p className="font-['Inter'] text-[12px] text-[#57534E] leading-relaxed mb-3">
-                  The RegSonar Sentinel server worker queries official public government endpoints every {autoSyncInterval ? `${autoSyncInterval / 60} minutes` : 'configured cycle'}. Incoming documents are parsed, deduplicated, and passed to our legal intelligence engine.
+                  The RegSonar Sentinel server worker queries official public government endpoints every {autoSyncInterval ? `${autoSyncInterval / 60} minutes` : 'configured cycle'}. Each source is fetched at most once every 10 minutes to respect government rate limits; failed sources keep their last good results and report the error.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
@@ -264,16 +296,16 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       1. Ingestion Layer
                     </span>
                     <span className="text-[#57534E]">
-                      Fetches structured JSON from US Federal Register, parses XML RSS from UK FCA and HKMA Open API feeds with timeout protection.
+                      Fetches JSON from the US Federal Register, HKMA Open API and MAS news search, and RSS from BIS. The UK FCA feed is behind a Cloudflare bot check and is usually blocked.
                     </span>
                   </div>
 
                   <div className="p-3 bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg">
                     <span className="font-['JetBrains_Mono'] font-bold text-[#0D5C63] block mb-1">
-                      2. Gemini AI Legal Synthesis
+                      2. Classification
                     </span>
                     <span className="text-[#57534E]">
-                      Extracts 3 executive bullet points, impacts on institutional business units, statutory deadlines, and assigns a calibrated impact score (1.0 - 10.0).
+                      Keyword rules assign sector and instrument format. Impact scores are a heuristic by document type, not an AI assessment.
                     </span>
                   </div>
 
@@ -282,7 +314,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       3. Live Client Push
                     </span>
                     <span className="text-[#57534E]">
-                      Delivers verified notices to the active feed, updating KPI ribbons, deadlines radar, and alert triggers in real time.
+                      Adds new notices to the feed (deduplicated by source ID) and updates the KPI ribbon.
                     </span>
                   </div>
                 </div>
@@ -291,14 +323,14 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
               <div className="p-4 bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-['Hanken_Grotesk'] text-[13px] font-bold text-[#1E1B18]">
-                    Active AI Model Configuration
+                    AI Synthesis (not yet wired in)
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#E6F4F4] text-[#0D5C63] border border-[#B2DFDB] px-2 py-0.5 rounded">
                     gemini-3.8-flash • Server-Side API
                   </span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-[#857F74] leading-relaxed">
-                  Automated summarization utilizes server-side Gemini 3.8 Flash SDK calls with strict JSON output schemas, backed by automated heuristic fallback parsing to ensure uninterrupted uptime during network spikes.
+                  The server exposes POST /api/feeds/synthesize, which calls Gemini when GEMINI_API_KEY is set and returns generic placeholder text otherwise. Live notices do not call it yet; they show the source's own abstract.
                 </p>
               </div>
             </div>
@@ -308,9 +340,9 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
         {/* Footer */}
         <div className="p-3.5 bg-[#F5F1E8] border-t border-[#E5DFD5] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#15803D] animate-ping"></span>
+            <span className={`w-2 h-2 rounded-full ${headerTone.dot}`}></span>
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#57534E]">
-              Connected to 6 Government &amp; Regulatory Ingestion Ports
+              {operationalCount} of {endpoints.length} monitored endpoints operational
             </span>
           </div>
 

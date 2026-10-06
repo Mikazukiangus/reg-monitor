@@ -1,4 +1,5 @@
 import React from 'react';
+import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
 interface KpiRibbonProps {
   onFilterBySeverity?: (severity: string) => void;
@@ -7,6 +8,7 @@ interface KpiRibbonProps {
   criticalCount: number;
   consultationsCount: number;
   activeFilter?: string;
+  endpoints: EndpointMetric[];
 }
 
 export const KpiRibbon: React.FC<KpiRibbonProps> = ({
@@ -15,8 +17,15 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
   totalNoticesCount,
   criticalCount,
   consultationsCount,
-  activeFilter
+  activeFilter,
+  endpoints
 }) => {
+  const operational = endpoints.filter(e => e.status === 'Operational');
+  const notOperational = endpoints.filter(e => e.status !== 'Operational' && e.status !== 'Checking');
+  const checking = endpoints.some(e => e.status === 'Checking');
+  const tone = checking ? STATUS_STYLES.Checking : notOperational.length === 0 ? STATUS_STYLES.Operational : STATUS_STYLES.Degraded;
+  const operationalPct = endpoints.length ? Math.round((operational.length / endpoints.length) * 100) : 0;
+
   return (
     <div className="w-full px-4 sm:px-6 py-3 bg-[#F5F1E8] border-b border-[#E5DFD5] shadow-xs">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -111,21 +120,22 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] uppercase tracking-wider font-medium">
               Gateways Active
             </span>
-            <span className="flex items-center text-[#15803D] font-['JetBrains_Mono'] text-[10px] font-semibold">
-              <span className="material-symbols-outlined text-xs mr-0.5">verified</span>
-              100% SLA
+            <span className={`flex items-center font-['JetBrains_Mono'] text-[10px] font-semibold ${tone.text}`}>
+              {checking ? 'Checking...' : `${operational.length}/${endpoints.length} up`}
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="font-['Hanken_Grotesk'] text-[24px] text-[#1E1B18] font-bold">
-              24
+              {operational.length}
             </span>
             <span className="font-['Inter'] text-[12px] text-[#857F74] truncate">
-              MAS, HKMA, ASIC, JFSA...
+              {notOperational.length > 0
+                ? `Issues: ${notOperational.map(e => e.agency.replace(/ \(.*\)$/, '')).join(', ')}`
+                : 'of monitored sources'}
             </span>
           </div>
           <div className="w-full bg-[#EFEBE0] h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-[#15803D] h-full w-full rounded-full"></div>
+            <div className={`${tone.dot} h-full rounded-full`} style={{ width: `${operationalPct}%` }}></div>
           </div>
         </div>
       </div>

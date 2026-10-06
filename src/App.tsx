@@ -38,74 +38,39 @@ import {
   UrgencySeverity
 } from './types/regulatory';
 
+// Mirrors ENDPOINTS in server.ts; status is filled in by /api/feeds/status
 const DEFAULT_ENDPOINTS: EndpointMetric[] = [
-  {
-    id: 'fed-reg',
-    name: 'US Federal Register API',
-    agency: 'SEC & CFTC',
-    jurisdiction: 'US Federal',
-    url: 'https://www.federalregister.gov/api/v1/documents.json',
-    protocol: 'REST JSON v1',
-    auth: 'Public / None',
-    status: 'Operational',
-    pingMs: 142
-  },
-  {
-    id: 'hkma-api',
-    name: 'HKMA Open Gateway',
-    agency: 'HKMA (Hong Kong)',
-    jurisdiction: 'Hong Kong',
-    url: 'https://www.hkma.gov.hk/eng/',
-    protocol: 'HTTPS Portal',
-    auth: 'Public / Open',
-    status: 'Operational',
-    pingMs: 78
-  },
-  {
-    id: 'fca-rss',
-    name: 'UK FCA Regulatory Feed',
-    agency: 'FCA (United Kingdom)',
-    jurisdiction: 'UK / Cross-Border',
-    url: 'https://www.fca.org.uk/news/rss.xml',
-    protocol: 'RSS XML v2.0',
-    auth: 'Public / Open',
-    status: 'Operational',
-    pingMs: 69
-  },
-  {
-    id: 'mas-gov',
-    name: 'Singapore MAS & Data Portal',
-    agency: 'MAS (Singapore)',
-    jurisdiction: 'Singapore',
-    url: 'https://www.mas.gov.sg/news',
-    protocol: 'Web Gateway / JSON',
-    auth: 'Public / Open',
-    status: 'Operational',
-    pingMs: 54
-  },
-  {
-    id: 'asic-gov',
-    name: 'Australia ASIC Regulatory Tracker',
-    agency: 'ASIC (Australia)',
-    jurisdiction: 'Australia',
-    url: 'https://asic.gov.au',
-    protocol: 'Open Data CKAN',
-    auth: 'Public / Open',
-    status: 'Operational',
-    pingMs: 110
-  },
-  {
-    id: 'bis-portal',
-    name: 'Bank for International Settlements',
-    agency: 'BIS & Basel Committee',
-    jurisdiction: 'Global Cross-Border',
-    url: 'https://www.bis.org',
-    protocol: 'Prudential Gateway',
-    auth: 'Public / Open',
-    status: 'Operational',
-    pingMs: 96
-  }
-];
+  { id: 'fed-reg', name: 'US Federal Register API', agency: 'SEC & CFTC', jurisdiction: 'US Federal', url: 'https://www.federalregister.gov/api/v1/documents.json', protocol: 'REST JSON', auth: 'Public / None', ingests: true },
+  { id: 'hkma-api', name: 'HKMA Open API', agency: 'HKMA (Hong Kong)', jurisdiction: 'Hong Kong', url: 'https://api.hkma.gov.hk/public/press-releases', protocol: 'REST JSON', auth: 'Public / None', ingests: true },
+  { id: 'fca-rss', name: 'UK FCA News RSS', agency: 'FCA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.fca.org.uk/news/rss.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'mas-gov', name: 'Singapore MAS News Search API', agency: 'MAS (Singapore)', jurisdiction: 'Singapore', url: 'https://www.mas.gov.sg/api/v1/search', protocol: 'JSON (undocumented)', auth: 'Public / None', ingests: true },
+  { id: 'asic-gov', name: 'Australia ASIC Portal', agency: 'ASIC (Australia)', jurisdiction: 'Australia', url: 'https://asic.gov.au', protocol: 'HTTPS Portal', auth: 'Public / None', ingests: false },
+  { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', url: 'https://www.bis.org/doclist/all_pressrels.rss', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
+].map(ep => ({ ...ep, status: 'Checking' as const, pingMs: null }));
+
+interface SourceSyncResult {
+  endpointId: string;
+  ok: boolean;
+  count: number;
+  error?: string;
+}
+
+// Combine per-source sync results into one summary per endpoint
+function mergeSyncResults(endpoints: EndpointMetric[], sources: SourceSyncResult[]): EndpointMetric[] {
+  return endpoints.map(ep => {
+    const mine = sources.filter(s => s.endpointId === ep.id);
+    if (mine.length === 0) return ep;
+    const failed = mine.filter(s => !s.ok);
+    return {
+      ...ep,
+      sync: {
+        ok: failed.length === 0,
+        count: mine.reduce((acc, s) => acc + s.count, 0),
+        error: failed.map(s => s.error).join('; ') || undefined
+      }
+    };
+  });
+}
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('feed');
@@ -118,7 +83,7 @@ export default function App() {
   const [isEndpointsModalOpen, setIsEndpointsModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isPinging, setIsPinging] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState('Just now');
+  const [lastSyncTime, setLastSyncTime] = useState('Not synced yet');
   const [autoSyncInterval, setAutoSyncInterval] = useState(180); // 3 minutes
 
   // Search & Global Jurisdiction Filter
@@ -134,7 +99,8 @@ export default function App() {
     AU: true,
     JP: true,
     UK_EU: false,
-    US: false
+    US: false,
+    GLOBAL: true
   });
   const [selectedSectors, setSelectedSectors] = useState<Record<SectorDomain, boolean>>({
     'FinTech & Digital Assets': true,
@@ -192,7 +158,8 @@ export default function App() {
       AU: true,
       JP: true,
       UK_EU: true,
-      US: true
+      US: true,
+      GLOBAL: true
     });
     setSelectedSectors({
       'FinTech & Digital Assets': true,
@@ -221,13 +188,13 @@ export default function App() {
   const handleWireItemClick = (regulator: string) => {
     setActiveTab('feed');
     if (regulator === 'MAS') {
-      setSelectedJurisdictions({ SG: true, HK: false, AU: false, JP: false, UK_EU: false, US: false });
+      setSelectedJurisdictions({ SG: true, HK: false, AU: false, JP: false, UK_EU: false, US: false, GLOBAL: false });
     } else if (regulator === 'HKMA') {
-      setSelectedJurisdictions({ SG: false, HK: true, AU: false, JP: false, UK_EU: false, US: false });
+      setSelectedJurisdictions({ SG: false, HK: true, AU: false, JP: false, UK_EU: false, US: false, GLOBAL: false });
     } else if (regulator === 'ASIC') {
-      setSelectedJurisdictions({ SG: false, HK: false, AU: true, JP: false, UK_EU: false, US: false });
+      setSelectedJurisdictions({ SG: false, HK: false, AU: true, JP: false, UK_EU: false, US: false, GLOBAL: false });
     } else if (regulator === 'JFSA') {
-      setSelectedJurisdictions({ SG: false, HK: false, AU: false, JP: true, UK_EU: false, US: false });
+      setSelectedJurisdictions({ SG: false, HK: false, AU: false, JP: true, UK_EU: false, US: false, GLOBAL: false });
     }
     setCurrentPage(1);
   };
@@ -246,19 +213,11 @@ export default function App() {
             return [...newItems, ...prev];
           });
         }
-        if (data.latencyMetrics && Array.isArray(data.latencyMetrics)) {
-          setEndpoints(prev =>
-            prev.map(ep => {
-              const match = data.latencyMetrics.find((m: any) =>
-                m.agency?.toLowerCase().includes(ep.agency.toLowerCase().slice(0, 3)) ||
-                m.jurisdiction?.toLowerCase().includes(ep.jurisdiction.toLowerCase().slice(0, 3))
-              );
-              return match ? { ...ep, pingMs: match.pingMs, status: match.status } : ep;
-            })
-          );
+        if (Array.isArray(data.endpoints) && Array.isArray(data.sources)) {
+          setEndpoints(mergeSyncResults(data.endpoints, data.sources));
         }
         const now = new Date();
-        setLastSyncTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' SGT');
+        setLastSyncTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Singapore' }) + ' SGT');
       }
     } catch (err) {
       console.warn('[RegSonar] Live feed sync note:', err);
@@ -274,7 +233,10 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         if (data.endpoints && Array.isArray(data.endpoints)) {
-          setEndpoints(data.endpoints);
+          // Keep the last sync summary; status probes don't fetch notices
+          setEndpoints(prev =>
+            data.endpoints.map((ep: EndpointMetric) => ({ ...ep, sync: prev.find(p => p.id === ep.id)?.sync }))
+          );
         }
       }
     } catch (err) {
@@ -297,6 +259,16 @@ export default function App() {
     return () => clearInterval(intervalId);
   }, [autoSyncInterval]);
 
+  const jurisdictionCounts = useMemo(() => {
+    const counts: Record<JurisdictionCode, number> = { SG: 0, HK: 0, AU: 0, JP: 0, UK_EU: 0, US: 0, GLOBAL: 0 };
+    notices.forEach(n => {
+      counts[n.jurisdictionCode] += 1;
+    });
+    return counts;
+  }, [notices]);
+
+  const ingestingSources = endpoints.filter(ep => ep.ingests && ep.sync?.ok).map(ep => ep.agency.replace(/ \(.*\)$/, ''));
+
   // Filter Notices
   const filteredNotices = useMemo(() => {
     return notices.filter(notice => {
@@ -305,7 +277,7 @@ export default function App() {
       if (headerJurisdiction === 'Hong Kong HKMA/SFC' && notice.jurisdictionCode !== 'HK') return false;
       if (headerJurisdiction === 'Australia ASIC' && notice.jurisdictionCode !== 'AU') return false;
       if (headerJurisdiction === 'Japan JFSA' && notice.jurisdictionCode !== 'JP') return false;
-      if (headerJurisdiction === 'Global Cross-Border' && notice.jurisdictionCode !== 'UK_EU' && notice.jurisdictionCode !== 'US') return false;
+      if (headerJurisdiction === 'Global Cross-Border' && notice.jurisdictionCode !== 'UK_EU' && notice.jurisdictionCode !== 'US' && notice.jurisdictionCode !== 'GLOBAL') return false;
 
       // Severity check
       if (selectedSeverities.length > 0 && !selectedSeverities.includes(notice.severity)) {
@@ -396,6 +368,7 @@ export default function App() {
         isSyncing={isSyncing}
         onTriggerSync={handleSyncFeeds}
         lastSyncTime={lastSyncTime}
+        endpoints={endpoints}
       />
 
       {/* Navigation Sub-bar & Real-Time Wire */}
@@ -414,6 +387,7 @@ export default function App() {
               totalNoticesCount={notices.length}
               criticalCount={notices.filter(n => n.severity === 'critical').length}
               consultationsCount={notices.filter(n => n.format === 'Consultations').length}
+              endpoints={endpoints}
               onFilterBySeverity={(sev) => {
                 if (sev === 'critical') {
                   setSelectedSeverities(['critical']);
@@ -440,6 +414,10 @@ export default function App() {
                   selectedFormat={selectedFormat}
                   onSelectFormat={setSelectedFormat}
                   onResetFilters={handleResetFilters}
+                  jurisdictionCounts={jurisdictionCounts}
+                  endpoints={endpoints}
+                  onPingEndpoints={handlePingEndpoints}
+                  isPinging={isPinging}
                 />
 
                 {/* Center Feed (6 cols): Active Notices Feed */}
@@ -453,7 +431,7 @@ export default function App() {
                       </span>
                       <span className="text-[#857F74] hidden sm:inline">•</span>
                       <span className="text-[#857F74] hidden sm:inline">
-                        US Federal Register (SEC/CFTC), HKMA, UK FCA, MAS &amp; ASIC
+                        {ingestingSources.length > 0 ? ingestingSources.join(', ') : 'Waiting for first sync'}
                       </span>
                     </div>
 
@@ -620,6 +598,7 @@ export default function App() {
                   onOpenLiveEndpointsModal={() => setIsEndpointsModalOpen(true)}
                   onTriggerSync={handleSyncFeeds}
                   isSyncing={isSyncing}
+                  endpoints={endpoints}
                 />
               </div>
             </div>
@@ -641,16 +620,19 @@ export default function App() {
 
       {/* Institutional Footer */}
       <Footer
+        endpoints={endpoints}
         onOpenMethodology={() =>
           setInfoModal({
             title: 'Statutory Ingestion Methodology',
-            body: 'RegSonar continuously polls 24 APAC regulatory statutory depositories using direct API gateways and verified gazette syndication feeds. Every incoming instrument is assigned a multi-factor impact score (0-10) evaluated against senior executive accountability provisions, capital surcharge risk, operational RTO limits, and cross-border equivalence.'
+            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA Open API, the MAS news search API, and the BIS media releases RSS feed. The UK FCA RSS feed is attempted but is usually blocked by a Cloudflare bot check. ASIC is status-checked only. Each source is fetched at most once every 10 minutes. Impact scores for live notices are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Notices that are not marked Live Feed are curated sample data.'
           })
         }
         onOpenAuditLog={() =>
           setInfoModal({
             title: 'Immutable Compliance Audit Log',
-            body: 'System Session ID: RS-APAC-SYNC-99201-LIVE\nHash Verification: SHA-256 (e8b7...43fa)\nStatus: 24 of 24 APAC feeds connected with 100% SLA verification. Zero missed statutory circulars in last 90 calendar days.'
+            body: `Last sync: ${lastSyncTime}\n\n${endpoints
+              .map(ep => `${ep.name}: ${ep.status}${ep.detail ? ` (${ep.detail})` : ''}${ep.ingests && ep.sync ? ` · ${ep.sync.ok ? `${ep.sync.count} notices` : `sync failed: ${ep.sync.error}`}` : ''}`)
+              .join('\n')}\n\nNo audit log is persisted yet; this shows the current session's source status only.`
           })
         }
         onOpenSecurity={() =>

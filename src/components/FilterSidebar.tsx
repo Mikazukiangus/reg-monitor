@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
+import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
 interface FilterSidebarProps {
   selectedSeverities: UrgencySeverity[];
@@ -11,6 +12,10 @@ interface FilterSidebarProps {
   selectedFormat: string | null;
   onSelectFormat: (format: string | null) => void;
   onResetFilters: () => void;
+  jurisdictionCounts: Record<JurisdictionCode, number>;
+  endpoints: EndpointMetric[];
+  onPingEndpoints: () => void;
+  isPinging: boolean;
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -22,29 +27,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onToggleSector,
   selectedFormat,
   onSelectFormat,
-  onResetFilters
+  onResetFilters,
+  jurisdictionCounts,
+  endpoints,
+  onPingEndpoints,
+  isPinging
 }) => {
-  const [latencies, setLatencies] = useState([
-    { name: 'MAS (Singapore)', ping: 12, status: 'Operational' },
-    { name: 'HKMA/SFC (Hong Kong)', ping: 14, status: 'Operational' },
-    { name: 'ASIC (Australia)', ping: 28, status: 'Operational' },
-    { name: 'JFSA (Japan)', ping: 32, status: 'Operational' }
-  ]);
-  const [isPinging, setIsPinging] = useState(false);
-
-  const handleTestPing = () => {
-    setIsPinging(true);
-    setTimeout(() => {
-      setLatencies([
-        { name: 'MAS (Singapore)', ping: Math.floor(10 + Math.random() * 5), status: 'Operational' },
-        { name: 'HKMA/SFC (Hong Kong)', ping: Math.floor(12 + Math.random() * 6), status: 'Operational' },
-        { name: 'ASIC (Australia)', ping: Math.floor(25 + Math.random() * 8), status: 'Operational' },
-        { name: 'JFSA (Japan)', ping: Math.floor(29 + Math.random() * 7), status: 'Operational' }
-      ]);
-      setIsPinging(false);
-    }, 600);
-  };
-
   return (
     <aside className="lg:col-span-3 flex flex-col gap-3">
       {/* Filters & Facets Panel */}
@@ -132,7 +120,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  12
+                  {jurisdictionCounts.SG}
                 </span>
               </label>
 
@@ -149,7 +137,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  8
+                  {jurisdictionCounts.HK}
                 </span>
               </label>
 
@@ -166,7 +154,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  7
+                  {jurisdictionCounts.AU}
                 </span>
               </label>
 
@@ -183,7 +171,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  5
+                  {jurisdictionCounts.JP}
                 </span>
               </label>
 
@@ -200,7 +188,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  4
+                  {jurisdictionCounts.UK_EU}
                 </span>
               </label>
 
@@ -217,7 +205,24 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                  2
+                  {jurisdictionCounts.US}
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedJurisdictions.GLOBAL}
+                    onChange={() => onToggleJurisdiction('GLOBAL')}
+                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                  />
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.GLOBAL ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                    Global (BIS, Basel Committee)
+                  </span>
+                </div>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                  {jurisdictionCounts.GLOBAL}
                 </span>
               </label>
             </div>
@@ -325,26 +330,31 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             Jurisdiction Mesh
           </span>
           <button
-            onClick={handleTestPing}
-            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#15803D] hover:underline font-semibold"
-            title="Click to ping gateways"
+            onClick={onPingEndpoints}
+            disabled={isPinging}
+            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#0D5C63] hover:underline font-semibold disabled:opacity-60"
+            title="Re-check the monitored endpoints"
           >
-            <span className={`w-1.5 h-1.5 rounded-full bg-[#15803D] ${isPinging ? 'animate-ping' : ''}`}></span>
-            Real-time Ping
+            <span className={`w-1.5 h-1.5 rounded-full bg-[#0D5C63] ${isPinging ? 'animate-ping' : ''}`}></span>
+            {isPinging ? 'Checking...' : 'Check Now'}
           </button>
         </div>
         <p className="font-['Inter'] text-[12px] text-[#857F74] mb-2.5">
-          Latency to primary APAC regulatory statutory depositories.
+          Response time from the RegSonar server to each monitored source.
         </p>
 
         <div className="space-y-2">
-          {latencies.map((item) => (
-            <div key={item.name} className="flex items-center justify-between text-[12px]">
-              <span className="text-[#57534E] font-['Inter']">{item.name}</span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#15803D] font-semibold flex items-center gap-1">
-                <span>{item.ping}ms</span>
-                <span className="text-[#857F74]">•</span>
-                <span>{item.status}</span>
+          {endpoints.map((ep) => (
+            <div key={ep.id} className="flex items-center justify-between text-[12px]" title={ep.detail}>
+              <span className="text-[#57534E] font-['Inter']">{ep.agency}</span>
+              <span className={`font-['JetBrains_Mono'] text-[11px] font-semibold flex items-center gap-1 ${STATUS_STYLES[ep.status].text}`}>
+                {ep.pingMs !== null && (
+                  <>
+                    <span>{ep.pingMs}ms</span>
+                    <span className="text-[#857F74]">•</span>
+                  </>
+                )}
+                <span>{ep.status}</span>
               </span>
             </div>
           ))}

@@ -21,7 +21,7 @@ interface NormalizedNotice {
   title: string;
   regulator: string;
   jurisdiction: string;
-  jurisdictionCode: 'SG' | 'HK' | 'AU' | 'JP' | 'UK_EU' | 'US';
+  jurisdictionCode: 'SG' | 'HK' | 'AU' | 'JP' | 'UK_EU' | 'US' | 'GLOBAL';
   type: string;
   typeColorClass: {
     bg: string;
@@ -49,8 +49,6 @@ interface NormalizedNotice {
   isLiveFeed?: boolean;
 }
 
-// In-memory cache for live notices and latency
-let cachedLiveNotices: NormalizedNotice[] = [];
 let lastSyncTimestamp = new Date().toISOString();
 
 // Helper to calculate relative time
@@ -93,7 +91,7 @@ function classifySector(text: string): 'FinTech & Digital Assets' | 'Banking & C
 // Helper to determine format
 function classifyFormat(type: string, title: string): 'Circulars' | 'Consultations' | 'Enforcement' | 'Guidelines' | 'Technical Standards' {
   const lower = (type + ' ' + title).toLowerCase();
-  if (lower.includes('proposed') || lower.includes('consultation') || lower.includes('comment') || lower.includes('draft')) {
+  if (lower.includes('proposed') || lower.includes('consult') || lower.includes('comment') || lower.includes('draft')) {
     return 'Consultations';
   }
   if (lower.includes('enforcement') || lower.includes('penalty') || lower.includes('proceeding') || lower.includes('action') || lower.includes('order')) {
@@ -125,275 +123,500 @@ function getTypeColor(format: string) {
 }
 
 const REG_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 (RegSonar-Feed-Gateway/2.0)';
+const FETCH_TIMEOUT_MS = 8000;
+
+// Rough impact heuristic by instrument format. Not an AI assessment.
+function estimateImpact(format: string): number {
+  switch (format) {
+    case 'Enforcement':
+      return 8.5;
+    case 'Consultations':
+      return 7.8;
+    case 'Technical Standards':
+      return 7.2;
+    case 'Guidelines':
+      return 7.0;
+    default:
+      return 6.5;
+  }
+}
+
+function severityFor(score: number): 'critical' | 'high' | 'info' {
+  return score >= 8.5 ? 'critical' : score >= 7.5 ? 'high' : 'info';
+}
+
+function stripHtml(text: string): string {
+  return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+async function fetchOrThrow(url: string): Promise<globalThis.Response> {
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: { 'User-Agent': REG_USER_AGENT }
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return res;
+}
 
 // Fetch US Federal Register API notices (SEC & CFTC)
 async function fetchFederalRegister(): Promise<NormalizedNotice[]> {
-  try {
-    const url = 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4';
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(6000),
-      headers: { 'User-Agent': REG_USER_AGENT }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    const results = data.results || [];
+  const url = 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4';
+  const res = await fetchOrThrow(url);
+  const data = await res.json();
+  const results = data.results || [];
 
-    return results.map((doc: any, idx: number) => {
-      const agencies = doc.agencies?.map((a: any) => a.raw_name || a.name).join(' & ') || 'US SEC & CFTC';
-      const isSec = agencies.toLowerCase().includes('securities');
-      const reg = isSec ? 'US SEC' : 'US CFTC';
-      const format = classifyFormat(doc.type || '', doc.title || '');
-      const sector = classifySector((doc.title || '') + ' ' + (doc.abstract || ''));
-      const deadline = doc.comments_close_on || doc.effective_on;
+  return results.map((doc: any, idx: number) => {
+    const agencies = doc.agencies?.map((a: any) => a.raw_name || a.name).join(' & ') || 'US SEC & CFTC';
+    const isSec = agencies.toLowerCase().includes('securities');
+    const reg = isSec ? 'US SEC' : 'US CFTC';
+    const format = classifyFormat(doc.type || '', doc.title || '');
+    const sector = classifySector((doc.title || '') + ' ' + (doc.abstract || ''));
+    const commentsClose: string | undefined = doc.comments_close_on || undefined;
+    const effectiveOn: string | undefined = doc.effective_on || undefined;
 
-      let score = 7.5;
-      if (doc.type === 'Rule') score = 8.7;
-      if (doc.type === 'Proposed Rule') score = 8.1;
+    let score = 7.5;
+    if (doc.type === 'Rule') score = 8.7;
+    if (doc.type === 'Proposed Rule') score = 8.1;
 
-      return {
-        id: `fedreg-${doc.document_number || idx}`,
-        ref: `FedReg: ${doc.citation || doc.document_number || '2026-US'}`,
-        title: doc.title,
-        regulator: reg,
-        jurisdiction: 'UNITED STATES',
-        jurisdictionCode: 'US',
-        type: (doc.type || 'REGULATORY RULE').toUpperCase(),
-        typeColorClass: getTypeColor(format),
-        impactScore: score,
-        issuedTimeAgo: getRelativeTime(doc.publication_date),
-        statutoryDeadline: deadline ? `Statutory Date: ${deadline}` : 'Effective on Publication',
-        deadlineDate: deadline || undefined,
-        statusBadge: {
-          text: deadline ? `Filing Due: ${deadline}` : 'Effective Immediately',
-          type: deadline ? 'deadline' : 'immediate'
-        },
-        aiSynthesis: {
-          title: 'Federal Register Statutory Analysis',
-          points: [
-            doc.abstract ? doc.abstract.slice(0, 180) + '...' : 'Mandatory regulatory provision issued pursuant to federal securities statutes.',
-            'Direct impact on cross-border broker-dealer registrations, swap data repositories, and qualified institutional clearing operations.',
-            'Harmonized with CFTC Title VII Dodd-Frank extraterritorial jurisdiction guidelines for APAC participants.'
-          ]
-        },
-        summary: doc.abstract || 'Regulatory release published in the US Federal Register governing capital markets oversight and exchange conduct.',
-        impactedUnits: ['Capital Markets', 'Cross-Border Compliance', 'OTC Clearing'],
-        tags: [reg, format, 'Federal Register', sector],
-        sector,
-        format,
-        severity: score >= 8.5 ? 'critical' : score >= 7.5 ? 'high' : 'info',
-        dossierUrl: doc.html_url || doc.pdf_url,
-        isLiveFeed: true
-      };
-    });
-  } catch (err: any) {
-    console.log('[RegSonar Feed] Federal Register notice query notice:', err?.message || 'offline');
-    return [];
-  }
-}
-
-// Fetch UK FCA RSS feed
-async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
-  try {
-    const url = 'https://www.fca.org.uk/news/rss.xml';
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(5000),
-      headers: { 'User-Agent': REG_USER_AGENT }
-    });
-    if (!res.ok) return [];
-    const xml = await res.text();
-    const parsed = xmlParser.parse(xml);
-    const items = parsed.rss?.channel?.item || [];
-    const slice = Array.isArray(items) ? items.slice(0, 3) : [items];
-
-    return slice.map((item: any, idx: number) => {
-      const format = classifyFormat('', item.title || '');
-      const sector = classifySector((item.title || '') + ' ' + (item.description || ''));
-      const score = item.title?.toLowerCase().includes('warning') || item.title?.toLowerCase().includes('fine') ? 8.9 : 7.4;
-
-      return {
-        id: `fca-${idx}-${Date.now() % 100000}`,
-        ref: `Ref: FCA-NEWS-${idx + 101}`,
-        title: item.title || 'FCA Regulatory Circular',
-        regulator: 'UK FCA',
-        jurisdiction: 'CROSS-BORDER',
-        jurisdictionCode: 'UK_EU',
-        type: format.toUpperCase(),
-        typeColorClass: getTypeColor(format),
-        impactScore: score,
-        issuedTimeAgo: getRelativeTime(item.pubDate),
-        statutoryDeadline: 'Supervisory Review Active',
-        statusBadge: {
-          text: 'Supervisory Directive',
-          type: 'standard'
-        },
-        aiSynthesis: {
-          title: 'UK FCA Prudential & Conduct Synthesis',
-          points: [
-            item.description ? item.description.slice(0, 160) + '...' : 'Supervisory policy update issued under the Financial Services and Markets Act.',
-            'Direct cross-border equivalence impact for UK entities operating designated branches in Hong Kong and Singapore.',
-            'Mandates compliance review across governance controls, consumer duty standards, and reporting thresholds.'
-          ]
-        },
-        summary: item.description || 'Regulatory notification from the UK Financial Conduct Authority.',
-        impactedUnits: ['Prudential Risk', 'International Compliance', 'Wealth Operations'],
-        tags: ['FCA', 'Cross-Border', format, sector],
-        sector,
-        format,
-        severity: score >= 8.5 ? 'critical' : 'high',
-        dossierUrl: item.link,
-        isLiveFeed: true
-      };
-    });
-  } catch (err: any) {
-    console.log('[RegSonar Feed] FCA feed notice:', err?.message || 'offline');
-    return [];
-  }
-}
-
-// Fetch HKMA Open API Data with Resilient Fail-Safe Gateway
-async function fetchHkmaLiveNotice(): Promise<NormalizedNotice[]> {
-  const endDay = new Date().toISOString().split('T')[0];
-  let aggBal = '44,821';
-
-  try {
-    // Attempt fast ping to official HKMA portal (3s timeout)
-    const portalUrl = 'https://www.hkma.gov.hk/eng/';
-    const res = await fetch(portalUrl, {
-      signal: AbortSignal.timeout(3000),
-      headers: { 'User-Agent': REG_USER_AGENT }
-    });
-    if (res.ok) {
-      aggBal = '45,120';
+    let statutoryDeadline = 'No date published';
+    let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
+    if (commentsClose) {
+      statutoryDeadline = `Comments close: ${commentsClose}`;
+      statusBadge = { text: `Comments close: ${commentsClose}`, type: 'deadline' };
+    } else if (effectiveOn) {
+      statutoryDeadline = `Effective: ${effectiveOn}`;
+      statusBadge = { text: `Effective: ${effectiveOn}`, type: 'action' };
     }
-  } catch (_silentErr) {
-    // Graceful fallback without raising errors
+
+    return {
+      id: `fedreg-${doc.document_number || idx}`,
+      ref: `FedReg: ${doc.citation || doc.document_number}`,
+      title: doc.title,
+      regulator: reg,
+      jurisdiction: 'UNITED STATES',
+      jurisdictionCode: 'US',
+      type: (doc.type || 'NOTICE').toUpperCase(),
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(doc.publication_date),
+      statutoryDeadline,
+      deadlineDate: commentsClose || effectiveOn,
+      statusBadge,
+      summary: doc.abstract || 'No abstract published in the Federal Register for this document.',
+      tags: [reg, format, 'Federal Register', sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: doc.html_url || doc.pdf_url,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Fetch UK FCA RSS feed. The FCA site sits behind a Cloudflare bot challenge,
+// so this usually fails with HTTP 403 from server environments.
+async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow('https://www.fca.org.uk/news/rss.xml');
+  const xml = await res.text();
+  const parsed = xmlParser.parse(xml);
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
+  }
+  const items = parsed.rss.channel.item || [];
+  const slice = (Array.isArray(items) ? items : [items]).slice(0, 3);
+
+  return slice.map((item: any) => {
+    const title = String(item.title || 'FCA publication');
+    const description = item.description ? stripHtml(String(item.description)) : undefined;
+    const format = classifyFormat('', title);
+    const sector = classifySector(title + ' ' + (description || ''));
+    const score = estimateImpact(format);
+    const slug = String(item.link || title).split('/').filter(Boolean).pop();
+
+    return {
+      id: `fca-${slug}`,
+      ref: `FCA: ${slug}`,
+      title,
+      regulator: 'UK FCA',
+      jurisdiction: 'UNITED KINGDOM',
+      jurisdictionCode: 'UK_EU',
+      type: format.toUpperCase(),
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item.pubDate),
+      summary: description,
+      tags: ['FCA', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: item.link,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Routine market-operation releases that are not regulatory notices
+const HKMA_ROUTINE_RELEASE = /tender (results|information)|exchange fund (bills|notes)|government bonds?\b|institutional bonds/i;
+
+// Fetch HKMA press releases from the HKMA Open API
+async function fetchHkmaPressReleases(): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow('https://api.hkma.gov.hk/public/press-releases?lang=en&pagesize=20');
+  const data = await res.json();
+  if (!data.header?.success) {
+    throw new Error(`HKMA API error ${data.header?.err_code}: ${data.header?.err_msg}`);
+  }
+  const records: any[] = data.result?.records || [];
+
+  return records
+    .filter((r) => r.title && !HKMA_ROUTINE_RELEASE.test(r.title))
+    .slice(0, 4)
+    .map((r) => {
+      const title = stripHtml(String(r.title));
+      const format = classifyFormat('', title);
+      const sector = classifySector(title);
+      const score = estimateImpact(format);
+      const slug = String(r.link || '').split('/').filter(Boolean).pop() || r.date;
+
+      return {
+        id: `hkma-pr-${slug}`,
+        ref: `HKMA Press Release ${slug}`,
+        title,
+        regulator: 'HKMA',
+        jurisdiction: 'HONG KONG',
+        jurisdictionCode: 'HK',
+        type: 'PRESS RELEASE',
+        typeColorClass: getTypeColor(format),
+        impactScore: score,
+        issuedTimeAgo: getRelativeTime(r.date),
+        tags: ['HKMA', format, sector],
+        sector,
+        format,
+        severity: severityFor(score),
+        dossierUrl: r.link,
+        isLiveFeed: true
+      };
+    });
+}
+
+// Fetch the latest HKMA daily interbank liquidity figures from the HKMA Open API
+async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow('https://api.hkma.gov.hk/public/market-data-and-statistics/daily-monetary-statistics/daily-figures-interbank-liquidity?pagesize=1');
+  const data = await res.json();
+  const rec = data.result?.records?.[0];
+  if (!data.header?.success || !rec) {
+    throw new Error(`HKMA API error ${data.header?.err_code}: ${data.header?.err_msg}`);
   }
 
+  const balance = Number(rec.closing_balance).toLocaleString('en-US');
   return [
     {
-      id: `hkma-liquidity-live-${endDay}`,
-      ref: `Ref: HKMA-LIQ-${endDay}`,
-      title: `HKMA Interbank Liquidity Facility & Closing Aggregate Balance Directive`,
+      id: `hkma-liquidity-${rec.end_of_date}`,
+      ref: `HKMA Daily Monetary Statistics ${rec.end_of_date}`,
+      title: `HKMA interbank liquidity: closing aggregate balance HK$${balance}M (${rec.end_of_date})`,
       regulator: 'HKMA',
       jurisdiction: 'HONG KONG',
       jurisdictionCode: 'HK',
-      type: 'MONETARY CIRCULAR',
+      type: 'MARKET DATA',
       typeColorClass: getTypeColor('Circulars'),
-      impactScore: 8.6,
-      issuedTimeAgo: getRelativeTime(endDay),
-      statutoryDeadline: 'Daily Reporting at 17:00 HKT',
+      impactScore: 5.0,
+      issuedTimeAgo: getRelativeTime(rec.end_of_date),
       statusBadge: {
-        text: `Closing Bal: HK$${aggBal}M`,
+        text: `Closing Bal: HK$${balance}M`,
         type: 'standard'
       },
-      aiSynthesis: {
-        title: 'HKMA Aggregate Balance & Liquidity Risk Analysis',
-        points: [
-          `Authorized Institutions (AIs) must maintain designated Liquidity Coverage Ratios (LCR) aligned with current aggregate balance levels (HK$${aggBal}M).`,
-          'Requires immediate intraday notification to HKMA Banking Supervision Department for custodial accounts experiencing liquidity variance > 12%.',
-          'Linked to HKMA Currency Board Operational Regulations and Basel III net stable funding compliance.'
-        ]
-      },
-      summary: `HKMA daily statutory figures for interbank liquidity. Closing aggregate balance registered at HK$${aggBal}M for date ${endDay}.`,
-      impactedUnits: ['Treasury & ALM', 'Liquidity Management', 'Custodial Operations'],
-      tags: ['HKMA', 'Liquidity Facility', 'Banking & Capital Markets', 'Open Gateway'],
+      summary: `Closing aggregate balance HK$${balance}M; overnight HIBOR ${rec.hibor_overnight}%; 1-month HIBOR fixing ${rec.hibor_fixing_1m}%; discount window base rate ${rec.disc_win_base_rate}%. Source: HKMA Open API daily monetary statistics.`,
+      tags: ['HKMA', 'Liquidity', 'Banking & Capital Markets', 'Open API'],
       sector: 'Banking & Capital Markets',
       format: 'Circulars',
-      severity: 'high',
-      dossierUrl: 'https://www.hkma.gov.hk/eng/key-functions/monetary-stability/open-market-operations-and-facilities/aggregate-balance/',
+      severity: 'info',
+      dossierUrl: 'https://www.hkma.gov.hk/eng/data-publications-and-research/data-and-statistics/daily-monetary-statistics/',
       isLiveFeed: true
     }
   ];
 }
 
-// Endpoint health and latency checker
-async function getEndpointsHealth() {
-  const endpoints = [
-    {
-      id: 'fed-reg',
-      name: 'US Federal Register API',
-      agency: 'SEC & CFTC',
-      jurisdiction: 'US Federal',
-      url: 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&order=newest&per_page=1',
-      protocol: 'REST JSON',
-      auth: 'Public / None'
-    },
-    {
-      id: 'hkma-api',
-      name: 'HKMA Open Gateway',
-      agency: 'HKMA (Hong Kong)',
-      jurisdiction: 'Hong Kong',
-      url: 'https://www.hkma.gov.hk/eng/',
-      protocol: 'HTTPS Portal',
-      auth: 'Public / Open'
-    },
-    {
-      id: 'fca-rss',
-      name: 'UK FCA Regulatory Feed',
-      agency: 'FCA (United Kingdom)',
-      jurisdiction: 'UK / Cross-Border',
-      url: 'https://www.fca.org.uk/news/rss.xml',
-      protocol: 'RSS XML',
-      auth: 'Public / Open'
-    },
-    {
-      id: 'mas-gov',
-      name: 'Singapore MAS & Data Portal',
-      agency: 'MAS (Singapore)',
-      jurisdiction: 'Singapore',
-      url: 'https://www.mas.gov.sg/news',
-      protocol: 'Web Gateway / JSON',
-      auth: 'Public / Open'
-    },
-    {
-      id: 'asic-gov',
-      name: 'Australia ASIC Regulatory Tracker',
-      agency: 'ASIC (Australia)',
-      jurisdiction: 'Australia',
-      url: 'https://asic.gov.au',
-      protocol: 'Open Data CKAN',
-      auth: 'Public / Open'
-    },
-    {
-      id: 'bis-portal',
-      name: 'Bank for International Settlements',
-      agency: 'BIS & Basel Committee',
-      jurisdiction: 'Global Cross-Border',
-      url: 'https://www.bis.org',
-      protocol: 'Prudential Gateway',
-      auth: 'Public / Open'
-    }
-  ];
+// Fetch MAS media releases and enforcement actions from the search API behind
+// mas.gov.sg/news. It is undocumented, and MAS serves a "Maintenance" page to
+// non-browser user agents, so this relies on REG_USER_AGENT.
+async function fetchMasMediaReleases(): Promise<NormalizedNotice[]> {
+  const params = new URLSearchParams();
+  params.append('q', '*:*');
+  params.append('fq', 'mas_mastercontenttypes_sm:"News"');
+  params.append('fq', 'mas_contenttype_s:("Media Releases" OR "Enforcement Actions Media Releases")');
+  params.append('sort', 'mas_date_tdt desc');
+  params.append('rows', '4');
+  params.append('wt', 'json');
+  const res = await fetchOrThrow(`https://www.mas.gov.sg/api/v1/search?${params}`);
+  if (!res.headers.get('content-type')?.includes('json')) {
+    throw new Error('MAS returned a non-JSON page (possibly maintenance or bot filtering)');
+  }
+  const data = await res.json();
+  const docs: any[] = data.response?.docs || [];
 
-  const results = await Promise.all(
-    endpoints.map(async (ep) => {
-      const start = Date.now();
-      try {
-        const res = await fetch(ep.url, {
-          signal: AbortSignal.timeout(5000),
-          headers: { 'User-Agent': REG_USER_AGENT }
-        });
-        const pingMs = Date.now() - start;
-        const isOk = res.ok || res.status < 400 || res.status === 403;
-        return {
-          ...ep,
-          status: isOk ? ('Operational' as const) : ('Degraded' as const),
-          statusCode: res.status,
-          pingMs
-        };
-      } catch (err: any) {
-        const pingMs = Date.now() - start;
-        return {
-          ...ep,
-          status: 'Operational' as const, // Fallback gracefully with synthetic ping
-          statusCode: 200,
-          pingMs: Math.max(42, Math.min(pingMs, 145))
-        };
+  return docs.map((doc) => {
+    const title = stripHtml(String(doc.document_title_string_s));
+    const summary = doc.document_shortsummary_t?.[0];
+    const isEnforcement = doc.mas_contenttype_s === 'Enforcement Actions Media Releases';
+    const format = isEnforcement ? 'Enforcement' : classifyFormat('', title);
+    const sector = classifySector(title + ' ' + (summary || ''));
+    const score = estimateImpact(format);
+    const slug = String(doc.page_url_s).split('/').filter(Boolean).pop();
+
+    return {
+      id: `mas-${slug}`,
+      ref: `MAS ${doc.mas_contenttype_s}`,
+      title,
+      regulator: 'MAS',
+      jurisdiction: 'SINGAPORE',
+      jurisdictionCode: 'SG',
+      type: isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(doc.mas_date_tdt),
+      summary,
+      tags: ['MAS', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: `https://www.mas.gov.sg${doc.page_url_s}`,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Fetch BIS media releases (RSS 1.0 / RDF), which include Basel Committee announcements
+async function fetchBisPressReleases(): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow('https://www.bis.org/doclist/all_pressrels.rss');
+  const parsed = xmlParser.parse(await res.text());
+  const items = parsed['rdf:RDF']?.item;
+  if (!items) {
+    throw new Error('Response was not an RSS feed');
+  }
+
+  return (Array.isArray(items) ? items : [items]).slice(0, 4).map((item: any) => {
+    const title = stripHtml(String(item.title));
+    const description = item.description ? stripHtml(String(item.description)) : undefined;
+    const format = classifyFormat('', title);
+    const sector = classifySector(title + ' ' + (description || ''));
+    const score = estimateImpact(format);
+    const slug = String(item.link).split('/').filter(Boolean).pop();
+    const regulator = /basel committee/i.test(title + ' ' + (description || '')) ? 'BCBS' : 'BIS';
+
+    return {
+      id: `bis-${slug}`,
+      ref: `BIS Media Release ${slug?.slice(0, 8)}`,
+      title,
+      regulator,
+      jurisdiction: 'GLOBAL',
+      jurisdictionCode: 'GLOBAL',
+      type: 'MEDIA RELEASE',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item['dc:date']),
+      summary: description,
+      tags: [regulator, format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: item.link,
+      isLiveFeed: true
+    };
+  });
+}
+
+type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
+
+interface EndpointDefinition {
+  id: string;
+  name: string;
+  agency: string;
+  jurisdiction: string;
+  url: string;
+  protocol: string;
+  auth: string;
+  ingests: boolean;
+}
+
+const ENDPOINTS: EndpointDefinition[] = [
+  {
+    id: 'fed-reg',
+    name: 'US Federal Register API',
+    agency: 'SEC & CFTC',
+    jurisdiction: 'US Federal',
+    url: 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&order=newest&per_page=1',
+    protocol: 'REST JSON',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'hkma-api',
+    name: 'HKMA Open API',
+    agency: 'HKMA (Hong Kong)',
+    jurisdiction: 'Hong Kong',
+    url: 'https://api.hkma.gov.hk/public/press-releases?lang=en&pagesize=1',
+    protocol: 'REST JSON',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'fca-rss',
+    name: 'UK FCA News RSS',
+    agency: 'FCA (United Kingdom)',
+    jurisdiction: 'United Kingdom',
+    url: 'https://www.fca.org.uk/news/rss.xml',
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'mas-gov',
+    name: 'Singapore MAS News Search API',
+    agency: 'MAS (Singapore)',
+    jurisdiction: 'Singapore',
+    url: 'https://www.mas.gov.sg/api/v1/search?q=*:*&rows=1&wt=json',
+    protocol: 'JSON (undocumented)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'asic-gov',
+    name: 'Australia ASIC Portal',
+    agency: 'ASIC (Australia)',
+    jurisdiction: 'Australia',
+    url: 'https://asic.gov.au',
+    protocol: 'HTTPS Portal',
+    auth: 'Public / None',
+    ingests: false
+  },
+  {
+    id: 'bis-portal',
+    name: 'BIS Media Releases RSS',
+    agency: 'BIS & Basel Committee',
+    jurisdiction: 'Global',
+    url: 'https://www.bis.org/doclist/all_pressrels.rss',
+    protocol: 'RSS 1.0 (RDF)',
+    auth: 'Public / None',
+    ingests: true
+  }
+];
+
+// Pages that return HTTP 200 but carry no usable content
+const UNUSABLE_PAGE_TITLE = /maintenance|just a moment|attention required|access denied|service unavailable/i;
+const FIREWALL_BLOCK_BODY = /your request has been blocked/i;
+
+// Probe one endpoint and report what actually happened. Never invents a status.
+async function probeEndpoint(ep: EndpointDefinition) {
+  const start = Date.now();
+  try {
+    const res = await fetch(ep.url, {
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      headers: { 'User-Agent': REG_USER_AGENT }
+    });
+    const body = await res.text();
+    const pingMs = Date.now() - start;
+    const pageTitle = body.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim();
+
+    let status: EndpointStatus;
+    let detail: string;
+    if (res.status >= 500) {
+      status = 'Down';
+      detail = `HTTP ${res.status}`;
+    } else if (!res.ok) {
+      status = 'Degraded';
+      if (FIREWALL_BLOCK_BODY.test(body)) {
+        detail = `HTTP ${res.status}: blocked by site firewall (likely rate limiting)`;
+      } else if (pageTitle && UNUSABLE_PAGE_TITLE.test(pageTitle)) {
+        detail = `HTTP ${res.status}: blocked ("${pageTitle}")`;
+      } else {
+        detail = `HTTP ${res.status}`;
       }
-    })
-  );
+    } else if (pageTitle && UNUSABLE_PAGE_TITLE.test(pageTitle)) {
+      status = 'Degraded';
+      detail = `HTTP ${res.status} but page says "${pageTitle}"`;
+    } else {
+      status = 'Operational';
+      detail = `HTTP ${res.status}`;
+    }
 
-  return results;
+    return { ...ep, status, statusCode: res.status, pingMs, detail };
+  } catch (err: any) {
+    const detail = err?.name === 'TimeoutError'
+      ? `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`
+      : err?.cause?.code || err?.message || 'Request failed';
+    return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail };
+  }
+}
+
+// Government APIs (HKMA in particular) rate-limit aggressively, so probes and
+// source fetches are cached rather than repeated on every client poll.
+const HEALTH_TTL_MS = 60 * 1000;
+const SOURCE_TTL_MS = 10 * 60 * 1000;
+
+let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
+
+function getEndpointsHealth() {
+  if (!healthCache || Date.now() - healthCache.at > HEALTH_TTL_MS) {
+    healthCache = { at: Date.now(), results: Promise.all(ENDPOINTS.map(probeEndpoint)) };
+  }
+  return healthCache.results;
+}
+
+// Ingestion sources, keyed to the endpoint they read from
+const SOURCES: { endpointId: string; name: string; fetch: () => Promise<NormalizedNotice[]> }[] = [
+  { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
+  { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
+  { endpointId: 'hkma-api', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases },
+  { endpointId: 'hkma-api', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity },
+  { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
+  { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
+];
+
+interface SourceState {
+  notices: NormalizedNotice[];
+  lastSuccessAt: string | null;
+  lastAttemptAt: number;
+  error?: string;
+  inFlight?: Promise<void>;
+}
+
+const sourceState = new Map<string, SourceState>();
+
+function describeError(err: any): string {
+  if (err?.name === 'TimeoutError') return `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`;
+  return err?.message || 'Fetch failed';
+}
+
+// Refresh a source if its cache has expired. On failure the last good notices
+// are kept and the error is reported alongside them.
+async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceState> {
+  let state = sourceState.get(source.name);
+  if (!state) {
+    state = { notices: [], lastSuccessAt: null, lastAttemptAt: 0 };
+    sourceState.set(source.name, state);
+  }
+  if (state.inFlight) {
+    await state.inFlight;
+  } else if (Date.now() - state.lastAttemptAt > SOURCE_TTL_MS) {
+    const s = state;
+    s.lastAttemptAt = Date.now();
+    s.inFlight = source.fetch()
+      .then((notices) => {
+        s.notices = notices;
+        s.lastSuccessAt = new Date().toISOString();
+        s.error = undefined;
+      })
+      .catch((err) => {
+        s.error = describeError(err);
+        console.log(`[RegSonar Feed Sentinel] ${source.name} failed: ${s.error}`);
+      })
+      .finally(() => {
+        s.inFlight = undefined;
+      });
+    await s.inFlight;
+  }
+  return state;
 }
 
 async function createServer() {
@@ -433,17 +656,21 @@ async function createServer() {
   app.all('/api/feeds/sync', async (_req: Request, res: Response) => {
     try {
       console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
-      const [fedRegItems, fcaItems, hkmaItems, metrics] = await Promise.all([
-        fetchFederalRegister(),
-        fetchFcaFeed(),
-        fetchHkmaLiveNotice(),
+      const [states, endpoints] = await Promise.all([
+        Promise.all(SOURCES.map(refreshSource)),
         getEndpointsHealth()
       ]);
 
-      const liveNotices = [...fedRegItems, ...fcaItems, ...hkmaItems];
+      const sources = SOURCES.map((s, i) => ({
+        endpointId: s.endpointId,
+        name: s.name,
+        ok: !states[i].error,
+        count: states[i].notices.length,
+        lastSuccessAt: states[i].lastSuccessAt,
+        error: states[i].error
+      }));
 
-      // Update in-memory cache
-      cachedLiveNotices = liveNotices;
+      const liveNotices = states.flatMap(st => st.notices);
       lastSyncTimestamp = new Date().toISOString();
 
       res.json({
@@ -451,12 +678,8 @@ async function createServer() {
         count: liveNotices.length,
         lastSync: lastSyncTimestamp,
         notices: liveNotices,
-        latencyMetrics: metrics.map(m => ({
-          agency: m.agency,
-          jurisdiction: m.jurisdiction,
-          pingMs: m.pingMs,
-          status: m.status
-        }))
+        sources,
+        endpoints
       });
     } catch (error: any) {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);

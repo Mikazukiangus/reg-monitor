@@ -6,7 +6,8 @@ export type JurisdictionCode =
   | 'AU'
   | 'JP'
   | 'UK_EU'
-  | 'US';
+  | 'US'
+  | 'GLOBAL';
 
 export type SectorDomain =
   | 'FinTech & Digital Assets'

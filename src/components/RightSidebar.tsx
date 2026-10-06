@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DeadlineItem, TrendBrief } from '../types/regulatory';
+import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
 interface RightSidebarProps {
   deadlines: DeadlineItem[];
@@ -12,6 +13,7 @@ interface RightSidebarProps {
   onOpenLiveEndpointsModal?: () => void;
   onTriggerSync?: () => void;
   isSyncing?: boolean;
+  endpoints?: EndpointMetric[];
 }
 
 export const RightSidebar: React.FC<RightSidebarProps> = ({
@@ -24,8 +26,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onSelectDeadlineNotice,
   onOpenLiveEndpointsModal,
   onTriggerSync,
-  isSyncing = false
+  isSyncing = false,
+  endpoints = []
 }) => {
+  const operationalCount = endpoints.filter(e => e.status === 'Operational').length;
   const [copiedAuditId, setCopiedAuditId] = useState(false);
   const auditId = 'RS-APAC-SYNC-99201-LIVE';
 
@@ -129,29 +133,23 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               Live Feeds Gateway
             </span>
           </div>
-          <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] px-2 py-0.5 rounded border border-[#86EFAC] flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse"></span>
-            6 Connected
+          <span className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded border flex items-center gap-1 ${
+            operationalCount === endpoints.length ? STATUS_STYLES.Operational.badge : STATUS_STYLES.Degraded.badge
+          }`}>
+            {operationalCount}/{endpoints.length} Up
           </span>
         </div>
 
         <div className="space-y-1.5 mb-3 text-[11px]">
-          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
-            <span className="font-['JetBrains_Mono'] text-[#57534E]">US Federal Register (SEC)</span>
-            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
-          </div>
-          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
-            <span className="font-['JetBrains_Mono'] text-[#57534E]">HKMA Open API Portal</span>
-            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
-          </div>
-          <div className="flex items-center justify-between py-1 border-b border-[#FAF7F2]">
-            <span className="font-['JetBrains_Mono'] text-[#57534E]">UK FCA Regulatory RSS</span>
-            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Live (200 OK)</span>
-          </div>
-          <div className="flex items-center justify-between py-1">
-            <span className="font-['JetBrains_Mono'] text-[#57534E]">MAS &amp; ASIC Gateways</span>
-            <span className="font-['JetBrains_Mono'] font-bold text-[#15803D]">Active</span>
-          </div>
+          {endpoints.map((ep) => (
+            <div key={ep.id} className="flex items-center justify-between py-1 border-b border-[#FAF7F2] last:border-b-0" title={ep.detail}>
+              <span className="font-['JetBrains_Mono'] text-[#57534E]">{ep.name}</span>
+              <span className={`font-['JetBrains_Mono'] font-bold ${STATUS_STYLES[ep.status].text}`}>
+                {ep.status}
+                {ep.statusCode ? ` (${ep.statusCode})` : ''}
+              </span>
+            </div>
+          ))}
         </div>
 
         <div className="flex items-center gap-2">
