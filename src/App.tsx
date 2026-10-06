@@ -52,11 +52,11 @@ const DEFAULT_ENDPOINTS: EndpointMetric[] = [
   },
   {
     id: 'hkma-api',
-    name: 'HKMA Open API Portal',
+    name: 'HKMA Open Gateway',
     agency: 'HKMA (Hong Kong)',
     jurisdiction: 'Hong Kong',
-    url: 'https://api.hkma.gov.hk/public/...',
-    protocol: 'REST JSON',
+    url: 'https://www.hkma.gov.hk/eng/',
+    protocol: 'HTTPS Portal',
     auth: 'Public / Open',
     status: 'Operational',
     pingMs: 78
@@ -261,7 +261,7 @@ export default function App() {
         setLastSyncTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' SGT');
       }
     } catch (err) {
-      console.error('[RegSonar] Live feed sync error:', err);
+      console.warn('[RegSonar] Live feed sync note:', err);
     } finally {
       setIsSyncing(false);
     }
@@ -278,7 +278,7 @@ export default function App() {
         }
       }
     } catch (err) {
-      console.error('[RegSonar] Endpoint ping error:', err);
+      console.warn('[RegSonar] Endpoint ping note:', err);
     } finally {
       setIsPinging(false);
     }
