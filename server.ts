@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, earliestDeadline, KeyPoints } from './summarize.ts';
+import { summarize, extractArticleText, earliestDeadline, KeyPoints } from './summarize.js';
 
 dotenv.config();
 
@@ -739,10 +739,10 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
   return state;
 }
 
-async function createServer() {
+// API routes only. Used by the local server below and by the Vercel
+// function in api/index.ts, where the frontend is served as static files.
+export function createApp() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
-  const isProd = process.env.NODE_ENV === 'production';
 
   app.use(express.json());
 
@@ -807,6 +807,14 @@ async function createServer() {
     }
   });
 
+  return app;
+}
+
+async function startLocalServer() {
+  const app = createApp();
+  const PORT = Number(process.env.PORT) || 3000;
+  const isProd = process.env.NODE_ENV === 'production';
+
   // Mount Vite or Static Serving
   if (!isProd) {
     const { createServer: createViteServer } = await import('vite');
@@ -827,7 +835,10 @@ async function createServer() {
   });
 }
 
-createServer().catch((err) => {
-  console.error('[RegSonar] Fatal error starting server:', err);
-  process.exit(1);
-});
+// On Vercel the app is imported by api/index.ts instead of listening on a port
+if (!process.env.VERCEL) {
+  startLocalServer().catch((err) => {
+    console.error('[RegSonar] Fatal error starting server:', err);
+    process.exit(1);
+  });
+}

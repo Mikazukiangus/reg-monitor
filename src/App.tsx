@@ -68,6 +68,7 @@ export default function App() {
   // Live notices from /api/feeds/sync; there is no sample data
   const [notices, setNotices] = useState<RegulatoryNotice[]>([]);
   const [hasSynced, setHasSynced] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Live Endpoints & Ingestion Gateway State
   const [endpoints, setEndpoints] = useState<EndpointMetric[]>(DEFAULT_ENDPOINTS);
@@ -182,14 +183,18 @@ export default function App() {
           setNotices(data.notices);
         }
         setHasSynced(true);
+        setSyncError(null);
         if (Array.isArray(data.endpoints) && Array.isArray(data.sources)) {
           setEndpoints(mergeSyncResults(data.endpoints, data.sources));
         }
         const now = new Date();
         setLastSyncTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Singapore' }) + ' SGT');
+      } else {
+        setSyncError(`The feed server returned HTTP ${res.status}.`);
       }
     } catch (err) {
       console.warn('[RegSonar] Live feed sync note:', err);
+      setSyncError('The feed server could not be reached.');
     } finally {
       setIsSyncing(false);
     }
@@ -513,6 +518,23 @@ export default function App() {
                           density={density}
                         />
                       ))
+                    ) : !hasSynced && syncError ? (
+                      <div className="bg-[#FFFFFF] border border-[#FDE68A] rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-[#B45309]">cloud_off</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                          Live notices could not be loaded
+                        </h4>
+                        <p className="text-[12px] text-[#57534E]">
+                          {syncError} RegSonar shows no sample data, so the feed stays empty until a sync succeeds.
+                        </p>
+                        <button
+                          onClick={handleSyncFeeds}
+                          disabled={isSyncing}
+                          className="mt-1 px-3 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white text-[12px] font-semibold rounded disabled:opacity-60"
+                        >
+                          {isSyncing ? 'Retrying...' : 'Retry sync'}
+                        </button>
+                      </div>
                     ) : !hasSynced ? (
                       <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-8 text-center space-y-2 shadow-xs">
                         <span className="material-symbols-outlined text-3xl text-[#0D5C63] animate-spin">sync</span>
