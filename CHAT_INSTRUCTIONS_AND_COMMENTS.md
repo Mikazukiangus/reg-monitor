@@ -208,4 +208,4 @@ This document records the full chronological instructions, technical requirement
 * **Build Status:** `vite build` passes.
 * **Lint Status:** `tsc --noEmit` exits with 0 errors.
 * **Git Synchronization:** All commits synced to `main` at `https://github.com/Mikazukiangus/reg-monitor.git`.
-* **Runtime Status:** Production runs on Vercel (`https://reg-monitor-beta.vercel.app`). Locally, `npm run dev` serves the app and API on port 3000, or the next free port.
+* **Runtime Status:** Production runs on Vercel (`https://reg-monitor-beta.vercel.app`). Locally, `npm run dev` serves the app and API on `PORT` (default 3000).
