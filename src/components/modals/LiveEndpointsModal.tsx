@@ -89,7 +89,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                 </span>
               </div>
               <p className="font-['Inter'] text-[11px] text-[#857F74]">
-                Notices ingested from US Federal Register, HKMA, MAS and BIS. UK FCA attempted; ASIC status only.
+                Notices ingested from US Federal Register, UK PRA, HKMA, MAS and BIS. UK FCA attempted; ASIC status only.
               </p>
             </div>
           </div>
@@ -182,7 +182,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                 : 'border-transparent text-[#857F74] hover:text-[#1E1B18]'
             }`}
           >
-            Ingestion Pipeline &amp; AI Synthesis
+            Ingestion Pipeline &amp; Key Points
           </button>
         </div>
 
@@ -296,7 +296,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       1. Ingestion Layer
                     </span>
                     <span className="text-[#57534E]">
-                      Fetches JSON from the US Federal Register, HKMA Open API and MAS news search, and RSS from BIS. The UK FCA feed is behind a Cloudflare bot check and is usually blocked.
+                      Fetches JSON from the US Federal Register, HKMA Open API and MAS news search, and RSS from the Bank of England PRA and BIS. The UK FCA feed is behind a Cloudflare bot check and is usually blocked.
                     </span>
                   </div>
 
@@ -314,7 +314,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       3. Live Client Push
                     </span>
                     <span className="text-[#57534E]">
-                      Adds new notices to the feed (deduplicated by source ID) and updates the KPI ribbon.
+                      Replaces the feed with the latest notices from every source and recomputes the KPI ribbon, filters and deadlines.
                     </span>
                   </div>
                 </div>
@@ -323,14 +323,14 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
               <div className="p-4 bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-['Hanken_Grotesk'] text-[13px] font-bold text-[#1E1B18]">
-                    AI Synthesis (not yet wired in)
+                    Key Points (extractive)
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#E6F4F4] text-[#0D5C63] border border-[#B2DFDB] px-2 py-0.5 rounded">
-                    gemini-3.8-flash • Server-Side API
+                    TextRank • No AI model • No external API
                   </span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-[#857F74] leading-relaxed">
-                  The server exposes POST /api/feeds/synthesize, which calls Gemini when GEMINI_API_KEY is set and returns generic placeholder text otherwise. Live notices do not call it yet; they show the source's own abstract.
+                  The server fetches each source document, extracts the article text and ranks its sentences with TextRank. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
                 </p>
               </div>
             </div>

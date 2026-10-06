@@ -21,7 +21,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
   const handleDownload = () => {
     if (exportFormat === 'csv') {
-      const headers = ['ID', 'Reference', 'Regulator', 'Jurisdiction', 'Type', 'Impact Score', 'Issued', 'Deadline', 'Sector', 'Title'];
+      const headers = ['ID', 'Reference', 'Regulator', 'Jurisdiction', 'Type', 'Impact Score', 'Published', 'Date in Source', 'Sector', 'Title', 'Source URL'];
       const rows = notices.map(n => [
         `"${n.id}"`,
         `"${n.ref}"`,
@@ -29,10 +29,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         `"${n.jurisdiction}"`,
         `"${n.type}"`,
         n.impactScore,
-        `"${n.issuedTimeAgo}"`,
-        `"${n.statutoryDeadline || ''}"`,
+        `"${n.publishedAt || ''}"`,
+        `"${n.deadlineDate || ''}"`,
         `"${n.sector}"`,
-        `"${n.title.replace(/"/g, '""')}"`
+        `"${n.title.replace(/"/g, '""')}"`,
+        `"${n.dossierUrl || ''}"`
       ]);
 
       const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -52,11 +53,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         jurisdiction: n.jurisdiction,
         type: n.type,
         impactScore: n.impactScore,
-        issuedTimeAgo: n.issuedTimeAgo,
-        statutoryDeadline: n.statutoryDeadline,
+        publishedAt: n.publishedAt,
+        deadlineDate: n.deadlineDate,
+        sourceUrl: n.dossierUrl,
         sector: n.sector,
         tags: n.tags,
-        ...(includeAI && n.aiSynthesis ? { aiSynthesis: n.aiSynthesis } : {}),
+        ...(includeAI && n.keyPoints ? { keyPoints: n.keyPoints } : {}),
         summary: n.summary
       }));
 
@@ -143,7 +145,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 className="w-4 h-4 rounded text-[#0D5C63] bg-white border-[#D8D0C2] accent-[#0D5C63]"
               />
               <span className="text-[#1E1B18] text-[12px] font-medium">
-                Include AI Executive Legal Synthesis &amp; Obligation breakdowns
+                Include key points quoted from source documents
               </span>
             </label>
           </div>

@@ -10,15 +10,16 @@ This document records the full chronological instructions, technical requirement
 * **Stack:**
   * **Frontend:** React 19 (SPA with TypeScript, Tailwind CSS, Lucide / Material Symbols)
   * **Backend:** Express full-stack runtime (`server.ts`) with Vite middleware mounted in development
-  * **AI Synthesis Engine:** `@google/genai` TypeScript SDK (`gemini-3.8-flash`) with structured JSON schema outputs and resilient heuristic fallbacks
-  * **Data Ingestion Ports** (as of 2026-10-06, see Request 8):
+  * **Key points:** extractive summaries built in `summarize.ts` (TextRank over sentences quoted verbatim from the source, plus rule-based dates and references). No AI model or external API; Gemini was removed in Request 9.
+  * **Data Ingestion Ports** (as of 2026-10-06, see Requests 8 and 9):
     * US Federal Register REST API v1 (`SEC` & `CFTC` documents): ingested
     * HKMA Open API (press releases and daily interbank liquidity figures): ingested
     * MAS news search API (media releases and enforcement actions; undocumented): ingested
     * BIS media releases RSS (includes Basel Committee): ingested
+    * Bank of England PRA publications RSS: ingested (UK coverage)
     * UK FCA news RSS: attempted, but usually blocked by a Cloudflare bot check (HTTP 403)
     * Australia ASIC: status check only, no ingestion
-    * Japan JFSA: not connected; JFSA items in the feed are curated sample data
+    * Japan JFSA: not connected (no sample data is shown; see Request 9)
 * **Repository:** `https://github.com/Mikazukiangus/reg-monitor.git` (branch: `main`)
 
 ---
@@ -145,8 +146,24 @@ This document records the full chronological instructions, technical requirement
 * **Known limitations:**
   * FCA is blocked by Cloudflare. No bypass was attempted; an official FCA data source is needed.
   * MAS uses an undocumented API and only answers browser-like user agents (it serves a "Maintenance" page otherwise), so it may break without notice.
-  * `/api/feeds/synthesize` (Gemini) exists but is not called by the UI.
-  * Curated sample notices and other dashboard figures (trend briefs, deadlines) are still static data.
+  * ~~`/api/feeds/synthesize` (Gemini) exists but is not called by the UI.~~ Removed in Request 9.
+  * ~~Curated sample notices and other dashboard figures (trend briefs, deadlines) are still static data.~~ Removed in Request 9.
+* **Correction:** the health-check cache is 5 minutes, not 60s (changed later in this session).
+
+### Request 9: Live US/UK Notices, Verified Claims Only & Extractive Summaries (Claude Code, 2026-10-06)
+* **Instructions:** "Keep MAS, ensure US/UK notices are updated on the site … update verified claims instead of unverified claims … AI summaries without Gemini or any other API", then "Remove sample notices and build extractive summaries, then commit and push".
+* **Changes:**
+  1. **UK source:** added the Bank of England PRA publications RSS (`boe-pra`) because the FCA feed is blocked by Cloudflare.
+  2. **US/UK on the site:** UK and US filters are on by default; "Most Recent First" now sorts by the real publish date (it was sorting text labels). The Federal Register API only returns `comments_close_on`, `effective_on` and `dates` when asked for by name, so these fields are now requested and used as deadlines.
+  3. **Extractive summaries (`summarize.ts`):** the server fetches each source document once (cached per notice), extracts the article text with Readability (or the Bank of England page body), and ranks sentences with TextRank plus a small lead-position and regulatory-term boost. The top sentences are shown word for word as "Key points, quoted from source". Future dates near cue words (deadline, effective, comments) are kept as dated statements; CP/PS/SS/DP numbers, Release No. and File No. are kept as references. A date found in the source becomes the notice deadline when the feed gives none.
+  4. **Sample data removed:** `src/data/regulatoryData.ts` and the modals built on it (Diff Redline, Case Brief, Draft Response, Full Digest, Webhook) were deleted. The feed starts empty and shows a loading state until the first sync. Deadlines, notifications, the "Latest" ticker, Radar, Horizon, Enforcement and Watch Rules screens are all derived from live notices.
+  5. **Verified claims only:** KPI cards, severity and format filter counts are computed from live notices (no fallback numbers or fake trends). Removed the made-up user profile, "Real-Time Webhook" and "142,000+ notices" labels, the "Inc." footer, certification claims and webhook delivery claims. Gap checklist and dossier export only contain source text.
+  6. **Gemini removed:** `@google/genai`, `/api/feeds/synthesize`, `GEMINI_API_KEY` and the AI Studio capability flag were removed. Added `linkedom` and `@mozilla/readability`.
+* **Verified:** `tsc --noEmit` and `vite build` pass; clean `npm install` works; `bun.lock` regenerated. A full sync took about 2s and returned key points for every source. Browser check: filter counts add up to the notice total, all tabs render, no console errors.
+* **Known limitations:**
+  * FCA is still blocked; PRA covers the UK.
+  * HKMA's firewall blocks frequent requests, so it is polled at most every 30 minutes.
+  * Key points are only as good as the sentence ranking; they are quotes, so they can be checked but may miss context. Sector and impact score are keyword heuristics.
 
 ---
 
@@ -154,9 +171,11 @@ This document records the full chronological instructions, technical requirement
 
 | File | Status | Description |
 | :--- | :--- | :--- |
-| `server.ts` | **Enhanced** | Express full-stack backend with live endpoints (`/api/feeds/status`, `/api/feeds/sync`, `/api/feeds/synthesize`, `/api/health`), an on-demand Gemini synthesis endpoint, real health probes, and cached ingestion from Federal Register, HKMA, MAS and BIS (FCA attempted). |
+| `server.ts` | **Enhanced** | Express full-stack backend with live endpoints (`/api/feeds/status`, `/api/feeds/sync`, `/api/health`), real health probes, cached ingestion from Federal Register, PRA, HKMA, MAS and BIS (FCA attempted), and extractive key points per notice. |
+| `summarize.ts` | **Created** | Article text extraction, TextRank sentence ranking, dated-statement and reference extraction. No AI model. |
+| `src/lib/derived.ts` | **Created** | Deadlines, notifications and sorting derived from live notices. |
 | `src/App.tsx` | **Updated** | Integrated dynamic KPI metrics, real-time feed synchronization, endpoint status tracking, density toggle, and sanitized client loggers. |
-| `src/data/regulatoryData.ts` | **Updated** | Comprehensive regulatory registry extended to Q1 2027; legacy 2025 notices removed. |
+| `src/data/regulatoryData.ts` | **Deleted** | Sample notices removed in Request 9; all data now comes from live sources. |
 | `src/components/modals/LiveEndpointsModal.tsx` | **Created** | Gateway status modal displaying latency metrics, protocols, and endpoint architecture for 6 regulatory ports. |
 | `src/components/Header.tsx` | **Updated** | Added interactive Live Ingestion badge trigger and manual Sync button. |
 | `src/components/RightSidebar.tsx` | **Updated** | Added Live Feeds Sentinel card with real-time sync button and gateway metrics. |
@@ -168,7 +187,7 @@ This document records the full chronological instructions, technical requirement
 
 ## 4. Verification & Health Status
 
-* **Endpoint Ingestion Status (2026-10-06):** 5 of 6 endpoints Operational; UK FCA Degraded (HTTP 403, Cloudflare challenge). Notices ingested from Federal Register, HKMA, MAS and BIS.
+* **Endpoint Ingestion Status (2026-10-06):** 6 of 7 endpoints Operational; UK FCA Degraded (HTTP 403, Cloudflare challenge). Notices ingested from Federal Register, PRA, HKMA, MAS and BIS.
 * **API Health Check (`/api/health`):** `healthy` (HTTP 200).
 * **Build Status:** `vite build` passes.
 * **Lint Status:** `tsc --noEmit` exits with 0 errors.

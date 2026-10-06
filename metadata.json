@@ -1,6 +1,6 @@
 {
-  "name": "RegPulse - APAC & Global Regulatory Intelligence",
-  "description": "Institutional-grade regulatory intelligence sentinel monitoring statutory notices, MAS/HKMA/ASIC/JFSA directives, consultation deadlines, and automated compliance risk synthesis.",
+  "name": "RegSonar - APAC & Global Regulatory Monitor",
+  "description": "Monitors public regulator publications (Federal Register, PRA, MAS, HKMA, BIS) and shows extractive key points quoted from each source document.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { RegulatoryNotice } from '../types/regulatory';
 
 export type ActiveTab =
   | 'feed'
@@ -10,13 +11,21 @@ export type ActiveTab =
 interface NavigationProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
-  onWireItemClick: (regulator: string) => void;
+  wireItems: RegulatoryNotice[];
+  onSelectNotice: (id: string) => void;
 }
+
+const SEVERITY_DOT: Record<RegulatoryNotice['severity'], string> = {
+  critical: 'bg-[#DC2626]',
+  high: 'bg-[#B45309]',
+  info: 'bg-[#0D5C63]'
+};
 
 export const Navigation: React.FC<NavigationProps> = ({
   activeTab,
   onTabChange,
-  onWireItemClick
+  wireItems,
+  onSelectNotice
 }) => {
   return (
     <div className="fixed top-14 left-0 right-0 z-40 bg-[#FAF7F2]">
@@ -92,48 +101,24 @@ export const Navigation: React.FC<NavigationProps> = ({
             bolt
           </span>
           <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#857F74] uppercase tracking-wider">
-            Real-Time Wire
+            Latest
           </span>
         </div>
 
         <div className="flex items-center gap-6 overflow-x-hidden whitespace-nowrap text-[#57534E] font-['Inter'] text-[12px]">
-          <span
-            onClick={() => onWireItemClick('MAS')}
-            className="flex items-center gap-1.5 cursor-pointer hover:text-[#1E1B18] transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
-            <strong className="text-[#1E1B18] font-medium">MAS:</strong> Guidelines on Digital Asset Service Providers updated (38m ago)
-          </span>
-
-          <span className="text-[#857F74]">•</span>
-
-          <span
-            onClick={() => onWireItemClick('HKMA')}
-            className="flex items-center gap-1.5 cursor-pointer hover:text-[#1E1B18] transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0D5C63]"></span>
-            <strong className="text-[#1E1B18] font-medium">HKMA:</strong> AI in Banking governance consultation open for feedback
-          </span>
-
-          <span className="text-[#857F74]">•</span>
-
-          <span
-            onClick={() => onWireItemClick('ASIC')}
-            className="flex items-center gap-1.5 cursor-pointer hover:text-[#1E1B18] transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
-            <strong className="text-[#1E1B18] font-medium">ASIC:</strong> Published FY25 enforcement and cross-border priorities report
-          </span>
-
-          <span className="text-[#857F74]">•</span>
-
-          <span
-            onClick={() => onWireItemClick('JFSA')}
-            className="flex items-center gap-1.5 cursor-pointer hover:text-[#1E1B18] transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6D28D9]"></span>
-            <strong className="text-[#1E1B18] font-medium">JFSA:</strong> Finalized amendments on ESG data and ratings provider oversight
-          </span>
+          {wireItems.length === 0 && <span className="text-[#857F74]">Waiting for first sync...</span>}
+          {wireItems.map((n, idx) => (
+            <React.Fragment key={n.id}>
+              {idx > 0 && <span className="text-[#857F74]">•</span>}
+              <span
+                onClick={() => onSelectNotice(n.id)}
+                className="flex items-center gap-1.5 cursor-pointer hover:text-[#1E1B18] transition-colors"
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${SEVERITY_DOT[n.severity]}`}></span>
+                <strong className="text-[#1E1B18] font-medium">{n.regulator}:</strong> {n.title} ({n.issuedTimeAgo})
+              </span>
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </div>

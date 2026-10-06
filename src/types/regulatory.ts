@@ -23,6 +23,20 @@ export type InstrumentFormat =
   | 'Guidelines'
   | 'Technical Standards';
 
+export interface KeyFact {
+  text: string;
+  date?: string;
+}
+
+// Mirrors KeyPoints in summarize.ts
+export interface KeyPoints {
+  points: string[];
+  facts: KeyFact[];
+  refs: string[];
+  sourceUrl?: string;
+  method: 'extractive';
+}
+
 export interface RegulatoryNotice {
   id: string;
   ref: string;
@@ -43,12 +57,9 @@ export interface RegulatoryNotice {
     text: string;
     type: 'deadline' | 'immediate' | 'action' | 'standard';
   };
-  aiSynthesis?: {
-    title: string;
-    points: string[];
-  };
   summary?: string;
-  impactedUnits?: string[];
+  // Sentences quoted from the source document (extractive, no AI model)
+  keyPoints?: KeyPoints;
   tags: string[];
   sector: SectorDomain;
   format: InstrumentFormat;
@@ -56,6 +67,8 @@ export interface RegulatoryNotice {
   bookmarked?: boolean;
   dossierUrl?: string;
   isLiveFeed?: boolean;
+  // ISO timestamp from the source; only set on live notices
+  publishedAt?: string;
 }
 
 export interface DeadlineItem {
@@ -67,22 +80,6 @@ export interface DeadlineItem {
   colorClass: string;
   textColorClass: string;
   noticeId?: string;
-}
-
-export interface LatencyMetric {
-  jurisdiction: string;
-  agency: string;
-  pingMs: number;
-  status: 'Operational' | 'Degraded';
-}
-
-export interface TrendBrief {
-  id: string;
-  tag: string;
-  title: string;
-  summary: string;
-  severityColor: string;
-  jurisdictions: string[];
 }
 
 export interface AlertNotification {
@@ -98,10 +95,9 @@ export interface AlertNotification {
 export interface CustomAlertRule {
   id: string;
   name: string;
+  // Regulator names, matched against notice.regulator
   jurisdictions: string[];
   minImpact: number;
   keywords: string[];
-  channels: ('slack' | 'webhook' | 'email')[];
   enabled: boolean;
-  triggerCount: number;
 }

@@ -5,9 +5,6 @@ interface NoticeCardProps {
   notice: RegulatoryNotice;
   onOpenGapAnalysis: (notice: RegulatoryNotice) => void;
   onOpenPdfDossier: (notice: RegulatoryNotice) => void;
-  onOpenDiffRedline: (notice: RegulatoryNotice) => void;
-  onOpenCaseBrief: (notice: RegulatoryNotice) => void;
-  onOpenDraftResponse: (notice: RegulatoryNotice) => void;
   onToggleBookmark: (id: string) => void;
   isBookmarked: boolean;
   density?: 'comfortable' | 'compact';
@@ -17,9 +14,6 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   notice,
   onOpenGapAnalysis,
   onOpenPdfDossier,
-  onOpenDiffRedline,
-  onOpenCaseBrief,
-  onOpenDraftResponse,
   onToggleBookmark,
   isBookmarked,
   density = 'comfortable'
@@ -147,7 +141,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           Issued {notice.issuedTimeAgo}
         </span>
 
-        <span>•</span>
+        {notice.statutoryDeadline && <span>•</span>}
 
         {notice.statutoryDeadline && (
           <span
@@ -173,56 +167,72 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         )}
       </div>
 
-      {/* AI Synthesis Box or Standard Narrative */}
-      {notice.aiSynthesis ? (
+      {/* Key points quoted from the source, or the source's own summary */}
+      {notice.keyPoints && notice.keyPoints.points.length > 0 ? (
         <div className="p-3.5 bg-[#FAF7F2] border border-[#E8E2D5] rounded-lg mb-3">
-          <div className="flex items-center gap-1.5 text-[#0D5C63] font-['Inter'] text-[12px] font-bold mb-2">
-            <span className="material-symbols-outlined text-base text-[#0D5C63]">auto_awesome</span>
-            <span>{notice.aiSynthesis.title}</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="flex items-center gap-1.5 text-[#0D5C63] font-['Inter'] text-[12px] font-bold">
+              <span className="material-symbols-outlined text-base text-[#0D5C63]">format_quote</span>
+              <span>Key points, quoted from source</span>
+            </div>
+            {notice.keyPoints.sourceUrl && (
+              <a
+                href={notice.keyPoints.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-['JetBrains_Mono'] text-[10px] text-[#857F74] hover:text-[#0D5C63] hover:underline shrink-0"
+              >
+                Verify in document ↗
+              </a>
+            )}
           </div>
           <ul className="space-y-1.5 font-['Inter'] text-[12px] text-[#1E1B18]">
-            {notice.aiSynthesis.points.map((point, idx) => (
+            {notice.keyPoints.points.map((point, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-[#0D5C63] mt-0.5 text-xs font-bold shrink-0">•</span>
+                <span className="text-[#0D5C63] mt-0.5 text-xs font-bold shrink-0">“</span>
                 <span className="leading-relaxed">{point}</span>
               </li>
             ))}
           </ul>
+          {notice.keyPoints.facts.length > 0 && (
+            <div className="mt-2.5 pt-2 border-t border-[#E8E2D5] space-y-1">
+              {notice.keyPoints.facts.map((fact, idx) => (
+                <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-[#44403C]">
+                  <span className="material-symbols-outlined text-sm text-[#B45309] shrink-0">event</span>
+                  <span className="leading-relaxed">{fact.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {notice.keyPoints.refs.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">Referenced:</span>
+              {notice.keyPoints.refs.map((ref) => (
+                <span key={ref} className="font-['JetBrains_Mono'] text-[10px] text-[#57534E] bg-[#FFFFFF] border border-[#E5DFD5] px-1.5 py-0.5 rounded">
+                  {ref}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
+      ) : notice.summary ? (
         <p className="font-['Inter'] text-[13px] text-[#44403C] mb-3 leading-relaxed">
           {notice.summary}
         </p>
-      )}
+      ) : null}
 
       {/* Footer Row: Impacted Units / Tags & Dynamic Actions */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
         {/* Left: Tags or Units */}
         <div className="flex flex-wrap items-center gap-1.5">
-          {notice.impactedUnits && notice.impactedUnits.length > 0 ? (
-            <>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] mr-1">
-                Impacted Units:
-              </span>
-              {notice.impactedUnits.map((unit) => (
-                <span
-                  key={unit}
-                  className="px-2 py-0.5 rounded bg-[#F5F1E8] border border-[#E5DFD5] text-[#57534E] font-['JetBrains_Mono'] text-[11px] font-medium"
-                >
-                  {unit}
-                </span>
-              ))}
-            </>
-          ) : (
-            notice.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-0.5 rounded bg-[#F5F1E8] border border-[#E5DFD5] text-[#57534E] font-['JetBrains_Mono'] text-[11px] font-medium"
-              >
-                {tag}
-              </span>
-            ))
-          )}
+          {notice.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-0.5 rounded bg-[#F5F1E8] border border-[#E5DFD5] text-[#57534E] font-['JetBrains_Mono'] text-[11px] font-medium"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
 
         {/* Right: Actions */}
@@ -242,89 +252,31 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </span>
           </button>
 
-          {/* Conditional Action Buttons based on item */}
-          {(notice.id === 'mas-dpt-2026' || notice.id.startsWith('mas-dpt') || notice.id.includes('dpt')) && (
-            <>
-              <button
-                onClick={() => onOpenGapAnalysis(notice)}
-                className="px-3 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
-              >
-                <span className="material-symbols-outlined text-sm">assignment</span>
-                Flag for Gap Analysis
-              </button>
-              <button
-                onClick={() => onOpenPdfDossier(notice)}
-                className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-              >
-                <span className="material-symbols-outlined text-sm">download</span>
-                PDF Dossier
-              </button>
-            </>
-          )}
-
-          {(notice.id === 'hkma-sfc-tokenised-2026' || notice.id.includes('tokenised')) && (
-            <button
-              onClick={() => onOpenDiffRedline(notice)}
-              className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+          <button
+            onClick={() => onOpenGapAnalysis(notice)}
+            className="px-2.5 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-sm">assignment</span>
+            Gap Checklist
+          </button>
+          <button
+            onClick={() => onOpenPdfDossier(notice)}
+            className="px-2.5 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-sm">description</span>
+            Dossier
+          </button>
+          {notice.dossierUrl && (
+            <a
+              href={notice.dossierUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2.5 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
             >
-              <span>View Diff &amp; Redline</span>
-              <span className="material-symbols-outlined text-sm">compare_arrows</span>
-            </button>
+              <span className="material-symbols-outlined text-sm">open_in_new</span>
+              Source
+            </a>
           )}
-
-          {(notice.id === 'asic-greenwashing-2026' || notice.id.includes('greenwashing')) && (
-            <button
-              onClick={() => onOpenCaseBrief(notice)}
-              className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-            >
-              <span className="material-symbols-outlined text-sm">gavel</span>
-              Precedent Case Brief
-            </button>
-          )}
-
-          {(notice.id === 'jfsa-hft-2026' || notice.id.includes('hft')) && (
-            <button
-              onClick={() => onOpenDraftResponse(notice)}
-              className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-            >
-              <span className="material-symbols-outlined text-sm">edit_note</span>
-              Draft Response
-            </button>
-          )}
-
-          {(notice.id === 'uk-fca-emir-apac-2026' || notice.id.includes('emir')) && (
-            <button
-              onClick={() => onOpenPdfDossier(notice)}
-              className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-            >
-              <span className="material-symbols-outlined text-sm">visibility</span>
-              Review Terms
-            </button>
-          )}
-
-          {/* Fallback actions for other items */}
-          {!notice.id.includes('dpt') &&
-            !notice.id.includes('tokenised') &&
-            !notice.id.includes('greenwashing') &&
-            !notice.id.includes('hft') &&
-            !notice.id.includes('emir') && (
-              <>
-                <button
-                  onClick={() => onOpenGapAnalysis(notice)}
-                  className="px-2.5 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-                >
-                  <span className="material-symbols-outlined text-sm">assignment</span>
-                  Analyze
-                </button>
-                <button
-                  onClick={() => onOpenPdfDossier(notice)}
-                  className="px-2.5 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
-                >
-                  <span className="material-symbols-outlined text-sm">description</span>
-                  Dossier
-                </button>
-              </>
-            )}
         </div>
       </div>
     </article>

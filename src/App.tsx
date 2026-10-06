@@ -16,21 +16,10 @@ import { AlertRulesScreen } from './components/screens/AlertRulesScreen';
 // Modals
 import { GapAnalysisModal } from './components/modals/GapAnalysisModal';
 import { PdfDossierModal } from './components/modals/PdfDossierModal';
-import { DiffRedlineModal } from './components/modals/DiffRedlineModal';
-import { CaseBriefModal } from './components/modals/CaseBriefModal';
-import { DraftResponseModal } from './components/modals/DraftResponseModal';
-import { FullDigestModal } from './components/modals/FullDigestModal';
-import { WebhookModal } from './components/modals/WebhookModal';
 import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal, EndpointMetric } from './components/modals/LiveEndpointsModal';
 
-// Data
-import {
-  INITIAL_NOTICES,
-  DEADLINES,
-  TREND_BRIEFS,
-  INITIAL_NOTIFICATIONS
-} from './data/regulatoryData';
+import { daysUntil, deriveDeadlines, deriveNotifications, sortNewestFirst } from './lib/derived';
 import {
   RegulatoryNotice,
   JurisdictionCode,
@@ -43,6 +32,7 @@ const DEFAULT_ENDPOINTS: EndpointMetric[] = [
   { id: 'fed-reg', name: 'US Federal Register API', agency: 'SEC & CFTC', jurisdiction: 'US Federal', url: 'https://www.federalregister.gov/api/v1/documents.json', protocol: 'REST JSON', auth: 'Public / None', ingests: true },
   { id: 'hkma-api', name: 'HKMA Open API', agency: 'HKMA (Hong Kong)', jurisdiction: 'Hong Kong', url: 'https://api.hkma.gov.hk/public/press-releases', protocol: 'REST JSON', auth: 'Public / None', ingests: true },
   { id: 'fca-rss', name: 'UK FCA News RSS', agency: 'FCA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.fca.org.uk/news/rss.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'boe-pra', name: 'Bank of England PRA Publications RSS', agency: 'PRA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'mas-gov', name: 'Singapore MAS News Search API', agency: 'MAS (Singapore)', jurisdiction: 'Singapore', url: 'https://www.mas.gov.sg/api/v1/search', protocol: 'JSON (undocumented)', auth: 'Public / None', ingests: true },
   { id: 'asic-gov', name: 'Australia ASIC Portal', agency: 'ASIC (Australia)', jurisdiction: 'Australia', url: 'https://asic.gov.au', protocol: 'HTTPS Portal', auth: 'Public / None', ingests: false },
   { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', url: 'https://www.bis.org/doclist/all_pressrels.rss', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
@@ -75,8 +65,9 @@ function mergeSyncResults(endpoints: EndpointMetric[], sources: SourceSyncResult
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('feed');
 
-  // Notices state (persists initial + live-synced items)
-  const [notices, setNotices] = useState<RegulatoryNotice[]>(INITIAL_NOTICES);
+  // Live notices from /api/feeds/sync; there is no sample data
+  const [notices, setNotices] = useState<RegulatoryNotice[]>([]);
+  const [hasSynced, setHasSynced] = useState(false);
 
   // Live Endpoints & Ingestion Gateway State
   const [endpoints, setEndpoints] = useState<EndpointMetric[]>(DEFAULT_ENDPOINTS);
@@ -98,8 +89,8 @@ export default function App() {
     HK: true,
     AU: true,
     JP: true,
-    UK_EU: false,
-    US: false,
+    UK_EU: true,
+    US: true,
     GLOBAL: true
   });
   const [selectedSectors, setSelectedSectors] = useState<Record<SectorDomain, boolean>>({
@@ -110,7 +101,7 @@ export default function App() {
     'AML/CFT & Sanctions': false
   });
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'Highest Impact Score' | 'Most Recent First' | 'Consultation Deadline'>('Highest Impact Score');
+  const [sortBy, setSortBy] = useState<'Highest Impact Score' | 'Most Recent First' | 'Consultation Deadline'>('Most Recent First');
   const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
 
   // Pagination
@@ -123,11 +114,6 @@ export default function App() {
   // Active Modals
   const [activeNoticeForGap, setActiveNoticeForGap] = useState<RegulatoryNotice | null>(null);
   const [activeNoticeForDossier, setActiveNoticeForDossier] = useState<RegulatoryNotice | null>(null);
-  const [activeNoticeForDiff, setActiveNoticeForDiff] = useState<RegulatoryNotice | null>(null);
-  const [activeNoticeForBrief, setActiveNoticeForBrief] = useState<RegulatoryNotice | null>(null);
-  const [activeNoticeForDraft, setActiveNoticeForDraft] = useState<RegulatoryNotice | null>(null);
-  const [isFullDigestOpen, setIsFullDigestOpen] = useState(false);
-  const [isWebhookModalOpen, setIsWebhookModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
   const [infoModal, setInfoModal] = useState<{ title: string; body: string } | null>(null);
@@ -184,21 +170,6 @@ export default function App() {
     });
   };
 
-  // Quick Wire Item click
-  const handleWireItemClick = (regulator: string) => {
-    setActiveTab('feed');
-    if (regulator === 'MAS') {
-      setSelectedJurisdictions({ SG: true, HK: false, AU: false, JP: false, UK_EU: false, US: false, GLOBAL: false });
-    } else if (regulator === 'HKMA') {
-      setSelectedJurisdictions({ SG: false, HK: true, AU: false, JP: false, UK_EU: false, US: false, GLOBAL: false });
-    } else if (regulator === 'ASIC') {
-      setSelectedJurisdictions({ SG: false, HK: false, AU: true, JP: false, UK_EU: false, US: false, GLOBAL: false });
-    } else if (regulator === 'JFSA') {
-      setSelectedJurisdictions({ SG: false, HK: false, AU: false, JP: true, UK_EU: false, US: false, GLOBAL: false });
-    }
-    setCurrentPage(1);
-  };
-
   // Live Feed Ingestion handlers
   const handleSyncFeeds = async () => {
     setIsSyncing(true);
@@ -206,13 +177,11 @@ export default function App() {
       const res = await fetch('/api/feeds/sync', { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
-        if (data.notices && Array.isArray(data.notices) && data.notices.length > 0) {
-          setNotices(prev => {
-            const existingIds = new Set(prev.map(n => n.id));
-            const newItems = data.notices.filter((n: RegulatoryNotice) => !existingIds.has(n.id));
-            return [...newItems, ...prev];
-          });
+        if (data.notices && Array.isArray(data.notices)) {
+          // The server returns the full current live set, so replace rather than append
+          setNotices(data.notices);
         }
+        setHasSynced(true);
         if (Array.isArray(data.endpoints) && Array.isArray(data.sources)) {
           setEndpoints(mergeSyncResults(data.endpoints, data.sources));
         }
@@ -267,6 +236,31 @@ export default function App() {
     return counts;
   }, [notices]);
 
+  const severityCounts = useMemo(() => {
+    const counts: Record<UrgencySeverity, number> = { critical: 0, high: 0, info: 0 };
+    notices.forEach(n => {
+      counts[n.severity] += 1;
+    });
+    return counts;
+  }, [notices]);
+
+  const formatCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    notices.forEach(n => {
+      counts[n.format] = (counts[n.format] || 0) + 1;
+    });
+    return counts;
+  }, [notices]);
+
+  const recentCount = notices.filter(
+    n => n.publishedAt && Date.now() - new Date(n.publishedAt).getTime() <= 7 * 24 * 60 * 60 * 1000
+  ).length;
+  const closingSoonCount = notices.filter(n => {
+    if (n.format !== 'Consultations' || !n.deadlineDate) return false;
+    const d = daysUntil(n.deadlineDate);
+    return d >= 0 && d <= 14;
+  }).length;
+
   const ingestingSources = endpoints.filter(ep => ep.ingests && ep.sync?.ok).map(ep => ep.agency.replace(/ \(.*\)$/, ''));
 
   // Filter Notices
@@ -307,7 +301,7 @@ export default function App() {
         const matchReg = notice.regulator.toLowerCase().includes(query);
         const matchTags = notice.tags.some(t => t.toLowerCase().includes(query));
         const matchSummary = notice.summary?.toLowerCase().includes(query);
-        const matchAi = notice.aiSynthesis?.points.some(p => p.toLowerCase().includes(query));
+        const matchAi = notice.keyPoints?.points.some(p => p.toLowerCase().includes(query));
         if (!matchTitle && !matchRef && !matchReg && !matchTags && !matchSummary && !matchAi) {
           return false;
         }
@@ -319,7 +313,8 @@ export default function App() {
         return b.impactScore - a.impactScore;
       }
       if (sortBy === 'Most Recent First') {
-        return a.issuedTimeAgo.localeCompare(b.issuedTimeAgo);
+        // Sample notices have no real publish date, so they sort after live ones
+        return (b.publishedAt || '').localeCompare(a.publishedAt || '');
       }
       if (sortBy === 'Consultation Deadline') {
         return (a.deadlineDate || '9999').localeCompare(b.deadlineDate || '9999');
@@ -342,6 +337,10 @@ export default function App() {
   const totalPages = Math.max(1, Math.ceil(filteredNotices.length / itemsPerPage));
   const currentNotices = filteredNotices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const deadlines = useMemo(() => deriveDeadlines(notices), [notices]);
+  const notifications = useMemo(() => deriveNotifications(notices), [notices]);
+  const latestNotices = useMemo(() => sortNewestFirst(notices).slice(0, 5), [notices]);
+
   const handleSelectNoticeById = (id: string) => {
     setActiveTab('feed');
     const target = notices.find(n => n.id === id);
@@ -362,7 +361,7 @@ export default function App() {
           setExportFormat('csv');
           setIsExportModalOpen(true);
         }}
-        notifications={INITIAL_NOTIFICATIONS}
+        notifications={notifications}
         onSelectNotice={handleSelectNoticeById}
         onOpenEndpointsModal={() => setIsEndpointsModalOpen(true)}
         isSyncing={isSyncing}
@@ -375,7 +374,8 @@ export default function App() {
       <Navigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onWireItemClick={handleWireItemClick}
+        wireItems={latestNotices}
+        onSelectNotice={handleSelectNoticeById}
       />
 
       {/* Main Content Viewport */}
@@ -386,7 +386,9 @@ export default function App() {
             <KpiRibbon
               totalNoticesCount={notices.length}
               criticalCount={notices.filter(n => n.severity === 'critical').length}
-              consultationsCount={notices.filter(n => n.format === 'Consultations').length}
+              consultationsCount={formatCounts.Consultations || 0}
+              recentCount={recentCount}
+              closingSoonCount={closingSoonCount}
               endpoints={endpoints}
               onFilterBySeverity={(sev) => {
                 if (sev === 'critical') {
@@ -415,6 +417,8 @@ export default function App() {
                   onSelectFormat={setSelectedFormat}
                   onResetFilters={handleResetFilters}
                   jurisdictionCounts={jurisdictionCounts}
+                  severityCounts={severityCounts}
+                  formatCounts={formatCounts}
                   endpoints={endpoints}
                   onPingEndpoints={handlePingEndpoints}
                   isPinging={isPinging}
@@ -504,14 +508,21 @@ export default function App() {
                           notice={notice}
                           onOpenGapAnalysis={(n) => setActiveNoticeForGap(n)}
                           onOpenPdfDossier={(n) => setActiveNoticeForDossier(n)}
-                          onOpenDiffRedline={(n) => setActiveNoticeForDiff(n)}
-                          onOpenCaseBrief={(n) => setActiveNoticeForBrief(n)}
-                          onOpenDraftResponse={(n) => setActiveNoticeForDraft(n)}
                           onToggleBookmark={handleToggleBookmark}
                           isBookmarked={bookmarkedIds.has(notice.id)}
                           density={density}
                         />
                       ))
+                    ) : !hasSynced ? (
+                      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-[#0D5C63] animate-spin">sync</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                          Loading live notices from regulators...
+                        </h4>
+                        <p className="text-[12px] text-[#57534E]">
+                          The first sync fetches each source document, so it can take a few seconds.
+                        </p>
+                      </div>
                     ) : (
                       <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-8 text-center space-y-2 shadow-xs">
                         <span className="material-symbols-outlined text-3xl text-[#857F74]">find_in_page</span>
@@ -536,7 +547,7 @@ export default function App() {
                     <span>
                       Showing {Math.min(filteredNotices.length, (currentPage - 1) * itemsPerPage + 1)} to{' '}
                       {Math.min(filteredNotices.length, currentPage * itemsPerPage)} of{' '}
-                      {filteredNotices.length} statutory publications today
+                      {filteredNotices.length} notices
                     </span>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -580,11 +591,9 @@ export default function App() {
                   </div>
                 </section>
 
-                {/* Right Rail (3 cols): AI Brief, Deadlines, Compliance Pipeline */}
+                {/* Right Rail (3 cols): Deadlines, Export */}
                 <RightSidebar
-                  deadlines={DEADLINES}
-                  trendBriefs={TREND_BRIEFS}
-                  onOpenFullDigest={() => setIsFullDigestOpen(true)}
+                  deadlines={deadlines}
                   onOpenExportCsv={() => {
                     setExportFormat('csv');
                     setIsExportModalOpen(true);
@@ -593,7 +602,6 @@ export default function App() {
                     setExportFormat('json');
                     setIsExportModalOpen(true);
                   }}
-                  onOpenWebhookModal={() => setIsWebhookModalOpen(true)}
                   onSelectDeadlineNotice={handleSelectNoticeById}
                   onOpenLiveEndpointsModal={() => setIsEndpointsModalOpen(true)}
                   onTriggerSync={handleSyncFeeds}
@@ -606,16 +614,16 @@ export default function App() {
         )}
 
         {/* Screen 2: APAC Regulatory Radar */}
-        {activeTab === 'radar' && <RadarScreen />}
+        {activeTab === 'radar' && <RadarScreen notices={notices} onSelectNotice={handleSelectNoticeById} />}
 
         {/* Screen 3: Impact & Horizon Tracker */}
-        {activeTab === 'horizon' && <HorizonScreen />}
+        {activeTab === 'horizon' && <HorizonScreen notices={notices} onSelectNotice={handleSelectNoticeById} />}
 
         {/* Screen 4: Enforcement & Sanctions */}
-        {activeTab === 'enforcement' && <EnforcementScreen />}
+        {activeTab === 'enforcement' && <EnforcementScreen notices={notices} onSelectNotice={handleSelectNoticeById} />}
 
         {/* Screen 5: Custom Alert Rules */}
-        {activeTab === 'alert-rules' && <AlertRulesScreen />}
+        {activeTab === 'alert-rules' && <AlertRulesScreen notices={notices} />}
       </main>
 
       {/* Institutional Footer */}
@@ -624,12 +632,12 @@ export default function App() {
         onOpenMethodology={() =>
           setInfoModal({
             title: 'Statutory Ingestion Methodology',
-            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA Open API, the MAS news search API, and the BIS media releases RSS feed. The UK FCA RSS feed is attempted but is usually blocked by a Cloudflare bot check. ASIC is status-checked only. Each source is fetched at most once every 10 minutes. Impact scores for live notices are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Notices that are not marked Live Feed are curated sample data.'
+            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA Open API, the MAS news search API, and the BIS media releases RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed; the UK FCA RSS feed is attempted but is usually blocked by a Cloudflare bot check. ASIC is status-checked only. Each source is fetched at most once every 10 minutes (HKMA every 30 minutes, because its firewall blocks frequent requests). Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. No AI model or external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data.'
           })
         }
         onOpenAuditLog={() =>
           setInfoModal({
-            title: 'Immutable Compliance Audit Log',
+            title: 'Source Status',
             body: `Last sync: ${lastSyncTime}\n\n${endpoints
               .map(ep => `${ep.name}: ${ep.status}${ep.detail ? ` (${ep.detail})` : ''}${ep.ingests && ep.sync ? ` · ${ep.sync.ok ? `${ep.sync.count} notices` : `sync failed: ${ep.sync.error}`}` : ''}`)
               .join('\n')}\n\nNo audit log is persisted yet; this shows the current session's source status only.`
@@ -637,46 +645,24 @@ export default function App() {
         }
         onOpenSecurity={() =>
           setInfoModal({
-            title: 'Security, Encryption & Sovereign Compliance',
-            body: 'Enterprise-grade encryption with AES-256 at rest and TLS 1.3 in transit. Certified compliant under ISO/IEC 27001, SOC 2 Type II, and Singapore MAS Outsourcing & Technology Risk Management Guidelines.'
+            title: 'Security',
+            body: 'RegSonar reads only public regulator publications and stores nothing beyond an in-memory cache on the server. No user accounts or personal data are collected. The project holds no security certifications.'
           })
         }
       />
 
       {/* Interactive Modals */}
-      <GapAnalysisModal
-        notice={activeNoticeForGap}
-        onClose={() => setActiveNoticeForGap(null)}
-      />
+      {activeNoticeForGap && (
+        <GapAnalysisModal
+          key={activeNoticeForGap.id}
+          notice={activeNoticeForGap}
+          onClose={() => setActiveNoticeForGap(null)}
+        />
+      )}
 
       <PdfDossierModal
         notice={activeNoticeForDossier}
         onClose={() => setActiveNoticeForDossier(null)}
-      />
-
-      <DiffRedlineModal
-        notice={activeNoticeForDiff}
-        onClose={() => setActiveNoticeForDiff(null)}
-      />
-
-      <CaseBriefModal
-        notice={activeNoticeForBrief}
-        onClose={() => setActiveNoticeForBrief(null)}
-      />
-
-      <DraftResponseModal
-        notice={activeNoticeForDraft}
-        onClose={() => setActiveNoticeForDraft(null)}
-      />
-
-      <FullDigestModal
-        isOpen={isFullDigestOpen}
-        onClose={() => setIsFullDigestOpen(false)}
-      />
-
-      <WebhookModal
-        isOpen={isWebhookModalOpen}
-        onClose={() => setIsWebhookModalOpen(false)}
       />
 
       <ExportModal

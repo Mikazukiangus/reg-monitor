@@ -1,9 +1,51 @@
 import React, { useState } from 'react';
-import { INITIAL_ALERT_RULES } from '../../data/regulatoryData';
-import { CustomAlertRule } from '../../types/regulatory';
+import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
 
-export const AlertRulesScreen: React.FC = () => {
-  const [rules, setRules] = useState<CustomAlertRule[]>(INITIAL_ALERT_RULES);
+const DEFAULT_RULES: CustomAlertRule[] = [
+  {
+    id: 'rule-1',
+    name: 'Consultations & Deadlines',
+    jurisdictions: ['MAS', 'HKMA', 'PRA', 'SEC'],
+    minImpact: 7.5,
+    keywords: ['consult', 'comments', 'deadline', 'feedback'],
+    enabled: true
+  },
+  {
+    id: 'rule-2',
+    name: 'Digital Assets & Tokenisation',
+    jurisdictions: ['MAS', 'HKMA', 'SEC', 'BIS', 'BCBS'],
+    minImpact: 0,
+    keywords: ['crypto', 'stablecoin', 'tokenis', 'digital asset', 'custody'],
+    enabled: true
+  },
+  {
+    id: 'rule-3',
+    name: 'Enforcement Actions',
+    jurisdictions: ['MAS', 'SEC', 'PRA', 'HKMA'],
+    minImpact: 0,
+    keywords: ['enforcement', 'penalty', 'fine', 'prohibition'],
+    enabled: true
+  }
+];
+
+// A notice matches when it is from a listed regulator, meets the impact
+// threshold, and mentions at least one keyword (if any are set).
+export function ruleMatches(rule: CustomAlertRule, notice: RegulatoryNotice): boolean {
+  const regulator = notice.regulator.toLowerCase();
+  if (rule.jurisdictions.length > 0 && !rule.jurisdictions.some(j => regulator.includes(j.toLowerCase()))) return false;
+  if (notice.impactScore < rule.minImpact) return false;
+  if (rule.keywords.length === 0) return true;
+  const text = [notice.title, notice.summary, ...(notice.keyPoints?.points || [])].join(' ').toLowerCase();
+  return rule.keywords.some(k => text.includes(k.toLowerCase()));
+}
+
+interface AlertRulesScreenProps {
+  notices: RegulatoryNotice[];
+}
+
+export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) => {
+  const [rules, setRules] = useState<CustomAlertRule[]>(DEFAULT_RULES);
+  const [agencies, setAgencies] = useState('MAS, HKMA');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [ruleName, setRuleName] = useState('');
   const [minImpact, setMinImpact] = useState(8.0);
@@ -22,12 +64,10 @@ export const AlertRulesScreen: React.FC = () => {
     const newRule: CustomAlertRule = {
       id: `rule-${Date.now()}`,
       name: ruleName,
-      jurisdictions: ['MAS', 'HKMA'],
+      jurisdictions: agencies.split(',').map(a => a.trim()).filter(Boolean),
       minImpact: minImpact,
       keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
-      channels: ['slack', 'webhook'],
-      enabled: true,
-      triggerCount: 0
+      enabled: true
     };
 
     setRules([newRule, ...rules]);
@@ -44,11 +84,11 @@ export const AlertRulesScreen: React.FC = () => {
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-[#0D5C63] text-2xl">tune</span>
             <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-[#1E1B18]">
-              Custom Statutory Alert Rules &amp; Triggers
+              Watch Rules
             </h1>
           </div>
           <p className="font-['Inter'] text-[13px] text-[#57534E]">
-            Configure automated escalation pipelines for high-severity notices, CISO liability triggers, and consultation deadlines.
+            Rules are checked against the live notices currently loaded. Matches are shown here only; delivery to Slack, webhooks or email is not implemented.
           </p>
         </div>
 
@@ -63,7 +103,9 @@ export const AlertRulesScreen: React.FC = () => {
 
       {/* Rules Grid */}
       <div className="space-y-4">
-        {rules.map((rule) => (
+        {rules.map((rule) => {
+          const matches = rule.enabled ? notices.filter(n => ruleMatches(rule, n)) : [];
+          return (
           <div
             key={rule.id}
             className="p-5 bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl hover:bg-[#FAF8F5] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
@@ -103,10 +145,32 @@ export const AlertRulesScreen: React.FC = () => {
                 ))}
               </div>
 
-              <div className="flex items-center gap-3 text-[11px] font-['JetBrains_Mono'] text-[#857F74]">
-                <span>Channels: <strong className="text-[#1E1B18]">{rule.channels.join(', ').toUpperCase()}</strong></span>
-                <span>•</span>
-                <span>Lifetime Triggers: <strong className="text-[#15803D]">{rule.triggerCount} dispatched</strong></span>
+              <div className="text-[11px] font-['JetBrains_Mono'] text-[#857F74]">
+                {rule.enabled ? (
+                  <>
+                    <span>
+                      Matching live notices: <strong className="text-[#0D5C63]">{matches.length}</strong>
+                    </span>
+                    {matches.length > 0 && (
+                      <ul className="mt-1.5 space-y-0.5 font-['Inter'] text-[12px] text-[#57534E]">
+                        {matches.slice(0, 5).map(n => (
+                          <li key={n.id} className="truncate">
+                            <span className="font-['JetBrains_Mono'] text-[11px] text-[#0D5C63] mr-1.5">{n.regulator}</span>
+                            {n.dossierUrl ? (
+                              <a href={n.dossierUrl} target="_blank" rel="noopener noreferrer" className="hover:text-[#0D5C63] hover:underline">
+                                {n.title}
+                              </a>
+                            ) : (
+                              n.title
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                ) : (
+                  <span>Paused</span>
+                )}
               </div>
             </div>
 
@@ -123,7 +187,8 @@ export const AlertRulesScreen: React.FC = () => {
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Create Rule Modal */}
@@ -132,7 +197,7 @@ export const AlertRulesScreen: React.FC = () => {
           <div className="bg-[#FFFFFF] border border-[#D8D0C2] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
               <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1E1B18]">
-                Create Statutory Alert Rule
+                Create Watch Rule
               </h3>
               <button onClick={() => setShowCreateModal(false)} className="text-[#857F74] hover:text-[#1E1B18]">
                 <span className="material-symbols-outlined text-lg">close</span>
@@ -146,9 +211,22 @@ export const AlertRulesScreen: React.FC = () => {
                   type="text"
                   value={ruleName}
                   onChange={(e) => setRuleName(e.target.value)}
-                  placeholder="e.g. Real-Time DPT & Stablecoin Mandates"
+                  placeholder="e.g. Stablecoin rules"
                   className="w-full bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#857F74] font-['JetBrains_Mono'] mb-1 font-medium">
+                  Regulators (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={agencies}
+                  onChange={(e) => setAgencies(e.target.value)}
+                  placeholder="e.g. MAS, HKMA, SEC, PRA, BIS"
+                  className="w-full bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
                 />
               </div>
 
@@ -158,7 +236,7 @@ export const AlertRulesScreen: React.FC = () => {
                 </label>
                 <input
                   type="range"
-                  min="5.0"
+                  min="0"
                   max="10.0"
                   step="0.1"
                   value={minImpact}
@@ -175,7 +253,7 @@ export const AlertRulesScreen: React.FC = () => {
                   type="text"
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="e.g. CISO, Zero-day, Custody, Stablecoin, Scope 3"
+                  placeholder="e.g. custody, stablecoin, climate"
                   className="w-full bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
                 />
               </div>
@@ -192,7 +270,7 @@ export const AlertRulesScreen: React.FC = () => {
                   type="submit"
                   className="px-4 py-1.5 bg-[#0D5C63] text-white font-semibold rounded hover:bg-[#0A474D] shadow-xs"
                 >
-                  Create &amp; Deploy
+                  Create Rule
                 </button>
               </div>
             </form>

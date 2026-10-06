@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({
           >
             Security &amp; Encryption
           </button>
-          <span className="text-[#857F74]">© 2026 RegSonar Global Inc.</span>
+          <span className="text-[#857F74]">© 2026 RegSonar</span>
         </div>
       </div>
     </footer>

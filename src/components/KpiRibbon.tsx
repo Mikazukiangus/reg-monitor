@@ -7,6 +7,10 @@ interface KpiRibbonProps {
   totalNoticesCount: number;
   criticalCount: number;
   consultationsCount: number;
+  // Notices published in the last 7 days
+  recentCount: number;
+  // Consultations with a date in the next 14 days
+  closingSoonCount: number;
   activeFilter?: string;
   endpoints: EndpointMetric[];
 }
@@ -17,6 +21,8 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
   totalNoticesCount,
   criticalCount,
   consultationsCount,
+  recentCount,
+  closingSoonCount,
   activeFilter,
   endpoints
 }) => {
@@ -24,6 +30,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
   const notOperational = endpoints.filter(e => e.status !== 'Operational' && e.status !== 'Checking');
   const checking = endpoints.some(e => e.status === 'Checking');
   const tone = checking ? STATUS_STYLES.Checking : notOperational.length === 0 ? STATUS_STYLES.Operational : STATUS_STYLES.Degraded;
+  const pct = (n: number) => `${totalNoticesCount ? Math.round((n / totalNoticesCount) * 100) : 0}%`;
   const operationalPct = endpoints.length ? Math.round((operational.length / endpoints.length) * 100) : 0;
 
   return (
@@ -38,23 +45,19 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
         >
           <div className="flex items-center justify-between">
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] uppercase tracking-wider font-medium">
-              Updates Today
-            </span>
-            <span className="flex items-center text-[#15803D] font-['JetBrains_Mono'] text-[10px] font-semibold bg-[#DCFCE7] border border-[#BBF7D0] px-1.5 py-0.5 rounded">
-              <span className="material-symbols-outlined text-xs mr-0.5">trending_up</span>
-              +12% 7d avg
+              Last 7 Days
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="font-['Hanken_Grotesk'] text-[24px] text-[#1E1B18] font-bold">
-              {totalNoticesCount || 38}
+              {recentCount}
             </span>
             <span className="font-['Inter'] text-[12px] text-[#857F74]">
-              regulatory notices logged
+              of {totalNoticesCount} live notices
             </span>
           </div>
           <div className="w-full bg-[#EFEBE0] h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-[#0D5C63] h-full w-3/4 rounded-full"></div>
+            <div className="bg-[#0D5C63] h-full rounded-full" style={{ width: pct(recentCount) }}></div>
           </div>
         </div>
 
@@ -70,21 +73,18 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#DC2626] uppercase tracking-wider font-semibold">
               Critical Impact
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#DC2626] animate-ping"></span>
-              <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#DC2626]">
-                Urgent Review
-              </span>
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#857F74]" title="Impact score is a heuristic by document type">
+              Score ≥ 8.5
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="font-['Hanken_Grotesk'] text-[24px] text-[#1E1B18] font-bold">
-              {criticalCount || 4}
+              {criticalCount}
             </span>
-            <span className="font-['Inter'] text-[12px] text-[#857F74]">mandates active</span>
+            <span className="font-['Inter'] text-[12px] text-[#857F74]">notices</span>
           </div>
           <div className="w-full bg-[#EFEBE0] h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-[#DC2626] h-full w-1/3 rounded-full"></div>
+            <div className="bg-[#DC2626] h-full rounded-full" style={{ width: pct(criticalCount) }}></div>
           </div>
         </div>
 
@@ -100,17 +100,17 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
               Consultations
             </span>
             <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#0D5C63] bg-[#E6F4F4] border border-[#B2DFDB] px-1.5 py-0.5 rounded">
-              Closing ≤ 14d
+              {closingSoonCount} closing ≤ 14d
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="font-['Hanken_Grotesk'] text-[24px] text-[#1E1B18] font-bold">
-              {consultationsCount || 9}
+              {consultationsCount}
             </span>
             <span className="font-['Inter'] text-[12px] text-[#857F74]">responses pending</span>
           </div>
           <div className="w-full bg-[#EFEBE0] h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-[#0D5C63] h-full w-2/5 rounded-full"></div>
+            <div className="bg-[#0D5C63] h-full rounded-full" style={{ width: pct(consultationsCount) }}></div>
           </div>
         </div>
 

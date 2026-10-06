@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RegulatoryNotice } from '../../types/regulatory';
 
 interface GapAnalysisModalProps {
-  notice: RegulatoryNotice | null;
+  notice: RegulatoryNotice;
   onClose: () => void;
 }
 
@@ -16,46 +16,19 @@ interface ChecklistItem {
 }
 
 export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onClose }) => {
-  if (!notice) return null;
-
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    {
-      id: 'item-1',
-      requirement: 'Establish 4-hour max RTO for fiat & stablecoin custodial on-ramps',
-      owner: 'Head of Custody Operations',
-      deadline: '2026-11-15',
-      status: 'In-Progress',
-      notes: 'Disaster recovery failover simulation scheduled for SG primary hot-wallet nodes.'
-    },
-    {
-      id: 'item-2',
-      requirement: 'Commission SOC2 Type II or ISO 27001 statutory penetration audit',
-      owner: 'Chief Information Security Officer (CISO)',
-      deadline: '2026-11-20',
-      status: 'Action-Required',
-      notes: 'RFP drafted; reviewing 3 external accredited statutory cybersecurity auditors.'
-    },
-    {
-      id: 'item-3',
-      requirement: 'Update Senior Executive Accountability Regime (SEAR) CISO liability charter',
-      owner: 'General Counsel & Board Governance',
-      deadline: '2026-11-30',
-      status: 'In-Progress',
-      notes: 'Board resolution drafted to formalize 72h zero-day statutory remediation escalation.'
-    },
-    {
-      id: 'item-4',
-      requirement: 'Implement multi-sig cold-storage quorum policy (3 of 5 hardware keys)',
-      owner: 'Treasury & Key Management Group',
-      deadline: '2026-11-10',
-      status: 'Compliant',
-      notes: 'Hardware security modules (HSMs) deployed in geographically segregated vaults.'
-    }
-  ]);
-
+  // Start from the dated sentences in the source document; users add the rest
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(() =>
+    (notice?.keyPoints?.facts || []).map((fact, idx) => ({
+      id: `fact-${idx}`,
+      requirement: fact.text,
+      owner: 'Unassigned',
+      deadline: fact.date || '',
+      status: 'Action-Required' as const,
+      notes: 'Quoted from source document'
+    }))
+  );
   const [newRequirement, setNewRequirement] = useState('');
   const [newOwner, setNewOwner] = useState('Custody Operations');
-  const [isExporting, setIsExporting] = useState(false);
 
   const handleStatusChange = (id: string, newStatus: ChecklistItem['status']) => {
     setChecklist(prev =>
@@ -70,20 +43,28 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
       id: `item-${Date.now()}`,
       requirement: newRequirement,
       owner: newOwner,
-      deadline: '2026-11-30',
+      deadline: '',
       status: 'Action-Required',
-      notes: 'New statutory compliance requirement logged.'
+      notes: ''
     };
     setChecklist([...checklist, newItem]);
     setNewRequirement('');
   };
 
   const handleExportGapReport = () => {
-    setIsExporting(true);
-    setTimeout(() => {
-      setIsExporting(false);
-      alert('Statutory Gap Analysis Dossier exported successfully to RegSonar registry.');
-    }, 800);
+    const csvCell = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const rows = [
+      ['Requirement', 'Owner', 'Deadline', 'Status', 'Notes'],
+      ...checklist.map(item => [item.requirement, item.owner, item.deadline, item.status, item.notes])
+    ];
+    const header = `# ${notice.regulator}: ${notice.title}\n# Source: ${notice.dossierUrl || 'n/a'}\n`;
+    const blob = new Blob([header + rows.map(r => r.map(csvCell).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `RegSonar_Gap_Checklist_${notice.id}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -98,7 +79,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                 Institutional Gap Analysis &amp; Action Matrix
               </h2>
               <p className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
-                {notice.regulator} • {notice.ref} • Statutory Target: {notice.statutoryDeadline}
+                {notice.regulator} • {notice.ref} • Date: {notice.statutoryDeadline || 'None found in source'}
               </p>
             </div>
           </div>
@@ -156,7 +137,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                     </p>
                     <div className="flex flex-wrap items-center gap-3 mt-1.5 font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
                       <span>Owner: <strong className="text-[#1E1B18]">{item.owner}</strong></span>
-                      <span>Target: <strong className="text-[#0D5C63]">{item.deadline}</strong></span>
+                      <span>Target: <strong className="text-[#0D5C63]">{item.deadline || "Not set"}</strong></span>
                       <span className="text-[#57534E] italic">{item.notes}</span>
                     </div>
                   </div>
@@ -230,13 +211,12 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
             </button>
             <button
               onClick={handleExportGapReport}
-              disabled={isExporting}
               className="px-4 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white font-['Inter'] text-[12px] font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm">
-                {isExporting ? 'hourglass_top' : 'download'}
+                download
               </span>
-              <span>{isExporting ? 'Generating Report...' : 'Export Gap Dossier (PDF)'}</span>
+              <span>Export Checklist (CSV)</span>
             </button>
           </div>
         </div>

@@ -13,6 +13,8 @@ interface FilterSidebarProps {
   onSelectFormat: (format: string | null) => void;
   onResetFilters: () => void;
   jurisdictionCounts: Record<JurisdictionCode, number>;
+  severityCounts: Record<UrgencySeverity, number>;
+  formatCounts: Record<string, number>;
   endpoints: EndpointMetric[];
   onPingEndpoints: () => void;
   isPinging: boolean;
@@ -29,6 +31,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onSelectFormat,
   onResetFilters,
   jurisdictionCounts,
+  severityCounts,
+  formatCounts,
   endpoints,
   onPingEndpoints,
   isPinging
@@ -70,7 +74,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
-                Critical (4)
+                Critical ({severityCounts.critical})
               </button>
 
               <button
@@ -83,7 +87,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0D5C63]"></span>
-                High (11)
+                High ({severityCounts.high})
               </button>
 
               <button
@@ -96,7 +100,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#78716C]"></span>
-                Info (23)
+                Info ({severityCounts.info})
               </button>
             </div>
           </div>
@@ -184,7 +188,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
                   />
                   <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.UK_EU ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
-                    UK &amp; EU (FCA, ESMA)
+                    UK &amp; EU (PRA, FCA, ESMA)
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
@@ -280,7 +284,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#1E1B18]'
                 }`}
               >
-                Circulars (14)
+                Circulars ({formatCounts.Circulars || 0})
               </button>
 
               <button
@@ -292,7 +296,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#1E1B18]'
                 }`}
               >
-                Consultations (9)
+                Consultations ({formatCounts.Consultations || 0})
               </button>
 
               <button
@@ -304,7 +308,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#DC2626]'
                 }`}
               >
-                Enforcement (6)
+                Enforcement ({formatCounts.Enforcement || 0})
               </button>
 
               <button
@@ -316,7 +320,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#57534E]'
                 }`}
               >
-                Guidelines (9)
+                Guidelines ({formatCounts.Guidelines || 0})
               </button>
             </div>
           </div>

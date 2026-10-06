@@ -103,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search 142,000+ regulatory notices, circulars, consultations, enforcement actions..."
+              placeholder="Search loaded notices by title, regulator, reference or key point..."
               className="w-full h-9 pl-10 pr-10 bg-[#FFFFFF] border border-[#E5DFD5] text-[#1E1B18] placeholder:text-[#857F74] font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:bg-[#FAF8F5] focus:border-[#0D5C63] transition-all shadow-xs"
             />
             {searchQuery && (
@@ -176,9 +176,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
                   <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-[#1E1B18] flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span>
-                    Critical Regulatory Alerts
+                    Latest Notices
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">Real-Time Webhook</span>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">From live sources</span>
                 </div>
                 <div className="divide-y divide-[#E5DFD5] max-h-72 overflow-y-auto mt-1">
                   {notifications.map((n) => (
@@ -220,43 +220,19 @@ export const Header: React.FC<HeaderProps> = ({
             <div
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center gap-2 pl-1 cursor-pointer group"
+              title="Local session"
             >
-              <img
-                alt="Sarah Chen"
-                className="w-8 h-8 rounded-full object-cover shrink-0 ring-1 ring-[#E5DFD5] group-hover:ring-[#0D5C63] transition-all"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27a8tm9ynn1zNKr2gDLscahCIAvx7s5dGlEeP1f2f4ojcUDVwF1az6V1F0Hti9JbrJGe1D6CMJLthWRFi-cS1oKzYfNmbnSCI0sd1zpQ9tTp9XgyercsR7BKazmoWE3pQXLCpaLwBcPCvDaQYyiNXEQwjwe3IdbPxBaUHSllCImd1GM5H_eBqyFrxrGdKWhIIfI3vl81wbhdzBvOnjkhH6PSkCHKbQqTE_5h2ZxGcfjy_lHwa4roA"
-              />
-              <div className="hidden 2xl:flex flex-col text-left">
-                <span className="font-['Inter'] text-[11px] font-semibold text-[#1E1B18] leading-tight truncate max-w-[140px]">
-                  Sarah Chen
-                </span>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] leading-none truncate max-w-[140px]">
-                  Head of Reg Affairs
-                </span>
-              </div>
+              <span className="w-8 h-8 rounded-full shrink-0 ring-1 ring-[#E5DFD5] group-hover:ring-[#0D5C63] transition-all bg-[#F5F1E8] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#57534E] text-lg">person</span>
+              </span>
             </div>
 
             {showProfileMenu && (
               <div className="absolute right-0 mt-2 w-64 bg-[#FFFFFF] border border-[#D8D0C2] rounded-lg shadow-xl p-3 z-50 text-[12px]">
-                <div className="pb-2 border-b border-[#E5DFD5]">
-                  <p className="font-semibold text-[#1E1B18]">Sarah Chen</p>
-                  <p className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">carbonfibre@gmail.com</p>
-                  <p className="text-[10px] text-[#15803D] mt-1 font-semibold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
-                    Enterprise Legal Seat • Active
-                  </p>
-                </div>
-                <div className="pt-2 space-y-1">
-                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
-                    Regulatory Mandate Subscriptions
-                  </div>
-                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
-                    Audit Trail &amp; Access Logs
-                  </div>
-                  <div className="px-2 py-1.5 rounded hover:bg-[#FAF8F5] text-[#44403C] cursor-pointer">
-                    API &amp; Webhook Credentials
-                  </div>
-                </div>
+                <p className="font-semibold text-[#1E1B18]">Local session</p>
+                <p className="text-[11px] text-[#57534E] mt-1 leading-relaxed">
+                  RegSonar has no accounts or sign-in. Filters and watch rules live in this browser tab only.
+                </p>
               </div>
             )}
           </div>

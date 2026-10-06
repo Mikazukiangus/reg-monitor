@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { GoogleGenAI } from '@google/genai';
+import { summarize, extractArticleText, earliestDeadline, KeyPoints } from './summarize.ts';
 
 dotenv.config();
 
@@ -35,18 +35,15 @@ interface NormalizedNotice {
     text: string;
     type: 'deadline' | 'immediate' | 'action' | 'standard';
   };
-  aiSynthesis?: {
-    title: string;
-    points: string[];
-  };
   summary?: string;
-  impactedUnits?: string[];
+  keyPoints?: KeyPoints;
   tags: string[];
   sector: 'FinTech & Digital Assets' | 'Banking & Capital Markets' | 'ESG & Sustainability' | 'AI Governance & Ethics' | 'AML/CFT & Sanctions';
   format: 'Circulars' | 'Consultations' | 'Enforcement' | 'Guidelines' | 'Technical Standards';
   severity: 'critical' | 'high' | 'info';
   dossierUrl?: string;
   isLiveFeed?: boolean;
+  publishedAt?: string;
 }
 
 let lastSyncTimestamp = new Date().toISOString();
@@ -145,6 +142,12 @@ function severityFor(score: number): 'critical' | 'high' | 'info' {
   return score >= 8.5 ? 'critical' : score >= 7.5 ? 'high' : 'info';
 }
 
+function toIso(dateString: string | undefined): string | undefined {
+  if (!dateString) return undefined;
+  const t = new Date(dateString).getTime();
+  return isNaN(t) ? undefined : new Date(t).toISOString();
+}
+
 function stripHtml(text: string): string {
   return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
@@ -162,7 +165,11 @@ async function fetchOrThrow(url: string): Promise<globalThis.Response> {
 
 // Fetch US Federal Register API notices (SEC & CFTC)
 async function fetchFederalRegister(): Promise<NormalizedNotice[]> {
-  const url = 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4';
+  // Date fields are only returned when requested by name
+  const fields = ['title', 'type', 'abstract', 'agencies', 'document_number', 'citation', 'publication_date', 'comments_close_on', 'effective_on', 'dates', 'html_url', 'pdf_url']
+    .map((f) => `&fields[]=${f}`)
+    .join('');
+  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4${fields}`;
   const res = await fetchOrThrow(url);
   const data = await res.json();
   const results = data.results || [];
@@ -201,10 +208,14 @@ async function fetchFederalRegister(): Promise<NormalizedNotice[]> {
       typeColorClass: getTypeColor(format),
       impactScore: score,
       issuedTimeAgo: getRelativeTime(doc.publication_date),
+      publishedAt: toIso(doc.publication_date),
       statutoryDeadline,
       deadlineDate: commentsClose || effectiveOn,
       statusBadge,
       summary: doc.abstract || 'No abstract published in the Federal Register for this document.',
+      keyPoints: doc.abstract
+        ? summarize(doc.abstract, { datesText: doc.dates, sourceUrl: doc.html_url })
+        : undefined,
       tags: [reg, format, 'Federal Register', sector],
       sector,
       format,
@@ -246,8 +257,49 @@ async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
       typeColorClass: getTypeColor(format),
       impactScore: score,
       issuedTimeAgo: getRelativeTime(item.pubDate),
+      publishedAt: toIso(item.pubDate),
       summary: description,
       tags: ['FCA', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: item.link,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Fetch Bank of England Prudential Regulation Authority publications (RSS 2.0)
+async function fetchPraPublications(): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow('https://www.bankofengland.co.uk/rss/prudential-regulation-publications');
+  const parsed = xmlParser.parse(await res.text());
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
+  }
+  const items = parsed.rss.channel.item || [];
+
+  return (Array.isArray(items) ? items : [items]).slice(0, 4).map((item: any) => {
+    const title = stripHtml(String(item.title));
+    const description = item.description ? stripHtml(String(item.description)) : undefined;
+    const format = classifyFormat('', title + ' ' + (description || ''));
+    const sector = classifySector(title + ' ' + (description || ''));
+    const score = estimateImpact(format);
+    const slug = String(item.link).split('/').filter(Boolean).pop();
+
+    return {
+      id: `pra-${slug}`,
+      ref: `PRA ${String(item.link).split('/prudential-regulation/')[1]?.split('/')[0] || 'publication'}`,
+      title,
+      regulator: 'UK PRA',
+      jurisdiction: 'UNITED KINGDOM',
+      jurisdictionCode: 'UK_EU',
+      type: format.toUpperCase(),
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item.pubDate),
+      publishedAt: toIso(item.pubDate),
+      summary: description,
+      tags: ['PRA', 'Bank of England', format, sector],
       sector,
       format,
       severity: severityFor(score),
@@ -290,6 +342,7 @@ async function fetchHkmaPressReleases(): Promise<NormalizedNotice[]> {
         typeColorClass: getTypeColor(format),
         impactScore: score,
         issuedTimeAgo: getRelativeTime(r.date),
+        publishedAt: toIso(r.date),
         tags: ['HKMA', format, sector],
         sector,
         format,
@@ -322,6 +375,7 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
       typeColorClass: getTypeColor('Circulars'),
       impactScore: 5.0,
       issuedTimeAgo: getRelativeTime(rec.end_of_date),
+      publishedAt: toIso(rec.end_of_date),
       statusBadge: {
         text: `Closing Bal: HK$${balance}M`,
         type: 'standard'
@@ -375,6 +429,7 @@ async function fetchMasMediaReleases(): Promise<NormalizedNotice[]> {
       typeColorClass: getTypeColor(format),
       impactScore: score,
       issuedTimeAgo: getRelativeTime(doc.mas_date_tdt),
+      publishedAt: toIso(doc.mas_date_tdt),
       summary,
       tags: ['MAS', format, sector],
       sector,
@@ -415,6 +470,7 @@ async function fetchBisPressReleases(): Promise<NormalizedNotice[]> {
       typeColorClass: getTypeColor(format),
       impactScore: score,
       issuedTimeAgo: getRelativeTime(item['dc:date']),
+      publishedAt: toIso(item['dc:date']),
       summary: description,
       tags: [regulator, format, sector],
       sector,
@@ -466,6 +522,16 @@ const ENDPOINTS: EndpointDefinition[] = [
     agency: 'FCA (United Kingdom)',
     jurisdiction: 'United Kingdom',
     url: 'https://www.fca.org.uk/news/rss.xml',
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'boe-pra',
+    name: 'Bank of England PRA Publications RSS',
+    agency: 'PRA (United Kingdom)',
+    jurisdiction: 'United Kingdom',
+    url: 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications',
     protocol: 'RSS XML',
     auth: 'Public / None',
     ingests: true
@@ -551,8 +617,10 @@ async function probeEndpoint(ep: EndpointDefinition) {
 
 // Government APIs (HKMA in particular) rate-limit aggressively, so probes and
 // source fetches are cached rather than repeated on every client poll.
-const HEALTH_TTL_MS = 60 * 1000;
+const HEALTH_TTL_MS = 5 * 60 * 1000;
 const SOURCE_TTL_MS = 10 * 60 * 1000;
+// HKMA's WAF blocks an IP after a handful of requests, so poll it less often
+const HKMA_SOURCE_TTL_MS = 30 * 60 * 1000;
 
 let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
 
@@ -564,14 +632,65 @@ function getEndpointsHealth() {
 }
 
 // Ingestion sources, keyed to the endpoint they read from
-const SOURCES: { endpointId: string; name: string; fetch: () => Promise<NormalizedNotice[]> }[] = [
+const SOURCES: { endpointId: string; name: string; fetch: () => Promise<NormalizedNotice[]>; ttlMs?: number }[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
   { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
-  { endpointId: 'hkma-api', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases },
-  { endpointId: 'hkma-api', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity },
+  { endpointId: 'boe-pra', name: 'UK PRA Publications', fetch: fetchPraPublications },
+  { endpointId: 'hkma-api', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases, ttlMs: HKMA_SOURCE_TTL_MS },
+  { endpointId: 'hkma-api', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS },
   { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];
+
+// Key points per notice id. Documents don't change once published, so each is
+// fetched and summarised once per server process.
+const keyPointsCache = new Map<string, KeyPoints | null>();
+
+async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null> {
+  if (keyPointsCache.has(notice.id)) return keyPointsCache.get(notice.id)!;
+  let result: KeyPoints | null = null;
+  try {
+    const res = await fetchOrThrow(notice.dossierUrl!);
+    const text = extractArticleText(await res.text(), notice.dossierUrl!);
+    if (text.length > 200) {
+      result = summarize(text, { sourceUrl: notice.dossierUrl });
+    }
+  } catch (err: any) {
+    console.log(`[RegSonar Summaries] Could not fetch ${notice.dossierUrl}: ${describeError(err)}`);
+  }
+  keyPointsCache.set(notice.id, result);
+  return result;
+}
+
+// Attach key points to notices that link to a document page. Fetches run one
+// at a time per source to stay polite to regulator sites.
+async function enrichWithKeyPoints(notices: NormalizedNotice[]): Promise<NormalizedNotice[]> {
+  const enriched: NormalizedNotice[] = [];
+  for (const notice of notices) {
+    if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity')) {
+      enriched.push(notice);
+      continue;
+    }
+    const keyPoints = await keyPointsFor(notice);
+    if (!keyPoints) {
+      enriched.push(notice);
+      continue;
+    }
+    const deadline = earliestDeadline(keyPoints);
+    enriched.push({
+      ...notice,
+      keyPoints,
+      ...(deadline && !notice.deadlineDate
+        ? {
+            deadlineDate: deadline.date,
+            statutoryDeadline: `Date in source: ${deadline.date}`,
+            statusBadge: { text: `Date in source: ${deadline.date}`, type: 'deadline' as const }
+          }
+        : {})
+    });
+  }
+  return enriched;
+}
 
 interface SourceState {
   notices: NormalizedNotice[];
@@ -598,10 +717,11 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
   }
   if (state.inFlight) {
     await state.inFlight;
-  } else if (Date.now() - state.lastAttemptAt > SOURCE_TTL_MS) {
+  } else if (Date.now() - state.lastAttemptAt > (source.ttlMs ?? SOURCE_TTL_MS)) {
     const s = state;
     s.lastAttemptAt = Date.now();
     s.inFlight = source.fetch()
+      .then(enrichWithKeyPoints)
       .then((notices) => {
         s.notices = notices;
         s.lastSuccessAt = new Date().toISOString();
@@ -684,77 +804,6 @@ async function createServer() {
     } catch (error: any) {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
       res.status(500).json({ success: false, error: error?.message || 'Sync error' });
-    }
-  });
-
-  // API Route: On-demand AI legal synthesis using Gemini
-  app.post('/api/feeds/synthesize', async (req: Request, res: Response) => {
-    try {
-      const { text, regulator, title } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
-
-      if (!apiKey) {
-        return res.json({
-          success: true,
-          source: 'heuristic',
-          synthesis: {
-            title: `Executive Legal Brief: ${title || 'Regulatory Directives'}`,
-            points: [
-              'Mandatory compliance review required within standard statutory window.',
-              'Cross-border operational risk alignment required for APAC authorized entities.',
-              'Board-level accountability linkage enforced under senior manager regimes.'
-            ]
-          }
-        });
-      }
-
-      try {
-        const ai = new GoogleGenAI({ apiKey });
-        const prompt = `You are a Senior APAC Regulatory Counsel. Analyze this regulatory notice and extract an executive legal synthesis.
-Title: ${title}
-Regulator: ${regulator}
-Text: ${text}
-
-Output JSON with:
-{
-  "title": "Short title describing legal implication",
-  "points": ["Point 1 (4-hour RTO/operational mandate)", "Point 2 (Audit/filing requirement)", "Point 3 (Senior executive liability/penalties)"],
-  "impactScore": (float between 6.0 and 9.9),
-  "statutoryDeadline": "e.g. 30 Nov 2026 or Effective Immediately",
-  "impactedUnits": ["e.g. Custody Operations", "Wealth Tech"]
-}`;
-
-        const aiRes = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
-          contents: prompt,
-          config: {
-            responseMimeType: 'application/json'
-          }
-        });
-
-        const parsed = JSON.parse(aiRes.text || '{}');
-        return res.json({
-          success: true,
-          source: 'gemini-3.8-flash',
-          synthesis: parsed
-        });
-      } catch (geminiErr: any) {
-        console.warn('Gemini temporary spike fallback:', geminiErr.message);
-        return res.json({
-          success: true,
-          source: 'heuristic_fallback',
-          synthesis: {
-            title: `Executive Legal Brief: ${title || 'Notice Analysis'}`,
-            points: [
-              'Statutory compliance filing required under applicable supervisory guidelines.',
-              'Impacts cross-border institutional trading and custody arrangements.',
-              'Audit log preservation mandated for regulatory review.'
-            ]
-          }
-        });
-      }
-    } catch (err: any) {
-      res.status(500).json({ success: false, error: err.message });
     }
   });
 
