@@ -208,6 +208,8 @@ This document records the full chronological instructions, technical requirement
   4. Wording corrected: Tesseract's recogniser is a neural network, so the site no longer says "No AI model". It now says sentences are selected by TextRank (not an AI model), with no external API.
   5. `vercel.json`: `includeFiles` lists the Tesseract worker, WebAssembly core, language data and their dependencies (loaded by path, so not traced automatically); `maxDuration` raised to 120s.
 * **Verified locally:** all 6 HKMA circulars and consultations have key points; the 2 scanned ones (GS-2 Transition Planning, Phase 2B taxonomy consultation) via OCR, at about 1.3s per page. OCR also surfaced deadlines: GS-2 documentation "in place by 1 July 2030" and the consultation "will last until 7 October 2026". A cold sync took about 9s.
+* **Deploy:** the first deploy was rejected because `includeFiles` is limited to 256 characters; it now uses one `node_modules/{...}/**` pattern.
+* **Verified in production:** OCR works on Vercel; both scanned documents had key points and deadlines (2030-07-01, 2026-10-07). A cold sync took about 32s. In the same check the HKMA press release RSS timed out once (unrelated to OCR; failed sources retry after 10 minutes). The function runs in `iad1` (US East).
 
 ---
 
