@@ -330,7 +330,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   </span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-[#857F74] leading-relaxed">
-                  The server fetches each source document, extracts the article text and ranks its sentences with TextRank. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
+                  The server fetches each source document, extracts the article text (or the text layer of a PDF, for HKMA circulars and consultations) and ranks its sentences with TextRank. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
                 </p>
               </div>
             </div>

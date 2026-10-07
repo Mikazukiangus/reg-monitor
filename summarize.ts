@@ -3,6 +3,7 @@
 // key facts (deadlines, references) are pulled out with rules.
 import { parseHTML } from 'linkedom';
 import { Readability } from '@mozilla/readability';
+import { extractText, getDocumentProxy } from 'unpdf';
 
 export interface KeyFact {
   text: string;
@@ -50,6 +51,72 @@ export function extractArticleText(html: string, url: string): string {
   }
   const article = new Readability(document as unknown as Document).parse();
   return article?.content ? htmlToText(article.content) : '';
+}
+
+// Letter furniture in regulator circulars: letterhead, salutations, sign-off,
+// contact details, page markers, and lines in Chinese
+const PDF_BOILERPLATE = /^(?:-\s*\d+\s*-|page \d+(?: of \d+)?|our ref\b|your ref\b|dear\b|yours (?:faithfully|sincerely)|encl\b|website:|tel:|fax:|e-?mail:)|\d+(?:st|nd|rd|th) floor|[\u3000-\u9fff]/i;
+const LIST_MARKER = /^(?:\d{1,2}\.|\([a-z0-9]{1,4}\)|[a-z]\)|[•▪●–-])\s+/i;
+const CONTACT_LINE = /please (?:feel free to )?contact|\b\d{4} \d{4}\b/i;
+
+// Subject lines and headings: no closing punctuation, mostly capitalised words
+function isTitleLike(line: string): boolean {
+  if (/[.!?:;,]$/.test(line)) return false;
+  const words = line.split(' ').filter((w) => w.length > 3);
+  return words.length >= 2 && words.filter((w) => /^[A-Z“"(]/.test(w)).length / words.length >= 0.75;
+}
+
+// Rebuild paragraphs from PDF text lines. Lines that wrap mid-sentence are
+// joined; short lines (headings, paragraph ends), list items, and removed
+// boilerplate (e.g. "Dear Sir/Madam" before the subject line) start a new
+// paragraph.
+function pdfLinesToText(pages: string[]): string {
+  const lines = pages
+    .flatMap((page) => page.split('\n'))
+    .map((l) => l.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .map((l) => (PDF_BOILERPLATE.test(l) || CONTACT_LINE.test(l) ? null : l));
+  const lengths = lines.flatMap((l) => (l ? [l.length] : [])).sort((a, b) => a - b);
+  const typical = lengths[Math.floor(lengths.length * 0.8)] || 80;
+
+  const paragraphs: string[] = [];
+  let current = '';
+  let prev = '';
+  for (const raw of lines) {
+    if (raw === null) {
+      if (current) paragraphs.push(current);
+      current = '';
+      prev = '';
+      continue;
+    }
+    const isListItem = LIST_MARKER.test(raw);
+    const line = raw.replace(LIST_MARKER, '');
+    // A line starting in lowercase always continues the sentence
+    const continues = /^[a-z(]/.test(line) && !isListItem;
+    const endsParagraph =
+      prev.length < typical * 0.7 || isTitleLike(prev) || (/[.!?:]$/.test(prev) && /^[A-Z]/.test(line) && prev.length < typical * 0.9);
+    const breakBefore = !current || isListItem || (!continues && endsParagraph);
+    if (breakBefore) {
+      if (current) paragraphs.push(current);
+      current = line;
+    } else {
+      current += prev.endsWith('-') ? line : ' ' + line;
+    }
+    prev = raw;
+  }
+  if (current) paragraphs.push(current);
+  // Drop footnotes ("1 The review followed...") and footnote markers glued to
+  // words or closing quotes, e.g. ("ECF").1
+  return paragraphs
+    .filter((p) => !/^\d{1,2} [A-Z]/.test(p))
+    .map((p) => p.replace(/([a-z)”"’])\.(\d{1,2})(?=\s|$)/g, '$1.')).join('\n');
+}
+
+// Plain text of a PDF document, as paragraphs
+export async function extractPdfText(data: Uint8Array): Promise<string> {
+  const pdf = await getDocumentProxy(data);
+  const { text } = await extractText(pdf, { mergePages: false });
+  return pdfLinesToText(text as string[]);
 }
 
 const STOP = new Set(

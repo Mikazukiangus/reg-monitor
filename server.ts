@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, earliestDeadline, KeyPoints } from './summarize.js';
+import { summarize, extractArticleText, extractPdfText, earliestDeadline, KeyPoints } from './summarize.js';
 
 dotenv.config();
 
@@ -682,12 +682,34 @@ const SOURCES: { endpointId: string; name: string; fetch: () => Promise<Normaliz
 // cached, so it is retried the next time its source refreshes.
 const keyPointsCache = new Map<string, KeyPoints | null>();
 
+// HKMA circulars and consultations link to BRDR landing pages that only hold
+// metadata; the document itself is the first PDF linked from the page
+const BRDR_PAGE = /^https:\/\/brdr\.hkma\.gov\.hk\//;
+const BRDR_PDF_LINK = /href="(\/eng\/doc-ldg\/docId\/getPdf\/[^"]+\.pdf)"/i;
+const MAX_PDF_BYTES = 15 * 1024 * 1024;
+
+async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; pdfUrl: string }> {
+  const page = await (await fetchOrThrow(pageUrl)).text();
+  const href = page.match(BRDR_PDF_LINK)?.[1];
+  if (!href) throw new Error('No PDF link on BRDR page');
+  const pdfUrl = new URL(href, pageUrl).toString();
+  const data = new Uint8Array(await (await fetchOrThrow(pdfUrl)).arrayBuffer());
+  if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
+  return { text: await extractPdfText(data), pdfUrl };
+}
+
 async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null> {
   if (keyPointsCache.has(notice.id)) return keyPointsCache.get(notice.id)!;
   try {
-    const res = await fetchOrThrow(notice.dossierUrl!);
-    const text = extractArticleText(await res.text(), notice.dossierUrl!);
-    const result = text.length > 200 ? summarize(text, { sourceUrl: notice.dossierUrl }) : null;
+    let text: string;
+    let sourceUrl = notice.dossierUrl!;
+    if (BRDR_PAGE.test(sourceUrl)) {
+      ({ text, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
+    } else {
+      const res = await fetchOrThrow(sourceUrl);
+      text = extractArticleText(await res.text(), sourceUrl);
+    }
+    const result = text.length > 200 ? summarize(text, { sourceUrl }) : null;
     keyPointsCache.set(notice.id, result);
     return result;
   } catch (err: any) {
@@ -696,16 +718,12 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
   }
 }
 
-// HKMA circulars and consultations link to BRDR landing pages that only hold
-// metadata (the text is in a PDF) and sit behind the same WAF as the Open API
-const NO_ARTICLE_TEXT = /^https:\/\/brdr\.hkma\.gov\.hk\//;
-
 // Attach key points to notices that link to a document page. Fetches run one
 // at a time per source to stay polite to regulator sites.
 async function enrichWithKeyPoints(notices: NormalizedNotice[]): Promise<NormalizedNotice[]> {
   const enriched: NormalizedNotice[] = [];
   for (const notice of notices) {
-    if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity') || NO_ARTICLE_TEXT.test(notice.dossierUrl)) {
+    if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity')) {
       enriched.push(notice);
       continue;
     }

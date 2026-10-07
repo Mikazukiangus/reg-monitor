@@ -190,6 +190,15 @@ This document records the full chronological instructions, technical requirement
   4. A failed key-point fetch is no longer cached. Previously one timeout meant that notice never got key points for the life of the server instance; now it is retried when its source next refreshes (every 10 minutes). In production two HKMA press-release pages timed out once from Vercel's Singapore region, although they load in under 1s elsewhere.
 * **Verified:** locally, with `api.hkma.gov.hk` and `brdr.hkma.gov.hk` made to time out (as on Vercel), a sync returned 10 HKMA notices (4 press releases with key points, 3 circulars, 3 consultations); only the liquidity source failed. `tsc --noEmit` and `vite build` pass; no console errors. In production after deploy: 29 notices, HKMA RSS Operational with 10 notices; only the liquidity figures (Open API) failed.
 
+### Request 12: Key Points for HKMA Circulars from PDFs (Claude Code, 2026-10-07)
+* **Instruction:** "add key points for HKMA circulars from the PDFs".
+* **Findings:** circular and consultation PDFs are only published on BRDR (`brdr.hkma.gov.hk/eng/doc-ldg/docId/getPdf/...`); the old `www.hkma.gov.hk/media/.../guidelines-and-circular/` paths return 404. Some BRDR PDFs are scanned images with no text layer.
+* **Changes:**
+  1. `summarize.ts` gained `extractPdfText()`, using `unpdf` (a serverless build of pdf.js). It rebuilds paragraphs from PDF lines: joins lines that wrap mid-sentence, keeps headings, subject lines and numbered items separate, and drops letter furniture (letterhead, Chinese address, "Dear Sir/Madam", sign-off, contact line, page markers, footnotes).
+  2. For BRDR links, the server fetches the landing page, takes the first linked PDF (the document itself), downloads it (15 MB cap) and summarises it with the same TextRank code. The "Verify in document" link points at the PDF.
+* **Verified locally:** 4 of the 6 current HKMA circulars and consultations got key points quoted from their PDFs. The other 2 (GS-2 Transition Planning; Phase 2B taxonomy consultation) are scanned PDFs with no text, so they keep the "No text could be extracted" note. OCR was not added, as it is too heavy for a serverless function.
+* **Open question:** BRDR uses the same Alibaba Cloud WAF family as `api.hkma.gov.hk`, so it may be unreachable from Vercel; see the production check below.
+
 ---
 
 ## 3. Key Files & Modifications Summary
