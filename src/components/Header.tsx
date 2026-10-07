@@ -87,9 +87,9 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <option value="All">All jurisdictions</option>
               <option value="Singapore MAS">Singapore (MAS)</option>
-              <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC)</option>
+              <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC, HKEX)</option>
               <option value="Australia Japan">Australia &amp; Japan</option>
-              <option value="UK US Global">UK, US &amp; Global</option>
+              <option value="UK US Global">UK, EU, US &amp; Global</option>
             </select>
           </div>
         </div>
@@ -245,7 +245,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="absolute right-0 mt-2 w-64 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50 text-[12px]">
                 <p className="font-semibold text-[#1D2630]">Local session</p>
                 <p className="text-[11px] text-[#3C4852] mt-1 leading-relaxed">
-                  RegSonar has no accounts or sign-in. Watch rules live in this browser tab only; the notices you have seen are remembered in this browser to mark new ones.
+                  RegSonar has no accounts or sign-in. Watch rules are saved in this browser only; the notices you have seen are remembered in this browser to mark new ones.
                 </p>
               </div>
             )}

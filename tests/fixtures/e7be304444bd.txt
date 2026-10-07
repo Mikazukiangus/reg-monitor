@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:admin="http://webns.net/mvcb/" version="2.0">
+  <channel>
+    <title>Financial Services Agency</title>
+    <link>https://www.fsa.go.jp/en/index.html</link>
+    <description>This is the official website of Financial Services Agency. This site contains information on organization of the Financial Services Agency, press releases, policies and councils, applicable laws and regulations, and a PR magazine "Access FSA".</description>
+    <dc:language>en</dc:language>
+    <item>
+      <title>International,Hosting Overseas Regulatory Officials at the Global Financial Partnership Center (29th Program: 15 Insurance Supervisory Authorities)</title>
+      <link>https://www.fsa.go.jp/en/glopac/20260825_29th/20260825_29th.html</link>
+      <description />
+      <pubDate>Wed, 07 Oct 2026 11:00:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Publication,FSA Weekly Review No.705 October 6, 2026</title>
+      <link>https://www.fsa.go.jp/en/newsletter/weekly2026/705.html</link>
+      <description />
+      <pubDate>Tue, 06 Oct 2026 09:30:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Press Conferences,Press Conference by KATAYAMA Satsuki, Minister of Finance and Minister of State for Financial Services (September 15, 2026)</title>
+      <link>https://www.fsa.go.jp/en/conference/minister/2026/20260915.html</link>
+      <description />
+      <pubDate>Fri, 02 Oct 2026 16:30:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Press Conferences,Press Conference by KATAYAMA Satsuki, Minister of Finance and Minister of State for Financial Services (September 18, 2026)</title>
+      <link>https://www.fsa.go.jp/en/conference/minister/2026/20260918.html</link>
+      <description />
+      <pubDate>Fri, 02 Oct 2026 16:30:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Others,Trends in High-Speed Trading (as of the end of June 2026)</title>
+      <link>https://www.fsa.go.jp/en/news/2026/20260930/20260930.html</link>
+      <description />
+      <pubDate>Wed, 30 Sep 2026 16:00:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Publication,FSA Weekly Review No.704 September 29, 2026</title>
+      <link>https://www.fsa.go.jp/en/newsletter/weekly2026/704.html</link>
+      <description />
+      <pubDate>Tue, 29 Sep 2026 09:13:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Press Conferences,Press Conference by KATAYAMA Satsuki, Minister of Finance and Minister of State for Financial Services (September 8, 2026)</title>
+      <link>https://www.fsa.go.jp/en/conference/minister/2026/20260908.html</link>
+      <description />
+      <pubDate>Thu, 24 Sep 2026 19:11:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Press Conferences,Summary of the Joint Press Conference by Minister Katayama, Minister of Finance and Minister of State for Financial Services, and Governor Ueda of the Bank of Japan (September 1, 2026)</title>
+      <link>https://www.fsa.go.jp/en/conference/minister/2026/20260901.html</link>
+      <description />
+      <pubDate>Thu, 24 Sep 2026 19:10:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Press Conferences,Press Conference by KATAYAMA Satsuki, Minister of Finance and Minister of State for Financial Services (August 31, 2026)</title>
+      <link>https://www.fsa.go.jp/en/conference/minister/2026/20260831.html</link>
+      <description />
+      <pubDate>Thu, 24 Sep 2026 19:09:00 JST</pubDate>
+    </item>
+    <item>
+      <title>Policies,FSA publishes "FSA Strategic Priorities: July 2026 - June 2027"</title>
+      <link>https://www.fsa.go.jp/en/news/2026/20260915/20260915.html</link>
+      <description />
+      <pubDate>Tue, 15 Sep 2026 18:00:00 JST</pubDate>
+    </item>
+  </channel>
+</rss>
+

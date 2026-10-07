@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.esma.europa.eu/">
+  <channel>
+    <title>European Securities and Markets Authority</title>
+    <link>https://www.esma.europa.eu/</link>
+    <description/>
+    <language>en</language>
+    
+    
+<item>
+  <title>ESMA calls for changes to make MiCA clearer, safer and ready for emerging services</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-calls-changes-make-mica-clearer-safer-and-ready-emerging-services</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA calls for changes to make MiCA clearer, safer and ready for emerging services&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-30T15:25:31+02:00" title="Wednesday, September 30, 2026 - 15:25" class="datetime"&gt;30 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Digital Finance and Innovation&lt;/div&gt;
+              &lt;div class="field__item"&gt;Investor protection&lt;/div&gt;
+              &lt;div class="field__item"&gt;Simplification and Burden Reduction&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, has responded to the European Commission’s public consultation on the review of Markets in Crypto-Assets Regulation (MiCA). &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA75-113276571-1721_Response_to_the_EC_consultation_MiCA_regulation_review.pdf"&gt;ESMA’s recommendations&lt;/a&gt; aim to simplify the framework while improving investor protection and addressing innovative business models, such as decentralised finance (DeFi), staking, lending and borrowing.&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;h6 class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;&lt;strong&gt;Enhancing investor protection&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;ESMA proposes new safeguards in areas where investors face risks that are not fully covered under the current framework, including:&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;stricter rules for the marketing of crypto-assets, particularly when they are promoted by influencers and third parties;&amp;nbsp;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;greater transparency in costs; and&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;proportionate requirements for staking, lending and borrowing, including through disclosure obligations.&amp;nbsp;&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;These measures would provide clearer information on costs, risks, rewards, collateral arrangements, and potential losses before investment decisions are made.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="EN-US"&gt;&lt;strong&gt;Reinforcing supervision&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;ESMA recommends strengthening&amp;nbsp;supervisory powers and address the risks arising from unauthorised services, online fraud and non-compliant stablecoins, by:&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;enhancing the EU’s capacity to detect, block and deactivate fraudulent websites and freeze crypto assets in cases of suspicion of market abuse or terrorist financing;&amp;nbsp;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;obtaining reinforced supervisory powers to deal with third-country firms which solicit EU investors without being authorised under MiCA, and;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span lang="EN-US"&gt;introducing explicit rules to prevent regulated crypto firms from offering services linked to stablecoins that do not comply with MiCA requirements.&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;These measures would support faster and more consistent supervisory action across the EU, better protecting investors, and reducing opportunities for regulatory arbitrage.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="EN-US"&gt;&lt;strong&gt;Evolving towards De-Fi and improving crypto-asset classification&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;As crypto markets evolve and activity around decentralised finance (DeFi) and stablecoins grow, ESMA advocates for the introduction of clearer criteria for determining which activities can be considered genuinely decentralised. It also recommends creating a new regulated crypto asset service for firms that provide users with access to DeFi protocols.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;To reduce uncertainty and support harmonised supervision across the EU, ESMA suggests adopting rules on how crypto-assets should be classified, including new products such as hybrid tokens. It also includes granting ESMA the ability to issue binding opinions on token classification to ensure the same products are treated consistently within the EU market.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="EN-US"&gt;&lt;strong&gt;Simplification and burden reduction&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;In line with the EU’s simplification and burden reduction agenda, ESMA proposes to streamline parts of the existing rules, including simplifying crypto-asset white-paper notification procedures, reducing duplicative authorisation requirements for some regulated firms, and improving the consistency of prudential requirements.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="EN-US"&gt;&lt;strong&gt;Development of an integrated European tokenised capital markets&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;Finally, and looking beyond the immediate MiCA review, ESMA highlights the need for a framework for tokenised securities and on-chain settlement that can support the development of an integrated European tokenised capital market and facilitates cross-border activity in the future.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Cristina Bonillo&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Senior Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      30/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA75-113276571-1721&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/response-european-commissions-consultation-review-mica-regulation" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Response to the European Commission's consultation on the review of MiCA regulation&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA75-113276571-1721_Response_to_the_EC_consultation_MiCA_regulation_review.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225364"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>ESMA sets 2027 priorities for stronger, simpler and more integrated EU capital markets</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-sets-2027-priorities-stronger-simpler-and-more-integrated-eu-capital</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA sets 2027 priorities for stronger, simpler and more integrated EU capital markets&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-28T09:58:05+02:00" title="Monday, September 28, 2026 - 09:58" class="datetime"&gt;28 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;About ESMA&lt;/div&gt;
+              &lt;div class="field__item"&gt;Press Releases&lt;/div&gt;
+              &lt;div class="field__item"&gt;Simplification and Burden Reduction&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, has today published its annual &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA22-50751485-1673_Annual_Work_Programme_2027.pdf"&gt;&lt;span&gt;Work Programme&lt;/span&gt;&lt;/a&gt;&lt;span&gt; for 2027. Guided by ESMA’s multi-annual strategy for 2023–2028, the programme is marking a shift from preparation to the delivery of several major initiatives.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;Verena Ross, Chair of ESMA, said:&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;em&gt;&lt;span&gt;“2027 marks an important milestone for the Savings and Investments Union (SIU) as many of ESMA's strategic initiatives move into the delivery phase. While co-legislators continue their work on the Market Integration and Supervision Package (MISP), ESMA is already advancing on key elements of the SIU agenda including initiatives to simplify the regulatory, reporting and supervisory framework. ESMA also continues to modernise the way it supervises markets through greater use of data and technology.&lt;/span&gt;&lt;/em&gt;&lt;/h6&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;em&gt;&lt;span&gt;This work programme reflects ESMA's commitment to strengthening the Single Market, protecting investors and safeguarding financial stability. It enables ESMA to remain agile in the face of volatile and risky market conditions, while responding effectively to rapidly changing needs and priorities.&lt;/span&gt;&lt;/em&gt;&lt;/h6&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;em&gt;&lt;span&gt;As financial markets continue to evolve, I know that ESMA and its staff will remain focused on ensuring that EU capital markets are efficient, resilient and attractive.”&lt;/span&gt;&lt;/em&gt;&lt;/h6&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Growing supervisory mandates&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA will advance its supervision of consolidated tape providers and external reviewers of European Green Bonds, as well as process the applications and begin supervision of ESG rating providers. It will also adapt to its expanded responsibilities for benchmark administrators.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA will carry out oversight activities for Critical ICT Third-Party Service Providers together with the other European Supervisory Authorities and continue monitoring and promoting compliance with the Digital Operational Resilience Act (DORA) across all of its supervisory mandates.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;In 2027, ESMA will review the impact of recent reforms (EMIR 3) aimed at making EU clearing markets more resilient. The work will help ensure that EU clearing houses remain robust and reduce the EU's dependence on certain systemically important clearing services located outside the EU.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Alongside its direct supervisory responsibilities, ESMA will enhance supervisory convergence across the EU, continuing the strong cooperation with National Competent Authorities (NCAs), including on supervision of crypto-asset service providers (CASPs) under MiCA.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Delivering more efficient financial markets&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Following the expected final agreement by the co-legislators on the MISP proposal in 2027, ESMA will prepare for the resulting changes to its mandates and responsibilities. In parallel, ESMA will be delivering other priorities supporting the SIU, including implementation of the European Single Access Point and the transition to T+1 settlement. ESMA will continue to enhance investor protection by supporting the implementation of the Retail Investment Strategy and promoting clear, accessible information for investors.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA’s four flagship simplification initiatives on transaction reporting, funds reporting, the retail investor journey and risk-based supervision will also enter a new phase in 2027. They are intended to reduce unnecessary administrative burdens, improve the usability of regulatory data and make supervision more effective. Further details are set out in the &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA22-1669215091-6873_SBR_Report.pdf"&gt;&lt;span&gt;&lt;u&gt;report&lt;/u&gt;&lt;/span&gt;&lt;/a&gt;&lt;span&gt; also published today which outlines actions undertaken in 2026 and planned for 2027 to embed simplification and burden reduction across ESMA’s regulatory and supervisory activities.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Finally, ESMA will support the implementation of key EU financial legislation by delivering technical standards and advice across its remit.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Harnessing data and technological innovation&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA will further enhance its data capabilities and promote innovation in the supervisory process, through the development of its Data Platform and the deployment of AI-based tools to support supervision. It will also strengthen cybersecurity capabilities and advance work on crypto-assets and the impact of artificial intelligence on financial markets. Tokenisation will remain as a priority for ESMA, further expanding the work on the opportunities it can bring to the EU capital markets.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;For the work programme:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Tayfun Yilmaz&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;For the SBR report:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Cristina Bonillo&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Senior Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      28/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA22-50751485-1673&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/2027-annual-work-programme" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;2027 Annual Work Programme&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA22-50751485-1673_Annual_Work_Programme_2027.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225251"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      28/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA22-1669215091-6873&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/esmas-contribution-simplification-and-burden-reduction" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA’s contribution to simplification and burden reduction&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA22-1669215091-6873_SBR_Report.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225252"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      28/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;SBR&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/simplification-and-burden-reduction-factsheet" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Simplification and burden reduction - factsheet&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2025-10/Simplification_and_Burden_Reduction.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:212516"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      28/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA71-545613100-3005&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/esma-sets-2027-priorities-stronger-simpler-and-more-integrated-eu-capital-markets-press" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA sets 2027 priorities for stronger, simpler and more integrated EU capital markets - Press release&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA71-545613100-3005_ESMA_sets_2027_priorities_for_stronger__simpler_and_more_integrated_EU_capital_markets_-_Press_release.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225254"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>Upcoming changes to the Euribor Panel</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/upcoming-changes-euribor-panel-0</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Upcoming changes to the Euribor Panel&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-24T17:51:27+02:00" title="Thursday, September 24, 2026 - 17:51" class="datetime"&gt;24 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Benchmarks&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, is issuing a statement on the upcoming changes to the Euribor panel, in its capacity as supervisor of the European Money Market Institute (EMMI), administrator of Euribor.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;This statement concerns the&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.emmi-benchmarks.eu/communication/statements/euribor-panel-update2/"&gt;&lt;span&gt;announcement by EMMI&lt;/span&gt;&lt;/a&gt;&lt;span&gt; that Cecabank, based in Spain, will withdraw from the Euribor panel. The withdrawal will take effect on 30 September 2026, which will be the bank’s final day contributing input data to the benchmark determination.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA and National Competent Authorities within the Euribor College of Supervisors have assessed the impact of the departure of Cecabank on Euribor representativeness of the Euro unsecured money market. ESMA and the College concluded that Cecabank’s departure does not pose a risk to the representativeness of Euribor.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;This departure follows a period of Euribor panel enlargement with the addition of four new panel banks since 2022, including&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.esma.europa.eu/press-news/esma-news/euribor-panel-include-kbc-bank"&gt;&lt;span&gt;KBC Bank’s recent joining of the panel in May 2026&lt;/span&gt;&lt;/a&gt;&lt;span&gt;. ESMA continues to encourage credit institutions active in the Euro unsecured money market to consider joining the Euribor panel, actively supporting the robustness and representativeness of this critical benchmark within the EU financial system.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Tayfun Yilmaz&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      </description>
+  
+</item>
+
+<item>
+  <title>ESMA sets new supervisory priority on digital innovation from 2027</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-sets-new-supervisory-priority-digital-innovation-2027</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA sets new supervisory priority on digital innovation from 2027&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-23T13:55:43+02:00" title="Wednesday, September 23, 2026 - 13:55" class="datetime"&gt;23 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Digital Finance and Innovation&lt;/div&gt;
+              &lt;div class="field__item"&gt;Supervisory convergence&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, will launch a new Union Strategic Supervisory Priority (USSP) to help embrace innovation while protecting investors and maintaining strong safeguards.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The digital innovation USSP aims to ensure supervisors have the expertise and capacity to oversee the use of new technologies. In collaboration with National Competent Authorities, our initial focus will be on how supervised entities use artificial intelligence and tokenisation. We will remain flexible to address future technological developments as they emerge.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The new priority will run alongside the USSP on cyber and operational resilience, which has been in place since 2025. Going forward, we will continue our efforts and coordination to address the challenges ahead, including those emerging from advanced models such as frontier AI.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;This year, ESMA is also concluding the USSP on ESG disclosures, following its launch in 2023. Overall, we have made strong progress in improving ESG disclosures and helping investors better understand sustainability information and receive quality advice. While this marks a significant milestone, ESG remains a long-term journey.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;▸ &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Union_strategic_supervisory_priorities_-_factsheet.pdf"&gt;&lt;span&gt;Factsheet &lt;/span&gt;&lt;/a&gt;&lt;span&gt;presenting key information on ongoing and future USSPs&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Background&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;USSPs are ESMA’s convergence tools that address high-risk areas of strategic importance across the EU. They help direct supervisory resources towards the risks that matter most for investor protection, financial stability and the orderly functioning of EU financial markets.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="FR"&gt;&lt;strong&gt;Tayfun Yilmaz&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="FR"&gt;Communications Officer&lt;/span&gt;&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;&lt;span lang="FR"&gt;press@esma.europa.eu&lt;/span&gt;&lt;/a&gt;&lt;span lang="FR"&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      23/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;USSPs&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/union-strategic-supervisory-priorities-ussps-factsheet" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Union strategic supervisory priorities (USSPs) - factsheet&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Union_strategic_supervisory_priorities_-_factsheet.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225085"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>ESAs call for vigilance over external dependencies, cyber threats and private credit risks</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esas-call-vigilance-over-external-dependencies-cyber-threats-and-private</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESAs call for vigilance over external dependencies, cyber threats and private credit risks&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-23T11:50:54+02:00" title="Wednesday, September 23, 2026 - 11:50" class="datetime"&gt;23 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Joint Committee&lt;/div&gt;
+              &lt;div class="field__item"&gt;Risk monitoring&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Supervisory Authorities (EBA, EIOPA and ESMA – the ESAs)&amp;nbsp;have identified external dependencies, emerging technologies and private credit as key vulnerabilities for the EU financial system&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/JC_2026_29_JC_update_on_risks_and_vulnerabilities_autumn_2026.pdf"&gt;&lt;span&gt;in their Autumn 2026 risk update.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The ESAs warn that the sector's reliance on non-EU providers and infrastructures could amplify the impact of geopolitical shocks and operational disruptions. Dependence on ICT service providers outside the European Economic Area remains a particular concern, alongside growing cyber risks linked to increasingly capable AI models.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The findings also highlight vulnerabilities related to private credit. Although the sector remains relatively small in the EU, its rapid growth, limited transparency and increasing links with the wider financial system could create risks during periods of stress.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Despite these challenges, the EU financial system has remained resilient. Investment funds, insurers and banks continue to show strong fundamentals, although geopolitical tensions, cyber threats, natural catastrophes and technological developments continue to shape the outlook.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The ESAs call on supervisors and market participants to strengthen their preparedness and continue closely monitoring risks stemming from external dependencies, private credit and emerging technologies.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Background&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The key findings of Autumn 2026 Joint Committee update on Risks and Vulnerabilities were presented at the meeting of the Financial Stability Table of the EU’s Economic and Financial Committee (FST-EFC) on 10 September 2026 as input from the ESAs.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Findings in detail:&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;The EU financial system remains resilient&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Financial markets have remained resilient despite a volatile environment marked by geopolitical tensions, fluctuations in energy prices and continued crypto-asset volatility. EU equities reached record highs even amid the geopolitical tensions in the Middle East. Bond yields rose but spread widening was limited. Resilience was also evident across the wider financial system. EU investment funds remained resilient throughout the period of volatility. Fundamentals in the insurance and pension sector stayed strong, and capital and funding positions strengthened, however, more frequent natural catastrophes could widen protection gaps, reinforcing the need for stronger action on adaptation.&amp;nbsp; European banks continued to operate from a position of strength, with strong profitability and high capital ratios supported by organic capital creation. Bank asset quality is also resilient with low levels of Non-Performing Loans, but with expectations of asset quality deterioration in certain portfolios, particularly Commercial Real Estate and Small and Medium-sized Enterprises.&amp;nbsp;Nevertheless, risks remain. Geopolitical developments, energy prices, and rapid technological advances including AI continue to shape the risk outlook, while operational risks are increasing with cyber and fraud risk remaining the main sources of concern.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Role of non-EU exposures and infrastructure dependencies&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The ESAs highlight the EU financial sector’s dependencies on non-EU countries across the financial system. Investment funds have substantial exposures to the US, particularly equity UCITS and alternative investment funds, while bond funds are more geographically diversified.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;In the insurance sector, global interconnectedness is contained overall and is primarily asset- and reinsurance-driven. While these links bring diversification benefits, they also increase market, counterparty, and concentration risks for the sector.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;In the banking sector, heightened geopolitical tensions are increasing uncertainties. Although direct exposures to the regions affected by geopolitical tensions remain limited, indirect exposure and second-round effects could have wider implications for borrowers and funding conditions.&amp;nbsp; Adverse developments from geopolitical tensions could lead to deteriorating asset quality and subdued credit demand, which are not least reflected in banks’ impairment overlays. Banks also face funding gaps in some non-EU currencies, mainly because of household and non-financial corporation deposits and mostly in USD, GBP and CHF. There is ongoing strong reliance on non-EU ICT service providers and payment systems. Dependence on non-EU service providers also remains visible in financial infrastructures, with clearing, repo and credit ratings markets largely intermediated by non-EU entities.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;External dependencies present risks, particularly linked to cyber and AI&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;This reliance on non-EU counterparties increases dependencies on other regulatory regimes and can increase vulnerabilities to geopolitical events outside the EU. It heightens cyber risks, particularly given the concentration of dependence on non-EEA ICT providers. In the insurance sector, exposure also arises through cyber-insurance underwriting. In a context of severe geopolitical instability, added frequency and severity of orchestrated AI-enabled cyberattacks could increase claims and accumulation risks for insurers, though exclusion clauses could limit the impacts on the sector.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The rapid development of advanced AI systems could make cyberattacks more powerful and harder to contain, allowing malicious actors to identify and exploit vulnerabilities at unprecedented speed. Quantum computing, another rapidly developing technological area, could soon transform the financial sector in key areas by optimising financial processes, fraud and compliance monitoring, as well as pricing. While it promises significant benefits, it could also create major risks, through undermining cryptography systems widely used to secure communications, transactions, databases, and blockchains. Risks posed could also materialise faster than any commercially viable application.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Private credit exposures have grown and present risks&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Private credit markets continue to expand rapidly as a source of financing globally, although the EU market remains relatively small, with limited aggregate exposures among banks and insurers. Nonetheless, the sector presents vulnerabilities linked to increasing complexity, limited transparency, and interlinkages across the financial system. These include infrequent and potentially inaccurate loan valuations, high credit risk, uncertainty about leverage across the value chain, and data gaps affecting both market participants and regulators. Risks may also arise from EU entity exposures to the larger US private credit market. Liquidity mismatches in private credit funds could amplify redemption pressures and generate spillovers to banks through funding and common exposures. Banks could also face credit risks through shared borrowers and financing commitments to private credit vehicles.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Supervisors and market participants should stay ready and responsive&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Given the ongoing geopolitical risks, the Joint Committee of the ESAs calls on supervisors and market participants to strengthen resilience through crisis preparedness, resolution coordination, and more effective and adaptable regulation. It also calls for proactive monitoring and management of risks related to external dependencies, private credit, and AI. This includes managing exposures to non-EEA entities, particularly those linked to private credit, monitoring dependencies on non-EU/EEA service providers, and strengthening preparedness for risks arising from the rapid development of AI and quantum computing.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="FR"&gt;&lt;strong&gt;Tayfun Yilmaz&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="FR"&gt;Communications Officer&lt;/span&gt;&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;&lt;span lang="FR"&gt;press@esma.europa.eu&lt;/span&gt;&lt;/a&gt;&lt;span lang="FR"&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      23/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;JC 2026 29&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/joint-committee-update-risks-and-vulnerabilities-eu-financial-system-autumn-2026" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Joint Committee update on risks and vulnerabilities in the EU financial system – autumn 2026&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/JC_2026_29_JC_update_on_risks_and_vulnerabilities_autumn_2026.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:225081"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>Ongoing geopolitical and economic vulnerabilities masked by strong investor optimism</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/ongoing-geopolitical-and-economic-vulnerabilities-masked-strong-investor</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Ongoing geopolitical and economic vulnerabilities masked by strong investor optimism&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-10T10:25:31+02:00" title="Thursday, September 10, 2026 - 10:25" class="datetime"&gt;10 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Press Releases&lt;/div&gt;
+              &lt;div class="field__item"&gt;Risk monitoring&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, published today its &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA50-1949966494-4282_TRV_Risk_Monitor_2_2026.pdf"&gt;&lt;span&gt;second risk monitoring report of 2026&lt;/span&gt;&lt;/a&gt;&lt;span&gt;, setting out the main risks and vulnerabilities in EU financial markets.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA finds that, while markets have remained resilient, stretched technology valuations and heightened geopolitical tensions are testing this resilience, in a climate of persistent inflation and weaker economic growth. Despite heightened market volatility and event-driven uncertainty, strong performance in technology and AI-related sectors has been helping to sustain fast recovery of investor optimism and financial markets valuations.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;This resilience should not be mistaken as an absence of vulnerabilities. The disconnect between deteriorating macro-financial conditions and upbeat market valuation increases the risk of sudden market corrections, should economic risks materialise or investor sentiment shift abruptly. At the same time, rapidly emerging threats to market infrastructures and key market players, such as those linked to frontier AI, should not be overlooked.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;strong&gt;Verena Ross, ESMA’s Chair, said:&lt;/strong&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;em&gt;“Investor optimism continues to support elevated valuations despite rising geopolitical tensions and a weakening economic outlook. The wider this gap becomes, the greater the risk of an abrupt market correction.&lt;/em&gt;&lt;/h6&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;em&gt;&lt;span&gt;Retail and institutional investors should remain vigilant and retain resilience, preparing to be able to withstand sharp market corrections.”&lt;/span&gt;&lt;/em&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Beyond these risk drivers, ESMA’s report sets out market developments and conditions across key segments of EU financial markets during the first half of 2026. It also provides in-depth analysis on selected topics, including UCITS market fragmentation, technology IPO trends in the US and prediction markets.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Market developments&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Securities markets and crypto-assets&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Equity markets fell sharply following the outbreak of the Middle East conflict, but prices have since rebounded to, or above, pre-conflict levels. Nevertheless, elevated valuations amid a weaker macro-financial and geopolitical outlook have increased the risk of abrupt corrections. In bond markets, concerns have emerged over funding conditions and the safe-haven role of bonds, with sovereign yields rising and spreads widening, while volatility remains elevated despite largely stable EU credit quality indicators. Beyond listed markets, risks also warrant close monitoring in less transparent and increasingly interconnected segments, both in private credit exposures to the US market, and in the growing linkage between increasingly vulnerable crypto-asset markets and the broader financial system.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Infrastructures and services&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Key market infrastructures have continued to function well, even during recent market stress, where clearing houses, known as central counterparties (CCPs), handled volatile energy trading without disruption. Settlement systems, however, saw a short-lived rise in failed transactions across asset classes in early April. Cyber risks are increasingly important as frontier AI developments are shifting the operational risk landscape.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Asset management&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Fund flows and performance remained positive despite the volatile market environment. While interest rate and credit risks are emerging as growing concerns, the available risk indicators remain broadly stable at this time. Valuation risk continues to be an issue across most fund categories.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Consumers&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Digital platforms have made it easier for retail investors to access markets, and this is shaping behaviours in different ways. On the one hand, many investors continue to favour passive products for long-term investing, while the same platforms can also facilitate short term or speculative trading. Overall, exposure to social media content and gamification features on digital platforms may encourage uniformed or impulsive investment decisions.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Structural developments&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Market-based finance&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;IPO activity remained limited in the EU, and follow-on issuance was below historical averages. At the same time, corporate bond issuance stayed strong, although the pace of short-term debt issuance moderated and refinancing risks increased.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Sustainable finance&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Global climate policy tensions and energy security concerns continued to weigh on ESG sentiment. Nevertheless, ESG funds saw mixed developments overall, with renewable energy and transition-focused funds attracting inflows. The EU ESG bond market remained resilient, supported by the growing use of proceeds linked to renewable energy projects.&lt;/span&gt;&lt;/p&gt;
+&lt;h6 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Financial innovation&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Tokenisation of equities remains at an early stage, but adoption momentum is increasing. In decentralised finance, recent exploits have renewed concerns about interconnectedness and potential spillovers. Investment in artificial intelligence continues to expand, reflected in the growing number of AI-focused funds, particularly those targeting AI infrastructure. Meanwhile, quantum computing has attracted significant investor interest, with both global and EU startup funding reaching record levels in 2025.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Ana Dilaverakis&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      10/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA50-1949966494-4282&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/trends-risks-and-vulnerabilities-trv-report-no-2-2026" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Trends, Risks and Vulnerabilities (TRV) Report, No. 2, 2026&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA50-1949966494-4282_TRV_Risk_Monitor_2_2026.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224657"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      10/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA50-1949966494-4299&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/statistical-annex-trends-risks-and-vulnerabilities-trv-report-no-2-2026" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Statistical Annex to the Trends, Risks and Vulnerabilities (TRV) Report, No. 2, 2026&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA50-1949966494-4299_TRV_2_2026_Statistical_annex.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224658"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      10/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA71-545613100-2999&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/ongoing-geopolitical-and-economic-vulnerabilities-masked-strong-investor-optimism-press" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Ongoing geopolitical and economic vulnerabilities masked by strong investor optimism - Press release&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA71-545613100-2999_Ongoing_geopolitical_and_economic_vulnerabilities_masked_by_strong_investor_optimism_-_Press_release.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224659"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>ESMA consults on disclosure requirements and updates guidelines and Q&amp;As under the Prospectus Regulation</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-consults-disclosure-requirements-and-updates-guidelines-and-qas-under</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA consults on disclosure requirements and updates guidelines and Q&amp;amp;As under the Prospectus Regulation&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-09T12:15:22+02:00" title="Wednesday, September 9, 2026 - 12:15" class="datetime"&gt;09 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Guidelines and Technical standards&lt;/div&gt;
+              &lt;div class="field__item"&gt;Prospectus&lt;/div&gt;
+              &lt;div class="field__item"&gt;Simplification and Burden Reduction&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, has published a package of materials under the Prospectus Regulation to reflect changes introduced by the Listing Act. The measures aim to&amp;nbsp;promote supervisory convergence and contribute to ESMA’s&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.esma.europa.eu/esmas-activities/simplification-and-burden-reduction"&gt;&lt;span&gt;simplification and burden-reduction&lt;/span&gt;&lt;/a&gt;&lt;span&gt; efforts.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The package includes:&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3085_Consultation_Paper_update_GLs_on_disclosure_under_Prospectus_Regulation.pdf"&gt;&lt;span&gt;a Consultation Paper on the update of the Guidelines on disclosure requirements&lt;/span&gt;&lt;/a&gt;&lt;span&gt;;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Overview_of_changes_made_to_the_Prospectus_Q_As.pdf"&gt;&lt;span&gt;updated Q&amp;amp;As&lt;/span&gt;&lt;/a&gt;&lt;span&gt;;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3034_Final_Report_Guidelines_on_supplements_which_introduce_new_securities_to_a_base_prospectus.pdf"&gt;&lt;span&gt;a Final Report on Guidelines for supplements that introduce new securities to a base prospectus&lt;/span&gt;&lt;/a&gt;&lt;span&gt; (“product supplements”); and&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3065_Final_report_update_to_RTS_key_financial_info_in_summary_of_a_prospectus.pdf"&gt;&lt;span&gt;a Final Report on regulatory technical standards (RTS) on key financial information to be included in prospectus summaries&lt;/span&gt;&lt;/a&gt;&lt;span&gt;.&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Consultation on disclosure Guidelines&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The Consultation Paper &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/press-news/consultations/consultation-update-guidelines-disclosure-requirements-under-prospectus"&gt;&lt;span&gt;seeks stakeholder feedback&lt;/span&gt;&lt;/a&gt;&lt;span&gt; on updates intended to help issuers and their advisers better understand expected disclosure under the revised Prospectus Regulation. They also simplify existing guidance by reducing the parts that are no longer necessary.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Stakeholders are invited to respond to the consultation by 9 November 2026. ESMA expects to publish the Final Report and updated Guidelines in Q2 2027.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Q&amp;amp;As&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The revised Q&amp;amp;As adjust legal references reflecting the amended Prospectus Regulation, introduce further clarifications where needed, and remove obsolete content. To help stakeholders navigate the changes, ESMA has prepared &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Overview_of_changes_made_to_the_Prospectus_Q_As.pdf"&gt;&lt;span&gt;an overview&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt; explaining&lt;/span&gt;&lt;/a&gt;&lt;span&gt;&amp;nbsp;the key changes and the reasons behind them.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Guidelines on product supplements&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The Guidelines establish a common approach for assessing whether a supplement introduces new securities to a base prospectus. They provide national competent authorities with a methodological and easy-to-apply framework and give market participants greater certainty when submitting supplements.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The Guidelines will apply when the translations into all official EU languages become available.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;RTS on key financial information&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The RTS update the requirements for financial information in prospectus following Listing Act reforms. They align summary disclosure requirements with the revised disclosure framework and support more proportionate information requirements.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA has submitted the Final Report to the European Commission for a decision on whether to adopt the RTS updating Commission Delegated Regulation 2019/979.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Iris Hude&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Communications Officer&lt;br&gt;press@esma.europa.eu&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      09/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA32-753890202-3085&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/consultation-paper-update-guidelines-disclosure-requirements-under-prospectus-regulation" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Consultation Paper on the update to the Guidelines on disclosure requirements under the Prospectus Regulation&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3085_Consultation_Paper_update_GLs_on_disclosure_under_Prospectus_Regulation.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224627"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      09/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA32-753890202-3034&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/final-report-guidelines-supplements-which-introduce-new-securities-base-prospectus" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Final Report on the Guidelines on supplements which introduce new securities to a base prospectus&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3034_Final_Report_Guidelines_on_supplements_which_introduce_new_securities_to_a_base_prospectus.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224628"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      09/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA32-753890202-3065&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/final-report-update-rts-concerning-key-financial-information-summary-prospectus" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Final Report on the update to the RTS concerning key financial information in the summary of a prospectus&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/ESMA32-753890202-3065_Final_report_update_to_RTS_key_financial_info_in_summary_of_a_prospectus.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224629"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      09/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;Prospectus package&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/overview-changes-made-prospectus-qas" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Overview of changes made to the Prospectus Q&amp;amp;As&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Overview_of_changes_made_to_the_Prospectus_Q_As.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224630"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="field field--name-field-news-consultation field--type-entity-reference field--label-hidden field__item"&gt;&lt;a href="https://www.esma.europa.eu/press-news/consultations/consultation-update-guidelines-disclosure-requirements-under-prospectus" hreflang="en"&gt;Consultation on the update to the Guidelines on disclosure requirements under the Prospectus Regulation&lt;/a&gt;&lt;/div&gt;
+      </description>
+  
+</item>
+
+<item>
+  <title>ESMA signs Memorandum of Understanding with the Securities and Exchange Board of India</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-signs-memorandum-understanding-securities-and-exchange-board-india</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA signs Memorandum of Understanding with the Securities and Exchange Board of India&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-04T15:47:51+02:00" title="Friday, September 4, 2026 - 15:47" class="datetime"&gt;04 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;CCP&lt;/div&gt;
+              &lt;div class="field__item"&gt;International cooperation&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The European Securities and Markets Authority (ESMA), the EU’s financial markets regulator and supervisor, has signed a&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/MoU_ESMA-SEBI_CCPs.pdf"&gt;&lt;span&gt;Memorandum of Understanding (MoU)&lt;/span&gt;&lt;/a&gt;&lt;span&gt;&amp;nbsp;with the Securities and Exchange Board of India (SEBI) to facilitate cooperation and exchange of information in relation to the recognition of central counterparties (CCPs) established in India and supervised by SEBI.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;Following the signature of an MoU between ESMA and the Reserve Bank of India (RBI) earlier this year, this agreement marks a further significant step towards restoring access for EU clearing members to Indian CCPs and follows more than two years of sustained engagement between ESMA and Indian authorities.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;This MoU&amp;nbsp;is the result of close and constructive cooperation between ESMA and SEBI and&amp;nbsp;reflects ESMA’s strong commitment to international supervisory cooperation and mutual support to advance safe, resilient and open financial markets.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Next steps&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The MoU will allow CCPs established in India and supervised by SEBI to re-apply for recognition under EMIR. It is a key requirement under Article 25 of the&amp;nbsp;European Market Infrastructure Regulation (EMIR) for the recognition of third-country CCPs by ESMA.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA is continuing discussions with the International Financial Services Centres Authority (IFSCA) with a view to concluding a similar cooperation arrangement.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;span lang="FR"&gt;&lt;strong&gt;Tayfun Yilmaz&lt;/strong&gt;&lt;/span&gt;&lt;/h6&gt;
+&lt;p&gt;&lt;span lang="FR"&gt;Communications Officer&lt;/span&gt;&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;&lt;span lang="FR"&gt;press@esma.europa.eu&lt;/span&gt;&lt;/a&gt;&lt;span lang="FR"&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      04/09/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;MoU ESMA-SEBI CCPs&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/memorandum-understanding-between-esma-and-securities-and-exchange-board-india-sebi-central" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Memorandum of Understanding between ESMA and the Securities and Exchange Board of India (SEBI) on central counterparties&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/MoU_ESMA-SEBI_CCPs.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224515"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  </description>
+  
+</item>
+
+<item>
+  <title>ESMA to host Data Day 2026: ‘Data in the Savings and Investment Union – from burden to opportunity’</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-host-data-day-2026-data-savings-and-investment-union-burden-opportunity</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA to host Data Day 2026: ‘Data in the Savings and Investment Union – from burden to opportunity’&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-09-04T10:50:20+02:00" title="Friday, September 4, 2026 - 10:50" class="datetime"&gt;04 September 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;Market data&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;Technology, use of data and simplification of reporting requirements will be at the centre of the European Securities and Markets Authority (ESMA) &lt;a href="https://www.esma.europa.eu/press-news/hearings/data-day-2026"&gt;Data Day 2026&lt;/a&gt;, taking place on 24 November in Paris.&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;Building on the success of the first edition, the event ‘Data in the Savings and Investment Union – from burden to opportunity’ will bring together over 200 industry participants, regulators and other stakeholders to discuss key developments in supervisory reporting and regulatory disclosures, as well as the role of data in supporting more effective supervision and further integration in capital markets across the European Union.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;The &lt;/span&gt;&lt;a href="https://www.esma.europa.eu/sites/default/files/2026-09/Data_day_2026_-_Agenda.pdf"&gt;&lt;span&gt;agenda&amp;nbsp;&lt;/span&gt;&lt;/a&gt;&lt;span&gt;of the full day event will include parallel sessions covering several strategic initiatives, including simplification and burden reduction, financial transaction reporting, integrated fund reporting, the European Single Access Point (ESAP) and crypto-asset monitoring. &amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;The event will take place in Paris, and some sessions will also be available via online streaming. For more information and registration arrangements, please consult the&amp;nbsp;&lt;/span&gt;&lt;a href="https://www.esma.europa.eu/press-news/hearings/data-day-2026"&gt;&lt;span&gt;dedicated event page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Cristina Bonillo&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Senior Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="field field--name-field-news-hearing field--type-entity-reference field--label-hidden field__item"&gt;&lt;a href="https://www.esma.europa.eu/press-news/hearings/data-day-2026" hreflang="en"&gt;Data day 2026&lt;/a&gt;&lt;/div&gt;
+      </description>
+  
+</item>
+
+<item>
+  <title>ESMA consults on reporting framework for clearing activity at recognised third-country CCPs</title>
+  <link>https://www.esma.europa.eu/press-news/esma-news/esma-consults-reporting-framework-clearing-activity-recognised-third-country</link>
+  <description>&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;ESMA consults on reporting framework for clearing activity at recognised third-country CCPs&lt;/span&gt;
+  
+&lt;span class="field field--name-created field--type-created field--label-hidden"&gt;&lt;time datetime="2026-08-18T15:52:46+02:00" title="Tuesday, August 18, 2026 - 15:52" class="datetime"&gt;18 August 2026&lt;/time&gt;
+&lt;/span&gt;
+
+      &lt;div class="field field--name-field-news-section field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;CCP&lt;/div&gt;
+              &lt;div class="field__item"&gt;Simplification and Burden Reduction&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="clearfix text-formatted field field--name-field-news-introduction field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;The European Securities and Markets Authority (ESMA), the EU's financial markets regulator and supervisor, has launched a &lt;a href="https://www.esma.europa.eu/press-news/consultations/consultation-reporting-framework-under-emir-clearing-activity-recognised"&gt;consultation &lt;/a&gt;on a proposed annual reporting framework under EMIR for clearing activity at recognised third-country central counterparties (CCPs), aimed at improving supervisory visibility of EU firms' exposures to such CCPs.&lt;/p&gt;
+&lt;/div&gt;
+      
+            &lt;div class="clearfix text-formatted field field--name-field-news-body field--type-text-long field--label-hidden field__item"&gt;&lt;p class="text-align-justify"&gt;&lt;span&gt;The consultation paper sets out ESMA's proposed Regulatory Technical Standards (RTS) and Implementing Technical Standards (ITS) under European Market Infrastructure Regulation (EMIR). The reporting obligation will apply to clearing members and clients that clear transactions through recognised third country CCPs.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;The objective is to provide supervisory authorities with a structured and consistent overview of the scale, characteristics and risk profile of EU firms' exposures to recognised third-country CCPs, contributing to the broader monitoring framework established under EMIR 3.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;In line with ESMA’s simplification and burden reduction agenda, the proposal seeks to maximise the reuse of information already available through existing reporting channels and limits new requirements to the information that is not available to ESMA or competent authorities.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;Once implemented, the new requirements will establish a harmonised approach to reporting clearing activity at recognised third-country CCPs.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 class="text-align-justify"&gt;&lt;span&gt;&lt;strong&gt;Next steps&lt;/strong&gt;&lt;/span&gt;&lt;/h4&gt;
+&lt;p class="text-align-justify"&gt;&lt;span&gt;ESMA invites stakeholders to provide feedback on the reporting framework, templates and format by 12 October 2026. Following the consultation, ESMA will assess the responses received and prepare a Final Report.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p class="text-align-justify"&gt;&lt;span lang="EN-US"&gt;Further information:&lt;/span&gt;&lt;/p&gt;
+&lt;h6&gt;&lt;strong&gt;Cristina Bonillo&lt;/strong&gt;&lt;/h6&gt;
+&lt;p&gt;Senior Communications Officer&lt;br&gt;&lt;a href="mailto:press@esma.europa.eu"&gt;press@esma.europa.eu&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+      
+      &lt;div class="field field--name-field-news-document field--type-entity-reference field--label-hidden field__items"&gt;
+              &lt;div class="field__item"&gt;
+&lt;tr&gt;
+  &lt;td headers="view-created-table-column" class="views-field views-field-created"&gt;
+      18/08/2026
+  &lt;/td&gt;
+  &lt;td headers="view-field-document-reference-table-column" class="views-field views-field-field-document-reference"&gt;
+                
+            &lt;div class="field field--name-field-document-reference field--type-string field--label-hidden field__item"&gt;ESMA12-2121844265-6008&lt;/div&gt;
+      
+        &lt;/td&gt;
+  &lt;td headers="view-title-table-column" class="views-field views-field-title"&gt;
+      &lt;a href="https://www.esma.europa.eu/document/consultation-paper-reporting-framework-under-emir-clearing-activity-recognised-third" rel="bookmark"&gt;&lt;span class="field field--name-title field--type-string field--label-hidden"&gt;Consultation paper on the reporting framework under EMIR for clearing activity at recognised third-country CCPs&lt;/span&gt;
+&lt;/a&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-nothing"&gt;
+      &lt;span class="download-single-button"&gt;
+        &lt;a href="https://www.esma.europa.eu/sites/default/files/2026-08/ESMA12-2121844265-6008_-_Consultation_Paper_on_EMIR_Article_7d.pdf" rel="bookmark" download&gt;&lt;/a&gt;
+      &lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td class="views-field views-field-field-main-document"&gt;
+    &lt;input type="checkbox" class="filesToDownloadInZip" data-value="file:224034"&gt;
+    &lt;label&gt;&lt;/label&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/div&gt;
+          &lt;/div&gt;
+  
+            &lt;div class="field field--name-field-news-consultation field--type-entity-reference field--label-hidden field__item"&gt;&lt;a href="https://www.esma.europa.eu/press-news/consultations/consultation-reporting-framework-under-emir-clearing-activity-recognised" hreflang="en"&gt;Consultation on the reporting framework under EMIR for clearing activity at recognised third-country CCPs&lt;/a&gt;&lt;/div&gt;
+      </description>
+  
+</item>
+
+  </channel>
+</rss>

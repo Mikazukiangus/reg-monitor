@@ -53,7 +53,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
               {recentCount}
             </span>
             <span className="font-['Inter'] text-[12px] text-[#56636B]">
-              of {totalNoticesCount} live notices
+              of {totalNoticesCount} notices loaded
             </span>
           </div>
           <div className="w-full bg-[#D9E3DD] h-1.5 rounded-full mt-2.5 overflow-hidden">

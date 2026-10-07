@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet title="XSL_formatting" type="text/xsl" href="rssxsl_data.xml" ?><rss version="2.0"><channel><title><![CDATA[HKMA: Consultations]]></title><link><![CDATA[https://brdr.hkma.gov.hk/eng/fltr-rslt/doc-types?docTypeList%5B%5D=CPR]]></link><description><![CDATA[HKMA RSS page]]></description><language><![CDATA[eng]]></language><copyright><![CDATA[2025 Hong Kong Monetary Authority. All rights reserved.]]></copyright><docs /><image><title><![CDATA[HKMA]]></title><url><![CDATA[/eng/img/logo_rss.gif]]></url><link><![CDATA[https://www.hkma.gov.hk/eng]]></link></image>
+    <item>
+      <title><![CDATA[Consultation on Phase 2B prototype of Hong Kong Taxonomy for Sustainable Finance]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260819-7-EN]]></link>
+      <pubDate><![CDATA[Mon, 07 Sep 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-09-07]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation on revised SPM module CA-B-2 "Systemically Important Banks" Enclosure : SPM CA-B-2 Systemically Important Banks (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260827-3-EN]]></link>
+      <pubDate><![CDATA[Fri, 28 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-28]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Letter to HKAB: Deemed comparable jurisdictions under SPM CR-G-14]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260605-10-EN]]></link>
+      <pubDate><![CDATA[Mon, 08 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Join consultation conclusions on proposed amendments to the Clearing Rules for over-the-counter derivative transactions Annex: Join consultation conclusions on proposed amendments to the Clearing Rules for over-the-counter derivative transactions ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260605-6-EN]]></link>
+      <pubDate><![CDATA[Fri, 05 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Proposed amendments to the Banking (Capital) Rules Annex : Proposed Amendments to the Banking (Capital) Rules]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260429-4-EN]]></link>
+      <pubDate><![CDATA[Thu, 30 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-30]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation on revised Supervisory Policy Manual (SPM) modules CR-S-5 on “Credit Card Business”, RR-1 on “Reputation Risk Management” and SR-1 on “Strategic Risk Management” Enclosure 1: Credit Card Business (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260312-3-EN]]></link>
+      <pubDate><![CDATA[Tue, 28 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-28]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation: revised SPM module CA-G-5 “Supervisory Review Process” Annex: Supervisory Review Process (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260319-5-EN]]></link>
+      <pubDate><![CDATA[Thu, 19 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-19]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation conclusions on enhancements to Banking Ordinance]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260213-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Feb 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-02-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Joint consultation paper on proposed amendments to the Clearing Rules for over-the-counter derivative transactions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260129-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 29 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Industry consultation on two proposed Code of Practice chapters regarding valuation in resolution under the Financial Institutions (Resolution) Ordinance (Cap. 628) ("FIRO") Enclosure: The HKMA's Approach to Valuation in Resolution (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251209-3-EN]]></link>
+      <pubDate><![CDATA[Wed, 10 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[IRRBB: consultation on revised SPM IR-1 Enclosure 1 : SPM module IR-1 Interest Rate Risk in the Banking Book]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251024-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 03 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-03]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoasset Standard: consultation on revised SPM module CA-G-1 “Overview of Capital Adequacy Regime for Locally Incorporated Authorized Institutions” Enclosure: Overview of Capital Adequacy Regime for Locally Incorporated Authorized Institutions (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251022-3-EN]]></link>
+      <pubDate><![CDATA[Thu, 23 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-23]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Letter to HKAB: Cryptoassets standard: consultation on new and revised SPM modules and code of practice]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250905-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 08 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation on Phase 2A prototype of Hong Kong Taxonomy for Sustainable Finance]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250903-8-EN]]></link>
+      <pubDate><![CDATA[Mon, 08 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Letter to HKAB: Cryptoassets standard and other miscellaneous amendments: consultation on revised completion instructions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250903-6-EN]]></link>
+      <pubDate><![CDATA[Thu, 04 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-04]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[Consultation on Revised Supervisory Policy Manual (SPM) Module IC-5 on “Stress-testing” Enclosure: Stress-testing (Consultation)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250826-4-EN]]></link>
+      <pubDate><![CDATA[Thu, 28 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-28]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[Joint consultation conclusions paper on the annual update to the list of Financial Services Providers under the Clearing Rules for OTC derivative transactions Annex: Joint consultation conclusions paper on the annual update to the list of Financial Services Providers under the Clearing Rules for OTC derivative transactions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250626-6-EN]]></link>
+      <pubDate><![CDATA[Thu, 26 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-27]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[Consultation on revised disclosure templates and tables Annex 1: Standard disclosure templates and tables for making disclosure under the BDR]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250623-4-EN]]></link>
+      <pubDate><![CDATA[Wed, 25 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-25]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consultation on revised disclosure templates and tables Annex 2: Standard disclosure templates for making disclosure under the LAC Rules ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250624-3-EN]]></link>
+      <pubDate><![CDATA[Wed, 25 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-25]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Letter to DTCA: Cryptoassets standard and other miscellaneous amendments: consultation on return templates ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates CIs: MA(BS)3 Part II Cls]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-10-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates CIs: MA(BS)3 Part II Cls - Annex]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-11-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3 Part IIIa ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-12-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3 Part IIIa ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-13-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3 Part IIIb]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-14-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3 Part IIIb ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-15-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3 Part IIIc ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-16-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3 Part IIIc ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-17-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3 Part IIIf ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-18-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3 Part IIIf ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-19-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Letter to HKAB: Cryptoassets standard and other miscellaneous amendments: consultation on return templates]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3a Part I ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-20-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3a Part I ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-21-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)26 Part I ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-22-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)26 Part I]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-23-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates CIs: MA(BS)27 Cls]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-24-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)28]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-25-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)1E Part 1 ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-3-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)1E Part 1 ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)1Fa ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-5-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)1Fb ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-6-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)1F]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-7-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Return template: MA(BS)3 Part I]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-8-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard and other miscellaneous amendments: consultation on return templates Explanatory notes : MA(BS)3 Part I ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250613-9-EN]]></link>
+      <pubDate><![CDATA[Fri, 13 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-13]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Consultation on annual update to the list of Financial Services Providers under the OTC derivatives regulatory regime Annex: Joint consultation paper on the annual update to the list of Financial Services Providers under the OTC derivatives regulatory regime]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250422-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 17 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-22]]></sortDate>
+    </item>
+<item><title><![CDATA[The HKMA issued a letter on 11 February 2025 to consult the banking industry on certain miscellaneous amendments to the Banking (Capital) Rules.]]></title><link><![CDATA[https://www.hkma.gov.hk/eng/regulatory-resources/consultations/20250211-1/]]></link><pubDate><![CDATA[Tue, 11 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-11]]></sortDate></item><item><title><![CDATA[The HKMA issued a letter on 13 January 2025 to consult the banking industry on implementation of the prudential treatment of cryptoasset exposures held by authorized institutions.]]></title><link><![CDATA[https://www.hkma.gov.hk/eng/regulatory-resources/consultations/20250113-1/]]></link><pubDate><![CDATA[Mon, 13 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-13]]></sortDate></item></channel></rss>

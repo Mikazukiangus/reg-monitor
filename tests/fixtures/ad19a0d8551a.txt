@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Financial Stability Board</title>
+	<atom:link href="https://www.fsb.org/feed/" rel="self" type="application/rss+xml" />
+	<link>https://www.fsb.org</link>
+	<description>Promoting global financial stability through strong financial sector policies</description>
+	<lastBuildDate>Wed, 30 Sep 2026 07:58:41 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	
+
+<image>
+	<url>https://www.fsb.org/uploads/cropped-hy4z0mnx-400x400-1-1-32x32.png</url>
+	<title>Financial Stability Board</title>
+	<link>https://www.fsb.org</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>FSB Regional Consultative Group for the Americas meets in Mexico City</title>
+		<link>https://www.fsb.org/2026/09/fsb-regional-consultative-group-for-the-americas-meets-in-mexico-city/</link>
+		
+		<pubDate>Wed, 30 Sep 2026 07:58:41 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60937</guid>
+
+					<description><![CDATA[BIS Americas Office hosts the FSB Americas group in Mexico City.]]></description>
+										<content:encoded><![CDATA[<p>The Financial Stability Board (FSB) Regional Consultative Group for the Americas (RCG Americas) convened on 24-25 September 2026 in Mexico City, hosted by the Bank for International Settlements’ Representative Office for the Americas. The meeting brought together senior officials from central banks, financial authorities, and regulatory bodies across the region to discuss key financial stability…</p>
+<p><a href="https://www.fsb.org/2026/09/fsb-regional-consultative-group-for-the-americas-meets-in-mexico-city/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>FSB hosts roundtable on public-private sector collaboration to strengthen operational resilience</title>
+		<link>https://www.fsb.org/2026/09/fsb-hosts-roundtable-on-public-private-sector-collaboration-to-strengthen-operational-resilience/</link>
+		
+		<pubDate>Fri, 11 Sep 2026 15:50:55 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60926</guid>
+
+					<description><![CDATA[Roundtable to explore how collaboration efforts between the public and private sectors can be structured and applied to prepare for and manage significant operational disruptions.]]></description>
+										<content:encoded><![CDATA[<p>The FSB hosted a roundtable in Basel on 10 September, exploring the practical steps to strengthen the preparedness of the financial sector for significant operational disruptions through public-private sector collaboration. Participants included senior officials from FSB member authorities and stakeholders (e.g. national/regional public-private sector collaboration fora…</p>
+<p><a href="https://www.fsb.org/2026/09/fsb-hosts-roundtable-on-public-private-sector-collaboration-to-strengthen-operational-resilience/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>FSB Annual Financial Report: 2025-26</title>
+		<link>https://www.fsb.org/2026/09/fsb-annual-financial-report-2025-26/</link>
+		
+		<pubDate>Fri, 04 Sep 2026 11:15:00 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60899</guid>
+
+					<description><![CDATA[FSB annual financial report for the 12-month period ending 31 March 2026.]]></description>
+										<content:encoded><![CDATA[<p>This report contains the audited financial statements of the FSB for the 12-month period from 1 April 2025 to 31 March 2026. It also provides details on the FSB’s governance arrangements and its transparency and accountability mechanisms. A detailed explanation of the activities undertaken to implement the mandate and tasks of the FSB is provided in the FSB’s Annual Report…</p>
+<p><a href="https://www.fsb.org/2026/09/fsb-annual-financial-report-2025-26/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Report of the auditor to FSB Plenary on the financial statements 2025-2026</title>
+		<link>https://www.fsb.org/uploads/P040926-2.pdf</link>
+		
+		<pubDate>Fri, 04 Sep 2026 11:15:00 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60915</guid>
+
+					<description><![CDATA[Report on the audit of the financial statements of the FSB Annual Financial Report 2025/2026.]]></description>
+										<content:encoded><![CDATA[Report on the audit of the financial statements of the FSB Annual Financial Report 2025/2026.]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>FSB Chair warns of risks arising from frontier Artificial Intelligence (AI) models</title>
+		<link>https://www.fsb.org/2026/08/fsb-chair-warns-of-risks-arising-from-frontier-artificial-intelligence-ai-models/</link>
+		
+		<pubDate>Mon, 31 Aug 2026 06:00:01 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60858</guid>
+
+					<description><![CDATA[The potential impact of frontier AI on cyber risk is the most immediate concern to the financial system, says FSB Chair, Andrew Bailey.]]></description>
+										<content:encoded><![CDATA[<p>Press enquiries: +41 61 280 8477 press@fsb.org Ref: 10/2026 The Financial Stability Board (FSB) today published a letter from its Chair, Andrew Bailey, to G20 Finance Ministers and Central Bank Governors ahead of their meeting in Asheville, North Carolina. Mr Bailey notes that the Middle East conflict has exacerbated energy-driven inflationary pressures. Markets remain vulnerable to…</p>
+<p><a href="https://www.fsb.org/2026/08/fsb-chair-warns-of-risks-arising-from-frontier-artificial-intelligence-ai-models/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>FSB Chair’s letter to G20 Finance Ministers and Central Bank Governors: August 2026</title>
+		<link>https://www.fsb.org/2026/08/fsb-chairs-letter-to-g20-finance-ministers-and-central-bank-governors-august-2026/</link>
+		
+		<pubDate>Mon, 31 Aug 2026 05:58:35 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60861</guid>
+
+					<description><![CDATA[In his letter to G20 Finance Ministers and Central Bank Governors, Andrew Bailey, warns that markets remain vulnerable to a potential disorderly correction and cautions on the risks posed by frontier AI models.]]></description>
+										<content:encoded><![CDATA[<p>This letter was submitted to G20 Finance Ministers and Central Bank Governors (FMCBG) ahead of their meetings on 31 August and 1 September 2026. Against the backdrop of the ongoing Middle East conflict, FSB Chair, Andrew Bailey warns that markets remain vulnerable to a potentially disorderly correction that could spread across borders, particularly given fragilities in sovereign debt markets…</p>
+<p><a href="https://www.fsb.org/2026/08/fsb-chairs-letter-to-g20-finance-ministers-and-central-bank-governors-august-2026/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ayman M. Al-Sayari appointed FSB’s Regional Engagement Chair</title>
+		<link>https://www.fsb.org/2026/08/ayman-m-al-sayari-appointed-fsbs-regional-engagement-chair/</link>
+		
+		<pubDate>Mon, 10 Aug 2026 13:30:00 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60777</guid>
+
+					<description><![CDATA[In his role as FSB Regional Engagement Chair, Ayman M. Al-Sayari, Governor of the Saudi Central Bank (SAMA), will advise the FSB Chair and Plenary on how to enhance the Regional Consultative Groups’ contribution to the FSB’s work.]]></description>
+										<content:encoded><![CDATA[<p>Ayman M. Al-Sayari, Governor of the Saudi Central Bank, has been appointed FSB’s Regional Engagement Chair for a two-year term, starting on 10 August 2026. In some priority areas of FSB work – such as crypto-assets and stablecoins and cross-border payments –, meaningful progress can only be achieved with a good understanding of developments in jurisdictions that are not members of the FSB.</p>
+<p><a href="https://www.fsb.org/2026/08/ayman-m-al-sayari-appointed-fsbs-regional-engagement-chair/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Public responses to consultation on Sound Practices for Responsible Adoption of Artificial Intelligence (AI)</title>
+		<link>https://www.fsb.org/2026/08/public-responses-to-consultation-on-sound-practices-for-responsible-adoption-of-artificial-intelligence-ai/</link>
+		
+		<pubDate>Thu, 06 Aug 2026 15:57:25 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60610</guid>
+
+					<description><![CDATA[Consultation responses to ‘Sound Practices for Responsible Adoption of Artificial Intelligence (AI): Consultation report‘.]]></description>
+										<content:encoded><![CDATA[<p>Summary of document history Summary of document history On 10 June 2026, the FSB published Sound Practices for Responsible Adoption of Artificial Intelligence (AI): Consultation report. Interested parties were invited to provide written comments by 22 July 2026. The public comments received are available below.</p>
+<p><a href="https://www.fsb.org/2026/08/public-responses-to-consultation-on-sound-practices-for-responsible-adoption-of-artificial-intelligence-ai/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Multilateralism, Utopia, and the Financial Stability Board</title>
+		<link>https://www.fsb.org/2026/07/multilateralism-utopia-and-the-financial-stability-board/</link>
+		
+		<pubDate>Tue, 28 Jul 2026 17:05:00 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60587</guid>
+
+					<description><![CDATA[In this speech, John Schindler, FSB Secretary General, addresses the importance of international organisations in a shifting geopolitical landscape.]]></description>
+										<content:encoded><![CDATA[<p>The views expressed in these remarks are those of the speaker in their role as FSB Secretary General and do not necessarily reflect those of the FSB or its members. Good afternoon. Thank you for the opportunity to speak about multilateralism, a topic that has become particularly newsworthy these days. Over five hundred years ago, Saint Thomas More published Utopia…</p>
+<p><a href="https://www.fsb.org/2026/07/multilateralism-utopia-and-the-financial-stability-board/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>FSB Regional Consultative Group for Sub-Saharan Africa meets in Mauritius</title>
+		<link>https://www.fsb.org/2026/07/fsb-regional-consultative-group-for-sub-saharan-africa-meets-in-mauritius/</link>
+		
+		<pubDate>Thu, 16 Jul 2026 14:32:18 +0000</pubDate>
+				<guid isPermaLink="false">https://www.fsb.org/?p=60560</guid>
+
+					<description><![CDATA[Bank of Mauritius hosts FSB Sub-Saharan Africa group in Mauritius.]]></description>
+										<content:encoded><![CDATA[<p>The Financial Stability Board (FSB) Regional Consultative Group for Sub-Saharan Africa (RCG SSA) met on 16-17 July 2026 in Mauritius, hosted by the Bank of Mauritius. The meeting brought together senior officials from central banks, financial authorities, and regulatory bodies in the region to discuss key financial stability topics. Co-chaired by Lesetja Kganyago, Governor of the South African…</p>
+<p><a href="https://www.fsb.org/2026/07/fsb-regional-consultative-group-for-sub-saharan-africa-meets-in-mauritius/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

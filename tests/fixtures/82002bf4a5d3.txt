@@ -1,0 +1,83 @@
+{
+  "responseHeader":{
+    "zkConnected":true,
+    "status":0,
+    "QTime":1
+  },
+  "response":{
+    "numFound":1911,
+    "start":0,
+    "maxScore":76.0169,
+    "numFoundExact":true,
+    "docs":[{
+      "document_title_t":["MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions"],
+      "document_title_string_s":"MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions",
+      "itemid_s":"{F9187096-3026-4B44-9D85-93B24B9297BC}",
+      "document_shortsummary_t":["The Monetary Authority of Singapore today issued a set of Guidelines on Artificial Intelligence Risk Management to support responsible AI adoption in Singapore’s financial sector."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-10-07T11:00:00Z",
+      "_uniqueid":"sitecore://web/{f9187096-3026-4b44-9d85-93b24b9297bc}?lang=en&ver=1&ndx=mas_search_index",
+      "page_url_s":"/news/media-releases/2026/mas-sets-out-supervisory-expectations-on-responsible-ai-adoption-by-financial-institutions",
+      "mas_contenttype_s":"Media Releases",
+      "navigation_title_string_s":"MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions",
+      "score":76.0169
+    },{
+      "document_title_t":["MAS Announces Senior Leadership Changes"],
+      "document_title_string_s":"MAS Announces Senior Leadership Changes",
+      "itemid_s":"{6AE32446-6B76-47BE-8ABA-92BC675180DC}",
+      "document_shortsummary_t":["The Monetary Authority of Singapore announced changes to its senior management team, which will take effect on 1 November 2026."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-10-01T16:00:00Z",
+      "_uniqueid":"sitecore://web/{6ae32446-6b76-47be-8aba-92bc675180dc}?lang=en&ver=1&ndx=mas_search_index",
+      "page_url_s":"/news/media-releases/2026/mas-announces-senior-leadership-changes",
+      "mas_contenttype_s":"Media Releases",
+      "navigation_title_string_s":"MAS Announces Senior Leadership Changes",
+      "score":74.848885
+    },{
+      "document_title_t":["Key Enforcement Actions Taken by MAS in Q3 2026"],
+      "document_title_string_s":"Key Enforcement Actions Taken by MAS in Q3 2026",
+      "itemid_s":"{DF46B59D-1F9A-4092-9F28-285C00B6992F}",
+      "document_shortsummary_t":["An overview of the key public enforcement actions taken by the Monetary Authority of Singapore from July to September 2026. "],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-10-01T11:00:00Z",
+      "_uniqueid":"sitecore://web/{df46b59d-1f9a-4092-9f28-285c00b6992f}?lang=en&ver=1&ndx=mas_search_index",
+      "page_url_s":"/news/media-releases/2026/key-enforcement-actions-taken-by-mas-in-q3-2026",
+      "mas_contenttype_s":"Media Releases",
+      "navigation_title_string_s":"Key Enforcement Actions Taken by MAS in Q3 2026",
+      "score":74.807556
+    },{
+      "document_title_t":["MAS Consults on Targeted Updates to Corporate Governance Requirements for Banks, Insurers and Designated Financial Holding Companies "],
+      "document_title_string_s":"MAS Consults on Targeted Updates to Corporate Governance Requirements for Banks, Insurers and Designated Financial Holding Companies ",
+      "itemid_s":"{10D4249B-CF23-4234-A1F2-1AFDF9B22FFE}",
+      "document_shortsummary_t":["Singapore, 30 September 2026… The Monetary Authority of Singapore (MAS) is seeking feedback on targeted updates to the Corporate Governance Regulations, as part of MAS’ regular review of regulatory standards to keep them current and effective for banks, insurers and their designated financial holding companies. The proposed changes build on an established and well-functioning corporate governance framework, strengthening safeguards in specific areas where risks and practices have evolved, while streamlining requirements for financial institutions (FIs) with less impact on customers and the financial system."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-09-30T11:00:00Z",
+      "_uniqueid":"sitecore://web/{10d4249b-cf23-4234-a1f2-1afdf9b22ffe}?lang=en&ver=3&ndx=mas_search_index",
+      "page_url_s":"/news/media-releases/2026/mas-consults-on-targeted-updates-to-corporate-governance-requirements",
+      "mas_contenttype_s":"Media Releases",
+      "navigation_title_string_s":"MAS Consults on Targeted Updates to Corporate Governance Requirements for Banks, Insurers and Designated Financial Holding Companies ",
+      "score":74.60977
+    }]
+  },
+  "facet_counts":{
+    "facet_queries":{ },
+    "facet_fields":{
+      "mas_contenttype_s":["Media Releases",1830,"Enforcement Actions Media Releases",81],
+      "topic_path":["Fintech",30,"Anti-Money Laundering",11,"Conduct",8,"Risk Management",7,"Conduct/Representative-related",6,"Monetary Policy",4,"Monetary Policy/Economic Issues",4,"OTC Markets",3,"OTC Markets/Trading Mandate",3,"Risk Management/Technology Risk",3,"Consumer Finance",2,"Governance",2,"Governance/Corporate Governance",2,"Anti-Money Laundering/AML&#47;CFT",1,"Conduct/Advisory and Sales",1,"Consumer Finance/Property Loans",1,"Fintech/Digital Currencies",1,"Mergers and Acquisitions",1,"Prudential and Supervisory Requirements",1,"Prudential and Supervisory Requirements/Deposit Insurance",1,"Risk Management/Business Continuity",1,"Risk Management/Fraud Risk",1,"Risk Management/Guidelines on Risk Management Practices",1,"Risk Management/Operational Risk",1],
+      "mas_sector_sm":["Capital Markets",48,"Banking",42,"Payments",39,"Insurance",27],
+      "entitytype_path":["Payments",6,"Banking",3,"Capital Markets Services",1],
+      "mas_focus_areas_sm":["FinTech",105,"International Engagement",78,"Enforcement",45,"Sustainable Finance",38,"Payments",21,"Anti-Money Laundering",14,"AI in Finance",11,"Skills and Career Development",11,"Cyber Security",10,"Wealth Management",7,"Foreign Exchange",6,"Crypto Tokens",5,"Digital Currencies",5,"Asset Management",4,"Enterprise Finance",3,"Fund Management",3,"Fixed Income",1,"Infrastructure Finance",1,"Insurance and Risk Financing",1],
+      "mas_sections_s":["News",1830,"Regulation",81]
+    },
+    "facet_ranges":{
+      "mas_date_tdt":{
+        "counts":["2024-01-01T00:00:00Z",95,"2025-01-01T00:00:00Z",80,"2026-01-01T00:00:00Z",56],
+        "gap":"+1YEAR",
+        "start":"2024-01-01T00:00:00Z",
+        "end":"2027-01-01T00:00:00Z"
+      }
+    },
+    "facet_intervals":{ },
+    "facet_heatmaps":{ }
+  }
+}

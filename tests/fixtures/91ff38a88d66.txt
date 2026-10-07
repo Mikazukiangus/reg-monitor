@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet title="XSL_formatting" type="text/xsl" href="rssxsl_data.xml" ?><rss version="2.0"><channel><title><![CDATA[HKMA: Circulars]]></title><link><![CDATA[https://brdr.hkma.gov.hk/eng/fltr-rslt/doc-types?docTypeList%5B%5D=CIR]]></link><description><![CDATA[HKMA RSS page]]></description><language><![CDATA[eng]]></language><copyright><![CDATA[2025 Hong Kong Monetary Authority. All rights reserved.]]></copyright><docs /><image><title><![CDATA[HKMA]]></title><url><![CDATA[/eng/img/logo_rss.gif]]></url><link><![CDATA[https://www.hkma.gov.hk/eng]]></link></image>
+    <item>
+      <title><![CDATA[Review of the Enhanced Competency Framework for Banking Practitioners]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260922-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 23 Sep 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-09-23]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[GS-2 Transition Planning]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260820-5-EN]]></link>
+      <pubDate><![CDATA[Tue, 22 Sep 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-09-22]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Circular on Private Market Investments]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260909-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 09 Sep 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-09-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Remote on-boarding of individual customers]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260902-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 03 Sep 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-09-03]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[Guidance on risk-based AML/CFT controls for politically exposed persons]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260827-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 28 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-28]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[Circular issued by the Insurance Authority (“IA”) regarding observations on insurance business carried on with the use of premium financing facilities]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260818-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 20 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-20]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Implementation guidance on Banking (Capital) Rules ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260810-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 20 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-20]]></sortDate>
+    </item>
+     <item>
+      <title><![CDATA[SPM CR-G-14: deemed comparable jurisdictions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260807-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 07 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-07]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[HKMA Liquidity Facilities Framework]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260805-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 07 Aug 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-08-07]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Joint Circular on the Cross-Sectoral Cyber Mapping Exercise]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260729-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 29 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Results of Quantum Preparedness Index Survey]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260727-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 27 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Code of Practice chapters regarding valuation in resolution issued under the Financial Institutions (Resolution) Ordinance (Cap. 628) (“FIRO”)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260713-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 24 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-24]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Complaints Watch Issue No. 28]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260709-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 24 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-24]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Interpretation Note issued by the Insurance Authority (“IA”) on the Review Mechanism for Illustration Rate Caps in Benefit Illustration for Participating Policies]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260708-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 10 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Licence Fees]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260710-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 10 Jul 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-07-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Supporting Adoption of Artificial Intelligence in Fighting Financial Crime]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260622-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 22 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-22]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revised Supervisory Policy Manual (SPM) Module IC-6 on “The Sharing and Use of Consumer Credit Data through Credit Reference Agencies”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260609-13-EN]]></link>
+      <pubDate><![CDATA[Tue, 09 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Remuneration Structures of Licensed Insurance Intermediaries which are Authorized Institutions for Participating Policies with Regular Payment Terms]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260602-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 05 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-05]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[SPM CRP-1: update on cryptoassets classification conditions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260603-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 03 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-03]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Strengthening Cyber Resilience amid Artificial Intelligence-Empowered Cyber Threats]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260529-8-EN]]></link>
+      <pubDate><![CDATA[Tue, 02 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-02]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Operational Resilience: Sustaining and Uplifting]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260529-5-EN]]></link>
+      <pubDate><![CDATA[Mon, 01 Jun 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-06-01]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Good practices on market risk capital charge calculation and related risk management]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260529-9-EN]]></link>
+      <pubDate><![CDATA[Fri, 29 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Guidance on Offering of Financing for Virtual Asset Dealing, Shared Order Book, and Client Virtual Asset Withdrawals]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260527-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 27 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Virtual asset-related activities in relation to relevant stablecoins issued by licensed stablecoin issuers]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260527-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 27 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Updated Guidance on Provision of Custodial Services for Digital Assets]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260527-6-EN]]></link>
+      <pubDate><![CDATA[Wed, 27 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Relevant Stablecoin-related Activities]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260527-4-EN]]></link>
+      <pubDate><![CDATA[Wed, 27 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Guidance on Banking Services for Individuals with Higher Risk Profiles]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260526-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 27 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Expected controls for account opening and maintaining relationships with clients with investment accounts]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260522-9-EN]]></link>
+      <pubDate><![CDATA[Fri, 22 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-22]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cross-sector Reference Checking Arrangement Between the Banking and Insurance Sectors]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260512-4-EN]]></link>
+      <pubDate><![CDATA[Wed, 13 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Launch of Digital Licensing Platform ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260511-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 11 May 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-05-11]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revised Supervisory Policy Manual (SPM) Module IC-5 on “Stress-testing”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260312-6-EN]]></link>
+      <pubDate><![CDATA[Mon, 13 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-13]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Good practices on integrating climate-related risks into internal capital adequacy assessment process and capital planning]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260409-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 09 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Granular Data Reporting 3.0]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260402-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 02 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-02]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Good practices for addressing vulnerabilities related to operational resilience ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260401-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 01 Apr 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-04-01]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Observations and Feedback on Liquidity and Funding in Resolution (LFIR) Implementation ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260327-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 27 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Consumer Protection in the Use of Alternative Data]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260326-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 26 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-26]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Complaints Against Debt Collection Agents Employed by Authorized Institutions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260313-4-EN]]></link>
+      <pubDate><![CDATA[Mon, 16 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-16]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Thematic Review of Sanctions Screening Systems]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260316-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 16 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-16]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Strategic Review of Business Models amid Digital Transformation]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260309-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 09 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Joint Circular on the Expansion of Generative Artificial Intelligence Sandbox]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260305-2-EN]]></link>
+      <pubDate><![CDATA[Thu, 05 Mar 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-03-05]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Asset and Wealth Management Activities Survey 2025 Conducted by the Securities and Futures Commission (“SFC”)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260209-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 11 Feb 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-02-11]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Complaints Watch Issue No. 27]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251230-7-EN]]></link>
+      <pubDate><![CDATA[Wed, 11 Feb 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-02-11]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Expansion of Payment Arrangements for Property Transactions to Sale and Purchase of Residential Properties in the Secondary Market in Hong Kong]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260205-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 05 Feb 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-02-05]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Hong Kong Taxonomy for Sustainable Finance (Phase 2A)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260122-7-EN]]></link>
+      <pubDate><![CDATA[Thu, 22 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-22]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Guideline on Elderly-friendly Banking Services of Hong Kong Association of Banks]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260120-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 21 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Second Edition of Practical Guideline on Barrier-free Banking Services of Hong Kong Association of Banks]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260120-3-EN]]></link>
+      <pubDate><![CDATA[Wed, 21 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Good practices on managing operational risk associated with trading activities]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260115-2-EN]]></link>
+      <pubDate><![CDATA[Thu, 15 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-15]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Practice Guide on Cloud Adoption]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260108-3-EN]]></link>
+      <pubDate><![CDATA[Thu, 08 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Liquidity Risk Management]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20260107-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 07 Jan 2026 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2026-01-07]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Self-Assessment of Compliance with the Code of Banking Practice 2025]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251231-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 31 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-31]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Further Frequently Asked Questions on Sale and Distribution of Green and Sustainable Investment Products]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251229-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 29 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[IRRBB: revised SPM module IR-1 and completion instructions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251222-5-EN]]></link>
+      <pubDate><![CDATA[Tue, 23 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-23]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Intellectual Property Financing Sandbox]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251222-2-EN]]></link>
+      <pubDate><![CDATA[Mon, 22 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-22]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets standard: gazettal of revised SPM modules and code of practice]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251218-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 19 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-19]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Guidance on combating high-end money laundering]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251210-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 12 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-12]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[SFC and HKMA joint product survey 2025]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251112-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 05 Dec 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-12-05]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revisions to standard LAC disclosure templates]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251103-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 27 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cryptoassets Standard: SPM Modules, Code of Practice, Disclosure Templates and Tables, and Banking Returns]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251127-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 27 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Interbank Debt Relief Plan]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251121-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 21 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Guidance on risk-based AML/CFT controls for politically exposed persons]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251118-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 21 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revised Supervisory Policy Manual (SPM) Module IB-1 on “Supervision of Insurance Intermediary Business of Authorized Institutions”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251118-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 21 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Supporting Artificial Intelligence Adoption in AML/CFT]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251118-3-EN]]></link>
+      <pubDate><![CDATA[Wed, 19 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-19]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Observations from Review on Premium Financing Activities for Insurance Policies]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251117-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 19 Nov 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-11-19]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Generative Artificial Intelligence Sandbox – Practical Insights Report]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251031-5-EN]]></link>
+      <pubDate><![CDATA[Fri, 31 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-31]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Good practices on climate risk management]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251027-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 27 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Updated Guidance on Registration in Respect of Regulated Activities under the Securities and Futures Ordinance and Controls to Ensure Fitness and Properness of Staff]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251027-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 27 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-27]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cross-boundary Credit Referencing]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251009-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 10 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Cross-boundary Data Validation Platform]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251010-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 10 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Complaints Against Debt Collection Agents Employed by Authorized Institutions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20251003-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 03 Oct 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-10-03]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Supplemental joint circular on intermediaries’ virtual asset-related activities]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250930-1-EN]]></link>
+      <pubDate><![CDATA[Tue, 30 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-30]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Risk-based approach in supporting green transformation of corporate customers]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250930-4-EN]]></link>
+      <pubDate><![CDATA[Tue, 30 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-30]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Concurrent SFC-HKMA thematic review of the distribution of non-exchange traded investment products]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250929-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 29 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Enhancement of the Renminbi (RMB) Liquidity Facility]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250926-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 26 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-26]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[RMB Business Facility]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250926-3-EN]]></link>
+      <pubDate><![CDATA[Fri, 26 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-26]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Circular on the Naming Requirements for Insurance Products]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250917-4-EN]]></link>
+      <pubDate><![CDATA[Fri, 19 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-19]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Enhanced Facilitative Measure for Visiting Professionals and Supervisory Policy Manual (SPM): Revised Module SB-1 on “Supervision of Regulated Activities of SFC-Registered Authorized Institutions”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250911-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 12 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-12]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revised Return on Liquidity Monitoring Tools (MA(BS)23)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250909-1-EN]]></link>
+      <pubDate><![CDATA[Tue, 09 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Supervisory Policy Manual (SPM): Revised module CG-7 on “Benchmark Submission”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250904-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 04 Sep 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-09-04]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[“E-Banking Security ABCD” ]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250825-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 25 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-25]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Preparedness of banking sector for accelerated settlement for Hong Kong cash equity market]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250818-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 18 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-18]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Capacity Building for Future Banking, 2026-2030]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250812-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 18 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-18]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Rules on cryptoassets standard and other updates]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250815-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 15 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-15]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Gazettal of revised SPM CG-1 on corporate governance]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250731-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 01 Aug 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-08-01]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Complaints Watch Issue No.26]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250709-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 28 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-28]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Mandatory Reference Checking Scheme Phase 2]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250723-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 24 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-24]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Chapter IV of Supplementary Guidance on the Revised Credit Risk Framework]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250720-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 21 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Chapter IV of Supplementary Guidance on the Revised Credit Risk Framework Enclosure: Chapter IV - IRB approach]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250720-2-EN]]></link>
+      <pubDate><![CDATA[Mon, 21 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-21]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Supervisory Policy Manual (SPM): Revised module CA-G-4 on “Validating Risk Rating Systems under the IRB approach”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250718-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 18 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-18]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Results of Tech Maturity Stock-take]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250716-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 16 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-16]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Results of Tech Maturity Stock-take Enclosure: Fintech Adoption - Progress and Future Directions]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250716-3-EN]]></link>
+      <pubDate><![CDATA[Wed, 16 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-16]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Gazettal of rules: cryptoassets standard and other updates]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250711-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 11 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-11]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Formal Version of Physical Risk Assessment Platform]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250710-2-EN]]></link>
+      <pubDate><![CDATA[Thu, 10 Jul 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-07-10]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Treatment of Deposits under Money Safe]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250625-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 26 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-26]]></sortDate>
+    </item>            
+    <item>
+      <title><![CDATA[Currency Conversion Arrangement Involving Onshore RMB (CNY) under RMB Cross-border Trade Settlement Scheme]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250626-1-EN]]></link>
+      <pubDate><![CDATA[Thu, 26 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-26]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Global Code of Conduct Standards and Practices for the Wholesale Foreign Exchange Market (the “FX Global Code”)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250616-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 16 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-16]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Promotion and Sale Arrangements under the Southbound Scheme of the Cross-boundary Wealth Management Connect Pilot Scheme in the Guangdong-Hong Kong-Macao Greater Bay Area]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250612-3-EN]]></link>
+      <pubDate><![CDATA[Thu, 12 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-12]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Return on Liquidity Monitoring Tools MA(BS)23 Enclosure 2: Completion Instructions : Return on Liquidity Monitoring Tools MA(BS)23]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250609-10-EN]]></link>
+      <pubDate><![CDATA[Mon, 09 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Revised Return on Liquidity Monitoring Tools (MA(BS)23)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250609-4-EN]]></link>
+      <pubDate><![CDATA[Mon, 09 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-09]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Return template on Liquidity Monitoring Tools : MA(BS)23 Enclosure 1: Return on Liquidity Monitoring Tools]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250609-8-EN]]></link>
+      <pubDate><![CDATA[Mon, 09 Jun 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-06-09]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Global Code of Conduct Standards and Practices for the Wholesale Foreign Exchange Market (the “FX Global Code”)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250528-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 28 May 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-05-28]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Company Re-domiciliation Regime]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250523-1-EN]]></link>
+      <pubDate><![CDATA[Fri, 23 May 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-05-23]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Generative Artificial Intelligence Sandbox: Second Cohort]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250428-2-EN]]></link>
+      <pubDate><![CDATA[Mon, 28 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-29]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Generative Artificial Intelligence Sandbox: Second Cohort Annex: Arrangement for the Second Cohort of Generative A.I. Sandbox (“Sandbox”)]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250428-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 28 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-29]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Generative Artificial Intelligence Sandbox: Second Cohort]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250428-2-EN]]></link>
+      <pubDate><![CDATA[Mon, 28 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-28]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Generative Artificial Intelligence Sandbox: Second Cohort Annex: Arrangement for the Second Cohort of Generative AI Sandbox]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250428-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 28 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-28]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Cyber Incidents Watch: Guidance on Strengthening Protection Measures against Distributed Denial-of-Service Attacks]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250415-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 16 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-16]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Banking Industry Integrity Charter]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250403-4-EN]]></link>
+      <pubDate><![CDATA[Tue, 15 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-15]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Handling of Cash at Bank of Deceased Account Holders]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250414-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 14 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-14]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[New Anti-Digital Fraud Measures: “E-Banking Security ABC”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250411-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 14 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-14]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[New Anti-Digital Fraud Measures: “E-Banking Security ABC” Annex: New Anti-Digital Fraud Measures: “E-Banking Security ABC”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250411-3-EN]]></link>
+      <pubDate><![CDATA[Mon, 14 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-14]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Revised Supervisory Policy Manual (SPM) Module CR-G-7 on “Collateral and Guarantees”]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250410-2-EN]]></link>
+      <pubDate><![CDATA[Fri, 11 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-11]]></sortDate>
+    </item>
+<item><title><![CDATA[Measures to combat Authorized payment scams (PDF File, 117.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250411e1.pdf]]></link><pubDate><![CDATA[Fri, 11 Apr 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-04-11]]></sortDate></item>
+<item>
+      <title><![CDATA[Strengthening the response to fraud and money laundering]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250408-4-EN]]></link>
+      <pubDate><![CDATA[Thu, 10 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-10]]></sortDate>
+    </item>
+<item>
+      <title><![CDATA[Research Paper on Distributed Ledger Technology in the Financial Sector Annex: Distributed Ledger Technology in the Financial Sector - A Study on the Opportunities and Challenges]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250319-2-EN]]></link>
+      <pubDate><![CDATA[Wed, 19 Mar 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Research Paper on Distributed Ledger Technology in the Financial Sector]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250319-1-EN]]></link>
+      <pubDate><![CDATA[Wed, 19 Mar 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-08]]></sortDate>
+    </item>
+    <item>
+      <title><![CDATA[Provision of Staking Services for Virtual Assets from Custodial Services]]></title>
+      <link><![CDATA[https://brdr.hkma.gov.hk/eng/doc-ldg/current/20250407-1-EN]]></link>
+      <pubDate><![CDATA[Mon, 07 Apr 2025 00:00:00 +0800]]></pubDate>
+      <description><![CDATA[]]></description>
+      <guid/>
+      <sortDate><![CDATA[2025-04-07]]></sortDate>
+    </item>
+    <item><title><![CDATA[Provision of Staking Services for Virtual Assets from Custodial Services (PDF File, 131.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250407e1.pdf]]></link><pubDate><![CDATA[Mon, 07 Apr 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-04-07]]></sortDate></item><item><title><![CDATA[Launch of Banking Regulatory Document Repository (BRDR) (PDF File, 192.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250331e1.pdf]]></link><pubDate><![CDATA[Mon, 31 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-31]]></sortDate></item><item><title><![CDATA[Investor Identification in IPO Subscription Services (PDF File, 161.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250328e1.pdf]]></link><pubDate><![CDATA[Fri, 28 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-28]]></sortDate></item><item><title><![CDATA[Provision of Southbound Scheme Services under Cross-boundary Wealth Management Connect Pilot Scheme by Authorized Institutions Incorporated outside Hong Kong (PDF File, 183.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250321e1.pdf]]></link><pubDate><![CDATA[Fri, 21 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-21]]></sortDate></item><item><title><![CDATA[Research Paper on Distributed Ledger Technology in the Financial Sector (PDF File, 122.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250319e1.pdf]]></link><pubDate><![CDATA[Wed, 19 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-19]]></sortDate></item><item><title><![CDATA[Guidance on Selling of Accumulators (PDF File, 145.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250314e1.pdf]]></link><pubDate><![CDATA[Fri, 14 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-14]]></sortDate></item><item><title><![CDATA[Indexed Universal Life Insurance Products for Professional Investors (PDF File, 216.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250313e1.pdf]]></link><pubDate><![CDATA[Thu, 13 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-13]]></sortDate></item><item><title><![CDATA[Complaints Against Debt Collection Agents Employed by Authorized Institutions (PDF File, 186.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250311e1.pdf]]></link><pubDate><![CDATA[Tue, 11 Mar 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-03-11]]></sortDate></item><item><title><![CDATA[Climate Risk Stress Test 2.0 (PDF File, 147.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250228e2.pdf]]></link><pubDate><![CDATA[Fri, 28 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-28]]></sortDate></item><item><title><![CDATA[Practice Note issued by the Insurance Authority (“IA”) on Illustration Rate Caps in Benefit Illustration for Participating Policies (PDF File, 143.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250228e1.pdf]]></link><pubDate><![CDATA[Fri, 28 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-28]]></sortDate></item><item><title><![CDATA[Asset and Wealth Management Activities Survey 2024 Conducted by the Securities and Futures Commission ("SFC") (PDF File, 124.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250220e1.pdf]]></link><pubDate><![CDATA[Thu, 20 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-20]]></sortDate></item><item><title><![CDATA[Refined Measures on Real-Time Fund Transfers Made by Customers (PDF File, 218.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250218e2.pdf]]></link><pubDate><![CDATA[Tue, 18 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-18]]></sortDate></item><item><title><![CDATA[Adoption Practice Guide on Greentech in the Banking Sector (PDF File, 121.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250218e1.pdf]]></link><pubDate><![CDATA[Tue, 18 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-18]]></sortDate></item><item><title><![CDATA[Circulars Issued by the Securities and Futures Commission on Listed Closed-ended Alternative Asset Funds and Listed Structured Funds (PDF File, 147.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250217e1.pdf]]></link><pubDate><![CDATA[Mon, 17 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-17]]></sortDate></item><item><title><![CDATA[Interest Rate Risk Management (PDF File, 1.0 MB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250212e1.pdf]]></link><pubDate><![CDATA[Wed, 12 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-12]]></sortDate></item><item><title><![CDATA[RMB Trade Financing Liquidity Facility (PDF File, 225.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250207e1.pdf]]></link><pubDate><![CDATA[Fri, 07 Feb 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-02-07]]></sortDate></item><item><title><![CDATA[Circular Issued by the Securities and Futures Commission on Deficiencies and Substandard Conduct Noted in the Management of Private Funds and Discretionary Accounts (PDF File, 142.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250128e1.pdf]]></link><pubDate><![CDATA[Tue, 28 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-28]]></sortDate></item><item><title><![CDATA[Complaints Watch (PDF File, 444.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250124e2.pdf]]></link><pubDate><![CDATA[Fri, 24 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-24]]></sortDate></item><item><title><![CDATA[Revised Supervisory Policy Manual (SPM) Module CA-G-5 on “Supervisory Review Process” (PDF File, 184.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250124e1.pdf]]></link><pubDate><![CDATA[Fri, 24 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-24]]></sortDate></item><item><title><![CDATA[Sharing of good industry practices for implementing operational resilience framework (PDF File, 161.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250120e1.pdf]]></link><pubDate><![CDATA[Mon, 20 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-20]]></sortDate></item><item><title><![CDATA[Supervisory Incubator for Distributed Ledger Technology (DLT) (PDF File, 172.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2025/20250108e1.pdf]]></link><pubDate><![CDATA[Wed, 08 Jan 2025 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2025-01-08]]></sortDate></item><item><title><![CDATA[Cyber Intelligence Sharing Platform Enhancements (PDF File, 167.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241227e1.pdf]]></link><pubDate><![CDATA[Fri, 27 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-27]]></sortDate></item><item><title><![CDATA[CCyB: revised SPM module CA-B-3 and return MA(BS)25 (PDF File, 162.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241220e3.pdf]]></link><pubDate><![CDATA[Fri, 20 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-20]]></sortDate></item><item><title><![CDATA[Streamlining of Audio-recording Requirements for Sale of Investment and Insurance Products (PDF File, 218.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241220e2.pdf]]></link><pubDate><![CDATA[Fri, 20 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-20]]></sortDate></item><item><title><![CDATA[Measures to protect bank customers from authorized payment scams (PDF File, 154.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241220e1.pdf]]></link><pubDate><![CDATA[Fri, 20 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-20]]></sortDate></item><item><title><![CDATA[Engaging more than one Credit Reference Agency under Credit Data Smart (PDF File, 171.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241219e1.pdf]]></link><pubDate><![CDATA[Thu, 19 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-19]]></sortDate></item><item><title><![CDATA[Good Practices on Transition Planning (PDF File, 169.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241216e1.pdf]]></link><pubDate><![CDATA[Mon, 16 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-16]]></sortDate></item><item><title><![CDATA[Guidelines for counterparty credit risk management (PDF File, 165.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241213e4.pdf]]></link><pubDate><![CDATA[Fri, 13 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-13]]></sortDate></item><item><title><![CDATA[Supervisory Policy Manual (SPM): Consequential updates arising from implementation of Basel III final reform package (PDF File, 193.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241213e3.pdf]]></link><pubDate><![CDATA[Fri, 13 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-13]]></sortDate></item><item><title><![CDATA[Revised Supervisory Policy Manual (SPM) Module CA-S-10 “Fair Value Practices” (PDF File, 168.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241213e2.pdf]]></link><pubDate><![CDATA[Fri, 13 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-13]]></sortDate></item><item><title><![CDATA[Banking (Capital)(Amendment) Rules 2023 - Supplementary Guidance on the Revised Credit Risk Framework (PDF File, 201.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241213e1.pdf]]></link><pubDate><![CDATA[Fri, 13 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-13]]></sortDate></item><item><title><![CDATA[SFC and HKMA joint product survey 2024 (PDF File, 161.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241206e2.pdf]]></link><pubDate><![CDATA[Fri, 06 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-06]]></sortDate></item><item><title><![CDATA[Basel III Final Reform Package – New and Amended Codes of Practice (PDF File, 181.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241206e1.pdf]]></link><pubDate><![CDATA[Fri, 06 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-06]]></sortDate></item><item><title><![CDATA[Revised Supervisory Policy Manual (SPM) Module CA-D-1 “Guideline on the Application of the Banking (Disclosure) Rules” (PDF File, 185.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241205e1.pdf]]></link><pubDate><![CDATA[Thu, 05 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-05]]></sortDate></item><item><title><![CDATA[Prudential Measures for Property Mortgage Loans (PDF File, 174.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241204e1.pdf]]></link><pubDate><![CDATA[Wed, 04 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-04]]></sortDate></item><item><title><![CDATA[Enhancing Customer Empowerment in Anti-Fraud-and-Scam Protection through "Money Safe" Protection and Option of Disabling Internet Banking Platforms (PDF File, 167.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241203e1.pdf]]></link><pubDate><![CDATA[Tue, 03 Dec 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-12-03]]></sortDate></item><item><title><![CDATA[New Supervisory Policy Manual (SPM) Module TM-C-1 on “Supervisory Approach on Cyber Risk Management” (PDF File, 170.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241129e2.pdf]]></link><pubDate><![CDATA[Fri, 29 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-29]]></sortDate></item><item><title><![CDATA[Revised Supervisory Policy Manual (SPM) Module CA-G-1 on “Overview of Capital Adequacy Regime for Locally Incorporated Authorized Institutions” (PDF File, 188.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241129e1.pdf]]></link><pubDate><![CDATA[Fri, 29 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-29]]></sortDate></item><item><title><![CDATA[Implementation of Basel III final reform package: Supervisory highlights (PDF File, 165.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241121e2.pdf]]></link><pubDate><![CDATA[Thu, 21 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-21]]></sortDate></item><item><title><![CDATA[Enhanced Competency Framework on Green and Sustainable Finance (Professional Level) (PDF File, 566.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241121e1.pdf]]></link><pubDate><![CDATA[Thu, 21 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-21]]></sortDate></item><item><title><![CDATA[Promotion of Mobile Point-of-Sale (POS) Terminals (PDF File, 141.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241115e3.pdf]]></link><pubDate><![CDATA[Fri, 15 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-15]]></sortDate></item><item><title><![CDATA[Commencement of Basel III final reform package (PDF File, 163.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241115e2.pdf]]></link><pubDate><![CDATA[Fri, 15 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-15]]></sortDate></item><item><title><![CDATA[New Supervisory Policy Manual (SPM) Module MB-1 on “Risk-based Supervision of Approved Money Brokers” (PDF File, 164.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241115e1.pdf]]></link><pubDate><![CDATA[Fri, 15 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-15]]></sortDate></item><item><title><![CDATA[Statements issued by the Financial Action Task Force (PDF File, 183.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241112e1.pdf]]></link><pubDate><![CDATA[Tue, 12 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-12]]></sortDate></item><item><title><![CDATA[Cooling-off Period for Unsecured Consumer Credit Products (PDF File, 214.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241108e1.pdf]]></link><pubDate><![CDATA[Fri, 08 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-08]]></sortDate></item><item><title><![CDATA[Payment Card Direct Debit Authorisation (PDF File, 221.8 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241105e1.pdf]]></link><pubDate><![CDATA[Tue, 05 Nov 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-11-05]]></sortDate></item><item><title><![CDATA[Supervisory Policy Manual (SPM): Revised module TM-E-1 on “Risk Management of E-banking” (PDF File, 141.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241025e1.pdf]]></link><pubDate><![CDATA[Fri, 25 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-25]]></sortDate></item><item><title><![CDATA[Revised standard LAC disclosure template and updated Code of Practice chapter LAC-1 “Resolution Planning – LAC Requirements” (PDF File, 280.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241024e2.pdf]]></link><pubDate><![CDATA[Thu, 24 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-24]]></sortDate></item><item><title><![CDATA[Revised Pillar 3 Disclosure Package (PDF File, 167.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241024e1.pdf]]></link><pubDate><![CDATA[Thu, 24 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-24]]></sortDate></item><item><title><![CDATA[Sustainable Finance Action Agenda (PDF File, 195.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241021e1.pdf]]></link><pubDate><![CDATA[Mon, 21 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-21]]></sortDate></item><item><title><![CDATA[Basel III implementation (PDF File, 170.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241018e2.pdf]]></link><pubDate><![CDATA[Fri, 18 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-18]]></sortDate></item><item><title><![CDATA[Applicable Jurisdictional Countercyclical Capital Buffer (CCyB) Ratio for Hong Kong (PDF File, 162.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241018e1.pdf]]></link><pubDate><![CDATA[Fri, 18 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-18]]></sortDate></item><item><title><![CDATA[Prudential Measures for Property Mortgage Loans (PDF File, 204.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241016e1.pdf]]></link><pubDate><![CDATA[Wed, 16 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-16]]></sortDate></item><item><title><![CDATA[Enhancement measures for online payment card transactions (PDF File, 189.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241010e2.pdf]]></link><pubDate><![CDATA[Thu, 10 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-10]]></sortDate></item><item><title><![CDATA[Gazettal of commencement notice for Basel III final reform package (PDF File, 167.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241010e1.pdf]]></link><pubDate><![CDATA[Thu, 10 Oct 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-10-10]]></sortDate></item><item><title><![CDATA[Risk Associated with Third-party IT Solutions (PDF File, 158.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240927e2.pdf]]></link><pubDate><![CDATA[Fri, 27 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-27]]></sortDate></item><item><title><![CDATA[Research Paper on Generative Artificial Intelligence in the Financial Services Sector (PDF File, 121.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240927e1.pdf]]></link><pubDate><![CDATA[Fri, 27 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-27]]></sortDate></item><item><title><![CDATA[Large exposures: revised SPM modules and banking returns (PDF File, 205.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240926e1.pdf]]></link><pubDate><![CDATA[Thu, 26 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-26]]></sortDate></item><item><title><![CDATA[Generative Artificial Intelligence Sandbox (PDF File, 633.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240920e1.pdf]]></link><pubDate><![CDATA[Fri, 20 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-20]]></sortDate></item><item><title><![CDATA[Banking Sector’s Support for Implementation of Severe Weather Trading (PDF File, 169.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240919e1.pdf]]></link><pubDate><![CDATA[Thu, 19 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-19]]></sortDate></item><item><title><![CDATA[Complaints Against Debt Collection Agents Employed by Authorized Institutions (PDF File, 186.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240910e1.pdf]]></link><pubDate><![CDATA[Tue, 10 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-10]]></sortDate></item><item><title><![CDATA[Use of Artificial Intelligence for Monitoring of Suspicious Activities (PDF File, 168.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240909e1.pdf]]></link><pubDate><![CDATA[Mon, 09 Sep 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-09-09]]></sortDate></item><item><title><![CDATA[Revised Banking Returns – Capital Adequacy Ratio (Form MA(BS)3) (“CAR Return”), Leverage Ratio (Form MA(BS)27) (“LR Return”), Liquidity Position (Form MA(BS)1E) (“Liquidity Position Return”) and Stable Funding Position (Form MA(BS)26) (“Stable Funding Position Return”) (PDF File, 171.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240830e1.pdf]]></link><pubDate><![CDATA[Fri, 30 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-30]]></sortDate></item><item><title><![CDATA[Good practices on climate-related risk governance (PDF File, 174.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240822e1.pdf]]></link><pubDate><![CDATA[Thu, 22 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-22]]></sortDate></item><item><title><![CDATA[Consumer Protection in respect of Use of Generative Artificial Intelligence (PDF File, 221.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240819e1.pdf]]></link><pubDate><![CDATA[Mon, 19 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-19]]></sortDate></item><item><title><![CDATA[Q&As on Market Risk and CVA Risk (PDF File, 184.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240813e1.pdf]]></link><pubDate><![CDATA[Tue, 13 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-13]]></sortDate></item><item><title><![CDATA[Automatic Exchange of Financial Account Information in Tax Matters (PDF File, 214.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240807e1.pdf]]></link><pubDate><![CDATA[Wed, 07 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-07]]></sortDate></item><item><title><![CDATA[Revised Return of Securities Related Activities (Securities Return) (PDF File, 118.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240807e2.pdf]]></link><pubDate><![CDATA[Wed, 07 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-07]]></sortDate></item><item><title><![CDATA[Supervisory Policy Manual (SPM): Revised Module CA-D-1 “Guideline on the Application of the Banking (Disclosure) Rules” (PDF File, 168.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240806e1.pdf]]></link><pubDate><![CDATA[Tue, 06 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-06]]></sortDate></item><item><title><![CDATA[Residential mortgage lending under the Mortgage Insurance Programme (PDF File, 143.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240802e1.pdf]]></link><pubDate><![CDATA[Fri, 02 Aug 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-08-02]]></sortDate></item><item><title><![CDATA[Complaints Watch (PDF File, 417.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240725e1.pdf]]></link><pubDate><![CDATA[Thu, 25 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-25]]></sortDate></item><item><title><![CDATA[Cryptoasset disclosure requirements and standard amendments (PDF File, 189.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240723e1.pdf]]></link><pubDate><![CDATA[Tue, 23 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-23]]></sortDate></item><item><title><![CDATA[BCBS recalibration of shocks for IRRBB (PDF File, 185.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240722e1.pdf]]></link><pubDate><![CDATA[Mon, 22 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-22]]></sortDate></item><item><title><![CDATA[Statements issued by the Financial Action Task Force (For SVF Licensees) (PDF File, 182.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240711e2.pdf]]></link><pubDate><![CDATA[Thu, 11 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-11]]></sortDate></item><item><title><![CDATA[Statements issued by the Financial Action Task Force (For AIs) (PDF File, 182.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240711e1.pdf]]></link><pubDate><![CDATA[Thu, 11 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-11]]></sortDate></item><item><title><![CDATA[Self-Assessment of Compliance with Supervisory Policy Manual Module TB-1 “Regulation and Supervision of Trust Business” (PDF File, 173.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240704e1.pdf]]></link><pubDate><![CDATA[Thu, 04 Jul 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-07-04]]></sortDate></item><item><title><![CDATA[Standard Contract for Cross-boundary Flow of Personal Information involving Transfer of Credit Data through Credit Reference Agencies (PDF File, 234.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240628e2.pdf]]></link><pubDate><![CDATA[Fri, 28 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-28]]></sortDate></item><item><title><![CDATA[Pilots on Cross-boundary Credit Referencing (PDF File, 280.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240628e1.pdf]]></link><pubDate><![CDATA[Fri, 28 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-28]]></sortDate></item><item><title><![CDATA[Findings from IA-HKMA joint inspection exercise on premium financing (PDF File, 210.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240627e1.pdf]]></link><pubDate><![CDATA[Thu, 27 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-27]]></sortDate></item><item><title><![CDATA[Bogus Telephone Calls (PDF File, 185.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240621e1.pdf]]></link><pubDate><![CDATA[Fri, 21 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-21]]></sortDate></item><item><title><![CDATA[Banking Sector’s Support for Implementation of Severe Weather Trading (PDF File, 174.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240618e1.pdf]]></link><pubDate><![CDATA[Tue, 18 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-18]]></sortDate></item><item><title><![CDATA[Licence Fees (PDF File, 151.2 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240614e2.pdf]]></link><pubDate><![CDATA[Fri, 14 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-14]]></sortDate></item><item><title><![CDATA[Refinements to property mortgage lending requirements (PDF File, 182.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240614e1.pdf]]></link><pubDate><![CDATA[Fri, 14 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-14]]></sortDate></item><item><title><![CDATA[Circular issued by the Insurance Authority (“IA”) on action against (and correction of) non-compliant business models that incentivize unlicensed selling of long term insurance policies to Mainland China Visitors (PDF File, 145.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240612e1.pdf]]></link><pubDate><![CDATA[Wed, 12 Jun 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-06-12]]></sortDate></item><item><title><![CDATA[Provision of Southbound Scheme Services under Cross-boundary Wealth Management Connect Pilot Scheme by Authorized Institutions Incorporated Outside Hong Kong (PDF File, 177.1 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240531e1.pdf]]></link><pubDate><![CDATA[Fri, 31 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-31]]></sortDate></item><item><title><![CDATA[Physical Risk Assessment Platform (PDF File, 170.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240529e1.pdf]]></link><pubDate><![CDATA[Wed, 29 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-29]]></sortDate></item><item><title><![CDATA[Supervisory Policy Manual (SPM): Updated Module CG-6 on “Competence and Ethical Behaviour” (PDF File, 166.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240523e1.pdf]]></link><pubDate><![CDATA[Thu, 23 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-23]]></sortDate></item><item><title><![CDATA[Refinements of the US Dollar Liquidity Facility (PDF File, 162.3 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240522e1.pdf]]></link><pubDate><![CDATA[Wed, 22 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-22]]></sortDate></item><item><title><![CDATA[Supervisory Policy Manual (SPM) SB-1: “Supervision of regulated activities of SFC-registered authorized institutions” (Revised) (PDF File, 122.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240510e1.pdf]]></link><pubDate><![CDATA[Fri, 10 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-10]]></sortDate></item><item><title><![CDATA[Applicable Jurisdictional Countercyclical Capital Buffer (CCyB) Ratio for Hong Kong (PDF File, 160.5 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240503e2.pdf]]></link><pubDate><![CDATA[Fri, 03 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-03]]></sortDate></item><item><title><![CDATA[Hong Kong Taxonomy for Sustainable Finance (PDF File, 170.9 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240503e.pdf]]></link><pubDate><![CDATA[Fri, 03 May 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-05-03]]></sortDate></item><item><title><![CDATA[Findings of concurrent SFC-HKMA thematic review of the distribution of non-exchange traded investment products (PDF File, 233.6 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240418e1.pdf]]></link><pubDate><![CDATA[Thu, 18 Apr 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-04-18]]></sortDate></item><item><title><![CDATA[Thematic Review of Transaction Monitoring Systems and Use of Artificial Intelligence (For SVF Licensees) (PDF File, 121.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240417e2.pdf]]></link><pubDate><![CDATA[Wed, 17 Apr 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-04-17]]></sortDate></item><item><title><![CDATA[Thematic Review of Transaction Monitoring Systems and Use of Artificial Intelligence (For AIs) (PDF File, 133.7 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240417e1.pdf]]></link><pubDate><![CDATA[Wed, 17 Apr 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-04-17]]></sortDate></item><item><title><![CDATA[Risk management considerations related to the use of distributed ledger technology (PDF File, 230.0 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240416e1.pdf]]></link><pubDate><![CDATA[Tue, 16 Apr 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-04-16]]></sortDate></item><item><title><![CDATA[Joint Circular on Anti-Scam Consumer Protection Charter 2.0 (PDF File, 237.4 KB)]]></title><link><![CDATA[https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20240410e1.pdf]]></link><pubDate><![CDATA[Wed, 10 Apr 2024 00:00:00 +0800]]></pubDate><description><![CDATA[]]></description><guid /><sortDate><![CDATA[2024-04-10]]></sortDate></item></channel></rss>

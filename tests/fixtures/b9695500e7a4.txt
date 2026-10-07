@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet title="XSL_formatting" type="text/xsl" href="https://www.sfc.hk/web_assets/css/rssxsl.data.xml"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>SFC: Circulars</title>
+    <link>https://www.sfc.hk/en/RSS-Feeds/Circulars</link>
+    <description>SFC RSS page</description>
+    <language>en</language>
+    <copyright>Copyright 2020 Securities and Futures Commission. All rights reserved.</copyright>
+    <image>
+      <url>https://www.sfc.hk/-/media/SFC/RSS/logo.png?h=95&amp;w=304&amp;rev=0b59c0321da14678b11506a31cb16aa5</url>
+      <title>SFC: Circulars</title>
+      <link>https://www.sfc.hk/en/RSS-Feeds/Circulars</link>
+    </image>
+    <atom:link rel="self" type="application/rss+xml" href="https://www.sfc.hk/en/RSS-Feeds/Circulars" />
+    <item>
+      <guid isPermaLink="false">26EC61</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/doc?refNo=26EC61</link>
+      <title>Circular to Intermediaries
+Roadmap for Implementing the Hong Kong Investor Identification Regime for the Exchange-traded Derivatives Market </title>
+      <description />
+      <pubDate>Wed, 30 Sep 2026 20:05:45 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26EC60</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/doc?refNo=26EC60</link>
+      <title>Circular to intermediaries 
+Obtaining client consent under the Hong Kong Investor Identification Regime for the exchange-traded derivatives market (HKIDR-DM) </title>
+      <description />
+      <pubDate>Wed, 30 Sep 2026 20:00:05 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26EC59</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/doc?refNo=26EC59</link>
+      <title>Securities and Futures Commission &amp; Securities Commission Malaysia
+Memorandum of Understanding on Simplified Dual IPO Listing Framework
+Circular on the Single Submission Arrangement for Dual Listings in Hong Kong
+</title>
+      <description />
+      <pubDate>Wed, 30 Sep 2026 19:31:16 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26EC54</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/intermediaries/supervision/doc?refNo=26EC54</link>
+      <title>Circular to Licensed Corporations, SFC-licensed Virtual Asset Service Providers and Associated Entities
+Brokers' Forum</title>
+      <description />
+      <pubDate>Fri, 04 Sep 2026 09:36:59 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26EC55</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/doc?refNo=26EC55</link>
+      <title>Circular on SFC-authorised funds with exposure to private market assets</title>
+      <description />
+      <pubDate>Thu, 03 Sep 2026 16:06:11 +0800</pubDate>
+    </item>
+  </channel>
+</rss>

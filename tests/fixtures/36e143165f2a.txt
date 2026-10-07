@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet title="XSL_formatting" type="text/xsl" href="https://www.sfc.hk/web_assets/css/rssxsl.data.xml"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>SFC: Press releases</title>
+    <link>https://www.sfc.hk/en/RSS-Feeds/Press-releases</link>
+    <description>SFC RSS page</description>
+    <language>en</language>
+    <copyright>Copyright 2020 Securities and Futures Commission. All rights reserved.</copyright>
+    <image>
+      <url>https://www.sfc.hk/-/media/SFC/RSS/logo.png?h=95&amp;w=304&amp;rev=0b59c0321da14678b11506a31cb16aa5</url>
+      <title>SFC: Press releases</title>
+      <link>https://www.sfc.hk/en/RSS-Feeds/Press-releases</link>
+    </image>
+    <atom:link rel="self" type="application/rss+xml" href="https://www.sfc.hk/en/RSS-Feeds/Press-releases" />
+    <item>
+      <guid isPermaLink="false">26PR160</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR160</link>
+      <title>Hong Kong’s securities brokers post strong earnings growth in first half of 2026</title>
+      <description />
+      <pubDate>Tue, 06 Oct 2026 16:34:37 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR159</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR159</link>
+      <title>SFC, Securities Commission Malaysia announce Single Submission Arrangement to streamline simultaneous listings in Malaysia and Hong Kong</title>
+      <description />
+      <pubDate>Wed, 30 Sep 2026 20:32:14 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR158</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR158</link>
+      <title>SFC reprimands and fines Zheng Da International Financial Holding Limited $7 million and suspends its responsible officer for regulatory breaches 
+</title>
+      <description />
+      <pubDate>Tue, 29 Sep 2026 04:30:00 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR157</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR157</link>
+      <title>SFC shares updates with securities industry on scam prevention and cybersecurity
+</title>
+      <description />
+      <pubDate>Mon, 28 Sep 2026 19:27:31 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR155</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR155</link>
+      <title>New speech by Kelvin Wong: Remarks at SFC and Accounting and Financial Reporting Council’s MoU Signing Ceremony </title>
+      <description />
+      <pubDate>Mon, 28 Sep 2026 11:34:25 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR156</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR156</link>
+      <title>SFC and AFRC extend regulatory cooperation to financial reporting of licensed firms and funds under new MoU</title>
+      <description />
+      <pubDate>Mon, 28 Sep 2026 11:20:39 +0800</pubDate>
+    </item>
+    <item>
+      <guid isPermaLink="false">26PR154</guid>
+      <link>https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR154</link>
+      <title>SFC suspends dealings in Silver Grant International Holdings Group Limited shares over suspicious diversion of over $1 billion in loan proceeds to its then-major shareholder and related party
+</title>
+      <description />
+      <pubDate>Fri, 25 Sep 2026 16:36:29 +0800</pubDate>
+    </item>
+  </channel>
+</rss>

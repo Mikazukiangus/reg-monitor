@@ -22,6 +22,8 @@ export interface KeyPoints {
   method: 'extractive';
   // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
   ocr?: boolean;
+  // A sentence stating when comments or responses are due, with that date
+  closingDate?: KeyFact;
 }
 
 const BLOCK_CLOSE = /<\/(p|li|h[1-6]|div|tr|td|th|section|article|blockquote|dd|dt)>|<br\s*\/?>/gi;
@@ -277,6 +279,25 @@ function extractDateFacts(sentences: string[], now: Date): KeyFact[] {
   return kept;
 }
 
+// Sentences that state when a consultation closes, e.g. "Comments should be
+// submitted on or before 9 December 2026" or "The consultation closes on ..."
+const CLOSING_CUE = new RegExp([
+  String.raw`\b(?:comments?|responses?|feedback|submissions?|views|representations)\b[^.;]{0,140}\b(?:by|on or before|no later than|before|until)\b`,
+  String.raw`\b(?:consultation|comment period|consultation period)\b[^.;]{0,80}\b(?:closes?|closing|ends?|will end|runs? until)\b`,
+  String.raw`\bclosing date\b`,
+  String.raw`\bdeadline for (?:responses|comments|submissions|feedback)\b`
+].join('|'), 'i');
+
+export function extractClosingDate(sentences: string[]): KeyFact | undefined {
+  for (const s of sentences) {
+    if (!CLOSING_CUE.test(s)) continue;
+    const dates = parseFullDates(s).sort();
+    // The latest date in the sentence: "published on 3 October ... comments by 9 December"
+    if (dates.length) return { text: s, date: dates[dates.length - 1] };
+  }
+  return undefined;
+}
+
 const REF_RE = /\b(?:CP|PS|SS|DP|CR)\d{1,2}\/\d{2}\b|\bRelease No\. [\w-]+|\bFile No\. [\w-]+|\b(?:Consultation Paper|Policy Statement) No\. [\w/-]+/g;
 
 export function summarize(text: string, options: { datesText?: string; sourceUrl?: string; now?: Date } = {}): KeyPoints {
@@ -286,7 +307,8 @@ export function summarize(text: string, options: { datesText?: string; sourceUrl
   const dateSentences = options.datesText ? splitSentences(options.datesText) : sentences;
   const facts = extractDateFacts(dateSentences, now);
   const refs = [...new Set(text.match(REF_RE) || [])].slice(0, 5);
-  return { points, facts, refs, sourceUrl: options.sourceUrl, method: 'extractive' };
+  const closingDate = extractClosingDate(sentences);
+  return { points, facts, refs, sourceUrl: options.sourceUrl, method: 'extractive', ...(closingDate ? { closingDate } : {}) };
 }
 
 // Earliest upcoming deadline named in the facts, if any

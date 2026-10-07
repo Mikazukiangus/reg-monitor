@@ -12,12 +12,12 @@ const SECTORS: SectorDomain[] = [
 
 const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'SG', label: 'SINGAPORE (MAS)' },
-  { code: 'HK', label: 'HONG KONG (HKMA, SFC)' },
+  { code: 'HK', label: 'HONG KONG (HKMA, SFC, HKEX)' },
   { code: 'US', label: 'UNITED STATES (SEC/CFTC)' },
-  { code: 'UK_EU', label: 'UNITED KINGDOM (PRA, FCA)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
   { code: 'AU', label: 'AUSTRALIA (ASIC)' },
   { code: 'JP', label: 'JAPAN (JFSA)' },
-  { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS)' }
+  { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS, FSB)' }
 ];
 
 interface RadarScreenProps {

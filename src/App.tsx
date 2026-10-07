@@ -8,6 +8,7 @@ import { RightSidebar } from './components/RightSidebar';
 import { Footer } from './components/Footer';
 import { BottomNav } from './components/BottomNav';
 import { NextUpStrip } from './components/NextUpStrip';
+import { searchTerms } from './components/Highlight';
 
 // Screens
 import { RadarScreen } from './components/screens/RadarScreen';
@@ -41,6 +42,9 @@ const DEFAULT_ENDPOINTS: EndpointMetric[] = [
   { id: 'boe-pra', name: 'Bank of England PRA Publications RSS', agency: 'PRA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'mas-gov', name: 'Singapore MAS News Search API', agency: 'MAS (Singapore)', jurisdiction: 'Singapore', url: 'https://www.mas.gov.sg/api/v1/search', protocol: 'JSON (undocumented)', auth: 'Public / None', ingests: true },
   { id: 'sfc-rss', name: 'SFC RSS Feeds', agency: 'SFC (Hong Kong)', jurisdiction: 'Hong Kong', url: 'https://www.sfc.hk/en/RSS-Feeds/Press-releases', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'hkex-rss', name: 'HKEX Regulatory Announcements RSS', agency: 'HKEX (Hong Kong)', jurisdiction: 'Hong Kong', url: 'https://www.hkex.com.hk/Services/RSS-Feeds/regulatory-announcements?sc_lang=en', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'esma-rss', name: 'ESMA News RSS', agency: 'ESMA (European Union)', jurisdiction: 'European Union', url: 'https://www.esma.europa.eu/rss.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'fsb-rss', name: 'FSB Publications RSS', agency: 'FSB (Global)', jurisdiction: 'Global', url: 'https://www.fsb.org/feed/', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'asic-gov', name: 'ASIC Media Releases', agency: 'ASIC (Australia)', jurisdiction: 'Australia', url: 'https://download.asic.gov.au/asic-nga/data/newsroom/newsroom-mr-latest.json', protocol: 'JSON (behind ASIC newsroom page)', auth: 'Public / None', ingests: true },
   { id: 'jfsa-rss', name: 'JFSA English News RSS', agency: 'JFSA (Japan)', jurisdiction: 'Japan', url: 'https://www.fsa.go.jp/fsaEnNewsList_rss2.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', url: 'https://www.bis.org/doclist/all_pressrels.rss', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
@@ -88,6 +92,10 @@ export default function App() {
 
   // Live notices from /api/feeds/sync; there is no sample data
   const [notices, setNotices] = useState<RegulatoryNotice[]>([]);
+  // The stored history, when the server has a database
+  const [archive, setArchive] = useState<{ enabled: boolean; count?: number; since?: string | null; error?: string }>({ enabled: false });
+  // Older notices found by searching the history, by search text
+  const [archiveResults, setArchiveResults] = useState<{ query: string; notices: RegulatoryNotice[] } | null>(null);
   const [hasSynced, setHasSynced] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
 
@@ -204,6 +212,7 @@ export default function App() {
         if (data.notices && Array.isArray(data.notices)) {
           // The server returns the full current live set, so replace rather than append
           setNotices(data.notices);
+          if (data.archive) setArchive(data.archive);
           recordVisit(data.notices.map((n: RegulatoryNotice) => n.id));
         }
         setHasSynced(true);
@@ -319,8 +328,9 @@ export default function App() {
 
   const ingestingSources = endpoints.filter(ep => ep.ingests && ep.sync?.ok).map(ep => ep.agency.replace(/ \(.*\)$/, ''));
 
+  // Notices from the stored history are older ones, so they never count as new
   const isNewNotice = (id: string) => !!previousVisit && !previousVisit.seenIds.has(id);
-  const newCount = notices.filter(n => isNewNotice(n.id)).length;
+  const newCount = notices.filter(n => !n.archived && isNewNotice(n.id)).length;
   const activeFilterCount =
     (selectedSeverities.length < 3 ? 1 : 0) +
     Object.values(selectedJurisdictions).filter(v => !v).length +
@@ -328,9 +338,41 @@ export default function App() {
     (selectedFormat ? 1 : 0) +
     (onlyNew ? 1 : 0);
 
+  // Search the stored history as well, once the search text settles
+  const searchText = (searchQuery + ' ' + feedKeywordSearch).trim();
+  React.useEffect(() => {
+    if (!archive.enabled || archive.error || searchText.length < 3) {
+      setArchiveResults(null);
+      return;
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch(`/api/notices/search?q=${encodeURIComponent(searchText)}`, { signal: controller.signal })
+        .then(res => (res.ok ? res.json() : null))
+        .then(data => data?.notices && setArchiveResults({ query: searchText, notices: data.notices }))
+        .catch(() => {});
+    }, 400);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [searchText, archive.enabled, archive.error]);
+
+  // Notices loaded with the feed, plus older ones the history search found
+  const searchableNotices = useMemo(() => {
+    if (!archiveResults || archiveResults.query !== searchText) return notices;
+    const ids = new Set(notices.map(n => n.id));
+    return [...notices, ...archiveResults.notices.filter(n => !ids.has(n.id))];
+  }, [notices, archiveResults, searchText]);
+  const archiveMatchIds = useMemo(
+    () => new Set(archiveResults && archiveResults.query === searchText ? archiveResults.notices.map(n => n.id) : []),
+    [archiveResults, searchText]
+  );
+  const highlightTerms = useMemo(() => searchTerms(searchText), [searchText]);
+
   // Filter Notices
   const filteredNotices = useMemo(() => {
-    return notices.filter(notice => {
+    return searchableNotices.filter(notice => {
       // Header dropdown filter
       if (headerJurisdiction === 'Singapore MAS' && notice.jurisdictionCode !== 'SG') return false;
       if (headerJurisdiction === 'Hong Kong HKMA' && notice.jurisdictionCode !== 'HK') return false;
@@ -357,20 +399,19 @@ export default function App() {
         return false;
       }
 
-      if (onlyNew && !isNewNotice(notice.id)) {
+      if (onlyNew && (notice.archived || !isNewNotice(notice.id))) {
         return false;
       }
 
-      // Global search & feed keyword search
-      const query = (searchQuery + ' ' + feedKeywordSearch).trim().toLowerCase();
-      if (query) {
-        const matchTitle = notice.title.toLowerCase().includes(query);
-        const matchRef = notice.ref.toLowerCase().includes(query);
-        const matchReg = notice.regulator.toLowerCase().includes(query);
-        const matchTags = notice.tags.some(t => t.toLowerCase().includes(query));
-        const matchSummary = notice.summary?.toLowerCase().includes(query);
-        const matchAi = notice.keyPoints?.points.some(p => p.toLowerCase().includes(query));
-        if (!matchTitle && !matchRef && !matchReg && !matchTags && !matchSummary && !matchAi) {
+      // Search: every word must appear, at the start of a word, in the title,
+      // reference, regulator, tags, summary or key points. Notices the history
+      // search found (which also matches word forms) are kept.
+      if (highlightTerms.length > 0 && !archiveMatchIds.has(notice.id)) {
+        const text = [
+          notice.title, notice.ref, notice.regulator, ...notice.tags, notice.summary,
+          ...(notice.keyPoints?.points || []), ...(notice.keyPoints?.facts.map(f => f.text) || [])
+        ].join(' ');
+        if (!highlightTerms.every(term => new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i').test(text))) {
           return false;
         }
       }
@@ -390,14 +431,14 @@ export default function App() {
       return 0;
     });
   }, [
-    notices,
+    searchableNotices,
+    archiveMatchIds,
+    highlightTerms,
     headerJurisdiction,
     selectedSeverities,
     selectedJurisdictions,
     selectedSectors,
     selectedFormat,
-    searchQuery,
-    feedKeywordSearch,
     sortBy,
     onlyNew
   ]);
@@ -412,10 +453,17 @@ export default function App() {
 
   const handleSelectNoticeById = (id: string) => {
     setActiveTab('feed');
-    const target = notices.find(n => n.id === id);
+    const target = searchableNotices.find(n => n.id === id);
     if (target) {
       setActiveNoticeForDossier(target);
     }
+  };
+
+  // A linked consultation or conclusion: open it here if loaded, else at the source
+  const handleOpenRelated = (id: string, url?: string) => {
+    const target = searchableNotices.find(n => n.id === id);
+    if (target) setActiveNoticeForDossier(target);
+    else if (url) window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleTabChange = (tab: ActiveTab) => {
@@ -428,7 +476,7 @@ export default function App() {
     if (!pendingNoticeId || notices.length === 0) return;
     const target = notices.find(n => n.id === pendingNoticeId);
     if (target) setActiveNoticeForDossier(target);
-    else showToast('The linked notice is no longer in the live feed');
+    else showToast('The linked notice is no longer in the feed');
     setPendingNoticeId(null);
   }, [notices, pendingNoticeId]);
 
@@ -698,9 +746,11 @@ export default function App() {
                           onToggleBookmark={handleToggleBookmark}
                           isBookmarked={bookmarkedIds.has(notice.id)}
                           density={density}
-                          isNew={isNewNotice(notice.id)}
+                          isNew={!notice.archived && isNewNotice(notice.id)}
                           onCopyLink={handleCopyNoticeLink}
                           onAddToCalendar={handleAddToCalendar}
+                          highlight={highlightTerms}
+                          onOpenRelated={handleOpenRelated}
                         />
                       ))
                     ) : !hasSynced && syncError ? (
@@ -844,7 +894,7 @@ export default function App() {
         onOpenMethodology={() =>
           setInfoModal({
             title: 'Statutory Ingestion Methodology',
-            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the SFC press release, circular and consultation RSS feeds, the MAS news search API, ASIC media releases (from the JSON file behind the ASIC newsroom page, as ASIC publishes no RSS feed), the JFSA English news RSS feed (press conference transcripts and the weekly newsletter are left out), and the BIS media releases RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents.'
+            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the SFC press release, circular and consultation RSS feeds, the HKEX regulatory announcements RSS feed, the MAS website search API (media releases, consultations with the closing date MAS publishes, circulars and guidelines), ASIC media releases (from the JSON file behind the ASIC newsroom page, as ASIC publishes no RSS feed), the JFSA English news RSS feed (press conference transcripts and the weekly newsletter are left out), the BIS media releases RSS feed, and the FSB publications RSS feed. EU coverage comes from the ESMA news RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents. "Comments close" dates come from the data the source itself publishes where there is any (Federal Register, MAS) and otherwise from a sentence in the document that states when comments or responses are due. When the server has a history database, every notice read is stored there: the feed also shows the last 30 days from it (marked "From history"), and search covers the whole history. A consultation and its conclusions are linked by regulator and title words ("matched by title"), because regulators do not publish that link in a form that can be read automatically.'
           })
         }
         onOpenAuditLog={() =>

@@ -1,0 +1,88 @@
+{
+  "responseHeader":{
+    "zkConnected":true,
+    "status":0,
+    "QTime":1
+  },
+  "response":{
+    "numFound":428,
+    "start":0,
+    "maxScore":74.602646,
+    "numFoundExact":true,
+    "docs":[{
+      "document_title_t":["Consultation Paper on Amendments to Corporate Governance Regulations for Banks, Insurers and Designated Financial Holding Companies"],
+      "document_title_string_s":"Consultation Paper on Amendments to Corporate Governance Regulations for Banks, Insurers and Designated Financial Holding Companies",
+      "mas_consultationstatus_s":"Open",
+      "masconsultation_closingdate_tdt":"2026-12-09T23:59:00Z",
+      "itemid_s":"{0930AF36-4691-424B-9025-448D1753B2A7}",
+      "document_shortsummary_t":["MAS is proposing changes to enhance corporate governance standards across the banking and insurance sectors. The consultation paper touches on several key corporate governance safeguards such as independence of directors, board and board committee composition and appointments of key principals of banks, insurers and their designated financial holding companies."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-09-30T10:08:00Z",
+      "masconsultation_consultationnumber_t":["P016-2026"],
+      "mas_content_number":["P016-2026"],
+      "topic_path":["Governance/Corporate Governance","Governance/Fit and Proper Criteria","Governance/Key Appointments"],
+      "_uniqueid":"sitecore://web/{0930af36-4691-424b-9025-448d1753b2a7}?lang=en&ver=2&ndx=mas_search_index",
+      "masconsultation_startdate_tdt":"2026-09-30T10:18:00Z",
+      "page_url_s":"/publications/consultations/2026/consultation-paper-on-amendments-to-cg-regulations-for-banks-insurers-and-designated-fhcs",
+      "mas_contenttype_s":"Consultations",
+      "navigation_title_string_s":"Consultation Paper on Amendments to Corporate Governance Regulations for Banks, Insurers and Designated Financial Holding Companies",
+      "score":74.602646
+    },{
+      "document_title_t":["Consultation on Proposed Amendments to the Payment Services Act 2019 for Stablecoins Regulation"],
+      "document_title_string_s":"Consultation on Proposed Amendments to the Payment Services Act 2019 for Stablecoins Regulation",
+      "mas_consultationstatus_s":"Open",
+      "masconsultation_closingdate_tdt":"2026-10-16T23:59:00Z",
+      "itemid_s":"{75D25918-E514-45A4-B10C-65DC49F7FE55}",
+      "document_shortsummary_t":["This paper sets out proposed legislative amendments to the Payment Services Act 2019 to introduce the regulatory framework for stablecoins in Singapore, as well as proposals on further requirements taking into account stablecoin developments since 2023. MAS invites comments from interested parties on the proposals set..."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-09-01T11:30:00Z",
+      "masconsultation_consultationnumber_t":["P015-2026"],
+      "mas_content_number":["P015-2026"],
+      "topic_path":["Fintech/Digital Currencies","Licensing, Authorisation and Registration"],
+      "_uniqueid":"sitecore://web/{75d25918-e514-45a4-b10c-65dc49f7fe55}?lang=en&ver=2&ndx=mas_search_index",
+      "masconsultation_startdate_tdt":"2026-09-01T11:30:00Z",
+      "page_url_s":"/publications/consultations/2026/consultation-on-proposed-amendments-to-the-payment-services-act-for-stablecoin-regulation",
+      "mas_contenttype_s":"Consultations",
+      "navigation_title_string_s":"Consultation on Proposed Amendments to the Payment Services Act for Stablecoin Regulation",
+      "score":69.30561
+    },{
+      "document_title_t":["Consultation Paper on Proposed Amendments to the Code on Collective Investment Schemes to Facilitate Retail Fund Product Innovation"],
+      "document_title_string_s":"Consultation Paper on Proposed Amendments to the Code on Collective Investment Schemes to Facilitate Retail Fund Product Innovation",
+      "mas_consultationstatus_s":"Open",
+      "masconsultation_closingdate_tdt":"2026-08-10T23:59:00Z",
+      "itemid_s":"{6509FC9A-CD02-4176-9539-7B5182A7E8DC}",
+      "document_shortsummary_t":["This consultation paper seeks views on the proposed amendments to the Code on Collective Investment Schemes (CIS Code) to enable a wider range of new fund product types to be authorised for retail offer through a more streamlined process, while ensuring that appropriate safeguards are in place for retail investors."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-07-09T00:00:00Z",
+      "masconsultation_consultationnumber_t":["P014-2026"],
+      "mas_content_number":["P014-2026"],
+      "_uniqueid":"sitecore://web/{6509fc9a-cd02-4176-9539-7b5182a7e8dc}?lang=en&ver=2&ndx=mas_search_index",
+      "masconsultation_startdate_tdt":"2026-07-09T00:00:00Z",
+      "page_url_s":"/publications/consultations/2026/cp-on-proposed-amendments-to-the-cis-code-to-facilitate-retail-fund-product-innovation",
+      "mas_contenttype_s":"Consultations",
+      "navigation_title_string_s":"Consultation Paper on Proposed Amendments to the Code on Collective Investment Schemes to Facilitate Retail Fund Product Innovation",
+      "score":61.156517
+    }]
+  },
+  "facet_counts":{
+    "facet_queries":{ },
+    "facet_fields":{
+      "mas_contenttype_s":["Consultations",428],
+      "topic_path":["Conduct",66,"Prudential and Supervisory Requirements",49,"Offers of Investments",47,"Governance",37,"Licensing, Authorisation and Registration",34,"Risk Management",31,"Conduct/Disclosures",29,"Offers of Investments/Offers of Collective Investment Schemes",29,"Conduct/Representative-related",26,"Conduct/Advisory and Sales",25,"Anti-Money Laundering",24,"Exemptions",23,"Conduct/Record Keeping",22,"Regulatory Submissions",21,"Financial and Margin",20,"Offers of Investments/Offers of Securities or Securities-Based Derivatives Contracts",20,"Governance/Corporate Governance",19,"Anti-Money Laundering/AML&#47;CFT",15,"Governance/Fit and Proper Criteria",15,"Conduct/Customer Monies and Assets Segregation",12,"Prudential and Supervisory Requirements/Valuation and Capital",12,"Financial and Margin/Capital and Financial Resources",11,"Resolution",11,"Risk Management/Guidelines on Risk Management Practices",11,"Conduct/Remuneration",10,"Governance/Key Appointments",9,"Prudential and Supervisory Requirements/Capital Adequacy",9,"OTC Markets",7,"Public Submissions",7,"Regulatory Submissions/Financial Returns",7,"Conduct/Complaints Handling",6,"Conduct/Investment Management",6,"Consumer Finance",6,"Financial and Margin/Margins",6,"Risk Management/Liquidity Risk",6,"Fintech",5,"Mergers and Acquisitions",5,"Prudential and Supervisory Requirements/General Provisions",5,"Prudential and Supervisory Requirements/Policy Owners' Protection Scheme",5,"Regulatory Submissions/Notifications",5,"Risk Management/Credit Risk",5,"Risk Management/Environmental Risk",5,"Risk Management/Operational Risk",5,"Gazette",4,"Information Gathering",4,"Treasury",4,"Widely Accepted Stored Value Facilities",4,"Capital Markets Services",3,"Capital Markets Services/Registered Business Trust",3,"Products",3,"Prudential and Supervisory Requirements/Insurance Funds",3,"Prudential and Supervisory Requirements/Investments",3,"Prudential and Supervisory Requirements/Supervisory Framework",3,"Public Submissions/Short Position Reporting",3,"Risk Management/Transition Planning",3,"Third-Party Risk Management",3,"Conduct/Selected Client",2,"Fintech/Digital Currencies",2,"Governance/Appointment of Auditors",2,"Legal",2,"Monetary Policy",2,"OTC Markets/Reporting Mandate",2,"OTC Markets/Trading Mandate",2,"Outsourcing",2,"Prudential and Supervisory Requirements/Deposit Insurance",2,"Prudential and Supervisory Requirements/Insurance Products and Business Types",2,"Prudential and Supervisory Requirements/Operations",2,"Regulatory Submissions/Declarations",2,"Resolution/MAS' Approach to Resolution",2,"Risk Management/Business Continuity",2,"Risk Management/Technology Risk",2,"Audit",1,"Consumer Finance/Property Loans",1,"Protected Cell Companies",1,"Regulatory Submissions/Insurer-related Reports",1,"Risk Management/Insurance Risk",1,"Risk Management/Market Conduct Risk",1,"Risk Management/Market Risk",1,"Treasury/Primary Dealers",1],
+      "mas_sector_sm":["Capital Markets",118,"Insurance",52,"Banking",42,"Payments",26],
+      "entitytype_path":["Capital Markets Services",128,"Capital Markets Services/Members of Public",69,"Financial Adviser",57,"Capital Markets Services/Licensed Fund Management Company",52,"Insurance",51,"Capital Markets Services/REIT Management",47,"Capital Markets Services/Dealing in Capital Markets Products",44,"Capital Markets Services/Exempt Capital Markets Services Entity",43,"Insurance/Direct Insurer (Composite)",41,"Financial Adviser/Licensed Financial Adviser",40,"Insurance/Direct Insurer (Life)",40,"Insurance/Direct Insurer (General)",38,"Financial Adviser/Exempt Financial Adviser",37,"Capital Markets Services/Securities Crowdfunding",36,"Capital Markets Services/Venture Capital Fund Management Company",34,"Capital Markets Services/Registered Fund Management Company",33,"Banking",31,"Capital Markets Services/Corporate Finance Advisory",31,"Capital Markets Services/Credit Rating Agency",30,"Insurance/Reinsurer (Composite)",30,"Insurance/Reinsurer (General)",30,"Insurance/Reinsurer (Life)",29,"Capital Markets Services/Product Financing",27,"Payments",27,"Insurance Broker",26,"Capital Markets Services/Providing Custodial Services",24,"Trust Business",21,"Capital Markets Services/Approved CIS Trustee",19,"Capital Markets Services/Exempt Futures Broker",18,"Capital Markets Services/Exempt OTC Derivatives Broker",18,"Insurance Broker/Registered Insurance Broker",18,"Banking/Full Bank (Locally Incorporated)",17,"Insurance Broker/Exempt Insurance Broker",17,"Banking/Wholesale Bank (Locally Incorporated)",16,"Financial Adviser/Exempt Financial Adviser Serving up to 30 Accredited Investors",15,"Trust Business/Licensed Trust Company",12,"Capital Markets Services/Exempt Corporate Finance Adviser Serving Accredited Investors",11,"Capital Markets Services/Foreign Fund Manager",11,"Insurance/Captive Insurer",11,"Payments/Major Payment Institution",11,"Banking/Full Bank (Branch)",9,"Banking/Wholesale Bank (Branch)",9,"Capital Markets Services/Markets and Exchanges",9,"Payments/Standard Payment Institution",9,"Insurance/Financial Holding Company (Insurance)",8,"Banking/Merchant Bank (Locally Incorporated)",7,"Banking/Merchant Bank (Branch)",6,"Payments/Designated Payment System Operator",6,"Payments/Designated Payment System Settlement Institution",6,"Payments/Money-changing Licensee",6,"Capital Markets Services/Clearing House",5,"Capital Markets Services/Registered Business Trust",5,"Banking/Finance Company",4,"Capital Markets Services/Holding Company of Exchange or Clearing House",4,"Insurance/Lloyd's Asia Scheme",4,"Banking/Financial Holding Company (Banking)",3,"Capital Markets Services/Central Securities Depository",3,"Capital Markets Services/OTC Counterparties",3,"Capital Markets Services/Trade Repository",3,"Insurance Broker/Approved Insurance Broker",3,"Payments/Credit and Charge Card Licensee",3,"Trust Business/Exempt Trust Company",3,"Insurance/Authorised Reinsurer",2,"Trust Business/Exempt Person Providing Trust Services",2,"Capital Markets Services/Benchmark Administrator&#47;Submitter",1,"Insurance/Marine Mutual Insurer",1,"Payments/Digital Token Service Provider",1],
+      "mas_focus_areas_sm":["Payments",9,"Anti-Money Laundering",5,"Crypto Tokens",5,"Sustainable Finance",5,"Asset Management",4,"FinTech",4,"Cyber Security",3,"Enforcement",3,"Fund Management",2,"Third-Party Risk Management",2,"Wealth Management",2,"Blockchain",1,"Digital Currencies",1],
+      "mas_sections_s":["Publications",428]
+    },
+    "facet_ranges":{
+      "mas_date_tdt":{
+        "counts":["2024-01-01T00:00:00Z",18,"2025-01-01T00:00:00Z",19,"2026-01-01T00:00:00Z",16],
+        "gap":"+1YEAR",
+        "start":"2024-01-01T00:00:00Z",
+        "end":"2027-01-01T00:00:00Z"
+      }
+    },
+    "facet_intervals":{ },
+    "facet_heatmaps":{ }
+  }
+}

@@ -3,6 +3,30 @@ import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
 import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
 import { copyText } from '../../lib/urlState';
 
+// Rules made on this tab are kept in this browser only
+const RULES_KEY = 'regsonar.alertRules';
+
+function loadRules(): CustomAlertRule[] {
+  try {
+    const saved = localStorage.getItem(RULES_KEY);
+    if (saved) {
+      const rules = JSON.parse(saved);
+      if (Array.isArray(rules)) return rules;
+    }
+  } catch {
+    // Private windows and blocked storage: start from the default rules
+  }
+  return DEFAULT_RULES;
+}
+
+function saveRules(rules: CustomAlertRule[]) {
+  try {
+    localStorage.setItem(RULES_KEY, JSON.stringify(rules));
+  } catch {
+    // Not saved; the rules still work until the tab is closed
+  }
+}
+
 interface DigestInfo {
   rules: CustomAlertRule[];
   schedule: string;
@@ -14,7 +38,14 @@ interface AlertRulesScreenProps {
 }
 
 export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) => {
-  const [rules, setRules] = useState<CustomAlertRule[]>(DEFAULT_RULES);
+  const [rules, setRulesState] = useState<CustomAlertRule[]>(loadRules);
+  const setRules = (update: CustomAlertRule[] | ((prev: CustomAlertRule[]) => CustomAlertRule[])) => {
+    setRulesState(prev => {
+      const next = typeof update === 'function' ? update(prev) : update;
+      saveRules(next);
+      return next;
+    });
+  };
   const [agencies, setAgencies] = useState('MAS, HKMA');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [ruleName, setRuleName] = useState('');
@@ -41,6 +72,14 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
     setRules(prev =>
       prev.map(r => (r.id === id ? { ...r, enabled: !r.enabled } : r))
     );
+  };
+
+  const handleDeleteRule = (rule: CustomAlertRule) => {
+    if (window.confirm(`Delete the rule "${rule.name}"?`)) setRules(prev => prev.filter(r => r.id !== rule.id));
+  };
+
+  const handleResetRules = () => {
+    if (window.confirm('Replace your rules with the starting set?')) setRules(DEFAULT_RULES);
   };
 
   const handleCreateRule = (e: React.FormEvent) => {
@@ -74,7 +113,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
             </h1>
           </div>
           <p className="font-['Inter'] text-[13px] text-[#3C4852]">
-            Rules here are checked against the live notices currently loaded and are kept in this tab only. The daily email digest below uses its own rules, stored on the server.
+            Rules here are checked against the notices currently loaded and are saved in this browser only. The daily email digest below uses its own rules, stored on the server.
           </p>
         </div>
 
@@ -178,7 +217,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 {rule.enabled ? (
                   <>
                     <span>
-                      Matching live notices: <strong className="text-[#1F4E79]">{matches.length}</strong>
+                      Matching notices: <strong className="text-[#1F4E79]">{matches.length}</strong>
                     </span>
                     {matches.length > 0 && (
                       <ul className="mt-1.5 space-y-0.5 font-['Inter'] text-[12px] text-[#3C4852]">
@@ -214,10 +253,24 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
               >
                 {rule.enabled ? 'Pause Rule' : 'Resume Rule'}
               </button>
+              <button
+                onClick={() => handleDeleteRule(rule)}
+                className="w-9 h-9 flex items-center justify-center rounded text-[#56636B] hover:text-[#A8432F] hover:bg-[#F8E8E2] transition-colors"
+                aria-label={`Delete the rule ${rule.name}`}
+                title="Delete rule"
+              >
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">delete</span>
+              </button>
             </div>
           </div>
           );
         })}
+      </div>
+
+      <div className="flex justify-end">
+        <button onClick={handleResetRules} className="font-['Inter'] text-[12px] text-[#56636B] hover:text-[#1F4E79] hover:underline">
+          Reset to the starting rules
+        </button>
       </div>
 
       {/* Create Rule Modal */}

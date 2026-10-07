@@ -1,6 +1,7 @@
 import React from 'react';
 import { RegulatoryNotice } from '../types/regulatory';
 import { daysUntil } from '../lib/derived';
+import { Highlight } from './Highlight';
 
 interface NoticeCardProps {
   notice: RegulatoryNotice;
@@ -13,6 +14,10 @@ interface NoticeCardProps {
   isNew?: boolean;
   onCopyLink?: (notice: RegulatoryNotice) => void;
   onAddToCalendar?: (notice: RegulatoryNotice) => void;
+  // Words to mark, from the search box
+  highlight?: string[];
+  // Open a related notice (consultation or conclusions) by id
+  onOpenRelated?: (id: string, url?: string) => void;
 }
 
 const NewBadge = () => (
@@ -30,7 +35,9 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   density = 'comfortable',
   isNew = false,
   onCopyLink,
-  onAddToCalendar
+  onAddToCalendar,
+  highlight,
+  onOpenRelated
 }) => {
   const hasUpcomingDate = !!notice.deadlineDate && daysUntil(notice.deadlineDate) >= 0;
 
@@ -78,11 +85,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               • {notice.issuedTimeAgo}
             </span>
           </div>
-          <h4
-            onClick={() => onOpenPdfDossier(notice)}
-            className="font-['Hanken_Grotesk'] text-[14px] text-[#1D2630] font-bold truncate hover:text-[#1F4E79] cursor-pointer"
-          >
-            {notice.title}
+          <h4 className="font-['Hanken_Grotesk'] text-[14px] text-[#1D2630] font-bold truncate">
+            <button onClick={() => onOpenPdfDossier(notice)} className="max-w-full truncate text-left hover:text-[#1F4E79] cursor-pointer">
+              <Highlight text={notice.title} terms={highlight} />
+            </button>
           </h4>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -120,6 +126,15 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             {notice.ref}
           </span>
 
+          {notice.archived && (
+            <span
+              className="px-1.5 py-0.5 rounded bg-[#E3EBE6] text-[#3C4852] border border-[#D3DDD7] font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider"
+              title="Stored when RegSonar read this source earlier; no longer among the source's latest items"
+            >
+              From history
+            </span>
+          )}
+
           {notice.isLiveFeed && (
             <span className="px-1.5 py-0.5 rounded bg-[#D7E9DD] text-[#2F6249] border border-[#ABCDB7] font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2F6249] animate-pulse"></span>
@@ -145,11 +160,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       </div>
 
       {/* Main Title */}
-      <h3
-        onClick={() => onOpenPdfDossier(notice)}
-        className="font-['Hanken_Grotesk'] text-[18px] text-[#1D2630] font-bold hover:text-[#1F4E79] transition-colors cursor-pointer mb-1 leading-snug"
-      >
-        {notice.title}
+      <h3 className="font-['Hanken_Grotesk'] text-[18px] text-[#1D2630] font-bold mb-1 leading-snug">
+        <button onClick={() => onOpenPdfDossier(notice)} className="text-left hover:text-[#1F4E79] transition-colors cursor-pointer">
+          <Highlight text={notice.title} terms={highlight} />
+        </button>
       </h3>
 
       {/* Meta Timestamps & Statutory Deadlines */}
@@ -216,7 +230,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             {notice.keyPoints.points.map((point, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="text-[#1F4E79] mt-0.5 text-xs font-bold shrink-0">“</span>
-                <span className="leading-relaxed">{point}</span>
+                <span className="leading-relaxed"><Highlight text={point} terms={highlight} /></span>
               </li>
             ))}
           </ul>
@@ -243,13 +257,37 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         </div>
       ) : notice.summary ? (
         <p className="font-['Inter'] text-[13px] text-[#3C4852] mb-3 leading-relaxed">
-          {notice.summary}
+          <Highlight text={notice.summary} terms={highlight} />
         </p>
       ) : notice.dossierUrl ? (
         <p className="font-['Inter'] text-[12px] text-[#56636B] mb-3 italic">
           No text could be extracted for key points. Open the source document to read it.
         </p>
       ) : null}
+
+      {/* Consultation and conclusions, matched by title */}
+      {notice.related && notice.related.length > 0 && (
+        <div className="mb-3 space-y-1">
+          {notice.related.map(link => (
+            <div key={link.id} className="flex items-start gap-1.5 font-['Inter'] text-[12px] text-[#3C4852]">
+              <span className="material-symbols-outlined text-sm text-[#1F4E79] shrink-0" aria-hidden="true">
+                {link.relation === 'consultation' ? 'undo' : 'redo'}
+              </span>
+              <span>
+                {link.relation === 'consultation' ? 'Follows the consultation: ' : 'Conclusions published: '}
+                <button
+                  onClick={() => onOpenRelated?.(link.id, link.dossierUrl)}
+                  className="text-left font-semibold text-[#1F4E79] hover:underline"
+                >
+                  {link.title}
+                </button>
+                {link.publishedAt && <span className="text-[#56636B]"> ({new Date(link.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })})</span>}
+                <span className="text-[#56636B]" title="Regulators don't publish this link; it is matched by regulator and title words"> · matched by title</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Footer Row: Impacted Units / Tags & Dynamic Actions */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">

@@ -1,0 +1,74 @@
+{
+  "responseHeader":{
+    "zkConnected":true,
+    "status":0,
+    "QTime":2
+  },
+  "response":{
+    "numFound":309,
+    "start":0,
+    "maxScore":76.0169,
+    "numFoundExact":true,
+    "docs":[{
+      "document_title_t":["Guidelines on Artificial Intelligence Risk Management for Financial Institutions"],
+      "document_title_string_s":"Guidelines on Artificial Intelligence Risk Management for Financial Institutions",
+      "itemid_s":"{7A19646C-3379-4048-95D4-82301357E59D}",
+      "document_shortsummary_t":["The MAS Guidelines apply to all financial institutions (FIs) and all forms of AI technologies. They set out MAS’ supervisory expectations for FIs to manage risks arising from AI use, while allowing them to tailor their approaches according to their risk profiles, including the scale and nature of their AI use. These..."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-10-07T11:00:00Z",
+      "topic_path":["Risk Management","Risk Management/Guidelines on Risk Management Practices"],
+      "_uniqueid":"sitecore://web/{7a19646c-3379-4048-95d4-82301357e59d}?lang=en&ver=1&ndx=mas_search_index",
+      "page_url_s":"/regulation/guidelines/guidelines-on-artificial-intelligence-risk-management-for-financial-institutions",
+      "mas_contenttype_s":"Guidelines",
+      "navigation_title_string_s":"Guidelines on Artificial Intelligence Risk Management for Financial Institutions",
+      "score":76.0169
+    },{
+      "document_title_t":["Circular on Misconduct Report and Investigation Report Templates"],
+      "document_title_string_s":"Circular on Misconduct Report and Investigation Report Templates",
+      "itemid_s":"{01CEF9E9-A396-4294-84F4-FB9639219A55}",
+      "document_shortsummary_t":["This circular informs licensed financial advisers, exempt financial advisers, holders of Capital Markets Services licence, exempt Capital Markets Services entities, registered insurance brokers, exempt insurance brokers and licensed direct insurers of the publication of the misconduct report and investigation report..."],
+      "mas_datetitle_s":"Published Date",
+      "mas_date_tdt":"2026-09-30T09:30:00Z",
+      "topic_path":["Governance/Fit and Proper Criteria","Regulatory Submissions/Notifications","Conduct/Representative-related","Conduct/Record Keeping"],
+      "_uniqueid":"sitecore://web/{01cef9e9-a396-4294-84f4-fb9639219a55}?lang=en&ver=1&ndx=mas_search_index",
+      "page_url_s":"/regulation/circulars/circular-on-misconduct-report-and-investigation-report-templates",
+      "mas_contenttype_s":"Circulars",
+      "navigation_title_string_s":"Misconduct Report and Investigation Report Templates",
+      "score":74.59745
+    },{
+      "navigation_title_string_s":"ID 10/26",
+      "page_url_s":"/regulation/circulars/id10_26",
+      "mas_datetitle_s":"Published Date",
+      "document_title_t":["ID 10/26 MAS Response to the Consultation Paper on Changes to the Group Capital Framework for Designated Financial Holding Companies (Licensed Insurer)"],
+      "document_title_string_s":"ID 10/26 MAS Response to the Consultation Paper on Changes to the Group Capital Framework for Designated Financial Holding Companies (Licensed Insurer)",
+      "itemid_s":"{78BB59BB-F782-433B-9F21-CD6570D5B357}",
+      "_uniqueid":"sitecore://web/{78bb59bb-f782-433b-9f21-cd6570d5b357}?lang=en&ver=1&ndx=mas_search_index",
+      "mas_contenttype_s":"Circulars",
+      "topic_path":["Prudential and Supervisory Requirements/Valuation and Capital"],
+      "document_shortsummary_t":["Informs insurers on the issuance of the Response to Consultation Paper on the proposed changes to MAS Notice FHC-N133 on Valuation and Capital Framework for Designated Financial Holding Companies (Licensed Insurer)."],
+      "mas_date_tdt":"2026-09-04T15:00:00Z",
+      "score":69.84412
+    }]
+  },
+  "facet_counts":{
+    "facet_queries":{ },
+    "facet_fields":{
+      "mas_contenttype_s":["Circulars",182,"Guidelines",127],
+      "topic_path":["Prudential and Supervisory Requirements",70,"Risk Management",65,"Conduct",58,"Regulatory Submissions",45,"Licensing, Authorisation and Registration",40,"Anti-Money Laundering",39,"Anti-Money Laundering/AML&#47;CFT",35,"Governance",33,"Conduct/Disclosures",32,"Regulatory Submissions/Financial Returns",29,"Prudential and Supervisory Requirements/Valuation and Capital",27,"Risk Management/Guidelines on Risk Management Practices",27,"Conduct/Advisory and Sales",25,"Conduct/Representative-related",24,"Offers of Investments",22,"Conduct/Record Keeping",21,"Governance/Corporate Governance",19,"Risk Management/Operational Risk",19,"Exemptions",16,"Offers of Investments/Offers of Collective Investment Schemes",15,"Governance/Fit and Proper Criteria",14,"Offers of Investments/Offers of Securities or Securities-Based Derivatives Contracts",14,"Conduct/Remuneration",13,"Financial and Margin",11,"Prudential and Supervisory Requirements/Investments",11,"Regulatory Submissions/Notifications",11,"Risk Management/Liquidity Risk",11,"Risk Management/Technology Risk",10,"Treasury",10,"Conduct/Complaints Handling",9,"Governance/Key Appointments",9,"Conduct/Investment Management",8,"Resolution",8,"Risk Management/Fraud Risk",8,"Risk Management/Market Risk",8,"Financial and Margin/Capital and Financial Resources",7,"Prudential and Supervisory Requirements/Insurance Products and Business Types",7,"Regulatory Submissions/Insurer-related Reports",7,"Risk Management/Credit Risk",7,"Treasury/SGD FX and Interest Rates",7,"Conduct/Customer Monies and Assets Segregation",6,"Consumer Finance",5,"Consumer Finance/Property Loans",5,"Financial and Margin/Margins",5,"Governance/Appointment of Auditors",5,"Prudential and Supervisory Requirements/Capital Adequacy",5,"Prudential and Supervisory Requirements/General Provisions",5,"Prudential and Supervisory Requirements/Training and Competency",5,"Outsourcing",4,"Prudential and Supervisory Requirements/Policy Owners' Protection Scheme",4,"Risk Management/Environmental Risk",4,"Risk Management/Insurance Risk",4,"Risk Management/Transition Planning",4,"Third-Party Risk Management",4,"Financial and Margin/Security Deposit and PII",3,"Prudential and Supervisory Requirements/Operations",3,"Prudential and Supervisory Requirements/Anti-Commingling",2,"Prudential and Supervisory Requirements/Insurance Funds",2,"Public Submissions",2,"Regulatory Submissions/Declarations",2,"Risk Management/Business Continuity",2,"Conduct/Selected Client",1,"Legal",1,"OTC Markets",1,"OTC Markets/Reporting Mandate",1,"Protected Cell Companies",1,"Prudential and Supervisory Requirements/Islamic Banking",1,"Prudential and Supervisory Requirements/Places of Business",1,"Prudential and Supervisory Requirements/Statistical Returns",1,"Public Submissions/Disclosure of Interests",1,"Public Submissions/Short Position Reporting",1,"Regulatory Submissions/Statistical Returns",1,"Resolution/MAS' Approach to Resolution",1,"Risk Management/Market Conduct Risk",1,"Risk Management/Payment and Settlement Risk",1,"Treasury/Covered Bonds and Asset Securitisation",1,"Treasury/Primary Dealers",1,"Treasury/Renminbi Business",1],
+      "mas_sector_sm":["Insurance",158,"Capital Markets",128,"Banking",71,"Payments",28],
+      "entitytype_path":["Insurance",157,"Insurance/Direct Insurer (Composite)",136,"Insurance/Direct Insurer (Life)",131,"Insurance/Direct Insurer (General)",114,"Insurance/Reinsurer (Composite)",103,"Insurance/Reinsurer (General)",103,"Insurance/Reinsurer (Life)",103,"Capital Markets Services",92,"Banking",78,"Insurance/Captive Insurer",75,"Financial Adviser",54,"Banking/Full Bank (Locally Incorporated)",53,"Banking/Wholesale Bank (Locally Incorporated)",50,"Banking/Full Bank (Branch)",49,"Insurance/Financial Holding Company (Insurance)",48,"Capital Markets Services/Dealing in Capital Markets Products",46,"Banking/Wholesale Bank (Branch)",45,"Capital Markets Services/Licensed Fund Management Company",45,"Financial Adviser/Licensed Financial Adviser",44,"Insurance/Lloyd's Asia Scheme",44,"Financial Adviser/Exempt Financial Adviser",41,"Payments",40,"Capital Markets Services/REIT Management",39,"Insurance Broker",38,"Banking/Merchant Bank (Branch)",37,"Banking/Merchant Bank (Locally Incorporated)",37,"Trust Business",37,"Banking/Finance Company",36,"Capital Markets Services/Securities Crowdfunding",35,"Capital Markets Services/Venture Capital Fund Management Company",35,"Capital Markets Services/Corporate Finance Advisory",32,"Capital Markets Services/Credit Rating Agency",30,"Capital Markets Services/Product Financing",29,"Capital Markets Services/Providing Custodial Services",29,"Capital Markets Services/Registered Fund Management Company",29,"Capital Markets Services/Exempt Capital Markets Services Entity",28,"Insurance Broker/Registered Insurance Broker",28,"Trust Business/Licensed Trust Company",28,"Payments/Major Payment Institution",27,"Capital Markets Services/Approved CIS Trustee",24,"Payments/Standard Payment Institution",24,"Capital Markets Services/Clearing House",23,"Capital Markets Services/Markets and Exchanges",23,"Insurance Broker/Exempt Insurance Broker",23,"Banking/Credit&#47;Charge Card Issuer",21,"Payments/Money-changing Licensee",21,"Capital Markets Services/Exempt Corporate Finance Adviser Serving Accredited Investors",20,"Capital Markets Services/Central Securities Depository",18,"Capital Markets Services/Exempt Futures Broker",18,"Capital Markets Services/Exempt OTC Derivatives Broker",18,"Capital Markets Services/Trade Repository",18,"Trust Business/Exempt Person Providing Trust Services",18,"Trust Business/Exempt Trust Company",18,"Capital Markets Services/Benchmark Administrator&#47;Submitter",17,"Capital Markets Services/Holding Company of Exchange or Clearing House",17,"Financial Adviser/Exempt Financial Adviser Serving up to 30 Accredited Investors",17,"Capital Markets Services/Registered Business Trust",16,"Insurance Broker/Approved Insurance Broker",16,"Capital Markets Services/Members of Public",15,"Payments/Credit and Charge Card Licensee",15,"Insurance/Authorised Reinsurer",13,"Payments/Designated Payment System Operator",12,"Payments/Designated Payment System Settlement Institution",12,"Capital Markets Services/OTC Counterparties",10,"Capital Markets Services/Foreign Fund Manager",9,"Insurance Broker/Lloyd's Broker",7,"Insurance/Approved MAT Insurer",7,"Banking/Financial Holding Company (Banking)",6,"Capital Markets Services/Money Broker",6,"Insurance/General Insurance Agents",5,"Payments/Credit Bureau Licensee",5,"Insurance Broker/Technology",4,"Insurance/Marine Mutual Insurer",4,"Payments/Digital Token Service Provider",3,"Insurance/Representative Office (Insurance)",2],
+      "mas_focus_areas_sm":["Anti-Money Laundering",12,"Payments",6,"Cyber Security",4,"Asset Management",3,"Fund Management",3,"Crypto Tokens",2,"Third-Party Risk Management",2],
+      "mas_sections_s":["Regulation",309]
+    },
+    "facet_ranges":{
+      "mas_date_tdt":{
+        "counts":["2024-01-01T00:00:00Z",49,"2025-01-01T00:00:00Z",39,"2026-01-01T00:00:00Z",16],
+        "gap":"+1YEAR",
+        "start":"2024-01-01T00:00:00Z",
+        "end":"2027-01-01T00:00:00Z"
+      }
+    },
+    "facet_intervals":{ },
+    "facet_heatmaps":{ }
+  }
+}

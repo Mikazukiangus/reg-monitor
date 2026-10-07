@@ -37,6 +37,17 @@ export interface KeyPoints {
   method: 'extractive';
   // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
   ocr?: boolean;
+  // A sentence stating when comments or responses are due, with that date
+  closingDate?: KeyFact;
+}
+
+// A consultation and its conclusions, matched by regulator and title words
+export interface RelatedLink {
+  id: string;
+  title: string;
+  relation: 'consultation' | 'conclusion';
+  publishedAt?: string;
+  dossierUrl?: string;
 }
 
 export interface RegulatoryNotice {
@@ -69,8 +80,11 @@ export interface RegulatoryNotice {
   bookmarked?: boolean;
   dossierUrl?: string;
   isLiveFeed?: boolean;
-  // ISO timestamp from the source; only set on live notices
+  // ISO timestamp from the source
   publishedAt?: string;
+  // From the stored history rather than the latest read of the source
+  archived?: boolean;
+  related?: RelatedLink[];
 }
 
 export interface DeadlineItem {

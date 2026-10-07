@@ -1,0 +1,74 @@
+{
+  "https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4&fields[]=title&fields[]=type&fields[]=abstract&fields[]=agencies&fields[]=document_number&fields[]=citation&fields[]=publication_date&fields[]=comments_close_on&fields[]=effective_on&fields[]=dates&fields[]=html_url&fields[]=pdf_url": {
+    "file": "22278dc35e2a.txt",
+    "contentType": "application/json; charset=utf-8"
+  },
+  "https://www.fca.org.uk/news/rss.xml": {
+    "file": "6c8a1b456338.txt",
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "https://www.bankofengland.co.uk/rss/prudential-regulation-publications": {
+    "file": "cb1db75c07bc.txt",
+    "contentType": "text/xml; charset=utf-8"
+  },
+  "https://www.hkma.gov.hk/eng/other-information/rss/rss_press-release.xml": {
+    "file": "e3e5058c8596.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.hkma.gov.hk/eng/other-information/rss/rss_circulars.xml": {
+    "file": "91ff38a88d66.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.hkma.gov.hk/eng/other-information/rss/rss_consultations.xml": {
+    "file": "4ecdd7635468.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.sfc.hk/en/RSS-Feeds/Press-releases": {
+    "file": "36e143165f2a.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.sfc.hk/en/RSS-Feeds/Circulars": {
+    "file": "b9695500e7a4.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.sfc.hk/en/RSS-Feeds/Consultations-and-Conclusions": {
+    "file": "75089a24d989.txt",
+    "contentType": "application/xml; charset=utf-8"
+  },
+  "https://www.hkex.com.hk/Services/RSS-Feeds/regulatory-announcements?sc_lang=en": {
+    "file": "31b64c1b4988.txt",
+    "contentType": "text/xml; charset=utf-8"
+  },
+  "https://www.mas.gov.sg/api/v1/search?q=*%3A*&fq=mas_contenttype_s%3A%28%22Media+Releases%22+OR+%22Enforcement+Actions+Media+Releases%22%29&sort=mas_date_tdt+desc&rows=4&wt=json": {
+    "file": "82002bf4a5d3.txt",
+    "contentType": "application/json;charset=utf-8"
+  },
+  "https://www.mas.gov.sg/api/v1/search?q=*%3A*&fq=mas_contenttype_s%3A%28%22Consultations%22%29&sort=mas_date_tdt+desc&rows=3&wt=json": {
+    "file": "187c817cfe06.txt",
+    "contentType": "application/json;charset=utf-8"
+  },
+  "https://www.mas.gov.sg/api/v1/search?q=*%3A*&fq=mas_contenttype_s%3A%28%22Circulars%22+OR+%22Guidelines%22%29&sort=mas_date_tdt+desc&rows=3&wt=json": {
+    "file": "7f94609d8f85.txt",
+    "contentType": "application/json;charset=utf-8"
+  },
+  "https://download.asic.gov.au/asic-nga/data/newsroom/newsroom-mr-latest.json": {
+    "file": "bb81a16a4dbc.txt",
+    "contentType": "application/json"
+  },
+  "https://www.fsa.go.jp/fsaEnNewsList_rss2.xml": {
+    "file": "e7be304444bd.txt",
+    "contentType": "application/xml"
+  },
+  "https://www.esma.europa.eu/rss.xml": {
+    "file": "0e9d8560196f.txt",
+    "contentType": "application/rss+xml; charset=utf-8"
+  },
+  "https://www.fsb.org/feed/": {
+    "file": "ad19a0d8551a.txt",
+    "contentType": "application/rss+xml; charset=UTF-8"
+  },
+  "https://www.bis.org/doclist/all_pressrels.rss": {
+    "file": "1796947970a6.txt",
+    "contentType": "application/rss+xml; charset=utf-8"
+  }
+}

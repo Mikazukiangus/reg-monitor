@@ -5,10 +5,10 @@ import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 // Labels name only the regulators RegSonar actually reads
 const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: string }[] = [
   { code: 'SG', label: 'Singapore (MAS)' },
-  { code: 'HK', label: 'Hong Kong (HKMA, SFC)' },
-  { code: 'UK_EU', label: 'United Kingdom (PRA, FCA)' },
+  { code: 'HK', label: 'Hong Kong (HKMA, SFC, HKEX)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
   { code: 'US', label: 'United States (SEC, CFTC)' },
-  { code: 'GLOBAL', label: 'Global (BIS, Basel Committee)' },
+  { code: 'GLOBAL', label: 'Global (BIS, Basel Committee, FSB)' },
   { code: 'AU', label: 'Australia (ASIC)' },
   { code: 'JP', label: 'Japan (JFSA)' }
 ];

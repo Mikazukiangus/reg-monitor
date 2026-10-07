@@ -6,6 +6,8 @@ import { XMLParser } from 'fast-xml-parser';
 import { summarize, extractArticleText, extractPdfText, earliestDeadline, htmlToText, KeyPoints } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
+import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl } from './db.js';
+import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 
 dotenv.config();
 
@@ -46,6 +48,9 @@ interface NormalizedNotice {
   dossierUrl?: string;
   isLiveFeed?: boolean;
   publishedAt?: string;
+  // From the stored history rather than the latest read of the source
+  archived?: boolean;
+  related?: RelatedLink[];
 }
 
 let lastSyncTimestamp = new Date().toISOString();
@@ -394,7 +399,7 @@ export interface LiquidityDay {
 
 // Read the interbank liquidity figures from a Daily Monetary Statistics page.
 // Returns null when the page has no figures (weekends and public holidays).
-function parseHkmaDailyStats(html: string): LiquidityDay | null {
+export function parseHkmaDailyStats(html: string): LiquidityDay | null {
   const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
   // The figure that follows a label, within the same table cell or the next
   const figureAfter = (label: string, value: RegExp) =>
@@ -473,14 +478,13 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
   ];
 }
 
-// Fetch MAS media releases and enforcement actions from the search API behind
-// mas.gov.sg/news. It is undocumented, and MAS serves a "Maintenance" page to
-// non-browser user agents, so this relies on REG_USER_AGENT.
-async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
+// Search the MAS website's search API (behind mas.gov.sg/news). It is
+// undocumented, and MAS serves a "Maintenance" page to non-browser user
+// agents, so this relies on REG_USER_AGENT.
+async function searchMas(contentTypes: string[], limit: number): Promise<any[]> {
   const params = new URLSearchParams();
   params.append('q', '*:*');
-  params.append('fq', 'mas_mastercontenttypes_sm:"News"');
-  params.append('fq', 'mas_contenttype_s:("Media Releases" OR "Enforcement Actions Media Releases")');
+  params.append('fq', `mas_contenttype_s:(${contentTypes.map(t => `"${t}"`).join(' OR ')})`);
   params.append('sort', 'mas_date_tdt desc');
   params.append('rows', String(limit));
   params.append('wt', 'json');
@@ -489,38 +493,77 @@ async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
     throw new Error('MAS returned a non-JSON page (possibly maintenance or bot filtering)');
   }
   const data = await res.json();
-  const docs: any[] = data.response?.docs || [];
+  return data.response?.docs || [];
+}
 
+// MAS dates are Singapore local time even though they end in "Z"
+const masDate = (value: unknown) => (value ? zonedToIso(String(value), 'Asia/Singapore') : undefined);
+
+function masNotice(doc: any, type: string, format: NormalizedNotice['format']): NormalizedNotice {
+  const title = stripHtml(String(doc.document_title_string_s));
+  const summary = doc.document_shortsummary_t?.[0];
+  const sector = classifySector(title + ' ' + (summary || ''));
+  const score = estimateImpact(format);
+  const slug = String(doc.page_url_s).split('/').filter(Boolean).pop();
+  const publishedAt = masDate(doc.mas_date_tdt);
+  return {
+    id: `mas-${slug}`,
+    ref: `MAS ${doc.mas_contenttype_s}`,
+    title,
+    regulator: 'MAS',
+    jurisdiction: 'SINGAPORE',
+    jurisdictionCode: 'SG',
+    type,
+    typeColorClass: getTypeColor(format),
+    impactScore: score,
+    issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+    publishedAt,
+    summary,
+    tags: ['MAS', format, sector],
+    sector,
+    format,
+    severity: severityFor(score),
+    dossierUrl: `https://www.mas.gov.sg${doc.page_url_s}`,
+    isLiveFeed: true
+  };
+}
+
+// MAS media releases and enforcement actions
+async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
+  const docs = await searchMas(['Media Releases', 'Enforcement Actions Media Releases'], limit);
   return docs.map((doc) => {
     const title = stripHtml(String(doc.document_title_string_s));
-    const summary = doc.document_shortsummary_t?.[0];
     const isEnforcement = doc.mas_contenttype_s === 'Enforcement Actions Media Releases';
-    const format = isEnforcement ? 'Enforcement' : classifyFormat('', title);
-    const sector = classifySector(title + ' ' + (summary || ''));
-    const score = estimateImpact(format);
-    const slug = String(doc.page_url_s).split('/').filter(Boolean).pop();
+    return masNotice(doc, isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE', isEnforcement ? 'Enforcement' : classifyFormat('', title));
+  });
+}
 
+// MAS consultation papers, with the closing date MAS publishes for each
+async function fetchMasConsultations(limit = 3): Promise<NormalizedNotice[]> {
+  const docs = await searchMas(['Consultations'], limit);
+  return docs.map((doc) => {
+    const notice = masNotice(doc, 'CONSULTATION', 'Consultations');
+    const closes = masDate(doc.masconsultation_closingdate_tdt);
+    if (!closes) return notice;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date(closes));
+    if (Date.parse(closes) < Date.now()) {
+      return { ...notice, statutoryDeadline: `Comments closed: ${date}`, statusBadge: { text: `Comments closed: ${date}`, type: 'standard' as const } };
+    }
     return {
-      id: `mas-${slug}`,
-      ref: `MAS ${doc.mas_contenttype_s}`,
-      title,
-      regulator: 'MAS',
-      jurisdiction: 'SINGAPORE',
-      jurisdictionCode: 'SG',
-      type: isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE',
-      typeColorClass: getTypeColor(format),
-      impactScore: score,
-      issuedTimeAgo: getRelativeTime(doc.mas_date_tdt),
-      publishedAt: toIso(doc.mas_date_tdt),
-      summary,
-      tags: ['MAS', format, sector],
-      sector,
-      format,
-      severity: severityFor(score),
-      dossierUrl: `https://www.mas.gov.sg${doc.page_url_s}`,
-      isLiveFeed: true
+      ...notice,
+      deadlineDate: date,
+      statutoryDeadline: `Comments close: ${date}`,
+      statusBadge: { text: `Comments close: ${date}`, type: 'deadline' as const }
     };
   });
+}
+
+// MAS circulars and guidelines
+async function fetchMasRegulatoryPublications(limit = 3): Promise<NormalizedNotice[]> {
+  const docs = await searchMas(['Circulars', 'Guidelines'], limit);
+  return docs.map((doc) =>
+    masNotice(doc, doc.mas_contenttype_s === 'Guidelines' ? 'GUIDELINES' : 'CIRCULAR', doc.mas_contenttype_s === 'Guidelines' ? 'Guidelines' : 'Circulars')
+  );
 }
 
 // Fetch BIS media releases (RSS 1.0 / RDF), which include Basel Committee announcements
@@ -624,7 +667,7 @@ const fetchSfcConsultations = (limit?: number) =>
 
 // Convert a local date-time without offset ("2026-10-07T11:13:00") in the
 // given time zone to an ISO timestamp
-function zonedToIso(local: string, timeZone: string): string | undefined {
+export function zonedToIso(local: string, timeZone: string): string | undefined {
   const asUtc = new Date(`${local.slice(0, 19)}Z`).getTime();
   if (isNaN(asUtc)) return undefined;
   const offset = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
@@ -736,6 +779,128 @@ async function fetchJfsaNews(limit = 4): Promise<NormalizedNotice[]> {
     });
 }
 
+// Items of an RSS 2.0 feed, or an error if the response is not one
+async function rssItems(url: string): Promise<any[]> {
+  const parsed = xmlParser.parse(await (await fetchOrThrow(url)).text());
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
+  }
+  const items = parsed.rss.channel.item || [];
+  return Array.isArray(items) ? items : [items];
+}
+
+const lastPathPart = (url: string) => new URL(url).pathname.split('/').filter(Boolean).pop()!.replace(/\.\w+$/, '');
+
+// Hong Kong Exchanges and Clearing: regulatory announcements (disciplinary
+// actions, listing consultations and conclusions) from its official RSS feed
+const HKEX_REGULATORY_RSS = 'https://www.hkex.com.hk/Services/RSS-Feeds/regulatory-announcements?sc_lang=en';
+
+async function fetchHkexRegulatory(limit = 4): Promise<NormalizedNotice[]> {
+  const items = await rssItems(HKEX_REGULATORY_RSS);
+  return items.slice(0, limit).map((item: any) => {
+    const title = stripHtml(String(item.title));
+    const format = /disciplinary|censure|sanction/i.test(title) ? 'Enforcement' : classifyFormat('', title);
+    const sector = classifySector(title);
+    const score = estimateImpact(format);
+    const slug = lastPathPart(String(item.link));
+    return {
+      id: `hkex-${slug}`,
+      ref: `HKEX Regulatory Announcement ${slug.replace(/news$/, '')}`,
+      title,
+      regulator: 'HKEX',
+      jurisdiction: 'HONG KONG',
+      jurisdictionCode: 'HK' as const,
+      type: format === 'Enforcement' ? 'DISCIPLINARY ACTION' : 'REGULATORY ANNOUNCEMENT',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item.pubDate),
+      publishedAt: toIso(item.pubDate),
+      tags: ['HKEX', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: String(item.link),
+      isLiveFeed: true
+    };
+  });
+}
+
+// Financial Stability Board publications and press releases (official RSS).
+// Meeting notices of its regional consultative groups are left out.
+const FSB_RSS = 'https://www.fsb.org/feed/';
+
+async function fetchFsbPublications(limit = 4): Promise<NormalizedNotice[]> {
+  const items = await rssItems(FSB_RSS);
+  return items
+    .filter((item: any) => !/regional consultative group|report of the auditor/i.test(String(item.title)))
+    .slice(0, limit)
+    .map((item: any) => {
+      const title = stripHtml(String(item.title));
+      const description = item.description ? stripHtml(String(item.description)) : undefined;
+      const format = classifyFormat('', title);
+      const sector = classifySector(title + ' ' + (description || ''));
+      const score = estimateImpact(format);
+      const slug = lastPathPart(String(item.link));
+      return {
+        id: `fsb-${slug}`,
+        ref: `FSB ${new Date(item.pubDate).toISOString().slice(0, 10)}`,
+        title,
+        regulator: 'FSB',
+        jurisdiction: 'GLOBAL',
+        jurisdictionCode: 'GLOBAL' as const,
+        type: 'PUBLICATION',
+        typeColorClass: getTypeColor(format),
+        impactScore: score,
+        issuedTimeAgo: getRelativeTime(item.pubDate),
+        publishedAt: toIso(item.pubDate),
+        summary: description,
+        tags: ['FSB', format, sector],
+        sector,
+        format,
+        severity: severityFor(score),
+        dossierUrl: String(item.link),
+        isLiveFeed: true
+      };
+    });
+}
+
+// European Securities and Markets Authority news (official RSS). Items have no
+// pubDate; the date is in a <time datetime="..."> tag inside the description.
+const ESMA_RSS = 'https://www.esma.europa.eu/rss.xml';
+
+async function fetchEsmaNews(limit = 4): Promise<NormalizedNotice[]> {
+  const items = await rssItems(ESMA_RSS);
+  return items.slice(0, limit).map((item: any) => {
+    const title = stripHtml(String(item.title));
+    const html = String(item.description || '');
+    const published = html.match(/datetime="([^"]+)"/)?.[1] || item.pubDate;
+    const section = html.match(/field--name-field-news-section[\s\S]*?field__item">([^<]+)</)?.[1]?.trim();
+    const format = classifyFormat(section || '', title);
+    const sector = classifySector(title + ' ' + (section || ''));
+    const score = estimateImpact(format);
+    const slug = lastPathPart(String(item.link));
+    return {
+      id: `esma-${slug}`.slice(0, 120),
+      ref: `ESMA News${section ? ` · ${section}` : ''}`,
+      title,
+      regulator: 'ESMA',
+      jurisdiction: 'EUROPEAN UNION',
+      jurisdictionCode: 'UK_EU' as const,
+      type: 'NEWS',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: published ? getRelativeTime(published) : 'Recently',
+      publishedAt: toIso(published),
+      tags: ['ESMA', format, sector, ...(section ? [section] : [])],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: String(item.link),
+      isLiveFeed: true
+    };
+  });
+}
+
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
 
 interface EndpointDefinition {
@@ -816,6 +981,36 @@ const ENDPOINTS: EndpointDefinition[] = [
     agency: 'SFC (Hong Kong)',
     jurisdiction: 'Hong Kong',
     url: `${SFC_RSS}/Press-releases`,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'hkex-rss',
+    name: 'HKEX Regulatory Announcements RSS',
+    agency: 'HKEX (Hong Kong)',
+    jurisdiction: 'Hong Kong',
+    url: HKEX_REGULATORY_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'esma-rss',
+    name: 'ESMA News RSS',
+    agency: 'ESMA (European Union)',
+    jurisdiction: 'European Union',
+    url: ESMA_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'fsb-rss',
+    name: 'FSB Publications RSS',
+    agency: 'FSB (Global)',
+    jurisdiction: 'Global',
+    url: FSB_RSS,
     protocol: 'RSS XML',
     auth: 'Public / None',
     ingests: true
@@ -992,7 +1187,7 @@ async function getLiquidityHistory(range: LiquidityRange) {
 
 // Ingestion sources, keyed to the endpoint they read from
 // fetch(limit) reads more than the feed's usual number of items; the email digest uses this
-const SOURCES: { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false }[] = [
+export const SOURCES: { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false }[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
   { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
   { endpointId: 'boe-pra', name: 'UK PRA Publications', fetch: fetchPraPublications },
@@ -1003,9 +1198,14 @@ const SOURCES: { endpointId: string; name: string; fetch: (limit?: number) => Pr
   { endpointId: 'sfc-rss', name: 'SFC Press Releases', fetch: fetchSfcPressReleases },
   { endpointId: 'sfc-rss', name: 'SFC Circulars', fetch: fetchSfcCirculars },
   { endpointId: 'sfc-rss', name: 'SFC Consultations', fetch: fetchSfcConsultations },
+  { endpointId: 'hkex-rss', name: 'HKEX Regulatory Announcements', fetch: fetchHkexRegulatory },
   { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
+  { endpointId: 'mas-gov', name: 'MAS Consultations', fetch: fetchMasConsultations },
+  { endpointId: 'mas-gov', name: 'MAS Circulars & Guidelines', fetch: fetchMasRegulatoryPublications },
   { endpointId: 'asic-gov', name: 'ASIC Media Releases', fetch: fetchAsicMediaReleases },
   { endpointId: 'jfsa-rss', name: 'JFSA News', fetch: fetchJfsaNews },
+  { endpointId: 'esma-rss', name: 'ESMA News', fetch: fetchEsmaNews },
+  { endpointId: 'fsb-rss', name: 'FSB Publications', fetch: fetchFsbPublications },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];
 
@@ -1054,6 +1254,10 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
       text = sfcText;
     } else if (BRDR_PAGE.test(sourceUrl)) {
       ({ text, ocr, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
+    } else if (/\.pdf$/i.test(new URL(sourceUrl).pathname)) {
+      const data = new Uint8Array(await (await fetchOrThrow(sourceUrl)).arrayBuffer());
+      if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
+      ({ text, ocr } = await extractPdfText(data));
     } else {
       const res = await fetchOrThrow(sourceUrl);
       text = extractArticleText(await res.text(), sourceUrl);
@@ -1081,15 +1285,19 @@ async function enrichWithKeyPoints(notices: NormalizedNotice[]): Promise<Normali
       enriched.push(notice);
       continue;
     }
-    const deadline = earliestDeadline(keyPoints);
+    // A stated closing date for comments wins over other dates in the document
+    const closing = keyPoints.closingDate?.date && keyPoints.closingDate.date >= hongKongDate() ? keyPoints.closingDate : undefined;
+    const deadline = closing || earliestDeadline(keyPoints);
+    const label = closing ? 'Comments close' : 'Date in source';
     enriched.push({
       ...notice,
       keyPoints,
-      ...(deadline && !notice.deadlineDate
+      // Dates the source itself gives (Federal Register, MAS consultations) are kept
+      ...(deadline && !notice.deadlineDate && !notice.statutoryDeadline
         ? {
             deadlineDate: deadline.date,
-            statutoryDeadline: `Date in source: ${deadline.date}`,
-            statusBadge: { text: `Date in source: ${deadline.date}`, type: 'deadline' as const }
+            statutoryDeadline: `${label}: ${deadline.date}`,
+            statusBadge: { text: `${label}: ${deadline.date}`, type: 'deadline' as const }
           }
         : {})
     });
@@ -1106,6 +1314,19 @@ interface SourceState {
 }
 
 const sourceState = new Map<string, SourceState>();
+
+// Store notices in the history database, if there is one. Failures are logged
+// and never affect the live feed.
+async function archiveNotices(notices: NormalizedNotice[]) {
+  const toSave = notices.filter(n => !n.id.startsWith('hkma-liquidity'));
+  if (toSave.length === 0) return;
+  try {
+    const db = await getDb();
+    if (db) await saveNotices(db, toSave.map(({ archived, related, ...n }) => n));
+  } catch (err: any) {
+    console.log(`[RegSonar History] Could not save notices: ${err?.message}`);
+  }
+}
 
 function describeError(err: any): string {
   if (err?.name === 'TimeoutError') return `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`;
@@ -1127,10 +1348,11 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
     s.lastAttemptAt = Date.now();
     s.inFlight = source.fetch()
       .then(enrichWithKeyPoints)
-      .then((notices) => {
+      .then(async (notices) => {
         s.notices = notices;
         s.lastSuccessAt = new Date().toISOString();
         s.error = undefined;
+        await archiveNotices(notices);
       })
       .catch((err) => {
         s.error = describeError(err);
@@ -1148,12 +1370,19 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
 // publishes more in a day than the feed shows is still covered
 const DIGEST_FETCH_LIMIT = 20;
 
+// While the history is new, the daily run reads further back to fill it
+const BACKFILL_LIMIT = 50;
+
 async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
   const sources = SOURCES.filter(s => s.inDigest !== false);
+  const db = await getDb();
+  const limit = db && (await archiveStats(db)).count < 300 ? BACKFILL_LIMIT : DIGEST_FETCH_LIMIT;
   const [states, wide] = await Promise.all([
     Promise.all(sources.map(refreshSource)),
-    Promise.allSettled(sources.map(s => s.fetch(DIGEST_FETCH_LIMIT)))
+    Promise.allSettled(sources.map(s => s.fetch(limit)))
   ]);
+  // The wider read goes into the history too (without key points)
+  await archiveNotices(wide.flatMap(r => (r.status === 'fulfilled' ? r.value : [])));
   const byId = new Map<string, NormalizedNotice>();
   const failed: string[] = [];
   wide.forEach((result, i) => {
@@ -1163,6 +1392,49 @@ async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; fa
   // Notices already in the feed carry key points, so they replace the wider read's copies
   states.forEach(st => st.notices.forEach(n => byId.set(n.id, n)));
   return { notices: [...byId.values()], failed };
+}
+
+// How far back the feed reaches into the history, and how many notices at most
+const ARCHIVE_FEED_DAYS = 30;
+const ARCHIVE_FEED_LIMIT = 300;
+
+const fromArchive = (n: any): NormalizedNotice => ({
+  ...n,
+  archived: true,
+  isLiveFeed: false,
+  issuedTimeAgo: n.publishedAt ? getRelativeTime(n.publishedAt) : 'Earlier'
+});
+
+// Add the last 30 days from the history to the live notices, and link
+// consultations to their conclusions
+async function withHistory(live: NormalizedNotice[]) {
+  const db = await getDb();
+  let notices = live;
+  let archive: { enabled: boolean; count?: number; since?: string | null; error?: string } = { enabled: false };
+  let candidates: RelatedCandidate[] = live;
+  if (db) {
+    try {
+      const liveIds = new Set(live.map(n => n.id));
+      const [recent, stats, linkable] = await Promise.all([
+        recentNotices(db, ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT),
+        archiveStats(db),
+        consultationCandidates(db)
+      ]);
+      notices = [...live, ...recent.filter(n => !liveIds.has(n.id)).map(fromArchive)];
+      archive = { enabled: true, ...stats };
+      candidates = [...linkable, ...live.filter(n => !linkable.some(c => c.id === n.id))] as RelatedCandidate[];
+    } catch (err: any) {
+      console.log(`[RegSonar History] Could not read history: ${err?.message}`);
+      archive = { enabled: true, error: 'The history database could not be read' };
+    }
+  } else if (databaseUrl()) {
+    archive = { enabled: true, error: 'The history database could not be reached' };
+  }
+  notices = notices.map(n => {
+    const related = findRelated(n, candidates);
+    return related.length ? { ...n, related } : n;
+  });
+  return { notices, archive };
 }
 
 function siteUrl(): string {
@@ -1225,15 +1497,16 @@ export function createApp() {
         error: states[i].error
       }));
 
-      const liveNotices = states.flatMap(st => st.notices);
+      const { notices: allNotices, archive } = await withHistory(states.flatMap(st => st.notices));
       lastSyncTimestamp = new Date().toISOString();
 
       res.set('Cache-Control', req.method === 'GET' ? 'public, s-maxage=300, stale-while-revalidate=86400' : 'no-store');
       res.json({
         success: true,
-        count: liveNotices.length,
+        count: allNotices.length,
         lastSync: lastSyncTimestamp,
-        notices: liveNotices,
+        notices: allNotices,
+        archive,
         sources,
         endpoints
       });
@@ -1301,6 +1574,27 @@ export function createApp() {
     });
   });
 
+  // Search the history: titles, summaries and key points
+  app.get('/api/notices/search', async (req: Request, res: Response) => {
+    const q = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 200) : '';
+    if (q.length < 2) {
+      res.status(400).json({ success: false, error: 'Search needs at least 2 characters' });
+      return;
+    }
+    try {
+      const db = await getDb();
+      if (!db) {
+        res.json({ success: true, enabled: false, notices: [] });
+        return;
+      }
+      const found = (await searchNotices(db, q, 40)).map(fromArchive);
+      res.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+      res.json({ success: true, enabled: true, notices: found });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error?.message || 'Search failed' });
+    }
+  });
+
   // API Route: daily HKMA liquidity figures for the dashboard chart
   app.get('/api/hkma/liquidity-history', async (req: Request, res: Response) => {
     try {
@@ -1342,8 +1636,10 @@ async function startLocalServer() {
   });
 }
 
-// On Vercel the app is imported by api/index.ts instead of listening on a port
-if (!process.env.VERCEL) {
+// On Vercel the app is imported by api/index.ts instead of listening on a
+// port; tests import this file too, so it only listens when run directly
+const runDirectly = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+if (!process.env.VERCEL && runDirectly) {
   startLocalServer().catch((err) => {
     console.error('[RegSonar] Fatal error starting server:', err);
     process.exit(1);
