@@ -222,6 +222,12 @@ This document records the full chronological instructions, technical requirement
 * **Change instead:** the server now reads the same figures (closing aggregate balance, overnight HIBOR, 1-month HIBOR fixing, discount window base rate, and the "as at" time) from the HKMA Daily Monetary Statistics page on www.hkma.gov.hk. That page is served from the same site as the HKMA RSS feeds, which Vercel can reach. The page has no robots.txt restrictions and is fetched at most once every 30 minutes; HKMA updates it at about 7pm Hong Kong time on business days. The endpoint `hkma-api` was replaced by `hkma-dms`, so nothing calls `api.hkma.gov.hk` any more.
 * **Verified:** locally, a sync returned 27 notices, including "closing aggregate balance HK$54,108M (2026-10-06)", which matches the page; both HKMA endpoints were Operational, and only the FCA failed (HTTP 403, as expected locally). `tsc --noEmit` and `vite build` pass.
 
+### Request 16: HKMA Liquidity Chart on the Dashboard (Claude Code, 2026-10-07)
+* **Instruction:** "show the liquidity figures as a chart on the dashboard".
+* **Data:** HKMA publishes each business day's figures on its own page (`.../daily-monetary-statistics/YYYY/MM/ms-YYYYMMDD/`, the URL the page's date picker opens). The new route `GET /api/hkma/liquidity-history` reads the weekdays in the last 28 days with the same parser as the liquidity source, two requests at a time. Pages without figures (public holidays) are skipped. Past dates never change, so each is fetched once per server process, and the latest figures come from the liquidity source.
+* **Chart:** `src/components/LiquidityChart.tsx`, a card in the dashboard's right column. It shows the closing aggregate balance, plus overnight HIBOR and the 1-month HIBOR fixing; hovering shows a day's figures. Each chart is scaled to its own range, which is printed beside its title. The chart is plain SVG, with no new dependency. Days that could not be fetched are counted in the footnote rather than drawn.
+* **Verified:** locally, 19 business days (9 Sept to 6 Oct 2026; 1 Oct, a public holiday, correctly absent). The 30 Sept figures match the HKMA page (closing balance HK$54,108M, overnight HIBOR 3.85%, 1-month fixing 3.00518%). Hover readouts match the API data, and there are no console errors. `tsc --noEmit` and `vite build` pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary
@@ -232,6 +238,7 @@ This document records the full chronological instructions, technical requirement
 | `summarize.ts` | **Created** | Article text extraction, TextRank sentence ranking, dated-statement and reference extraction. No AI model. |
 | `src/lib/derived.ts` | **Created** | Deadlines, notifications and sorting derived from live notices. |
 | `api/index.ts` | **Created** | Vercel function that serves the Express API (Request 10). |
+| `src/components/LiquidityChart.tsx` | **Created** | Dashboard chart of daily HKMA interbank liquidity (Request 16). |
 | `vercel.json` | **Created** | Routes `/api/*` to the function and sets its maximum duration. |
 | `src/App.tsx` | **Updated** | Integrated dynamic KPI metrics, real-time feed synchronization, endpoint status tracking, density toggle, and sanitized client loggers. |
 | `src/data/regulatoryData.ts` | **Deleted** | Sample notices removed in Request 9; all data now comes from live sources. |

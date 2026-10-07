@@ -380,22 +380,55 @@ const fetchHkmaConsultations = () =>
 // API, but its firewall blocks cloud servers (Vercel and GitHub Actions alike).
 const HKMA_DAILY_STATS_PAGE = 'https://www.hkma.gov.hk/eng/data-publications-and-research/data-and-statistics/daily-monetary-statistics/';
 
-async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
-  const html = await (await fetchOrThrow(HKMA_DAILY_STATS_PAGE)).text();
+export interface LiquidityDay {
+  date: string; // YYYY-MM-DD, Hong Kong
+  time: string; // HH:MM the page states the figures as at
+  closingBalance: number; // HK$ million
+  overnightHibor: number | null; // %
+  hiborFixing1m: number | null; // %
+  baseRate: number | null; // %
+}
+
+// Read the interbank liquidity figures from a Daily Monetary Statistics page.
+// Returns null when the page has no figures (weekends and public holidays).
+function parseHkmaDailyStats(html: string): LiquidityDay | null {
   const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
   // The figure that follows a label, within the same table cell or the next
   const figureAfter = (label: string, value: RegExp) =>
     text.match(new RegExp(label + /[^%\d]{0,80}?/.source + value.source))?.[1];
+  const rate = (label: string) => {
+    const v = figureAfter(label, /([\d.]+)%/);
+    return v ? Number(v) : null;
+  };
 
   const closing = figureAfter('Closing Aggregate Balance', /([\d,]+) mn/);
-  const baseRate = figureAfter('Base Rate', /([\d.]+)%/);
-  const overnight = figureAfter('Overnight HIBOR', /([\d.]+)%/);
-  const fixing1m = figureAfter('1-Month HIBOR Fixing', /([\d.]+)%/);
   const asOf = text.match(/Date and Time \(日期和時間\) : (\d{2}:\d{2}), (\d{2})\/(\d{2})\/(\d{4})/);
-  if (!closing || !asOf) throw new Error('Figures not found on the HKMA Daily Monetary Statistics page');
-
+  if (!closing || !asOf) return null;
   const [, time, day, month, year] = asOf;
-  const date = `${year}-${month}-${day}`;
+  return {
+    date: `${year}-${month}-${day}`,
+    time,
+    closingBalance: Number(closing.replace(/,/g, '')),
+    overnightHibor: rate('Overnight HIBOR'),
+    hiborFixing1m: rate('1-Month HIBOR Fixing'),
+    baseRate: rate('Base Rate')
+  };
+}
+
+// Most recent figures read by the liquidity source, for the chart
+let latestLiquidity: LiquidityDay | null = null;
+
+async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
+  const html = await (await fetchOrThrow(HKMA_DAILY_STATS_PAGE)).text();
+  const latest = parseHkmaDailyStats(html);
+  if (!latest) throw new Error('Figures not found on the HKMA Daily Monetary Statistics page');
+  latestLiquidity = latest;
+
+  const { date, time } = latest;
+  const closing = latest.closingBalance.toLocaleString('en-US');
+  const overnight = latest.overnightHibor?.toFixed(2);
+  const fixing1m = latest.hiborFixing1m?.toFixed(5);
+  const baseRate = latest.baseRate?.toFixed(2);
   // The page states Hong Kong time
   const publishedAt = toIso(`${date}T${time}:00+08:00`);
   const rates = [
@@ -682,6 +715,72 @@ function getEndpointsHealth() {
   return healthCache.results;
 }
 
+// Daily liquidity figures for the chart, one page per business day. HKMA
+// publishes each date at .../daily-monetary-statistics/YYYY/MM/ms-YYYYMMDD/.
+// Past dates never change, so each is fetched once per server process; the
+// latest figures come from the liquidity source.
+const LIQUIDITY_HISTORY_DAYS = 28;
+const liquidityDayCache = new Map<string, LiquidityDay | null>();
+let liquidityHistoryInFlight: Promise<{ days: LiquidityDay[]; failed: number }> | null = null;
+
+function hongKongDate(offsetDays = 0): string {
+  const d = new Date(Date.now() - offsetDays * 86_400_000);
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Hong_Kong' }).format(d);
+}
+
+async function fetchLiquidityDay(date: string): Promise<LiquidityDay | null> {
+  if (liquidityDayCache.has(date)) return liquidityDayCache.get(date)!;
+  const [y, m, d] = date.split('-');
+  const html = await (await fetchOrThrow(`${HKMA_DAILY_STATS_PAGE}${y}/${m}/ms-${y}${m}${d}/`)).text();
+  const parsed = parseHkmaDailyStats(html);
+  // A page for another date than the one asked for is treated as no figures
+  const day = parsed?.date === date ? parsed : null;
+  liquidityDayCache.set(date, day);
+  return day;
+}
+
+async function loadLiquidityHistory(): Promise<{ days: LiquidityDay[]; failed: number }> {
+  // Weekdays before today (Hong Kong); today's figures appear after 7pm
+  const dates: string[] = [];
+  for (let i = 1; i <= LIQUIDITY_HISTORY_DAYS; i++) {
+    const date = hongKongDate(i);
+    const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
+    if (weekday !== 0 && weekday !== 6) dates.push(date);
+  }
+
+  // Two requests at a time to stay polite to the HKMA site
+  const days: LiquidityDay[] = [];
+  let failed = 0;
+  for (let i = 0; i < dates.length; i += 2) {
+    const results = await Promise.allSettled(dates.slice(i, i + 2).map(fetchLiquidityDay));
+    for (const r of results) {
+      if (r.status === 'rejected') failed++;
+      else if (r.value) days.push(r.value);
+    }
+  }
+  return { days, failed };
+}
+
+async function getLiquidityHistory() {
+  liquidityHistoryInFlight ??= loadLiquidityHistory().finally(() => {
+    liquidityHistoryInFlight = null;
+  });
+  const [{ days, failed }, latestState] = await Promise.all([
+    liquidityHistoryInFlight,
+    refreshSource(SOURCES.find(src => src.fetch === fetchHkmaLiquidity)!)
+  ]);
+
+  // Today's figures (from the liquidity source) are added if not already present
+  const byDate = new Map(days.map(d => [d.date, d]));
+  if (latestLiquidity && !byDate.has(latestLiquidity.date)) byDate.set(latestLiquidity.date, latestLiquidity);
+  return {
+    days: [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    failed,
+    latestError: latestState.error,
+    source: HKMA_DAILY_STATS_PAGE
+  };
+}
+
 // Ingestion sources, keyed to the endpoint they read from
 const SOURCES: { endpointId: string; name: string; fetch: () => Promise<NormalizedNotice[]>; ttlMs?: number }[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
@@ -879,6 +978,15 @@ export function createApp() {
     } catch (error: any) {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
       res.status(500).json({ success: false, error: error?.message || 'Sync error' });
+    }
+  });
+
+  // API Route: daily HKMA liquidity figures for the dashboard chart
+  app.get('/api/hkma/liquidity-history', async (_req: Request, res: Response) => {
+    try {
+      res.json({ success: true, ...(await getLiquidityHistory()) });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error?.message || 'Could not load liquidity history' });
     }
   });
 
