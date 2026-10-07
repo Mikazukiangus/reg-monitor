@@ -270,6 +270,7 @@ This document records the full chronological instructions, technical requirement
 * **11. Dark mode:** about 1,000 fixed colours were replaced by 32 named theme colours (`src/index.css`), with a dark palette in the same Porcelain & Prussian family. A header button cycles through follows device, light and dark; the choice is kept in this browser and applied before the page draws.
 * **12. Accessibility:** checked with axe on every tab, in both themes, and in every window. Fixed: clickable cards, deadlines and notifications are now buttons; every field has a label; windows take focus, keep Tab inside, close with Escape and return focus; a skip link and a page heading were added; keyboard focus shows an outline; icon text is hidden from screen readers and icon-only buttons have names; an inline link is underlined. After the fixes axe reports no violations.
 * **Verified locally:** with an in-memory Postgres (`DATABASE_URL=pglite`) the history stored 513 notices back to April 2024 and search works; all 19 sources load (FCA 403 locally as before). `tsc --noEmit`, 51 tests and `vite build` pass.
+* **Database and merge (2026-10-07):** the user added a Neon Postgres database in Vercel Storage (sets `DATABASE_URL` for preview and production). After a redeploy the preview stored 63 notices back to 5 June 2026 and history search worked. The user said "merge into main"; `main` was fast-forwarded and deployed. On production all 19 sources returned notices, the history is on (63 notices) and search returns results.
 
 ---
 
