@@ -272,6 +272,12 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** with an in-memory Postgres (`DATABASE_URL=pglite`) the history stored 513 notices back to April 2024 and search works; all 19 sources load (FCA 403 locally as before). `tsc --noEmit`, 51 tests and `vite build` pass.
 * **Database and merge (2026-10-07):** the user added a Neon Postgres database in Vercel Storage (sets `DATABASE_URL` for preview and production). After a redeploy the preview stored 63 notices back to 5 June 2026 and history search worked. The user said "merge into main"; `main` was fast-forwarded and deployed. On production all 19 sources returned notices, the history is on (63 notices) and search returns results.
 
+### Request 21: Duplicate Notices and a Missed Closing Date (Claude Code, 2026-10-07)
+* **Instruction:** "please fix the 2 small issues". Built on the branch `fix-duplicates-and-closing-dates`.
+* **Duplicates:** an SFC release listed in both the press-release and consultation feeds appeared twice. Notices are now kept once per document link (`dedupeByDocument` in `src/lib/dedupe.ts`), preferring the consultation copy and keeping key points from either; applied to the feed, the digest and history search.
+* **Closing date:** "The public consultation ... will last until 7 October 2026" (HKMA) was shown as "Date in source". The closing-date finder now also recognises "lasts until", "will run/remain open until" and "is/remains open until".
+* **Verified locally:** a live sync has no repeated document links; the SFC notice appears once as a consultation and the HKMA taxonomy consultation shows "Comments close: 2026-10-07". 52 tests pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary

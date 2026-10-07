@@ -8,6 +8,7 @@ import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './dige
 import { DIGEST_RULES } from './digest-rules.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
+import { dedupeByDocument } from './src/lib/dedupe.js';
 
 dotenv.config();
 
@@ -1391,7 +1392,7 @@ async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; fa
   });
   // Notices already in the feed carry key points, so they replace the wider read's copies
   states.forEach(st => st.notices.forEach(n => byId.set(n.id, n)));
-  return { notices: [...byId.values()], failed };
+  return { notices: dedupeByDocument([...byId.values()]), failed };
 }
 
 // How far back the feed reaches into the history, and how many notices at most
@@ -1430,7 +1431,7 @@ async function withHistory(live: NormalizedNotice[]) {
   } else if (databaseUrl()) {
     archive = { enabled: true, error: 'The history database could not be reached' };
   }
-  notices = notices.map(n => {
+  notices = dedupeByDocument(notices).map(n => {
     const related = findRelated(n, candidates);
     return related.length ? { ...n, related } : n;
   });
@@ -1587,7 +1588,7 @@ export function createApp() {
         res.json({ success: true, enabled: false, notices: [] });
         return;
       }
-      const found = (await searchNotices(db, q, 40)).map(fromArchive);
+      const found = dedupeByDocument((await searchNotices(db, q, 40)).map(fromArchive));
       res.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
       res.json({ success: true, enabled: true, notices: found });
     } catch (error: any) {

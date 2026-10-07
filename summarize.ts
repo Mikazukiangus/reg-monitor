@@ -280,10 +280,11 @@ function extractDateFacts(sentences: string[], now: Date): KeyFact[] {
 }
 
 // Sentences that state when a consultation closes, e.g. "Comments should be
-// submitted on or before 9 December 2026" or "The consultation closes on ..."
+// submitted on or before 9 December 2026", "The consultation closes on ..."
+// or "The public consultation ... will last until 7 October 2026"
 const CLOSING_CUE = new RegExp([
   String.raw`\b(?:comments?|responses?|feedback|submissions?|views|representations)\b[^.;]{0,140}\b(?:by|on or before|no later than|before|until)\b`,
-  String.raw`\b(?:consultation|comment period|consultation period)\b[^.;]{0,80}\b(?:closes?|closing|ends?|will end|runs? until)\b`,
+  String.raw`\b(?:consultation|comment period|consultation period)\b[^.;]{0,80}\b(?:closes?|closing|ends?|will end|runs? until|lasts? until|will (?:last|run|remain open|be open) until|(?:is|remains) open until)\b`,
   String.raw`\bclosing date\b`,
   String.raw`\bdeadline for (?:responses|comments|submissions|feedback)\b`
 ].join('|'), 'i');

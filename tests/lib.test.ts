@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { extractClosingDate } from '../summarize.ts';
+import { dedupeByDocument } from '../src/lib/dedupe.ts';
 import { ruleMatches } from '../src/lib/alertRules.ts';
 import { findRelated } from '../src/lib/related.ts';
 import { buildIcs } from '../src/lib/ics.ts';
@@ -13,6 +14,7 @@ test('closing dates are found only in sentences that state one', () => {
   assert.equal(extractClosingDate(['The consultation closes on Friday 9 January 2027.'])?.date, '2027-01-09');
   assert.equal(extractClosingDate(['Published on 3 October 2026; responses are invited by 15 November 2026.'])?.date, '2026-11-15');
   assert.equal(extractClosingDate(['The closing date for submissions is 30 November 2026.'])?.date, '2026-11-30');
+  assert.equal(extractClosingDate(['The public consultation commences today and will last until 7 October 2026.'])?.date, '2026-10-07');
   assert.equal(extractClosingDate(['MAS met industry on 4 October 2026.']), undefined);
 });
 
@@ -64,4 +66,21 @@ test('the digest covers one Singapore day', () => {
     { id: 'b', ref: 'b', regulator: 'SFC', impactScore: 8, title: 'SFC fines another broker', publishedAt: '2026-10-06T16:30:00Z' }
   ];
   assert.deepEqual(matchDigest(notices, [rule], '2026-10-06').map(m => m.notice.id), ['a']);
+});
+
+test('a document listed in two feeds is kept once, as the consultation', () => {
+  const url = 'https://apps.sfc.hk/edistributionWeb/gateway/EN/news-and-announcements/news/doc?refNo=26PR161';
+  const out = dedupeByDocument([
+    { id: 'sfc-pr-26PR161', format: 'Circulars', dossierUrl: url, keyPoints: { points: ['quoted'] } },
+    { id: 'other', format: 'Circulars', dossierUrl: 'https://example.org/a' },
+    { id: 'sfc-con-26PR161', format: 'Consultations', dossierUrl: url + '#top' },
+    { id: 'no-link', format: 'Circulars' }
+  ]);
+  assert.deepEqual(out.map(n => n.id), ['sfc-con-26PR161', 'other', 'no-link']);
+  assert.deepEqual(out[0].keyPoints, { points: ['quoted'] });
+  // Different refNo values are different documents
+  assert.equal(dedupeByDocument([
+    { id: 'a', format: 'Circulars', dossierUrl: url },
+    { id: 'b', format: 'Circulars', dossierUrl: url.replace('26PR161', '26PR160') }
+  ]).length, 2);
 });
