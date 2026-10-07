@@ -14,7 +14,7 @@ This document records the full chronological instructions, technical requirement
   * **Data Ingestion Ports** (as of 2026-10-06, see Requests 8 and 9):
     * US Federal Register REST API v1 (`SEC` & `CFTC` documents): ingested
     * HKMA RSS feeds on www.hkma.gov.hk (press releases, circulars, consultations): ingested (see Request 11)
-    * HKMA Open API (daily interbank liquidity figures only): ingested when reachable; its firewall often blocks cloud servers
+    * HKMA Daily Monetary Statistics page on www.hkma.gov.hk (daily interbank liquidity figures): ingested (see Request 15). The HKMA Open API is no longer called, because its firewall blocks cloud servers
     * MAS news search API (media releases and enforcement actions; undocumented): ingested
     * BIS media releases RSS (includes Basel Committee): ingested
     * Bank of England PRA publications RSS: ingested (UK coverage)
@@ -215,6 +215,12 @@ This document records the full chronological instructions, technical requirement
 * **Instruction:** "yes, move the function to hkg1".
 * **Change:** `vercel.json` sets `"regions": ["hkg1"]`, so the API function runs in Vercel's Hong Kong region instead of `iad1` (US East), close to the HKMA and MAS sources, whose requests had been timing out intermittently from the US.
 * **Verified in production (one cold sync):** 18.8s, down from about 32s in `iad1`; 29 notices, all with key points; every source succeeded except the HKMA Open API liquidity figures, which still time out (its firewall blocks cloud servers regardless of region). US and UK sources still answer in 0.3–1.6s.
+
+### Request 15: HKMA Liquidity Figures (Claude Code, 2026-10-07)
+* **Instruction:** "add a scheduled job for HKMA liquidity figures".
+* **Tried first:** a GitHub Actions job, run twice a day, that fetched the figures from the HKMA Open API and committed them to `data/hkma-liquidity.json` for the site to read. One test run showed GitHub's servers are blocked as well: the first request timed out and the retry returned HTTP 502. The job was removed rather than left to fail twice a day. At the same time, the Open API returned HTTP 405 ("request has been blocked") from the local machine. No attempt was made to get around the firewall.
+* **Change instead:** the server now reads the same figures (closing aggregate balance, overnight HIBOR, 1-month HIBOR fixing, discount window base rate, and the "as at" time) from the HKMA Daily Monetary Statistics page on www.hkma.gov.hk. That page is served from the same site as the HKMA RSS feeds, which Vercel can reach. The page has no robots.txt restrictions and is fetched at most once every 30 minutes; HKMA updates it at about 7pm Hong Kong time on business days. The endpoint `hkma-api` was replaced by `hkma-dms`, so nothing calls `api.hkma.gov.hk` any more.
+* **Verified:** locally, a sync returned 27 notices, including "closing aggregate balance HK$54,108M (2026-10-06)", which matches the page; both HKMA endpoints were Operational, and only the FCA failed (HTTP 403, as expected locally). `tsc --noEmit` and `vite build` pass.
 
 ---
 

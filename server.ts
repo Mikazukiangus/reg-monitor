@@ -375,40 +375,58 @@ const fetchHkmaCirculars = () =>
 const fetchHkmaConsultations = () =>
   fetchHkmaRss({ file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 });
 
-// Fetch the latest HKMA daily interbank liquidity figures from the HKMA Open API.
-// The figures are only published there, so this source may fail on Vercel.
-async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow('https://api.hkma.gov.hk/public/market-data-and-statistics/daily-monetary-statistics/daily-figures-interbank-liquidity?pagesize=1');
-  const data = await res.json();
-  const rec = data.result?.records?.[0];
-  if (!data.header?.success || !rec) {
-    throw new Error(`HKMA API error ${data.header?.err_code}: ${data.header?.err_msg}`);
-  }
+// Fetch the latest HKMA interbank liquidity figures from the Daily Monetary
+// Statistics page on www.hkma.gov.hk. The same figures are in the HKMA Open
+// API, but its firewall blocks cloud servers (Vercel and GitHub Actions alike).
+const HKMA_DAILY_STATS_PAGE = 'https://www.hkma.gov.hk/eng/data-publications-and-research/data-and-statistics/daily-monetary-statistics/';
 
-  const balance = Number(rec.closing_balance).toLocaleString('en-US');
+async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
+  const html = await (await fetchOrThrow(HKMA_DAILY_STATS_PAGE)).text();
+  const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+  // The figure that follows a label, within the same table cell or the next
+  const figureAfter = (label: string, value: RegExp) =>
+    text.match(new RegExp(label + /[^%\d]{0,80}?/.source + value.source))?.[1];
+
+  const closing = figureAfter('Closing Aggregate Balance', /([\d,]+) mn/);
+  const baseRate = figureAfter('Base Rate', /([\d.]+)%/);
+  const overnight = figureAfter('Overnight HIBOR', /([\d.]+)%/);
+  const fixing1m = figureAfter('1-Month HIBOR Fixing', /([\d.]+)%/);
+  const asOf = text.match(/Date and Time \(日期和時間\) : (\d{2}:\d{2}), (\d{2})\/(\d{2})\/(\d{4})/);
+  if (!closing || !asOf) throw new Error('Figures not found on the HKMA Daily Monetary Statistics page');
+
+  const [, time, day, month, year] = asOf;
+  const date = `${year}-${month}-${day}`;
+  // The page states Hong Kong time
+  const publishedAt = toIso(`${date}T${time}:00+08:00`);
+  const rates = [
+    overnight && `overnight HIBOR ${overnight}%`,
+    fixing1m && `1-month HIBOR fixing ${fixing1m}%`,
+    baseRate && `discount window base rate ${baseRate}%`
+  ].filter(Boolean);
+
   return [
     {
-      id: `hkma-liquidity-${rec.end_of_date}`,
-      ref: `HKMA Daily Monetary Statistics ${rec.end_of_date}`,
-      title: `HKMA interbank liquidity: closing aggregate balance HK$${balance}M (${rec.end_of_date})`,
+      id: `hkma-liquidity-${date}`,
+      ref: `HKMA Daily Monetary Statistics ${date}`,
+      title: `HKMA interbank liquidity: closing aggregate balance HK$${closing}M (${date})`,
       regulator: 'HKMA',
       jurisdiction: 'HONG KONG',
       jurisdictionCode: 'HK',
       type: 'MARKET DATA',
       typeColorClass: getTypeColor('Circulars'),
       impactScore: 5.0,
-      issuedTimeAgo: getRelativeTime(rec.end_of_date),
-      publishedAt: toIso(rec.end_of_date),
+      issuedTimeAgo: getRelativeTime(publishedAt ?? date),
+      publishedAt,
       statusBadge: {
-        text: `Closing Bal: HK$${balance}M`,
+        text: `Closing Bal: HK$${closing}M`,
         type: 'standard'
       },
-      summary: `Closing aggregate balance HK$${balance}M; overnight HIBOR ${rec.hibor_overnight}%; 1-month HIBOR fixing ${rec.hibor_fixing_1m}%; discount window base rate ${rec.disc_win_base_rate}%. Source: HKMA Open API daily monetary statistics.`,
-      tags: ['HKMA', 'Liquidity', 'Banking & Capital Markets', 'Open API'],
+      summary: `Closing aggregate balance HK$${closing}M${rates.length ? `; ${rates.join('; ')}` : ''}. Figures as at ${time}, ${date} (Hong Kong time). Source: HKMA Daily Monetary Statistics page.`,
+      tags: ['HKMA', 'Liquidity', 'Banking & Capital Markets'],
       sector: 'Banking & Capital Markets',
       format: 'Circulars',
       severity: 'info',
-      dossierUrl: 'https://www.hkma.gov.hk/eng/data-publications-and-research/data-and-statistics/daily-monetary-statistics/',
+      dossierUrl: HKMA_DAILY_STATS_PAGE,
       isLiveFeed: true
     }
   ];
@@ -540,12 +558,12 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
-    id: 'hkma-api',
-    name: 'HKMA Open API (liquidity figures)',
+    id: 'hkma-dms',
+    name: 'HKMA Daily Monetary Statistics',
     agency: 'HKMA liquidity data (Hong Kong)',
     jurisdiction: 'Hong Kong',
-    url: 'https://api.hkma.gov.hk/public/press-releases?lang=en&pagesize=1',
-    protocol: 'REST JSON',
+    url: HKMA_DAILY_STATS_PAGE,
+    protocol: 'HTML',
     auth: 'Public / None',
     ingests: true
   },
@@ -652,7 +670,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
 // source fetches are cached rather than repeated on every client poll.
 const HEALTH_TTL_MS = 5 * 60 * 1000;
 const SOURCE_TTL_MS = 10 * 60 * 1000;
-// The HKMA Open API's WAF blocks an IP after a handful of requests, so poll it less often
+// The liquidity figures change once a business day (about 7pm Hong Kong time)
 const HKMA_SOURCE_TTL_MS = 30 * 60 * 1000;
 
 let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
@@ -672,7 +690,7 @@ const SOURCES: { endpointId: string; name: string; fetch: () => Promise<Normaliz
   { endpointId: 'hkma-rss', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases },
   { endpointId: 'hkma-rss', name: 'HKMA Circulars', fetch: fetchHkmaCirculars },
   { endpointId: 'hkma-rss', name: 'HKMA Consultations', fetch: fetchHkmaConsultations },
-  { endpointId: 'hkma-api', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS },
+  { endpointId: 'hkma-dms', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS },
   { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];

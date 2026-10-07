@@ -296,7 +296,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       1. Ingestion Layer
                     </span>
                     <span className="text-[#57534E]">
-                      Fetches JSON from the US Federal Register, MAS news search and HKMA Open API (liquidity figures), and RSS from HKMA, the Bank of England PRA, the FCA and BIS. The FCA feed is behind a Cloudflare bot check and is sometimes blocked.
+                      Fetches JSON from the US Federal Register and MAS news search, RSS from HKMA, the Bank of England PRA, the FCA and BIS, and HKMA liquidity figures from its Daily Monetary Statistics page. The FCA feed is behind a Cloudflare bot check and is sometimes blocked.
                     </span>
                   </div>
 
