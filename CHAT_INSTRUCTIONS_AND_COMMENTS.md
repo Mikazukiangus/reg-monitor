@@ -13,7 +13,8 @@ This document records the full chronological instructions, technical requirement
   * **Key points:** extractive summaries built in `summarize.ts` (TextRank over sentences quoted verbatim from the source, plus rule-based dates and references). No AI model or external API; Gemini was removed in Request 9.
   * **Data Ingestion Ports** (as of 2026-10-06, see Requests 8 and 9):
     * US Federal Register REST API v1 (`SEC` & `CFTC` documents): ingested
-    * HKMA Open API (press releases and daily interbank liquidity figures): ingested
+    * HKMA RSS feeds on www.hkma.gov.hk (press releases, circulars, consultations): ingested (see Request 11)
+    * HKMA Open API (daily interbank liquidity figures only): ingested when reachable; its firewall often blocks cloud servers
     * MAS news search API (media releases and enforcement actions; undocumented): ingested
     * BIS media releases RSS (includes Basel Committee): ingested
     * Bank of England PRA publications RSS: ingested (UK coverage)
@@ -178,6 +179,15 @@ This document records the full chronological instructions, technical requirement
   * From Vercel's servers the FCA RSS loads, unlike locally.
   * HKMA sometimes times out from Vercel; a failed source is retried after 30 minutes and keeps its last good notices.
   * Caches live in each function instance's memory. A fresh instance needs about 15s for its first sync because it fetches every source document.
+
+### Request 11: Reliable HKMA on Vercel (Claude Code, 2026-10-07)
+* **Instruction:** "make HKMA more reliable on Vercel".
+* **Diagnosis:** from Vercel, every request to `api.hkma.gov.hk` timed out after 8s while all other sources answered in under 2s. DNS shows the API sits behind an Alibaba Cloud WAF (`aligfwaf.com`), which appears to drop traffic from cloud hosts. HKMA's main website, `www.hkma.gov.hk`, is served by a different CDN and publishes official RSS feeds.
+* **Changes:**
+  1. HKMA press releases now come from `rss_press-release.xml` instead of the Open API. HKMA circulars (`rss_circulars.xml`, 3 newest) and consultations (`rss_consultations.xml`, 3 newest) were added. Routine items (tender results, bond issues, monetary statistics) are filtered out.
+  2. New endpoint `hkma-rss` (HKMA RSS Feeds). The `hkma-api` endpoint now only provides the daily liquidity figures, which are not in any feed, and is labelled "HKMA liquidity data" so a failure there doesn't read as HKMA being down.
+  3. Circulars and consultations link to BRDR (`brdr.hkma.gov.hk`) pages that only hold metadata (the text is a PDF) and sit behind the same WAF, so they are not fetched for key points. Cards without extractable text now say so and point to the source document.
+* **Verified:** locally, with `api.hkma.gov.hk` and `brdr.hkma.gov.hk` made to time out (as on Vercel), a sync returned 10 HKMA notices (4 press releases with key points, 3 circulars, 3 consultations); only the liquidity source failed. `tsc --noEmit` and `vite build` pass; no console errors.
 
 ---
 

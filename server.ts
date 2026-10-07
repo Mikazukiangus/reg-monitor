@@ -310,50 +310,73 @@ async function fetchPraPublications(): Promise<NormalizedNotice[]> {
 }
 
 // Routine market-operation releases that are not regulatory notices
-const HKMA_ROUTINE_RELEASE = /tender (results|information)|exchange fund (bills|notes)|government bonds?\b|institutional bonds/i;
+const HKMA_ROUTINE_RELEASE = /tender (results|information)|exchange fund (bills|notes)|government bonds?\b|institutional bonds|monetary statistics/i;
 
-// Fetch HKMA press releases from the HKMA Open API
-async function fetchHkmaPressReleases(): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow('https://api.hkma.gov.hk/public/press-releases?lang=en&pagesize=20');
-  const data = await res.json();
-  if (!data.header?.success) {
-    throw new Error(`HKMA API error ${data.header?.err_code}: ${data.header?.err_msg}`);
+// HKMA publishes official RSS feeds on www.hkma.gov.hk. That host is served by
+// a different CDN from api.hkma.gov.hk, whose Alibaba Cloud WAF times out
+// requests from cloud hosts such as Vercel, so notices come from RSS.
+const HKMA_RSS = 'https://www.hkma.gov.hk/eng/other-information/rss';
+
+interface HkmaFeed {
+  file: string;
+  idPrefix: string;
+  refLabel: string;
+  type: string;
+  // Force a format for every item, otherwise classify by title
+  format?: 'Consultations';
+  limit: number;
+}
+
+async function fetchHkmaRss(feed: HkmaFeed): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(`${HKMA_RSS}/${feed.file}`);
+  const parsed = xmlParser.parse(await res.text());
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
   }
-  const records: any[] = data.result?.records || [];
+  const items = parsed.rss.channel.item || [];
 
-  return records
-    .filter((r) => r.title && !HKMA_ROUTINE_RELEASE.test(r.title))
-    .slice(0, 4)
-    .map((r) => {
-      const title = stripHtml(String(r.title));
-      const format = classifyFormat('', title);
+  return (Array.isArray(items) ? items : [items])
+    .filter((item: any) => item.title && !HKMA_ROUTINE_RELEASE.test(String(item.title)))
+    .slice(0, feed.limit)
+    .map((item: any) => {
+      const title = stripHtml(String(item.title));
+      const format = feed.format || classifyFormat('', title);
       const sector = classifySector(title);
       const score = estimateImpact(format);
-      const slug = String(r.link || '').split('/').filter(Boolean).pop() || r.date;
+      // Press releases end in /20261006-4/, BRDR documents in /20260922-1-EN
+      const slug = String(item.link).split('/').filter(Boolean).pop()!.replace(/-EN$/, '');
 
       return {
-        id: `hkma-pr-${slug}`,
-        ref: `HKMA Press Release ${slug}`,
+        id: `${feed.idPrefix}-${slug}`,
+        ref: `${feed.refLabel} ${slug}`,
         title,
         regulator: 'HKMA',
         jurisdiction: 'HONG KONG',
         jurisdictionCode: 'HK',
-        type: 'PRESS RELEASE',
+        type: feed.type,
         typeColorClass: getTypeColor(format),
         impactScore: score,
-        issuedTimeAgo: getRelativeTime(r.date),
-        publishedAt: toIso(r.date),
+        issuedTimeAgo: getRelativeTime(item.pubDate),
+        publishedAt: toIso(item.pubDate),
         tags: ['HKMA', format, sector],
         sector,
         format,
         severity: severityFor(score),
-        dossierUrl: r.link,
+        dossierUrl: String(item.link),
         isLiveFeed: true
       };
     });
 }
 
-// Fetch the latest HKMA daily interbank liquidity figures from the HKMA Open API
+const fetchHkmaPressReleases = () =>
+  fetchHkmaRss({ file: 'rss_press-release.xml', idPrefix: 'hkma-pr', refLabel: 'HKMA Press Release', type: 'PRESS RELEASE', limit: 4 });
+const fetchHkmaCirculars = () =>
+  fetchHkmaRss({ file: 'rss_circulars.xml', idPrefix: 'hkma-cir', refLabel: 'HKMA Circular', type: 'CIRCULAR', limit: 3 });
+const fetchHkmaConsultations = () =>
+  fetchHkmaRss({ file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 });
+
+// Fetch the latest HKMA daily interbank liquidity figures from the HKMA Open API.
+// The figures are only published there, so this source may fail on Vercel.
 async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow('https://api.hkma.gov.hk/public/market-data-and-statistics/daily-monetary-statistics/daily-figures-interbank-liquidity?pagesize=1');
   const data = await res.json();
@@ -507,9 +530,19 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
-    id: 'hkma-api',
-    name: 'HKMA Open API',
+    id: 'hkma-rss',
+    name: 'HKMA RSS Feeds',
     agency: 'HKMA (Hong Kong)',
+    jurisdiction: 'Hong Kong',
+    url: 'https://www.hkma.gov.hk/eng/other-information/rss/rss_press-release.xml',
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'hkma-api',
+    name: 'HKMA Open API (liquidity figures)',
+    agency: 'HKMA liquidity data (Hong Kong)',
     jurisdiction: 'Hong Kong',
     url: 'https://api.hkma.gov.hk/public/press-releases?lang=en&pagesize=1',
     protocol: 'REST JSON',
@@ -619,7 +652,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
 // source fetches are cached rather than repeated on every client poll.
 const HEALTH_TTL_MS = 5 * 60 * 1000;
 const SOURCE_TTL_MS = 10 * 60 * 1000;
-// HKMA's WAF blocks an IP after a handful of requests, so poll it less often
+// The HKMA Open API's WAF blocks an IP after a handful of requests, so poll it less often
 const HKMA_SOURCE_TTL_MS = 30 * 60 * 1000;
 
 let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
@@ -636,7 +669,9 @@ const SOURCES: { endpointId: string; name: string; fetch: () => Promise<Normaliz
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
   { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
   { endpointId: 'boe-pra', name: 'UK PRA Publications', fetch: fetchPraPublications },
-  { endpointId: 'hkma-api', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases, ttlMs: HKMA_SOURCE_TTL_MS },
+  { endpointId: 'hkma-rss', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases },
+  { endpointId: 'hkma-rss', name: 'HKMA Circulars', fetch: fetchHkmaCirculars },
+  { endpointId: 'hkma-rss', name: 'HKMA Consultations', fetch: fetchHkmaConsultations },
   { endpointId: 'hkma-api', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS },
   { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
@@ -662,12 +697,16 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
   return result;
 }
 
+// HKMA circulars and consultations link to BRDR landing pages that only hold
+// metadata (the text is in a PDF) and sit behind the same WAF as the Open API
+const NO_ARTICLE_TEXT = /^https:\/\/brdr\.hkma\.gov\.hk\//;
+
 // Attach key points to notices that link to a document page. Fetches run one
 // at a time per source to stay polite to regulator sites.
 async function enrichWithKeyPoints(notices: NormalizedNotice[]): Promise<NormalizedNotice[]> {
   const enriched: NormalizedNotice[] = [];
   for (const notice of notices) {
-    if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity')) {
+    if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity') || NO_ARTICLE_TEXT.test(notice.dossierUrl)) {
       enriched.push(notice);
       continue;
     }

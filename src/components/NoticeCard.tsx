@@ -219,6 +219,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         <p className="font-['Inter'] text-[13px] text-[#44403C] mb-3 leading-relaxed">
           {notice.summary}
         </p>
+      ) : notice.dossierUrl ? (
+        <p className="font-['Inter'] text-[12px] text-[#857F74] mb-3 italic">
+          No text could be extracted for key points. Open the source document to read it.
+        </p>
       ) : null}
 
       {/* Footer Row: Impacted Units / Tags & Dynamic Actions */}
