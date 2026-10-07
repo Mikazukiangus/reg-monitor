@@ -28,6 +28,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
       `Source: ${notice.dossierUrl || 'n/a'}`,
       ``,
       ...(notice.summary ? [`SOURCE SUMMARY`, notice.summary, ``] : []),
+      ...(keyPoints?.ocr ? [`NOTE: the source is a scanned PDF read by OCR; quotes may contain recognition errors.`, ``] : []),
       ...(keyPoints?.points.length ? [`KEY POINTS (quoted verbatim from the source document)`, ...keyPoints.points.map(p => `- "${p}"`), ``] : []),
       ...(keyPoints?.facts.length ? [`DATED STATEMENTS (quoted)`, ...keyPoints.facts.map(f => `- "${f.text}"`), ``] : []),
       ...(keyPoints?.refs.length ? [`REFERENCES MENTIONED`, keyPoints.refs.join(', '), ``] : []),
@@ -127,6 +128,11 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
                 <h4 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-[#0D5C63]">
                   Key Points, Quoted from Source
                 </h4>
+                {keyPoints.ocr && (
+                  <p className="text-[12px] text-[#B45309] mb-2">
+                    This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors; check them against the document.
+                  </p>
+                )}
                 <ul className="space-y-2">
                   {keyPoints.points.map((pt, i) => (
                     <li key={i} className="border-l-2 border-[#B2DFDB] pl-3 italic">{pt}</li>
@@ -164,7 +170,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
         </div>
 
         <div className="p-3 bg-[#F5F1E8] border-t border-[#E5DFD5] flex items-center justify-between font-['JetBrains_Mono'] text-[10px] text-[#857F74]">
-          <span>Key points are extractive: sentences quoted from the document, no AI model.</span>
+          <span>Key points are extractive: sentences quoted from the document{keyPoints?.ocr ? ', read by OCR' : ''}.</span>
           {notice.dossierUrl && (
             <a href={notice.dossierUrl} target="_blank" rel="noopener noreferrer" className="text-[#0D5C63] font-bold hover:underline shrink-0 ml-3">
               Open source document ↗

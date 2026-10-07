@@ -1,9 +1,12 @@
-// Extractive summaries for regulatory documents. No model or external API:
-// every key point is a sentence quoted verbatim from the source document, and
-// key facts (deadlines, references) are pulled out with rules.
+// Extractive summaries for regulatory documents. No generative model or
+// external API: every key point is a sentence quoted verbatim from the source
+// document, and key facts (deadlines, references) are pulled out with rules.
+// Scanned PDFs are read with Tesseract OCR first.
+import { createRequire } from 'node:module';
+import path from 'node:path';
 import { parseHTML } from 'linkedom';
 import { Readability } from '@mozilla/readability';
-import { extractText, getDocumentProxy } from 'unpdf';
+import { extractImages, extractText, getDocumentProxy } from 'unpdf';
 
 export interface KeyFact {
   text: string;
@@ -17,6 +20,8 @@ export interface KeyPoints {
   refs: string[];
   sourceUrl?: string;
   method: 'extractive';
+  // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
+  ocr?: boolean;
 }
 
 const BLOCK_CLOSE = /<\/(p|li|h[1-6]|div|tr|td|th|section|article|blockquote|dd|dt)>|<br\s*\/?>/gi;
@@ -58,6 +63,11 @@ export function extractArticleText(html: string, url: string): string {
 const PDF_BOILERPLATE = /^(?:-\s*\d+\s*-|page \d+(?: of \d+)?|our ref\b|your ref\b|dear\b|yours (?:faithfully|sincerely)|encl\b|website:|tel:|fax:|e-?mail:)|\d+(?:st|nd|rd|th) floor|[\u3000-\u9fff]/i;
 const LIST_MARKER = /^(?:\d{1,2}\.|\([a-z0-9]{1,4}\)|[a-z]\)|[•▪●–-])\s+/i;
 const CONTACT_LINE = /please (?:feel free to )?contact|\b\d{4} \d{4}\b/i;
+// Footnotes sit at the bottom of a page: "1 The review followed..." (OCR often
+// reads the superscript as "!"). Dates such as "7 September 2026" are not footnotes.
+const FOOTNOTE_START =
+  /^(?:\d{1,2}|[!¹²³])\s+(?!(?:January|February|March|April|May|June|July|August|September|October|November|December)\b)[A-Z“"]/;
+const PAGE_BREAK = '\f';
 
 // Subject lines and headings: no closing punctuation, mostly capitalised words
 function isTitleLike(line: string): boolean {
@@ -71,18 +81,28 @@ function isTitleLike(line: string): boolean {
 // boilerplate (e.g. "Dear Sir/Madam" before the subject line) start a new
 // paragraph.
 function pdfLinesToText(pages: string[]): string {
-  const lines = pages
-    .flatMap((page) => page.split('\n'))
-    .map((l) => l.replace(/\s+/g, ' ').trim())
-    .filter(Boolean)
-    .map((l) => (PDF_BOILERPLATE.test(l) || CONTACT_LINE.test(l) ? null : l));
-  const lengths = lines.flatMap((l) => (l ? [l.length] : [])).sort((a, b) => a - b);
+  // Keep page breaks so a footnote only runs to the end of its page
+  const lines: (string | null)[] = [];
+  let inFootnote = false;
+  for (const page of pages) {
+    for (const raw of page.split('\n')) {
+      const l = raw.replace(/\s+/g, ' ').trim();
+      if (!l) continue;
+      if (FOOTNOTE_START.test(l)) inFootnote = true;
+      if (inFootnote) continue;
+      lines.push(PDF_BOILERPLATE.test(l) || CONTACT_LINE.test(l) ? null : l);
+    }
+    inFootnote = false;
+    lines.push(PAGE_BREAK);
+  }
+  const lengths = lines.flatMap((l) => (l && l !== PAGE_BREAK ? [l.length] : [])).sort((a, b) => a - b);
   const typical = lengths[Math.floor(lengths.length * 0.8)] || 80;
 
   const paragraphs: string[] = [];
   let current = '';
   let prev = '';
   for (const raw of lines) {
+    if (raw === PAGE_BREAK) continue;
     if (raw === null) {
       if (current) paragraphs.push(current);
       current = '';
@@ -105,18 +125,51 @@ function pdfLinesToText(pages: string[]): string {
     prev = raw;
   }
   if (current) paragraphs.push(current);
-  // Drop footnotes ("1 The review followed...") and footnote markers glued to
-  // words or closing quotes, e.g. ("ECF").1
-  return paragraphs
-    .filter((p) => !/^\d{1,2} [A-Z]/.test(p))
-    .map((p) => p.replace(/([a-z)”"’])\.(\d{1,2})(?=\s|$)/g, '$1.')).join('\n');
+  // Drop footnote markers glued to words or closing quotes, e.g. ("ECF").1 or
+  // website.! from OCR
+  return paragraphs.map((p) => p.replace(/([a-z)”"’])\.(?:\d{1,2}|[!¹²³])(?=\s|$)/g, '$1.')).join('\n');
 }
 
-// Plain text of a PDF document, as paragraphs
-export async function extractPdfText(data: Uint8Array): Promise<string> {
+// Scanned PDFs have no text layer. Their pages are read with Tesseract OCR,
+// using the English data bundled in @tesseract.js-data/eng (no download).
+const OCR_MAX_PAGES = 4;
+const require = createRequire(import.meta.url);
+const OCR_LANG_PATH = path.join(path.dirname(require.resolve('@tesseract.js-data/eng/package.json')), '4.0.0_best_int');
+
+async function ocrPdfPages(pdf: Awaited<ReturnType<typeof getDocumentProxy>>): Promise<string[]> {
+  const { createWorker } = (await import('tesseract.js')).default;
+  const worker = await createWorker('eng', 1, { langPath: OCR_LANG_PATH, cacheMethod: 'none', gzip: true });
+  try {
+    const pages: string[] = [];
+    for (let p = 1; p <= Math.min(pdf.numPages, OCR_MAX_PAGES); p++) {
+      // A scanned page is one full-page image; take the largest
+      const images = await extractImages(pdf, p);
+      const img = images.sort((a, b) => b.width * b.height - a.width * a.height)[0];
+      if (!img) continue;
+      // Grayscale PGM, which Tesseract reads directly
+      const gray = new Uint8Array(img.width * img.height);
+      for (let i = 0, j = 0; i < gray.length; i++, j += img.channels) {
+        gray[i] = img.channels >= 3 ? (img.data[j] * 299 + img.data[j + 1] * 587 + img.data[j + 2] * 114) / 1000 : img.data[j];
+      }
+      const pgm = Buffer.concat([Buffer.from(`P5\n${img.width} ${img.height}\n255\n`), Buffer.from(gray)]);
+      pages.push((await worker.recognize(pgm)).data.text);
+    }
+    return pages;
+  } finally {
+    await worker.terminate();
+  }
+}
+
+// Plain text of a PDF document, as paragraphs. Falls back to OCR when the PDF
+// has no text layer.
+export async function extractPdfText(data: Uint8Array): Promise<{ text: string; ocr: boolean }> {
   const pdf = await getDocumentProxy(data);
   const { text } = await extractText(pdf, { mergePages: false });
-  return pdfLinesToText(text as string[]);
+  const pages = text as string[];
+  if (pages.join('').trim().length >= 200) {
+    return { text: pdfLinesToText(pages), ocr: false };
+  }
+  return { text: pdfLinesToText(await ocrPdfPages(pdf)), ocr: true };
 }
 
 const STOP = new Set(

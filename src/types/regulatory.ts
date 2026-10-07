@@ -35,6 +35,8 @@ export interface KeyPoints {
   refs: string[];
   sourceUrl?: string;
   method: 'extractive';
+  // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
+  ocr?: boolean;
 }
 
 export interface RegulatoryNotice {
@@ -58,7 +60,7 @@ export interface RegulatoryNotice {
     type: 'deadline' | 'immediate' | 'action' | 'standard';
   };
   summary?: string;
-  // Sentences quoted from the source document (extractive, no AI model)
+  // Sentences quoted from the source document (extractive, selected by TextRank)
   keyPoints?: KeyPoints;
   tags: string[];
   sector: SectorDomain;

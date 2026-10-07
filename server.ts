@@ -688,28 +688,29 @@ const BRDR_PAGE = /^https:\/\/brdr\.hkma\.gov\.hk\//;
 const BRDR_PDF_LINK = /href="(\/eng\/doc-ldg\/docId\/getPdf\/[^"]+\.pdf)"/i;
 const MAX_PDF_BYTES = 15 * 1024 * 1024;
 
-async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; pdfUrl: string }> {
+async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; ocr: boolean; pdfUrl: string }> {
   const page = await (await fetchOrThrow(pageUrl)).text();
   const href = page.match(BRDR_PDF_LINK)?.[1];
   if (!href) throw new Error('No PDF link on BRDR page');
   const pdfUrl = new URL(href, pageUrl).toString();
   const data = new Uint8Array(await (await fetchOrThrow(pdfUrl)).arrayBuffer());
   if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
-  return { text: await extractPdfText(data), pdfUrl };
+  return { ...(await extractPdfText(data)), pdfUrl };
 }
 
 async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null> {
   if (keyPointsCache.has(notice.id)) return keyPointsCache.get(notice.id)!;
   try {
     let text: string;
+    let ocr = false;
     let sourceUrl = notice.dossierUrl!;
     if (BRDR_PAGE.test(sourceUrl)) {
-      ({ text, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
+      ({ text, ocr, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
     } else {
       const res = await fetchOrThrow(sourceUrl);
       text = extractArticleText(await res.text(), sourceUrl);
     }
-    const result = text.length > 200 ? summarize(text, { sourceUrl }) : null;
+    const result = text.length > 200 ? { ...summarize(text, { sourceUrl }), ...(ocr ? { ocr } : {}) } : null;
     keyPointsCache.set(notice.id, result);
     return result;
   } catch (err: any) {

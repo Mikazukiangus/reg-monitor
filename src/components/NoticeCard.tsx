@@ -174,6 +174,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             <div className="flex items-center gap-1.5 text-[#0D5C63] font-['Inter'] text-[12px] font-bold">
               <span className="material-symbols-outlined text-base text-[#0D5C63]">format_quote</span>
               <span>Key points, quoted from source</span>
+              {notice.keyPoints.ocr && (
+                <span
+                  className="px-1.5 py-0.5 rounded bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] font-['JetBrains_Mono'] text-[9px] font-bold"
+                  title="This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors."
+                >
+                  OCR · check wording
+                </span>
+              )}
             </div>
             {notice.keyPoints.sourceUrl && (
               <a

@@ -199,6 +199,16 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** 4 of the 6 current HKMA circulars and consultations got key points quoted from their PDFs. The other 2 (GS-2 Transition Planning; Phase 2B taxonomy consultation) are scanned PDFs with no text, so they keep the "No text could be extracted" note. OCR was not added, as it is too heavy for a serverless function.
 * **Verified in production:** BRDR is reachable from Vercel (unlike `api.hkma.gov.hk`, despite a similar Alibaba Cloud WAF). After deploy, the same 4 of 6 documents had key points from their PDFs, and all four HKMA sources succeeded.
 
+### Request 13: OCR for Scanned HKMA PDFs (Claude Code, 2026-10-07)
+* **Instruction:** "add OCR for the scanned HKMA PDFs".
+* **Changes:**
+  1. `extractPdfText()` falls back to OCR when a PDF has no text layer (under 200 characters). Each page's scan (one full-page image) is taken with `unpdf`'s `extractImages`, converted to a grayscale PGM in memory, and read by `tesseract.js` with the English data bundled from `@tesseract.js-data/eng` (no runtime download). At most 4 pages per document.
+  2. Footnote handling: a footnote line ("1 The review…", or "! Prototype…" where OCR misreads the superscript) and its continuation lines are skipped to the end of the page; dates like "7 September 2026" are not treated as footnotes.
+  3. OCR'd key points carry `ocr: true` and are labelled "OCR · check wording" on the card and in the dossier, because recognition can misread characters (e.g. "AIs" read as "Als").
+  4. Wording corrected: Tesseract's recogniser is a neural network, so the site no longer says "No AI model". It now says sentences are selected by TextRank (not an AI model), with no external API.
+  5. `vercel.json`: `includeFiles` lists the Tesseract worker, WebAssembly core, language data and their dependencies (loaded by path, so not traced automatically); `maxDuration` raised to 120s.
+* **Verified locally:** all 6 HKMA circulars and consultations have key points; the 2 scanned ones (GS-2 Transition Planning, Phase 2B taxonomy consultation) via OCR, at about 1.3s per page. OCR also surfaced deadlines: GS-2 documentation "in place by 1 July 2030" and the consultation "will last until 7 October 2026". A cold sync took about 9s.
+
 ---
 
 ## 3. Key Files & Modifications Summary

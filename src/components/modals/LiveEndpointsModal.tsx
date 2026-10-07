@@ -326,11 +326,11 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                     Key Points (extractive)
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-[#E6F4F4] text-[#0D5C63] border border-[#B2DFDB] px-2 py-0.5 rounded">
-                    TextRank • No AI model • No external API
+                    TextRank • OCR for scanned PDFs • No external API
                   </span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-[#857F74] leading-relaxed">
-                  The server fetches each source document, extracts the article text (or the text layer of a PDF, for HKMA circulars and consultations) and ranks its sentences with TextRank. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
+                  The server fetches each source document, extracts the article text (or the text layer of a PDF, for HKMA circulars and consultations) and ranks its sentences with TextRank. Scanned PDFs are first read with Tesseract OCR on the server; those key points are labelled OCR because recognition can misread characters. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
                 </p>
               </div>
             </div>

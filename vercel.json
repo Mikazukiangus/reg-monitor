@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
   "functions": {
-    "api/index.ts": { "maxDuration": 60 }
+    "api/index.ts": {
+      "maxDuration": 120,
+      "includeFiles": "{node_modules/tesseract.js/**,node_modules/tesseract.js-core/**,node_modules/@tesseract.js-data/eng/**,node_modules/bmp-js/**,node_modules/idb-keyval/**,node_modules/is-url/**,node_modules/node-fetch/**,node_modules/whatwg-url/**,node_modules/tr46/**,node_modules/webidl-conversions/**,node_modules/regenerator-runtime/**,node_modules/wasm-feature-detect/**,node_modules/zlibjs/**}"
+    }
   }
 }
