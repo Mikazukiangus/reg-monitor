@@ -211,6 +211,10 @@ This document records the full chronological instructions, technical requirement
 * **Deploy:** the first deploy was rejected because `includeFiles` is limited to 256 characters; it now uses one `node_modules/{...}/**` pattern.
 * **Verified in production:** OCR works on Vercel; both scanned documents had key points and deadlines (2030-07-01, 2026-10-07). A cold sync took about 32s. In the same check the HKMA press release RSS timed out once (unrelated to OCR; failed sources retry after 10 minutes). The function runs in `iad1` (US East).
 
+### Request 14: Function Region Moved to Hong Kong (Claude Code, 2026-10-07)
+* **Instruction:** "yes, move the function to hkg1".
+* **Change:** `vercel.json` sets `"regions": ["hkg1"]`, so the API function runs in Vercel's Hong Kong region instead of `iad1` (US East), next to the HKMA, MAS and BIS-in-Asia sources it reads most.
+
 ---
 
 ## 3. Key Files & Modifications Summary
