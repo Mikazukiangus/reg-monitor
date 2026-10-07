@@ -1,0 +1,39 @@
+# Saves the latest HKMA daily interbank liquidity figures to
+# data/hkma-liquidity.json. The HKMA Open API blocks Vercel's servers, so the
+# site reads this snapshot instead. A new commit redeploys the site.
+name: HKMA liquidity snapshot
+
+on:
+  schedule:
+    # 09:30 and 18:30 Hong Kong time
+    - cron: '30 1 * * *'
+    - cron: '30 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hkma-liquidity
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/fetch-hkma-liquidity.mjs
+      - name: Commit new figures
+        run: |
+          if git diff --quiet -- data/hkma-liquidity.json && git ls-files --error-unmatch data/hkma-liquidity.json >/dev/null 2>&1; then
+            echo "No change"; exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/hkma-liquidity.json
+          git commit -m "Update HKMA liquidity snapshot ($(jq -r .record.end_of_date data/hkma-liquidity.json))"
+          git push
