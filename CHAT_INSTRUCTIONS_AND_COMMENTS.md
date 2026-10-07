@@ -277,6 +277,7 @@ This document records the full chronological instructions, technical requirement
 * **Duplicates:** an SFC release listed in both the press-release and consultation feeds appeared twice. Notices are now kept once per document link (`dedupeByDocument` in `src/lib/dedupe.ts`), preferring the consultation copy and keeping key points from either; applied to the feed, the digest and history search.
 * **Closing date:** "The public consultation ... will last until 7 October 2026" (HKMA) was shown as "Date in source". The closing-date finder now also recognises "lasts until", "will run/remain open until" and "is/remains open until".
 * **Verified locally:** a live sync has no repeated document links; the SFC notice appears once as a consultation and the HKMA taxonomy consultation shows "Comments close: 2026-10-07". 52 tests pass.
+* **Merged (2026-10-07):** the user said "merge into main". On production: 19 sources, 63 notices, no repeated document links; SFC 26PR161 appears once and the HKMA taxonomy consultation shows "Comments close: 2026-10-07".
 
 ---
 
