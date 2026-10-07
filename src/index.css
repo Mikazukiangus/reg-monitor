@@ -1,44 +1,50 @@
 @import "tailwindcss";
 
+/* Wada Sanzo "Porcelain & Prussian": Prussian blue on porcelain green, with
+   Venetian red, ochre and cobalt green for status. Each colour is a variable,
+   so the dark theme below only has to redefine the variables. */
 @theme {
-  --color-surface: #EEF3EF;
-  --color-surface-dim: #E8EFEA;
-  --color-surface-bright: #FBFCFA;
-  --color-surface-container-lowest: #FBFCFA;
-  --color-surface-container-low: #E3EBE6;
-  --color-surface-container: #D9E3DD;
-  --color-surface-container-high: #DCE4DF;
-  --color-surface-container-highest: #CFDAD3;
-  --color-surface-panel: #FBFCFA;
-  --color-surface-panel-elevated: #F4F7F4;
-  --color-border-subtle: #D3DDD7;
-  --color-border-strong: #C5D2CA;
-  
-  /* Wada Sanzo "Porcelain & Prussian": Prussian blue accent on porcelain green */
-  --color-primary: #1F4E79;
-  --color-primary-container: #1F4E79;
-  --color-secondary-container: #163A5C;
-  --color-on-primary-container: #FFFFFF;
-  --color-secondary: #56636B;
-  --color-tertiary: #2F6249;
+  --color-page: #EEF3EF;
+  --color-panel: #FBFCFA;
+  --color-panel-raised: #F4F7F4;
+  --color-wash: #E3EBE6;
+  --color-wash-mid: #D9E3DD;
+  --color-wash-strong: #DCE4DF;
+  --color-line: #D3DDD7;
+  --color-line-strong: #C5D2CA;
+  --color-line-dim: #A9B6AE;
 
-  /* Semantic status colours: cobalt green, Prussian blue, Venetian red, violet */
-  --color-status-in-force: #2F6249;
-  --color-status-in-force-bg: #D7E9DD;
-  --color-status-pending: #1F4E79;
-  --color-status-pending-bg: #D9E5EE;
-  --color-status-enforcement: #A8432F;
-  --color-status-enforcement-bg: #F4DCD3;
-  --color-status-consultation: #4E4560;
-  --color-status-consultation-bg: #E4E1EA;
+  --color-ink: #1D2630;
+  --color-ink-soft: #3C4852;
+  --color-muted: #56636B;
+  --color-on-accent: #FFFFFF;
 
-  /* Typography Colors */
-  --color-text-primary: #1D2630;
-  --color-text-secondary: #3C4852;
-  --color-text-muted: #56636B;
-  --color-on-surface: #1D2630;
-  --color-on-surface-variant: #3C4852;
-  --color-error: #A8432F;
+  --color-prussian: #1F4E79;
+  --color-prussian-deep: #163A5C;
+  --color-prussian-tint: #D9E5EE;
+  --color-prussian-line: #B3C8D9;
+
+  --color-venetian: #A8432F;
+  --color-venetian-deep: #8A3524;
+  --color-venetian-wash: #F8E8E2;
+  --color-venetian-tint: #F4DCD3;
+  --color-venetian-line: #E2B5A6;
+  --color-venetian-line-soft: #ECC6B9;
+
+  --color-ochre: #6E5410;
+  --color-ochre-mid: #A8862A;
+  --color-ochre-line: #DCC68A;
+  --color-ochre-tint: #F3E8C6;
+  --color-ochre-wash: #F8F1DC;
+
+  --color-cobalt: #2F6249;
+  --color-cobalt-tint: #D7E9DD;
+  --color-cobalt-line: #ABCDB7;
+  --color-cobalt-line-soft: #C3DECB;
+  --color-cobalt-wash: #EAF3ED;
+
+  --color-scroll: #CFDAD3;
+  --color-scroll-hover: #B8C6BD;
 
   --font-headline-xl: "Hanken Grotesk", sans-serif;
   --font-headline-lg: "Hanken Grotesk", sans-serif;
@@ -52,10 +58,57 @@
   --font-metadata-badge: "JetBrains Mono", monospace;
 }
 
+/* Dark theme: set on <html> by the script in index.html (following the
+   device setting unless the visitor picked one) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-page: #121A1F;
+  --color-panel: #18222A;
+  --color-panel-raised: #1D2831;
+  --color-wash: #22303A;
+  --color-wash-mid: #273642;
+  --color-wash-strong: #2A3944;
+  --color-line: #2E3D48;
+  --color-line-strong: #3A4B57;
+  --color-line-dim: #536571;
+
+  --color-ink: #E4ECE7;
+  --color-ink-soft: #C3CFC9;
+  --color-muted: #9AA9A3;
+  --color-on-accent: #0F1620;
+
+  --color-prussian: #8DB7E2;
+  --color-prussian-deep: #B4D0EC;
+  --color-prussian-tint: #1E3448;
+  --color-prussian-line: #34506A;
+
+  --color-venetian: #E8937D;
+  --color-venetian-deep: #F0AA96;
+  --color-venetian-wash: #2C1F1B;
+  --color-venetian-tint: #3A2520;
+  --color-venetian-line: #6A3A2E;
+  --color-venetian-line-soft: #553028;
+
+  --color-ochre: #E0C46E;
+  --color-ochre-mid: #D9B65A;
+  --color-ochre-line: #6A5622;
+  --color-ochre-tint: #4A3D16;
+  --color-ochre-wash: #28230F;
+
+  --color-cobalt: #86C9A2;
+  --color-cobalt-tint: #1C3328;
+  --color-cobalt-line: #2F5A43;
+  --color-cobalt-line-soft: #284A38;
+  --color-cobalt-wash: #1A2B23;
+
+  --color-scroll: #3A4B57;
+  --color-scroll-hover: #536571;
+}
+
 @layer base {
   body {
-    background-color: #EEF3EF;
-    color: #1D2630;
+    background-color: var(--color-page);
+    color: var(--color-ink);
     font-family: "Inter", sans-serif;
   }
 }
@@ -66,14 +119,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #EEF3EF;
+  background: var(--color-page);
 }
 ::-webkit-scrollbar-thumb {
-  background: #CFDAD3;
+  background: var(--color-scroll);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B8C6BD;
+  background: var(--color-scroll-hover);
 }
 
 .material-symbols-outlined {
@@ -91,3 +144,16 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* A visible outline for keyboard focus (mouse clicks don't show it) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-prussian);
+    outline-offset: 2px;
+  }
+}
+
+
+/* Set briefly while the theme changes (see ThemeToggle.tsx) */
+.theme-switching * {
+  transition: none !important;
+}

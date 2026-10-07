@@ -52,19 +52,19 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   variant = 'rail'
 }) => {
   return (
-    <aside className={variant === 'rail' ? 'hidden lg:flex lg:col-span-3 flex-col gap-3' : 'flex flex-col gap-3'}>
+    <aside aria-label="Filters" className={variant === 'rail' ? 'hidden lg:flex lg:col-span-3 flex-col gap-3' : 'flex flex-col gap-3'}>
       {/* Filters & Facets Panel */}
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
-        <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#D3DDD7]">
+      <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
+        <div className="flex items-center justify-between mb-3 pb-2 border-b border-line">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[#1F4E79] text-base">filter_alt</span>
-            <span className="font-['Hanken_Grotesk'] text-[16px] text-[#1D2630] font-bold">
+            <span className="material-symbols-outlined text-prussian text-base" aria-hidden="true">filter_alt</span>
+            <span className="font-['Hanken_Grotesk'] text-[16px] text-ink font-bold">
               Filters &amp; Facets
             </span>
           </div>
           <button
             onClick={onResetFilters}
-            className="font-['Inter'] text-[11px] font-semibold text-[#56636B] hover:text-[#1D2630] transition-colors"
+            className="font-['Inter'] text-[11px] font-semibold text-muted hover:text-ink transition-colors"
             id="reset-filters"
           >
             Reset
@@ -74,7 +74,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="space-y-4">
           {/* Urgency Severity */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-muted block mb-1.5">
               Urgency Severity
             </span>
             <div className="grid grid-cols-3 gap-1.5">
@@ -83,11 +83,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('critical')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('critical')
-                    ? 'bg-[#F4DCD3] border-[#E2B5A6] text-[#A8432F] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
+                    ? 'bg-venetian-tint border-venetian-line text-venetian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A8432F]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-venetian"></span>
                 Critical ({severityCounts.critical})
               </button>
 
@@ -96,11 +96,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('high')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('high')
-                    ? 'bg-[#D9E5EE] border-[#B3C8D9] text-[#1F4E79] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
+                    ? 'bg-prussian-tint border-prussian-line text-prussian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1F4E79]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-prussian"></span>
                 High ({severityCounts.high})
               </button>
 
@@ -109,11 +109,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('info')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('info')
-                    ? 'bg-[#DCE4DF] border-[#C5D2CA] text-[#1D2630] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
+                    ? 'bg-wash-strong border-line-strong text-ink shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#56636B]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-muted"></span>
                 Info ({severityCounts.info})
               </button>
             </div>
@@ -121,30 +121,30 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Primary Jurisdiction */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-muted block mb-1.5">
               Primary Jurisdiction
             </span>
             <div className="space-y-1">
               {JURISDICTION_OPTIONS.map(({ code, label, note }) => (
                 <label
                   key={code}
-                  className="flex items-center justify-between gap-2 p-1.5 min-h-[40px] lg:min-h-0 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors"
+                  className="flex items-center justify-between gap-2 p-1.5 min-h-[40px] lg:min-h-0 rounded hover:bg-panel-raised cursor-pointer transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <input
                       type="checkbox"
                       checked={selectedJurisdictions[code]}
                       onChange={() => onToggleJurisdiction(code)}
-                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
+                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
                     />
                     <span className="flex flex-col min-w-0">
-                      <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions[code] ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
+                      <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions[code] ? 'text-ink font-medium' : 'text-ink-soft'}`}>
                         {label}
                       </span>
-                      {note && <span className="font-['Inter'] text-[11px] text-[#56636B]">{note}</span>}
+                      {note && <span className="font-['Inter'] text-[11px] text-muted">{note}</span>}
                     </span>
                   </div>
-                  <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7] shrink-0">
+                  <span className="font-['JetBrains_Mono'] text-[11px] text-muted bg-wash px-1.5 py-0.5 rounded border border-line shrink-0">
                     {jurisdictionCounts[code]}
                   </span>
                 </label>
@@ -154,7 +154,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Sector / Domain */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-muted block mb-1.5">
               Sector / Domain
             </span>
             <div className="space-y-1">
@@ -169,17 +169,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               ).map((sector) => (
                 <label
                   key={sector}
-                  className="flex items-center gap-2 p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors"
+                  className="flex items-center gap-2 p-1.5 rounded hover:bg-panel-raised cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedSectors[sector]}
                     onChange={() => onToggleSector(sector)}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
+                    className="w-3.5 h-3.5 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
                   />
                   <span
                     className={`font-['Inter'] text-[12px] ${
-                      selectedSectors[sector] ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'
+                      selectedSectors[sector] ? 'text-ink font-medium' : 'text-ink-soft'
                     }`}
                   >
                     {sector}
@@ -191,7 +191,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Instrument Format */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-muted block mb-1.5">
               Instrument Format
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -200,8 +200,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Circulars' ? null : 'Circulars')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Circulars'
-                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#1D2630]'
+                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink'
                 }`}
               >
                 Circulars ({formatCounts.Circulars || 0})
@@ -212,8 +212,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Consultations' ? null : 'Consultations')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Consultations'
-                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#1D2630]'
+                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink'
                 }`}
               >
                 Consultations ({formatCounts.Consultations || 0})
@@ -224,8 +224,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Enforcement' ? null : 'Enforcement')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Enforcement'
-                    ? 'bg-[#A8432F] text-white border-[#A8432F] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#A8432F]'
+                    ? 'bg-venetian text-on-accent border-venetian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-venetian'
                 }`}
               >
                 Enforcement ({formatCounts.Enforcement || 0})
@@ -236,8 +236,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Guidelines' ? null : 'Guidelines')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Guidelines'
-                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
-                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
+                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
                 Guidelines ({formatCounts.Guidelines || 0})
@@ -248,34 +248,34 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Jurisdiction Mesh Card */}
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+      <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-1">
-          <span className="font-['Inter'] text-[13px] font-bold text-[#1D2630]">
+          <span className="font-['Inter'] text-[13px] font-bold text-ink">
             Jurisdiction Mesh
           </span>
           <button
             onClick={onPingEndpoints}
             disabled={isPinging}
-            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#1F4E79] hover:underline font-semibold disabled:opacity-60"
+            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-prussian hover:underline font-semibold disabled:opacity-60"
             title="Re-check the monitored endpoints"
           >
-            <span className={`w-1.5 h-1.5 rounded-full bg-[#1F4E79] ${isPinging ? 'animate-ping' : ''}`}></span>
+            <span className={`w-1.5 h-1.5 rounded-full bg-prussian ${isPinging ? 'animate-ping' : ''}`}></span>
             {isPinging ? 'Checking...' : 'Check Now'}
           </button>
         </div>
-        <p className="font-['Inter'] text-[12px] text-[#56636B] mb-2.5">
+        <p className="font-['Inter'] text-[12px] text-muted mb-2.5">
           Response time from the RegSonar server to each monitored source.
         </p>
 
         <div className="space-y-2">
           {endpoints.map((ep) => (
             <div key={ep.id} className="flex items-center justify-between text-[12px]" title={ep.detail}>
-              <span className="text-[#3C4852] font-['Inter']">{ep.agency}</span>
+              <span className="text-ink-soft font-['Inter']">{ep.agency}</span>
               <span className={`font-['JetBrains_Mono'] text-[11px] font-semibold flex items-center gap-1 ${STATUS_STYLES[ep.status].text}`}>
                 {ep.pingMs !== null && (
                   <>
                     <span>{ep.pingMs}ms</span>
-                    <span className="text-[#56636B]">•</span>
+                    <span className="text-muted">•</span>
                   </>
                 )}
                 <span>{ep.status}</span>

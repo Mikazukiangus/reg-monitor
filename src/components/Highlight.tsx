@@ -11,7 +11,7 @@ export const Highlight: React.FC<{ text: string; terms?: string[] }> = ({ text, 
     <>
       {parts.map((part, i) =>
         i % 2 === 1 ? (
-          <mark key={i} className="bg-[#F3E8C6] text-inherit rounded-sm px-0.5">
+          <mark key={i} className="bg-ochre-tint text-inherit rounded-sm px-0.5">
             {part}
           </mark>
         ) : (

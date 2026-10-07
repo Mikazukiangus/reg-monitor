@@ -258,6 +258,19 @@ This document records the full chronological instructions, technical requirement
 * **Merged:** the user said "merge into main". On production all 14 sources were OK (46 notices), including SFC 10, ASIC 4 and JFSA 2, each with key points, so all three sources can be reached from Vercel's hkg1 region. The manifest, service worker and icons are served, and `/api/digest` reports it is off until `CRON_SECRET` is set.
 * **Digest confirmed (2026-10-07):** the user added `RESEND_API_KEY`, `DIGEST_TO` and `CRON_SECRET` in Vercel, ran the cron job from the Vercel dashboard, and received the email.
 
+### Request 20: History, More Sources, Closing Dates, Tests, Dark Mode and Accessibility (Claude Code, 2026-10-07)
+* **Instruction:** "suggest more site improvements", then "build 1, 2, 3, 6, 7, 9, 10, 11, 12". The user chose Neon Postgres for the history and "saved per browser only" for alert rules. Built on the branch `improvements-round-3`.
+* **1. Notice history:** `db.ts` saves every notice read (with key points) to Postgres when `DATABASE_URL` is set. The feed adds notices from the last 30 days that have left the live feeds, marked "From history"; search covers the whole history (`GET /api/notices/search`, Postgres full-text search). Without a database the site works as before. Needs a Neon database added in the Vercel project's Storage tab.
+* **2. More sources:** HKEX regulatory announcements (RSS), MAS consultations and MAS circulars & guidelines (same MAS search service), ESMA news (RSS) and FSB publications (RSS). IOSCO (refuses automated requests), EBA (feed only has e-mail bulletins) and APRA (feed only has statistics) were left out. **Bug fixed:** MAS times are Singapore time marked as UTC and were 8 hours off; they are now converted.
+* **3. Comment deadlines beyond the US:** MAS's own closing-date field, otherwise a sentence in the document that says when comments are due ("Comments close"); past dates show "Comments closed".
+* **6. Tests:** 51 tests (`npm test`) run each source's reader against saved real responses in `tests/fixtures`, plus the closing-date finder, rule matching, consultation links, calendar export, link state and digest date. GitHub Actions runs type check, tests and build on every push.
+* **7. Saved rules:** Alert Rules tab rules are saved in this browser (localStorage), with delete and reset. The email digest still uses `digest-rules.ts`.
+* **9. Consultation links:** consultations and their conclusions from the same regulator are linked when the titles share most topic words, labelled "matched by title".
+* **10. Search:** every word must match the start of a word in the title, reference, regulator, tags, summary or key points; matches are highlighted.
+* **11. Dark mode:** about 1,000 fixed colours were replaced by 32 named theme colours (`src/index.css`), with a dark palette in the same Porcelain & Prussian family. A header button cycles through follows device, light and dark; the choice is kept in this browser and applied before the page draws.
+* **12. Accessibility:** checked with axe on every tab, in both themes, and in every window. Fixed: clickable cards, deadlines and notifications are now buttons; every field has a label; windows take focus, keep Tab inside, close with Escape and return focus; a skip link and a page heading were added; keyboard focus shows an outline; icon text is hidden from screen readers and icon-only buttons have names; an inline link is underlined. After the fixes axe reports no violations.
+* **Verified locally:** with an in-memory Postgres (`DATABASE_URL=pglite`) the history stored 513 notices back to April 2024 and search works; all 19 sources load (FCA 403 locally as before). `tsc --noEmit`, 51 tests and `vite build` pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary

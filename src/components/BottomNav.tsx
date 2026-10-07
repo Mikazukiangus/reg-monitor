@@ -18,7 +18,7 @@ interface BottomNavProps {
 export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) => (
   <nav
     aria-label="Sections"
-    className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FBFCFA]/95 backdrop-blur-md border-t border-[#D3DDD7] pb-[env(safe-area-inset-bottom)]"
+    className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-panel/95 backdrop-blur-md border-t border-line pb-[env(safe-area-inset-bottom)]"
   >
     <div className="grid grid-cols-5">
       {TABS.map(tab => {
@@ -29,10 +29,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
             onClick={() => onTabChange(tab.id)}
             aria-current={active ? 'page' : undefined}
             className={`h-14 flex flex-col items-center justify-center gap-0.5 font-['Inter'] text-[10px] font-semibold transition-colors ${
-              active ? 'text-[#1F4E79]' : 'text-[#56636B] hover:text-[#1D2630]'
+              active ? 'text-prussian' : 'text-muted hover:text-ink'
             }`}
           >
-            <span className={`material-symbols-outlined text-[22px] ${active ? 'bg-[#D9E5EE] rounded-full px-3' : 'px-3'}`}>
+            <span className={`material-symbols-outlined text-[22px] ${active ? 'bg-prussian-tint rounded-full px-3' : 'px-3'}`} aria-hidden="true">
               {tab.icon}
             </span>
             {tab.label}

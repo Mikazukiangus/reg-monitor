@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { BottomNav } from './components/BottomNav';
 import { NextUpStrip } from './components/NextUpStrip';
 import { searchTerms } from './components/Highlight';
+import { useDialog } from './components/useDialog';
 
 // Screens
 import { RadarScreen } from './components/screens/RadarScreen';
@@ -142,6 +143,8 @@ export default function App() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
   const [infoModal, setInfoModal] = useState<{ title: string; body: string } | null>(null);
+  const infoDialogRef = useDialog<HTMLDivElement>(!!infoModal, () => setInfoModal(null));
+  const filterDrawerRef = useDialog<HTMLDivElement>(isFilterDrawerOpen, () => setIsFilterDrawerOpen(false));
 
   // Toggle Filters
   const handleToggleSeverity = (sev: UrgencySeverity) => {
@@ -524,8 +527,14 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#EEF3EF] font-['Inter'] text-[#1D2630] antialiased min-h-screen flex flex-col pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
+    <div className="bg-page font-['Inter'] text-ink antialiased min-h-screen flex flex-col pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
       {/* Fixed Top Header */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:rounded focus:bg-prussian focus:text-on-accent font-['Inter'] text-[13px] font-semibold"
+      >
+        Skip to the notices
+      </a>
       <Header
         searchQuery={searchQuery}
         onSearchChange={(value) => {
@@ -557,7 +566,7 @@ export default function App() {
       />
 
       {/* Main Content Viewport */}
-      <main className="w-full pt-[88px] md:pt-32 bg-[#EEF3EF] min-h-screen flex-1 flex flex-col">
+      <main id="main" tabIndex={-1} className="focus:outline-none w-full pt-[88px] md:pt-32 bg-page min-h-screen flex-1 flex flex-col">
         {activeTab === 'feed' && (
           <div className="flex flex-col w-full">
             {/* Executive KPI Ribbon */}
@@ -587,7 +596,8 @@ export default function App() {
                 <FilterSidebar {...filterSidebarProps} />
 
                 {/* Center Feed (6 cols): Active Notices Feed */}
-                <section className="lg:col-span-6 flex flex-col gap-3 min-w-0">
+                <section aria-labelledby="feed-heading" className="lg:col-span-6 flex flex-col gap-3 min-w-0">
+                  <h2 id="feed-heading" className="sr-only">Notices</h2>
                   <NextUpStrip
                     nextDeadline={deadlines[0]}
                     liquidity={liquidityNotice}
@@ -595,21 +605,21 @@ export default function App() {
                   />
 
                   {/* Live Feeds Connected Status Strip */}
-                  <div className="bg-[#FBFCFA] border border-[#D3DDD7] px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
+                  <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-2 h-2 rounded-full bg-[#2F6249] animate-pulse"></span>
-                      <span className="font-['JetBrains_Mono'] font-bold text-[#1D2630]">
+                      <span className="w-2 h-2 rounded-full bg-cobalt animate-pulse"></span>
+                      <span className="font-['JetBrains_Mono'] font-bold text-ink">
                         Automated Feed Ingestion
                       </span>
-                      <span className="text-[#56636B] hidden sm:inline">•</span>
-                      <span className="text-[#56636B] hidden sm:inline">
+                      <span className="text-muted hidden sm:inline">•</span>
+                      <span className="text-muted hidden sm:inline">
                         {ingestingSources.length > 0 ? ingestingSources.join(', ') : 'Waiting for first sync'}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span
-                        className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]"
+                        className="font-['JetBrains_Mono'] text-[10px] text-muted"
                         title={lastSyncAt ? `The server built this data at ${new Date(lastSyncAt).toLocaleString()}` : undefined}
                       >
                         {lastSyncAt ? `Data as of ${lastSyncTime}` : lastSyncTime}
@@ -617,18 +627,18 @@ export default function App() {
                       </span>
                       <button
                         onClick={() => setIsEndpointsModalOpen(true)}
-                        className="text-[#1F4E79] hover:text-[#163A5C] font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
+                        className="text-prussian hover:text-prussian-deep font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
                       >
                         <span>Endpoints Gateway</span>
-                        <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                        <span className="material-symbols-outlined text-[13px]" aria-hidden="true">open_in_new</span>
                       </button>
                     </div>
                   </div>
 
                   {/* Offline: the notices are the copy saved on this device */}
                   {hasSynced && (isOffline || savedCopyAt) && (
-                    <div role="status" className="bg-[#F8F1DC] border border-[#DCC68A] px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-[#6E5410]">
-                      <span className="material-symbols-outlined text-[16px]">cloud_off</span>
+                    <div role="status" className="bg-ochre-wash border border-ochre-line px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-ochre">
+                      <span className="material-symbols-outlined text-[16px]" aria-hidden="true">cloud_off</span>
                       <span>
                         {isOffline ? "You're offline. " : 'The feed server could not be reached. '}
                         Showing the notices saved on this device (data as of {lastSyncTime}); they refresh when the connection is back.
@@ -638,17 +648,17 @@ export default function App() {
 
                   {/* New since the last visit in this browser */}
                   {previousVisit && hasSynced && (
-                    <div className="bg-[#FBFCFA] border border-[#D3DDD7] px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] shadow-2xs">
-                      <span className="text-[#3C4852]">
+                    <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] shadow-2xs">
+                      <span className="text-ink-soft">
                         {newCount > 0 ? (
                           <>
-                            <strong className="text-[#1F4E79]">{newCount} new</strong> since your last visit
+                            <strong className="text-prussian">{newCount} new</strong> since your last visit
                           </>
                         ) : (
                           'Nothing new since your last visit'
                         )}
                         {previousVisit.at && (
-                          <span className="text-[#56636B]">
+                          <span className="text-muted">
                             {' '}({new Date(previousVisit.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })})
                           </span>
                         )}
@@ -661,7 +671,7 @@ export default function App() {
                           }}
                           aria-pressed={onlyNew}
                           className={`min-h-[32px] px-3 rounded font-['Inter'] text-[11px] font-semibold border transition-colors ${
-                            onlyNew ? 'bg-[#1F4E79] text-white border-[#1F4E79]' : 'bg-[#F4F7F4] text-[#1D2630] border-[#D3DDD7] hover:bg-[#E3EBE6]'
+                            onlyNew ? 'bg-prussian text-on-accent border-prussian' : 'bg-panel-raised text-ink border-line hover:bg-wash'
                           }`}
                         >
                           {onlyNew ? 'Show all' : 'Show only new'}
@@ -671,9 +681,9 @@ export default function App() {
                   )}
 
                   {/* Feed Search & Sort Bar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#FBFCFA] border border-[#D3DDD7] p-2.5 rounded-lg shadow-xs">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
-                      <span className="material-symbols-outlined absolute left-3 top-2 text-[#56636B] text-lg pointer-events-none">
+                      <span className="material-symbols-outlined absolute left-3 top-2 text-muted text-lg pointer-events-none" aria-hidden="true">
                         search
                       </span>
                       <input
@@ -684,26 +694,27 @@ export default function App() {
                           setCurrentPage(1);
                         }}
                         placeholder="Filter alerts by legal keyword, citation, act..."
-                        className="w-full h-8 pl-9 pr-3 bg-[#F4F7F4] border border-[#D3DDD7] rounded text-[#1D2630] placeholder:text-[#56636B] font-['Inter'] text-[12px] focus:outline-none focus:bg-[#FBFCFA] focus:border-[#1F4E79] transition-all"
+                        aria-label="Filter the feed"
+                        className="w-full h-8 pl-9 pr-3 bg-panel-raised border border-line rounded text-ink placeholder:text-muted font-['Inter'] text-[12px] focus:outline-none focus:bg-panel focus:border-prussian transition-all"
                       />
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         onClick={() => setIsFilterDrawerOpen(true)}
-                        className="lg:hidden h-9 px-3 flex items-center gap-1 bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[12px] font-semibold rounded"
+                        className="lg:hidden h-9 px-3 flex items-center gap-1 bg-panel-raised border border-line text-ink font-['Inter'] text-[12px] font-semibold rounded"
                       >
-                        <span className="material-symbols-outlined text-base text-[#1F4E79]">filter_alt</span>
+                        <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">filter_alt</span>
                         Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                       </button>
-                      <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] hidden md:inline font-medium">
+                      <span className="font-['JetBrains_Mono'] text-[11px] text-muted hidden md:inline font-medium">
                         Sort:
                       </span>
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
                         aria-label="Sort notices"
-                        className="h-9 lg:h-8 min-w-0 flex-1 sm:flex-none px-2 bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-[#1F4E79] cursor-pointer"
+                        className="h-9 lg:h-8 min-w-0 flex-1 sm:flex-none px-2 bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-prussian cursor-pointer"
                       >
                         <option value="Highest Impact Score">Highest Impact Score</option>
                         <option value="Most Recent First">Most Recent First</option>
@@ -714,22 +725,22 @@ export default function App() {
                         onClick={() => setDensity(density === 'comfortable' ? 'compact' : 'comfortable')}
                         className={`h-8 w-8 flex items-center justify-center border rounded transition-colors ${
                           density === 'compact'
-                            ? 'bg-[#1F4E79] text-white border-[#1F4E79]'
-                            : 'bg-[#F4F7F4] border-[#D3DDD7] text-[#3C4852] hover:text-[#1D2630]'
+                            ? 'bg-prussian text-on-accent border-prussian'
+                            : 'bg-panel-raised border-line text-ink-soft hover:text-ink'
                         }`}
                         title="Feed Density Toggle"
                         aria-label="Toggle compact view"
                       >
-                        <span className="material-symbols-outlined text-base">view_agenda</span>
+                        <span className="material-symbols-outlined text-base" aria-hidden="true">view_agenda</span>
                       </button>
 
                       <button
                         onClick={handleCopyViewLink}
-                        className="h-8 w-8 flex items-center justify-center border rounded bg-[#F4F7F4] border-[#D3DDD7] text-[#3C4852] hover:text-[#1D2630] transition-colors"
+                        className="h-8 w-8 flex items-center justify-center border rounded bg-panel-raised border-line text-ink-soft hover:text-ink transition-colors"
                         title="Copy a link to this view, with its filters and search"
                         aria-label="Copy a link to this view"
                       >
-                        <span className="material-symbols-outlined text-base">share</span>
+                        <span className="material-symbols-outlined text-base" aria-hidden="true">share</span>
                       </button>
                     </div>
                   </div>
@@ -754,44 +765,44 @@ export default function App() {
                         />
                       ))
                     ) : !hasSynced && syncError ? (
-                      <div className="bg-[#FBFCFA] border border-[#DCC68A] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#6E5410]">cloud_off</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+                      <div className="bg-panel border border-ochre-line rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-ochre" aria-hidden="true">cloud_off</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           Live notices could not be loaded
                         </h4>
-                        <p className="text-[12px] text-[#3C4852]">
+                        <p className="text-[12px] text-ink-soft">
                           {syncError} RegSonar shows no sample data, so the feed stays empty until a sync succeeds.
                         </p>
                         <button
                           onClick={syncNow}
                           disabled={isSyncing}
-                          className="mt-1 px-3 py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white text-[12px] font-semibold rounded disabled:opacity-60"
+                          className="mt-1 px-3 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent text-[12px] font-semibold rounded disabled:opacity-60"
                         >
                           {isSyncing ? 'Retrying...' : 'Retry sync'}
                         </button>
                       </div>
                     ) : !hasSynced ? (
-                      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#1F4E79] animate-spin">sync</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+                      <div className="bg-panel border border-line rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-prussian animate-spin" aria-hidden="true">sync</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           Loading live notices from regulators...
                         </h4>
-                        <p className="text-[12px] text-[#3C4852]">
+                        <p className="text-[12px] text-ink-soft">
                           The first sync fetches each source document, so it can take a few seconds.
                         </p>
                       </div>
                     ) : (
-                      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#56636B]">find_in_page</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+                      <div className="bg-panel border border-line rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-muted" aria-hidden="true">find_in_page</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           No statutory publications match current filters
                         </h4>
-                        <p className="text-[12px] text-[#3C4852]">
+                        <p className="text-[12px] text-ink-soft">
                           Try adjusting your jurisdiction selections or reset the filter facets.
                         </p>
                         <button
                           onClick={handleResetFilters}
-                          className="px-3.5 py-1.5 bg-[#1F4E79] text-white text-[12px] font-semibold rounded hover:bg-[#163A5C] transition-colors mt-2 shadow-xs"
+                          className="px-3.5 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep transition-colors mt-2 shadow-xs"
                         >
                           Reset Filters
                         </button>
@@ -800,7 +811,7 @@ export default function App() {
                   </div>
 
                   {/* Pagination Ribbon */}
-                  <div className="p-3 bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] text-[#3C4852] shadow-xs">
+                  <div className="p-3 bg-panel border border-line rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] text-ink-soft shadow-xs">
                     <span>
                       Showing {Math.min(filteredNotices.length, (currentPage - 1) * itemsPerPage + 1)} to{' '}
                       {Math.min(filteredNotices.length, currentPage * itemsPerPage)} of{' '}
@@ -812,8 +823,8 @@ export default function App() {
                         disabled={currentPage === 1}
                         className={`px-3 min-h-9 sm:min-h-0 sm:py-1 rounded text-[11px] font-semibold transition-colors ${
                           currentPage === 1
-                            ? 'bg-[#E3EBE6] text-[#56636B] cursor-not-allowed border border-[#D3DDD7]'
-                            : 'bg-[#F4F7F4] text-[#1D2630] border border-[#D3DDD7] hover:bg-[#E3EBE6]'
+                            ? 'bg-wash text-muted cursor-not-allowed border border-line'
+                            : 'bg-panel-raised text-ink border border-line hover:bg-wash'
                         }`}
                       >
                         Previous
@@ -828,8 +839,8 @@ export default function App() {
                           onClick={() => setCurrentPage(idx + 1)}
                           className={`hidden sm:inline-block px-3 py-1 rounded font-['Inter'] text-[11px] font-semibold transition-colors ${
                             currentPage === idx + 1
-                              ? 'bg-[#1F4E79] text-white shadow-2xs'
-                              : 'bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] hover:bg-[#E3EBE6]'
+                              ? 'bg-prussian text-on-accent shadow-2xs'
+                              : 'bg-panel-raised border border-line text-ink hover:bg-wash'
                           }`}
                         >
                           {idx + 1}
@@ -841,8 +852,8 @@ export default function App() {
                         disabled={currentPage === totalPages}
                         className={`px-3 min-h-9 sm:min-h-0 sm:py-1 rounded text-[11px] font-semibold transition-colors ${
                           currentPage === totalPages
-                            ? 'bg-[#E3EBE6] text-[#56636B] cursor-not-allowed border border-[#D3DDD7]'
-                            : 'bg-[#F4F7F4] text-[#1D2630] border border-[#D3DDD7] hover:bg-[#E3EBE6]'
+                            ? 'bg-wash text-muted cursor-not-allowed border border-line'
+                            : 'bg-panel-raised text-ink border border-line hover:bg-wash'
                         }`}
                       >
                         Next
@@ -917,14 +928,14 @@ export default function App() {
 
       {/* Filters sheet (phones and tablets) */}
       {isFilterDrawerOpen && (
-        <div className="lg:hidden fixed inset-0 z-[60] flex" role="dialog" aria-modal="true" aria-label="Filters">
-          <button className="flex-1 bg-black/40" aria-label="Close filters" onClick={() => setIsFilterDrawerOpen(false)}></button>
-          <div className="w-[min(360px,90vw)] h-full bg-[#EEF3EF] shadow-2xl flex flex-col">
-            <div className="flex items-center justify-between px-4 h-14 border-b border-[#D3DDD7] bg-[#FBFCFA]">
+        <div className="lg:hidden fixed inset-0 z-[60] flex">
+          <button className="flex-1 bg-black/40" aria-label="Close filters" tabIndex={-1} onClick={() => setIsFilterDrawerOpen(false)}></button>
+          <div ref={filterDrawerRef} role="dialog" aria-modal="true" aria-label="Filters" tabIndex={-1} className="w-[min(360px,90vw)] h-full bg-page shadow-2xl flex flex-col focus:outline-none">
+            <div className="flex items-center justify-between px-4 h-14 border-b border-line bg-panel">
               <span className="font-['Hanken_Grotesk'] text-[17px] font-bold">Filters</span>
               <button
                 onClick={() => setIsFilterDrawerOpen(false)}
-                className="h-9 px-3 bg-[#1F4E79] text-white rounded font-['Inter'] text-[12px] font-semibold"
+                className="h-9 px-3 bg-prussian text-on-accent rounded font-['Inter'] text-[12px] font-semibold"
               >
                 Show {filteredNotices.length} {filteredNotices.length === 1 ? 'notice' : 'notices'}
               </button>
@@ -939,7 +950,7 @@ export default function App() {
       {/* Short confirmation messages */}
       <div aria-live="polite" className="fixed left-1/2 -translate-x-1/2 bottom-[calc(72px+env(safe-area-inset-bottom))] md:bottom-6 z-[70] pointer-events-none">
         {toast && (
-          <div className="px-4 py-2 rounded-lg bg-[#1D2630] text-white font-['Inter'] text-[12px] shadow-lg">{toast}</div>
+          <div className="px-4 py-2 rounded-lg bg-ink text-on-accent font-['Inter'] text-[12px] shadow-lg">{toast}</div>
         )}
       </div>
 
@@ -980,25 +991,26 @@ export default function App() {
       {/* Info Notice Modal */}
       {infoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-[#FBFCFA] border border-[#C5D2CA] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#D3DDD7]">
-              <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1D2630]">
+          <div ref={infoDialogRef} role="dialog" aria-modal="true" aria-labelledby="info-title" tabIndex={-1} className="bg-panel border border-line-strong rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-3 focus:outline-none">
+            <div className="flex items-center justify-between pb-2 border-b border-line">
+              <h3 id="info-title" className="font-['Hanken_Grotesk'] text-[17px] font-bold text-ink">
                 {infoModal.title}
               </h3>
               <button
                 onClick={() => setInfoModal(null)}
-                className="text-[#56636B] hover:text-[#1D2630]"
+                aria-label="Close"
+                className="text-muted hover:text-ink"
               >
-                <span className="material-symbols-outlined text-lg">close</span>
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">close</span>
               </button>
             </div>
-            <p className="text-[13px] text-[#3C4852] leading-relaxed whitespace-pre-wrap font-['Inter']">
+            <p className="text-[13px] text-ink-soft leading-relaxed whitespace-pre-wrap font-['Inter']">
               {infoModal.body}
             </p>
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setInfoModal(null)}
-                className="px-4 py-1.5 bg-[#1F4E79] text-white text-[12px] font-semibold rounded hover:bg-[#163A5C] shadow-xs"
+                className="px-4 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep shadow-xs"
               >
                 Close
               </button>

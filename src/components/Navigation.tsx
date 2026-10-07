@@ -16,9 +16,9 @@ interface NavigationProps {
 }
 
 const SEVERITY_DOT: Record<RegulatoryNotice['severity'], string> = {
-  critical: 'bg-[#A8432F]',
-  high: 'bg-[#6E5410]',
-  info: 'bg-[#1F4E79]'
+  critical: 'bg-venetian',
+  high: 'bg-ochre',
+  info: 'bg-prussian'
 };
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -28,16 +28,17 @@ export const Navigation: React.FC<NavigationProps> = ({
   onSelectNotice
 }) => {
   return (
-    <div className="fixed top-14 left-0 right-0 z-40 bg-[#EEF3EF]">
+    <div className="fixed top-14 left-0 right-0 z-40 bg-page">
       {/* Tab Navigation Row */}
-      <div className="hidden md:flex h-10 w-full px-4 sm:px-6 bg-[#E3EBE6] border-b border-[#D3DDD7] items-center justify-between overflow-x-auto scrollbar-none">
-        <nav className="flex items-center gap-1.5 h-full shrink-0">
+      <div className="hidden md:flex h-10 w-full px-4 sm:px-6 bg-wash border-b border-line items-center justify-between overflow-x-auto scrollbar-none">
+        <nav aria-label="Sections" className="flex items-center gap-1.5 h-full shrink-0">
           <button
             onClick={() => onTabChange('feed')}
+            aria-current={activeTab === 'feed' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'feed'
-                ? 'bg-[#1F4E79] text-white shadow-xs'
-                : 'text-[#3C4852] hover:text-[#1D2630] hover:bg-[#DCE4DF]'
+                ? 'bg-prussian text-on-accent shadow-xs'
+                : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
             Live Regulatory Feed
@@ -45,10 +46,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           <button
             onClick={() => onTabChange('radar')}
+            aria-current={activeTab === 'radar' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'radar'
-                ? 'bg-[#1F4E79] text-white shadow-xs'
-                : 'text-[#3C4852] hover:text-[#1D2630] hover:bg-[#DCE4DF]'
+                ? 'bg-prussian text-on-accent shadow-xs'
+                : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
             APAC Regulatory Radar
@@ -56,10 +58,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           <button
             onClick={() => onTabChange('horizon')}
+            aria-current={activeTab === 'horizon' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'horizon'
-                ? 'bg-[#1F4E79] text-white shadow-xs'
-                : 'text-[#3C4852] hover:text-[#1D2630] hover:bg-[#DCE4DF]'
+                ? 'bg-prussian text-on-accent shadow-xs'
+                : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
             Impact &amp; Horizon Tracker
@@ -67,10 +70,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           <button
             onClick={() => onTabChange('enforcement')}
+            aria-current={activeTab === 'enforcement' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'enforcement'
-                ? 'bg-[#1F4E79] text-white shadow-xs'
-                : 'text-[#3C4852] hover:text-[#1D2630] hover:bg-[#DCE4DF]'
+                ? 'bg-prussian text-on-accent shadow-xs'
+                : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
             Enforcement &amp; Sanctions
@@ -78,10 +82,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           <button
             onClick={() => onTabChange('alert-rules')}
+            aria-current={activeTab === 'alert-rules' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'alert-rules'
-                ? 'bg-[#1F4E79] text-white shadow-xs'
-                : 'text-[#3C4852] hover:text-[#1D2630] hover:bg-[#DCE4DF]'
+                ? 'bg-prussian text-on-accent shadow-xs'
+                : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
             Custom Alert Rules
@@ -91,32 +96,32 @@ export const Navigation: React.FC<NavigationProps> = ({
       </div>
 
       {/* Real-Time Wire Banner */}
-      <div className="h-8 w-full px-4 sm:px-6 bg-[#D9E3DD] border-b border-[#D3DDD7] flex items-center overflow-hidden">
-        <div className="flex items-center gap-1 shrink-0 pr-4 border-r border-[#C5D2CA] mr-4">
-          <span className="material-symbols-outlined text-[#1F4E79] text-sm animate-pulse">
+      <section aria-label="Latest notices" className="h-8 w-full px-4 sm:px-6 bg-wash-mid border-b border-line flex items-center overflow-hidden">
+        <div className="flex items-center gap-1 shrink-0 pr-4 border-r border-line-strong mr-4">
+          <span className="material-symbols-outlined text-prussian text-sm animate-pulse" aria-hidden="true">
             bolt
           </span>
-          <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-[#56636B] uppercase tracking-wider">
+          <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted uppercase tracking-wider">
             Latest
           </span>
         </div>
 
-        <div className="flex items-center gap-6 overflow-x-hidden whitespace-nowrap text-[#3C4852] font-['Inter'] text-[12px]">
-          {wireItems.length === 0 && <span className="text-[#56636B]">Waiting for first sync...</span>}
+        <div className="flex items-center gap-6 overflow-x-hidden whitespace-nowrap text-ink-soft font-['Inter'] text-[12px]">
+          {wireItems.length === 0 && <span className="text-muted">Waiting for first sync...</span>}
           {wireItems.map((n, idx) => (
             <React.Fragment key={n.id}>
-              {idx > 0 && <span className="text-[#56636B]">•</span>}
+              {idx > 0 && <span className="text-muted" aria-hidden="true">•</span>}
               <button
                 onClick={() => onSelectNotice(n.id)}
-                className="flex items-center gap-1.5 cursor-pointer hover:text-[#1D2630] transition-colors"
+                className="flex items-center gap-1.5 cursor-pointer hover:text-ink transition-colors"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${SEVERITY_DOT[n.severity]}`}></span>
-                <strong className="text-[#1D2630] font-medium">{n.regulator}:</strong> {n.title} ({n.issuedTimeAgo})
+                <strong className="text-ink font-medium">{n.regulator}:</strong> {n.title} ({n.issuedTimeAgo})
               </button>
             </React.Fragment>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

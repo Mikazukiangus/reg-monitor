@@ -32,49 +32,49 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
 
   return (
     <div className="w-full px-4 sm:px-6 py-6 space-y-6">
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl p-5 shadow-xs">
+      <div className="bg-panel border border-line rounded-xl p-5 shadow-xs">
         <div className="flex items-center gap-2 mb-1">
-          <span className="material-symbols-outlined text-[#1F4E79] text-2xl">radar</span>
-          <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-[#1D2630]">
+          <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">radar</span>
+          <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
             Regulatory Radar
           </h1>
         </div>
-        <p className="font-['Inter'] text-[13px] text-[#3C4852]">
+        <p className="font-['Inter'] text-[13px] text-ink-soft">
           Live publications by jurisdiction and sector, newest first. Sectors are assigned by keyword rules.
         </p>
       </div>
 
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl overflow-hidden shadow-xs">
+      <div className="bg-panel border border-line rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-[12px] font-['Inter'] border-collapse">
             <thead>
-              <tr className="bg-[#E3EBE6] border-b border-[#D3DDD7] font-['JetBrains_Mono'] text-[11px] text-[#1D2630]">
+              <tr className="bg-wash border-b border-line font-['JetBrains_Mono'] text-[11px] text-ink">
                 <th className="p-3.5 pl-5 min-w-[180px] font-bold">SECTOR</th>
                 {JURISDICTIONS.map(j => (
                   <th key={j.code} className="p-3.5 min-w-[200px] font-bold">{j.label}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D3DDD7]">
+            <tbody className="divide-y divide-line">
               {SECTORS.map(sector => (
                 <tr key={sector} className="align-top">
-                  <td className="p-3.5 pl-5 font-bold text-[#1D2630]">{sector}</td>
+                  <td className="p-3.5 pl-5 font-bold text-ink">{sector}</td>
                   {JURISDICTIONS.map(j => {
                     const cell = sorted.filter(n => n.sector === sector && n.jurisdictionCode === j.code);
                     return (
                       <td key={j.code} className="p-3.5">
                         {cell.length === 0 ? (
-                          <span className="text-[#A9B6AE]">–</span>
+                          <span className="text-line-dim">–</span>
                         ) : (
                           <div className="space-y-1.5">
-                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border bg-[#D9E5EE] text-[#1F4E79] border-[#B3C8D9]">
+                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border bg-prussian-tint text-prussian border-prussian-line">
                               {cell.length} {cell.length === 1 ? 'notice' : 'notices'}
                             </span>
                             {cell.slice(0, 2).map(n => (
                               <button
                                 key={n.id}
                                 onClick={() => onSelectNotice(n.id)}
-                                className="block text-left text-[#3C4852] hover:text-[#1F4E79] leading-snug line-clamp-2"
+                                className="block text-left text-ink-soft hover:text-prussian leading-snug line-clamp-2"
                               >
                                 {n.title}
                               </button>

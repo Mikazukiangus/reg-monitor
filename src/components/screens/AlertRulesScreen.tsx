@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDialog } from '../useDialog';
 import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
 import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
 import { copyText } from '../../lib/urlState';
@@ -48,6 +49,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   };
   const [agencies, setAgencies] = useState('MAS, HKMA');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const createDialogRef = useDialog<HTMLDivElement>(showCreateModal, () => setShowCreateModal(false));
   const [ruleName, setRuleName] = useState('');
   const [minImpact, setMinImpact] = useState(8.0);
   const [keywords, setKeywords] = useState('');
@@ -104,54 +106,54 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   return (
     <div className="w-full px-4 sm:px-6 py-6 space-y-6">
       {/* Header */}
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-panel border border-line rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-[#1F4E79] text-2xl">tune</span>
-            <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-[#1D2630]">
+            <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">tune</span>
+            <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
               Watch Rules
             </h1>
           </div>
-          <p className="font-['Inter'] text-[13px] text-[#3C4852]">
+          <p className="font-['Inter'] text-[13px] text-ink-soft">
             Rules here are checked against the notices currently loaded and are saved in this browser only. The daily email digest below uses its own rules, stored on the server.
           </p>
         </div>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-[#1F4E79] hover:bg-[#163A5C] text-white text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
+          className="px-4 py-2 bg-prussian hover:bg-prussian-deep text-on-accent text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
         >
-          <span className="material-symbols-outlined text-base">add</span>
+          <span className="material-symbols-outlined text-base" aria-hidden="true">add</span>
           <span>New Alert Rule</span>
         </button>
       </div>
 
       {/* Daily email digest (server side, to the site owner only) */}
-      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl p-5 shadow-xs space-y-3">
+      <div className="bg-panel border border-line rounded-xl p-5 shadow-xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#1F4E79] text-xl">mail</span>
-            <h2 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">Daily email digest</h2>
+            <span className="material-symbols-outlined text-prussian text-xl" aria-hidden="true">mail</span>
+            <h2 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">Daily email digest</h2>
           </div>
           {digest && (
             <span
               className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                digest.configured ? 'bg-[#D7E9DD] text-[#2F6249] border-[#ABCDB7]' : 'bg-[#F8F1DC] text-[#6E5410] border-[#DCC68A]'
+                digest.configured ? 'bg-cobalt-tint text-cobalt border-cobalt-line' : 'bg-ochre-wash text-ochre border-ochre-line'
               }`}
             >
               {digest.configured ? 'Sending is set up' : 'Not sending yet'}
             </span>
           )}
         </div>
-        <p className="font-['Inter'] text-[13px] text-[#3C4852]">
+        <p className="font-['Inter'] text-[13px] text-ink-soft">
           {digest ? `${digest.schedule}, ` : ''}one email to the site owner listing the previous day's notices (Singapore time) that match these rules, read from up to 20 recent items per source. No email is sent on days with no matches.
           {digest && !digest.configured && ' It starts once the CRON_SECRET, RESEND_API_KEY and DIGEST_TO settings are added to the Vercel project.'}
         </p>
-        {digestError && <p className="font-['Inter'] text-[12px] text-[#A8432F]">The digest settings could not be loaded.</p>}
+        {digestError && <p className="font-['Inter'] text-[12px] text-venetian">The digest settings could not be loaded.</p>}
         {digest && (
           <ul className="flex flex-wrap gap-2">
             {digest.rules.filter(r => r.enabled).map(r => (
-              <li key={r.id} className="font-['Inter'] text-[12px] bg-[#E3EBE6] text-[#1D2630] px-2.5 py-1 rounded-md" title={`${r.jurisdictions.join(', ') || 'Any regulator'} · impact ≥ ${r.minImpact} · ${r.keywords.join(', ') || 'any keywords'}`}>
+              <li key={r.id} className="font-['Inter'] text-[12px] bg-wash text-ink px-2.5 py-1 rounded-md" title={`${r.jurisdictions.join(', ') || 'Any regulator'} · impact ≥ ${r.minImpact} · ${r.keywords.join(', ') || 'any keywords'}`}>
                 {r.name}
               </li>
             ))}
@@ -160,12 +162,12 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleCopyRules}
-            className="px-3 py-1.5 border border-[#C5D2CA] hover:bg-[#E3EBE6] text-[#1D2630] text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 border border-line-strong hover:bg-wash text-ink text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
           >
-            <span className="material-symbols-outlined text-base">{copied ? 'check' : 'content_copy'}</span>
+            <span className="material-symbols-outlined text-base" aria-hidden="true">{copied ? 'check' : 'content_copy'}</span>
             {copied ? 'Copied' : 'Copy the rules on this tab'}
           </button>
-          <span className="font-['Inter'] text-[11px] text-[#56636B]">To use them for the digest, put them in digest-rules.ts in the project.</span>
+          <span className="font-['Inter'] text-[11px] text-muted">To use them for the digest, put them in digest-rules.ts in the project.</span>
         </div>
       </div>
 
@@ -176,56 +178,56 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
           return (
           <div
             key={rule.id}
-            className="p-5 bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl hover:bg-[#F4F7F4] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
+            className="p-5 bg-panel border border-line rounded-xl hover:bg-panel-raised transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
           >
             <div className="space-y-2 flex-1">
               <div className="flex items-center gap-3">
-                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                   {rule.name}
                 </h3>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border ${
                     rule.enabled
-                      ? 'bg-[#D7E9DD] text-[#2F6249] border-[#ABCDB7]'
-                      : 'bg-[#E3EBE6] text-[#56636B] border-[#D3DDD7]'
+                      ? 'bg-cobalt-tint text-cobalt border-cobalt-line'
+                      : 'bg-wash text-muted border-line'
                   }`}
                 >
                   {rule.enabled ? 'ACTIVE' : 'PAUSED'}
                 </span>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-muted">
                   Min Impact: ≥ {rule.minImpact}
                 </span>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-['JetBrains_Mono'] text-[#56636B]">Agencies:</span>
+                <span className="text-[11px] font-['JetBrains_Mono'] text-muted">Agencies:</span>
                 {rule.jurisdictions.map(j => (
-                  <span key={j} className="px-2 py-0.5 bg-[#EEF3EF] text-[#1F4E79] border border-[#D3DDD7] rounded text-[10px] font-['JetBrains_Mono'] font-bold">
+                  <span key={j} className="px-2 py-0.5 bg-page text-prussian border border-line rounded text-[10px] font-['JetBrains_Mono'] font-bold">
                     {j}
                   </span>
                 ))}
 
-                <span className="text-[11px] font-['JetBrains_Mono'] text-[#56636B] ml-2">Keywords:</span>
+                <span className="text-[11px] font-['JetBrains_Mono'] text-muted ml-2">Keywords:</span>
                 {rule.keywords.map(k => (
-                  <span key={k} className="px-2 py-0.5 bg-[#EEF3EF] text-[#3C4852] border border-[#D3DDD7] rounded text-[10px] font-['JetBrains_Mono'] font-medium">
+                  <span key={k} className="px-2 py-0.5 bg-page text-ink-soft border border-line rounded text-[10px] font-['JetBrains_Mono'] font-medium">
                     {k}
                   </span>
                 ))}
               </div>
 
-              <div className="text-[11px] font-['JetBrains_Mono'] text-[#56636B]">
+              <div className="text-[11px] font-['JetBrains_Mono'] text-muted">
                 {rule.enabled ? (
                   <>
                     <span>
-                      Matching notices: <strong className="text-[#1F4E79]">{matches.length}</strong>
+                      Matching notices: <strong className="text-prussian">{matches.length}</strong>
                     </span>
                     {matches.length > 0 && (
-                      <ul className="mt-1.5 space-y-0.5 font-['Inter'] text-[12px] text-[#3C4852]">
+                      <ul className="mt-1.5 space-y-0.5 font-['Inter'] text-[12px] text-ink-soft">
                         {matches.slice(0, 5).map(n => (
                           <li key={n.id} className="truncate">
-                            <span className="font-['JetBrains_Mono'] text-[11px] text-[#1F4E79] mr-1.5">{n.regulator}</span>
+                            <span className="font-['JetBrains_Mono'] text-[11px] text-prussian mr-1.5">{n.regulator}</span>
                             {n.dossierUrl ? (
-                              <a href={n.dossierUrl} target="_blank" rel="noopener noreferrer" className="hover:text-[#1F4E79] hover:underline">
+                              <a href={n.dossierUrl} target="_blank" rel="noopener noreferrer" className="hover:text-prussian hover:underline">
                                 {n.title}
                               </a>
                             ) : (
@@ -247,15 +249,15 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 onClick={() => handleToggleRule(rule.id)}
                 className={`px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${
                   rule.enabled
-                    ? 'border-[#ECC6B9] bg-[#F8E8E2] text-[#A8432F] hover:bg-[#F4DCD3]'
-                    : 'border-[#C3DECB] bg-[#EAF3ED] text-[#2F6249] hover:bg-[#D7E9DD]'
+                    ? 'border-venetian-line-soft bg-venetian-wash text-venetian hover:bg-venetian-tint'
+                    : 'border-cobalt-line-soft bg-cobalt-wash text-cobalt hover:bg-cobalt-tint'
                 }`}
               >
                 {rule.enabled ? 'Pause Rule' : 'Resume Rule'}
               </button>
               <button
                 onClick={() => handleDeleteRule(rule)}
-                className="w-9 h-9 flex items-center justify-center rounded text-[#56636B] hover:text-[#A8432F] hover:bg-[#F8E8E2] transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded text-muted hover:text-venetian hover:bg-venetian-wash transition-colors"
                 aria-label={`Delete the rule ${rule.name}`}
                 title="Delete rule"
               >
@@ -268,7 +270,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
       </div>
 
       <div className="flex justify-end">
-        <button onClick={handleResetRules} className="font-['Inter'] text-[12px] text-[#56636B] hover:text-[#1F4E79] hover:underline">
+        <button onClick={handleResetRules} className="font-['Inter'] text-[12px] text-muted hover:text-prussian hover:underline">
           Reset to the starting rules
         </button>
       </div>
@@ -276,67 +278,71 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
       {/* Create Rule Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-[#FBFCFA] border border-[#C5D2CA] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#D3DDD7]">
-              <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1D2630]">
+          <div ref={createDialogRef} role="dialog" aria-modal="true" aria-labelledby="create-rule-title" tabIndex={-1} className="bg-panel border border-line-strong rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-4 focus:outline-none">
+            <div className="flex items-center justify-between pb-2 border-b border-line">
+              <h3 id="create-rule-title" className="font-['Hanken_Grotesk'] text-[17px] font-bold text-ink">
                 Create Watch Rule
               </h3>
-              <button onClick={() => setShowCreateModal(false)} className="text-[#56636B] hover:text-[#1D2630]">
-                <span className="material-symbols-outlined text-lg">close</span>
+              <button onClick={() => setShowCreateModal(false)} aria-label="Close" className="text-muted hover:text-ink">
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">close</span>
               </button>
             </div>
 
             <form onSubmit={handleCreateRule} className="space-y-3 font-['Inter'] text-[12px]">
               <div>
-                <label className="block text-[#56636B] font-['JetBrains_Mono'] mb-1 font-medium">Rule Name</label>
+                <label htmlFor="rule-name" className="block text-muted font-['JetBrains_Mono'] mb-1 font-medium">Rule Name</label>
                 <input
+                  id="rule-name"
                   type="text"
                   value={ruleName}
                   onChange={(e) => setRuleName(e.target.value)}
                   placeholder="e.g. Stablecoin rules"
-                  className="w-full bg-[#FBFCFA] border border-[#D3DDD7] px-3 py-1.5 rounded text-[#1D2630] focus:outline-none focus:border-[#1F4E79]"
+                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-prussian"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[#56636B] font-['JetBrains_Mono'] mb-1 font-medium">
+                <label htmlFor="rule-agencies" className="block text-muted font-['JetBrains_Mono'] mb-1 font-medium">
                   Regulators (comma separated)
                 </label>
                 <input
+                  id="rule-agencies"
                   type="text"
                   value={agencies}
                   onChange={(e) => setAgencies(e.target.value)}
                   placeholder="e.g. MAS, HKMA, SEC, PRA, BIS"
-                  className="w-full bg-[#FBFCFA] border border-[#D3DDD7] px-3 py-1.5 rounded text-[#1D2630] focus:outline-none focus:border-[#1F4E79]"
+                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-prussian"
                 />
               </div>
 
               <div>
-                <label className="block text-[#56636B] font-['JetBrains_Mono'] mb-1 font-medium">
+                <label htmlFor="rule-impact" className="block text-muted font-['JetBrains_Mono'] mb-1 font-medium">
                   Minimum Impact Threshold: {minImpact} / 10
                 </label>
                 <input
+                  id="rule-impact"
                   type="range"
                   min="0"
                   max="10.0"
                   step="0.1"
                   value={minImpact}
                   onChange={(e) => setMinImpact(parseFloat(e.target.value))}
-                  className="w-full accent-[#1F4E79]"
+                  className="w-full accent-prussian"
                 />
               </div>
 
               <div>
-                <label className="block text-[#56636B] font-['JetBrains_Mono'] mb-1 font-medium">
+                <label htmlFor="rule-keywords" className="block text-muted font-['JetBrains_Mono'] mb-1 font-medium">
                   Trigger Keywords (comma separated)
                 </label>
                 <input
+                  id="rule-keywords"
                   type="text"
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                   placeholder="e.g. custody, stablecoin, climate"
-                  className="w-full bg-[#FBFCFA] border border-[#D3DDD7] px-3 py-1.5 rounded text-[#1D2630] focus:outline-none focus:border-[#1F4E79]"
+                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-prussian"
                 />
               </div>
 
@@ -344,13 +350,13 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-3.5 py-1.5 text-[#3C4852] hover:text-[#1D2630] font-semibold"
+                  className="px-3.5 py-1.5 text-ink-soft hover:text-ink font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#1F4E79] text-white font-semibold rounded hover:bg-[#163A5C] shadow-xs"
+                  className="px-4 py-1.5 bg-prussian text-on-accent font-semibold rounded hover:bg-prussian-deep shadow-xs"
                 >
                   Create Rule
                 </button>

@@ -109,13 +109,13 @@ export const LiquidityChart: React.FC = () => {
   // Each chart is scaled to its own range, which is stated beside the title
   const chart = (title: string, range: string, children: React.ReactNode) => (
     <div>
-      <div className="flex items-baseline justify-between gap-2 mb-0.5 font-['JetBrains_Mono'] text-[10px] text-[#56636B]">
+      <div className="flex items-baseline justify-between gap-2 mb-0.5 font-['JetBrains_Mono'] text-[10px] text-muted">
         <span className="uppercase">{title}</span>
         <span>{range}</span>
       </div>
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="w-full h-auto block bg-[#EEF3EF] rounded border border-[#DCE4DF]"
+        className="w-full h-auto block bg-page rounded border border-wash-strong"
         onPointerMove={handleMove}
         onPointerDown={handleMove}
         onPointerLeave={() => setHover(null)}
@@ -125,20 +125,20 @@ export const LiquidityChart: React.FC = () => {
       >
         {children}
         {hover !== null && (
-          <line x1={x(hover)} x2={x(hover)} y1={0} y2={HEIGHT} stroke="#56636B" strokeWidth={0.75} strokeDasharray="2 2" />
+          <line x1={x(hover)} x2={x(hover)} y1={0} y2={HEIGHT} stroke="var(--color-muted)" strokeWidth={0.75} strokeDasharray="2 2" />
         )}
       </svg>
     </div>
   );
 
   return (
-    <div id="liquidity-card" className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs scroll-mt-28">
-      <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#D3DDD7]">
+    <div id="liquidity-card" className="bg-panel border border-line rounded-lg p-3.5 shadow-xs scroll-mt-28">
+      <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-line">
         <div className="flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-[#1F4E79] text-lg">show_chart</span>
-          <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1D2630] font-bold">HKMA Interbank Liquidity</span>
+          <span className="material-symbols-outlined text-prussian text-lg" aria-hidden="true">show_chart</span>
+          <span className="font-['Hanken_Grotesk'] text-[15px] text-ink font-bold">HKMA Interbank Liquidity</span>
         </div>
-        <div role="group" aria-label="Chart range" className="flex rounded border border-[#D3DDD7] overflow-hidden">
+        <div role="group" aria-label="Chart range" className="flex rounded border border-line overflow-hidden">
           {(Object.keys(RANGE_LABELS) as Range[]).map(r => (
             <button
               key={r}
@@ -148,7 +148,7 @@ export const LiquidityChart: React.FC = () => {
               }}
               aria-pressed={range === r}
               className={`px-2.5 min-h-[28px] font-['JetBrains_Mono'] text-[11px] font-semibold transition-colors ${
-                range === r ? 'bg-[#1F4E79] text-white' : 'bg-[#F4F7F4] text-[#3C4852] hover:bg-[#E3EBE6]'
+                range === r ? 'bg-prussian text-on-accent' : 'bg-panel-raised text-ink-soft hover:bg-wash'
               }`}
             >
               {RANGE_LABELS[r]}
@@ -157,27 +157,27 @@ export const LiquidityChart: React.FC = () => {
         </div>
       </div>
 
-      {error && <p className="font-['Inter'] text-[12px] text-[#56636B] mb-2">{error}. Open the HKMA page for the figures.</p>}
-      {!error && !history && <p className="font-['Inter'] text-[12px] text-[#56636B]">Loading figures from HKMA…</p>}
+      {error && <p className="font-['Inter'] text-[12px] text-muted mb-2">{error}. Open the HKMA page for the figures.</p>}
+      {!error && !history && <p className="font-['Inter'] text-[12px] text-muted">Loading figures from HKMA…</p>}
       {history && loadingRange && (
-        <p className="font-['Inter'] text-[11px] text-[#56636B] mb-2">
+        <p className="font-['Inter'] text-[11px] text-muted mb-2">
           Loading {range === '3m' ? 'three months' : 'one month'} of daily pages from HKMA; this can take up to a minute the first time…
         </p>
       )}
       {history && days.length < 2 && (
-        <p className="font-['Inter'] text-[12px] text-[#56636B]">Not enough daily figures could be read to draw a chart.</p>
+        <p className="font-['Inter'] text-[12px] text-muted">Not enough daily figures could be read to draw a chart.</p>
       )}
 
       {history && days.length >= 2 && shown && (
         <div className="space-y-2.5">
           <div className="flex items-baseline justify-between gap-2">
-            <span className="font-['JetBrains_Mono'] text-[11px] text-[#3C4852]">{shortDate(shown.date)}</span>
+            <span className="font-['JetBrains_Mono'] text-[11px] text-ink-soft">{shortDate(shown.date)}</span>
             <span className="flex items-baseline gap-1.5">
-              <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+              <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                 HK${shown.closingBalance.toLocaleString('en-US')}M
               </span>
               {previous && (
-                <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">
+                <span className="font-['JetBrains_Mono'] text-[10px] text-muted">
                   {shown.closingBalance === previous.closingBalance
                     ? `unchanged from ${shortDate(previous.date)}`
                     : `${signed(shown.closingBalance - previous.closingBalance)} vs ${shortDate(previous.date)}`}
@@ -192,11 +192,11 @@ export const LiquidityChart: React.FC = () => {
             <>
               <path
                 d={`${linePath(balancePoints)} L${x(days.length - 1)},${HEIGHT} L${x(0)},${HEIGHT} Z`}
-                fill="#1F4E79"
+                fill="var(--color-prussian)"
                 fillOpacity={0.08}
               />
-              <path d={linePath(balancePoints)} fill="none" stroke="#1F4E79" strokeWidth={1.5} />
-              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="#1F4E79" />}
+              <path d={linePath(balancePoints)} fill="none" stroke="var(--color-prussian)" strokeWidth={1.5} />
+              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="var(--color-prussian)" />}
             </>
           )}
 
@@ -205,38 +205,38 @@ export const LiquidityChart: React.FC = () => {
               'HIBOR (%)',
               `${Math.min(...rates).toFixed(2)} – ${Math.max(...rates).toFixed(2)}`,
               <>
-                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="#A8862A" strokeWidth={1.5} />
-                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="#1F4E79" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="var(--color-ochre-mid)" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="var(--color-prussian)" strokeWidth={1.5} />
               </>
             )}
 
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 font-['JetBrains_Mono'] text-[10px]">
-            <span className="text-[#6E5410]">
+            <span className="text-ochre">
               ● Overnight {shown.overnightHibor !== null ? `${shown.overnightHibor.toFixed(2)}%` : 'n/a'}
               {previous && bp(shown.overnightHibor, previous.overnightHibor) !== null && (
-                <span className="text-[#56636B]"> ({signed(bp(shown.overnightHibor, previous.overnightHibor)!, ' bp')})</span>
+                <span className="text-muted"> ({signed(bp(shown.overnightHibor, previous.overnightHibor)!, ' bp')})</span>
               )}
             </span>
-            <span className="text-[#1F4E79]">
+            <span className="text-prussian">
               ● 1-month fixing {shown.hiborFixing1m !== null ? `${shown.hiborFixing1m.toFixed(5)}%` : 'n/a'}
               {previous && bp(shown.hiborFixing1m, previous.hiborFixing1m) !== null && (
-                <span className="text-[#56636B]"> ({signed(bp(shown.hiborFixing1m, previous.hiborFixing1m)!, ' bp')})</span>
+                <span className="text-muted"> ({signed(bp(shown.hiborFixing1m, previous.hiborFixing1m)!, ' bp')})</span>
               )}
             </span>
           </div>
 
           {shown.baseRate !== null && (
-            <p className="font-['Inter'] text-[12px] text-[#3C4852]">
-              Discount window base rate <strong className="font-semibold text-[#1D2630]">{shown.baseRate.toFixed(2)}%</strong>
+            <p className="font-['Inter'] text-[12px] text-ink-soft">
+              Discount window base rate <strong className="font-semibold text-ink">{shown.baseRate.toFixed(2)}%</strong>
               {baseRateChange && hover === null && (
-                <span className="text-[#56636B]">, changed from {baseRateChange.from.toFixed(2)}% on {shortDate(baseRateChange.date)}</span>
+                <span className="text-muted">, changed from {baseRateChange.from.toFixed(2)}% on {shortDate(baseRateChange.date)}</span>
               )}
             </p>
           )}
 
-          <p className="font-['Inter'] text-[11px] text-[#56636B] leading-snug">
+          <p className="font-['Inter'] text-[11px] text-muted leading-snug">
             {days.length} business days, {shortDate(days[0].date)} to {shortDate(days[days.length - 1].date)}, as stated on the{' '}
-            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-[#1F4E79] hover:underline">
+            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-prussian underline underline-offset-2">
               HKMA Daily Monetary Statistics
             </a>{' '}
             pages (figures as at {shown.time} Hong Kong time). Changes are against the previous business day shown.
