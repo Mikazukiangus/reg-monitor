@@ -213,7 +213,8 @@ This document records the full chronological instructions, technical requirement
 
 ### Request 14: Function Region Moved to Hong Kong (Claude Code, 2026-10-07)
 * **Instruction:** "yes, move the function to hkg1".
-* **Change:** `vercel.json` sets `"regions": ["hkg1"]`, so the API function runs in Vercel's Hong Kong region instead of `iad1` (US East), next to the HKMA, MAS and BIS-in-Asia sources it reads most.
+* **Change:** `vercel.json` sets `"regions": ["hkg1"]`, so the API function runs in Vercel's Hong Kong region instead of `iad1` (US East), close to the HKMA and MAS sources, whose requests had been timing out intermittently from the US.
+* **Verified in production (one cold sync):** 18.8s, down from about 32s in `iad1`; 29 notices, all with key points; every source succeeded except the HKMA Open API liquidity figures, which still time out (its firewall blocks cloud servers regardless of region). US and UK sources still answer in 0.3–1.6s.
 
 ---
 
