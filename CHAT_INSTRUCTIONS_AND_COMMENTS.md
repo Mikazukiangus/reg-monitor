@@ -228,6 +228,12 @@ This document records the full chronological instructions, technical requirement
 * **Chart:** `src/components/LiquidityChart.tsx`, a card in the dashboard's right column. It shows the closing aggregate balance, plus overnight HIBOR and the 1-month HIBOR fixing; hovering shows a day's figures. Each chart is scaled to its own range, which is printed beside its title. The chart is plain SVG, with no new dependency. Days that could not be fetched are counted in the footnote rather than drawn.
 * **Verified:** locally, 19 business days (9 Sept to 6 Oct 2026; 1 Oct, a public holiday, correctly absent). The 30 Sept figures match the HKMA page (closing balance HK$54,108M, overnight HIBOR 3.85%, 1-month fixing 3.00518%). Hover readouts match the API data, and there are no console errors. `tsc --noEmit` and `vite build` pass.
 
+### Request 17: Colour Scheme after Wada Sanzo (Claude Code, 2026-10-07)
+* **Instruction:** "Update the colour scheme based on … Wada Sanzo … keep a light colour base but do not make it look like a Claude website", then "apply Porcelain & Prussian to the site and push".
+* **Design:** three combinations from Sanzo Wada's *A Dictionary of Color Combinations* were drawn on a design canvas. The user chose **Porcelain & Prussian**: a Light Porcelain Green ground (`#EEF3EF`), Blackish Slate text (`#1D2630`), Prussian Blue primary (`#1F4E79`), Venetian Red for critical items (`#A8432F`), and Pyrite Yellow (as a fill only), with `#6E5410` for warning text. Hex values approximate the printed plates.
+* **Change:** every hex colour in `src/` (Tailwind arbitrary classes and the `@theme` tokens in `src/index.css`) was mapped from the old warm cream and teal palette to the new one (41 colours). White card surfaces became `#FBFCFA`; white text on buttons is unchanged. The HIBOR overnight line uses a darker pyrite (`#A8862A`) so it stays visible on the light chart background. Fonts are unchanged.
+* **Verified:** `tsc --noEmit` and `vite build` pass. The dashboard, notice cards and liquidity chart render in the new colours, with no console errors.
+
 ---
 
 ## 3. Key Files & Modifications Summary

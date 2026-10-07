@@ -79,13 +79,13 @@ export const LiquidityChart: React.FC = () => {
   // Each chart is scaled to its own range, which is stated beside the title
   const chart = (title: string, range: string, children: React.ReactNode) => (
     <div>
-      <div className="flex items-baseline justify-between gap-2 mb-0.5 font-['JetBrains_Mono'] text-[10px] text-[#857F74]">
+      <div className="flex items-baseline justify-between gap-2 mb-0.5 font-['JetBrains_Mono'] text-[10px] text-[#56636B]">
         <span className="uppercase">{title}</span>
         <span>{range}</span>
       </div>
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="w-full h-auto block bg-[#FAF7F2] rounded border border-[#EAE4D7]"
+        className="w-full h-auto block bg-[#EEF3EF] rounded border border-[#DCE4DF]"
         onMouseMove={handleMove}
         onMouseLeave={() => setHover(null)}
         role="img"
@@ -93,33 +93,33 @@ export const LiquidityChart: React.FC = () => {
       >
         {children}
         {hover !== null && (
-          <line x1={x(hover)} x2={x(hover)} y1={0} y2={HEIGHT} stroke="#857F74" strokeWidth={0.75} strokeDasharray="2 2" />
+          <line x1={x(hover)} x2={x(hover)} y1={0} y2={HEIGHT} stroke="#56636B" strokeWidth={0.75} strokeDasharray="2 2" />
         )}
       </svg>
     </div>
   );
 
   return (
-    <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
-      <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#E5DFD5]">
+    <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+      <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#D3DDD7]">
         <div className="flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-[#0D5C63] text-lg">show_chart</span>
-          <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1E1B18] font-bold">HKMA Interbank Liquidity</span>
+          <span className="material-symbols-outlined text-[#1F4E79] text-lg">show_chart</span>
+          <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1D2630] font-bold">HKMA Interbank Liquidity</span>
         </div>
-        <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">Daily</span>
+        <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">Daily</span>
       </div>
 
-      {error && <p className="font-['Inter'] text-[12px] text-[#857F74]">{error}. Open the HKMA page for the figures.</p>}
-      {!error && !history && <p className="font-['Inter'] text-[12px] text-[#857F74]">Loading figures from HKMA…</p>}
+      {error && <p className="font-['Inter'] text-[12px] text-[#56636B]">{error}. Open the HKMA page for the figures.</p>}
+      {!error && !history && <p className="font-['Inter'] text-[12px] text-[#56636B]">Loading figures from HKMA…</p>}
       {history && days.length < 2 && (
-        <p className="font-['Inter'] text-[12px] text-[#857F74]">Not enough daily figures could be read to draw a chart.</p>
+        <p className="font-['Inter'] text-[12px] text-[#56636B]">Not enough daily figures could be read to draw a chart.</p>
       )}
 
       {history && days.length >= 2 && shown && (
         <div className="space-y-2.5">
           <div className="flex items-baseline justify-between gap-2">
-            <span className="font-['JetBrains_Mono'] text-[11px] text-[#57534E]">{shortDate(shown.date)}</span>
-            <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+            <span className="font-['JetBrains_Mono'] text-[11px] text-[#3C4852]">{shortDate(shown.date)}</span>
+            <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
               HK${shown.closingBalance.toLocaleString('en-US')}M
             </span>
           </div>
@@ -130,11 +130,11 @@ export const LiquidityChart: React.FC = () => {
             <>
               <path
                 d={`${linePath(balancePoints)} L${x(days.length - 1)},${HEIGHT} L${x(0)},${HEIGHT} Z`}
-                fill="#0D5C63"
+                fill="#1F4E79"
                 fillOpacity={0.08}
               />
-              <path d={linePath(balancePoints)} fill="none" stroke="#0D5C63" strokeWidth={1.5} />
-              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="#0D5C63" />}
+              <path d={linePath(balancePoints)} fill="none" stroke="#1F4E79" strokeWidth={1.5} />
+              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="#1F4E79" />}
             </>
           )}
 
@@ -143,23 +143,23 @@ export const LiquidityChart: React.FC = () => {
               'HIBOR (%)',
               `${Math.min(...rates).toFixed(2)} – ${Math.max(...rates).toFixed(2)}`,
               <>
-                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="#B45309" strokeWidth={1.5} />
-                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="#0D5C63" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="#A8862A" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="#1F4E79" strokeWidth={1.5} />
               </>
             )}
 
           <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[10px]">
-            <span className="text-[#B45309]">
+            <span className="text-[#6E5410]">
               ● Overnight {shown.overnightHibor !== null ? `${shown.overnightHibor.toFixed(2)}%` : 'n/a'}
             </span>
-            <span className="text-[#0D5C63]">
+            <span className="text-[#1F4E79]">
               ● 1-month fixing {shown.hiborFixing1m !== null ? `${shown.hiborFixing1m.toFixed(5)}%` : 'n/a'}
             </span>
           </div>
 
-          <p className="font-['Inter'] text-[11px] text-[#857F74] leading-snug">
+          <p className="font-['Inter'] text-[11px] text-[#56636B] leading-snug">
             {days.length} business days, {shortDate(days[0].date)} to {shortDate(days[days.length - 1].date)}, as stated on the{' '}
-            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-[#0D5C63] hover:underline">
+            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-[#1F4E79] hover:underline">
               HKMA Daily Monetary Statistics
             </a>{' '}
             pages (figures as at {shown.time} Hong Kong time).

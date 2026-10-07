@@ -29,22 +29,22 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   return (
     <aside className="lg:col-span-3 flex flex-col gap-3">
       {/* Deadlines Radar */}
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
-        <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#E5DFD5]">
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+        <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#D3DDD7]">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[#0D5C63] text-lg">alarm</span>
-            <span className="font-['Hanken_Grotesk'] text-[16px] text-[#1E1B18] font-bold">
+            <span className="material-symbols-outlined text-[#1F4E79] text-lg">alarm</span>
+            <span className="font-['Hanken_Grotesk'] text-[16px] text-[#1D2630] font-bold">
               Deadlines Radar
             </span>
           </div>
-          <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] font-medium">
+          <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] font-medium">
             From source documents
           </span>
         </div>
 
         <div className="space-y-2">
           {deadlines.length === 0 && (
-            <p className="font-['Inter'] text-[12px] text-[#857F74]">
+            <p className="font-['Inter'] text-[12px] text-[#56636B]">
               No upcoming dates found in the current notices.
             </p>
           )}
@@ -52,13 +52,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             <div
               key={item.id}
               onClick={() => item.noticeId && onSelectDeadlineNotice(item.noticeId)}
-              className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D7] rounded flex items-center justify-between gap-2 hover:bg-[#F5F1E8] cursor-pointer transition-colors"
+              className="p-2.5 bg-[#EEF3EF] border border-[#DCE4DF] rounded flex items-center justify-between gap-2 hover:bg-[#E3EBE6] cursor-pointer transition-colors"
             >
               <div className="min-w-0">
-                <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-[#1E1B18] block line-clamp-2">
+                <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-[#1D2630] block line-clamp-2">
                   {item.title}
                 </span>
-                <span className="font-['Inter'] text-[11px] text-[#857F74]">
+                <span className="font-['Inter'] text-[11px] text-[#56636B]">
                   {item.subtitle}
                 </span>
               </div>
@@ -66,7 +66,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 <span className={`font-['Hanken_Grotesk'] text-[18px] font-bold block ${item.textColorClass}`}>
                   {item.daysRemaining}d
                 </span>
-                <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74] block">
+                <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B] block">
                   {item.dateStr}
                 </span>
               </div>
@@ -78,11 +78,11 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       <LiquidityChart />
 
       {/* Live Feeds Sentinel */}
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
-        <div className="flex items-center justify-between mb-2 pb-1 border-b border-[#E5DFD5]">
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+        <div className="flex items-center justify-between mb-2 pb-1 border-b border-[#D3DDD7]">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[#0D5C63] text-lg">sensors</span>
-            <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1E1B18] font-bold">
+            <span className="material-symbols-outlined text-[#1F4E79] text-lg">sensors</span>
+            <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1D2630] font-bold">
               Live Feeds Gateway
             </span>
           </div>
@@ -95,8 +95,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
         <div className="space-y-1.5 mb-3 text-[11px]">
           {endpoints.map((ep) => (
-            <div key={ep.id} className="flex items-center justify-between py-1 border-b border-[#FAF7F2] last:border-b-0" title={ep.detail}>
-              <span className="font-['JetBrains_Mono'] text-[#57534E]">{ep.name}</span>
+            <div key={ep.id} className="flex items-center justify-between py-1 border-b border-[#EEF3EF] last:border-b-0" title={ep.detail}>
+              <span className="font-['JetBrains_Mono'] text-[#3C4852]">{ep.name}</span>
               <span className={`font-['JetBrains_Mono'] font-bold ${STATUS_STYLES[ep.status].text}`}>
                 {ep.status}
                 {ep.statusCode ? ` (${ep.statusCode})` : ''}
@@ -109,9 +109,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           {onOpenLiveEndpointsModal && (
             <button
               onClick={onOpenLiveEndpointsModal}
-              className="flex-1 py-1.5 bg-[#FAF8F5] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
+              className="flex-1 py-1.5 bg-[#F4F7F4] hover:bg-[#E3EBE6] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
             >
-              <span className="material-symbols-outlined text-sm text-[#0D5C63]">hub</span>
+              <span className="material-symbols-outlined text-sm text-[#1F4E79]">hub</span>
               <span>Manage APIs</span>
             </button>
           )}
@@ -120,7 +120,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex-1 py-1.5 bg-[#0D5C63] hover:bg-[#0A474D] text-white font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
+              className="flex-1 py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`}>
                 sync
@@ -132,28 +132,28 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       </div>
 
       {/* Compliance Pipeline Sync */}
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
-        <span className="font-['Inter'] text-[13px] text-[#1E1B18] font-bold block mb-1">
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+        <span className="font-['Inter'] text-[13px] text-[#1D2630] font-bold block mb-1">
           Export Notices
         </span>
-        <p className="font-['Inter'] text-[12px] text-[#857F74] mb-3 leading-relaxed">
+        <p className="font-['Inter'] text-[12px] text-[#56636B] mb-3 leading-relaxed">
           Download the currently filtered notices, including source links and quoted key points.
         </p>
 
         <div className="grid grid-cols-2 gap-2 mb-2">
           <button
             onClick={onOpenExportCsv}
-            className="flex items-center justify-center gap-1.5 py-2 bg-[#FAF8F5] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
+            className="flex items-center justify-center gap-1.5 py-2 bg-[#F4F7F4] hover:bg-[#E3EBE6] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-base text-[#0D5C63]">table_view</span>
+            <span className="material-symbols-outlined text-base text-[#1F4E79]">table_view</span>
             <span>Excel / CSV</span>
           </button>
 
           <button
             onClick={onOpenExportJson}
-            className="flex items-center justify-center gap-1.5 py-2 bg-[#FAF8F5] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
+            className="flex items-center justify-center gap-1.5 py-2 bg-[#F4F7F4] hover:bg-[#E3EBE6] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-base text-[#0D5C63]">code</span>
+            <span className="material-symbols-outlined text-base text-[#1F4E79]">code</span>
             <span>JSON Feed</span>
           </button>
         </div>

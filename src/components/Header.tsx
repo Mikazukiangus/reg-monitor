@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
   const allOperational = !checking && operationalCount === endpoints.length;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E5DFD5] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#EEF3EF]/95 backdrop-blur-md border-b border-[#D3DDD7] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       <div className="h-14 w-full px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3 shrink-0">
@@ -68,10 +68,10 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onJurisdictionFilterChange('All APAC')}
             />
             <div className="flex flex-col">
-              <span className="font-['Hanken_Grotesk'] text-[19px] text-[#1E1B18] tracking-tight font-bold leading-none">
+              <span className="font-['Hanken_Grotesk'] text-[19px] text-[#1D2630] tracking-tight font-bold leading-none">
                 RegSonar
               </span>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74] tracking-wider uppercase mt-0.5 font-medium">
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B] tracking-wider uppercase mt-0.5 font-medium">
                 Intelligence APAC &amp; Global
               </span>
             </div>
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
             <select
               value={selectedJurisdictionFilter}
               onChange={(e) => onJurisdictionFilterChange(e.target.value)}
-              className="bg-[#FFFFFF] border border-[#E5DFD5] text-[#44403C] font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-[#0D5C63] focus:text-[#1E1B18] cursor-pointer transition-colors shadow-xs"
+              className="bg-[#FBFCFA] border border-[#D3DDD7] text-[#3C4852] font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-[#1F4E79] focus:text-[#1D2630] cursor-pointer transition-colors shadow-xs"
             >
               <option value="All APAC">All APAC</option>
               <option value="Singapore MAS">Singapore MAS</option>
@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Global Search Bar */}
         <div className="flex-1 max-w-2xl mx-3 hidden md:block">
           <div className="relative flex items-center w-full">
-            <span className="material-symbols-outlined absolute left-3 text-[#857F74] text-lg pointer-events-none">
+            <span className="material-symbols-outlined absolute left-3 text-[#56636B] text-lg pointer-events-none">
               search
             </span>
             <input
@@ -104,12 +104,12 @@ export const Header: React.FC<HeaderProps> = ({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search loaded notices by title, regulator, reference or key point..."
-              className="w-full h-9 pl-10 pr-10 bg-[#FFFFFF] border border-[#E5DFD5] text-[#1E1B18] placeholder:text-[#857F74] font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:bg-[#FAF8F5] focus:border-[#0D5C63] transition-all shadow-xs"
+              className="w-full h-9 pl-10 pr-10 bg-[#FBFCFA] border border-[#D3DDD7] text-[#1D2630] placeholder:text-[#56636B] font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:bg-[#F4F7F4] focus:border-[#1F4E79] transition-all shadow-xs"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-3 text-[#857F74] hover:text-[#1E1B18]"
+                className="absolute right-3 text-[#56636B] hover:text-[#1D2630]"
                 title="Clear search"
               >
                 <span className="material-symbols-outlined text-base">close</span>
@@ -125,12 +125,12 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onOpenEndpointsModal}
             className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 border rounded-lg cursor-pointer transition-colors shadow-2xs ${
               allOperational
-                ? 'bg-[#F0FDF4] hover:bg-[#DCFCE7] border-[#BBF7D0] text-[#15803D]'
-                : 'bg-[#FFFBEB] hover:bg-[#FEF3C7] border-[#FDE68A] text-[#B45309]'
+                ? 'bg-[#EAF3ED] hover:bg-[#D7E9DD] border-[#C3DECB] text-[#2F6249]'
+                : 'bg-[#F8F1DC] hover:bg-[#F3E8C6] border-[#DCC68A] text-[#6E5410]'
             }`}
             title="View monitored government endpoints and their current status"
           >
-            <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-[#15803D]' : 'bg-[#B45309]'}`}></span>
+            <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-[#2F6249]' : 'bg-[#6E5410]'}`}></span>
             <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wide">
               {checking ? 'Checking Sources' : `${operationalCount}/${endpoints.length} Sources Up`}
             </span>
@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex items-center gap-1.5 px-2.5 h-8 bg-[#0D5C63] hover:bg-[#0A474D] text-white font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 h-8 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
               title="Poll live regulatory APIs for latest circulars and rules"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`}>
@@ -161,26 +161,26 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               aria-label="Notifications"
-              className="relative p-1.5 text-[#57534E] hover:text-[#1E1B18] bg-[#FFFFFF] hover:bg-[#F5F1E8] rounded-lg border border-[#E5DFD5] transition-colors shadow-xs"
+              className="relative p-1.5 text-[#3C4852] hover:text-[#1D2630] bg-[#FBFCFA] hover:bg-[#E3EBE6] rounded-lg border border-[#D3DDD7] transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-xl">notifications</span>
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#DC2626] text-white font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#A8432F] text-white font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
                   {unreadCount}
                 </span>
               )}
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#FFFFFF] border border-[#D8D0C2] rounded-lg shadow-xl p-3 z-50">
-                <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
-                  <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-[#1E1B18] flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span>
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50">
+                <div className="flex items-center justify-between pb-2 border-b border-[#D3DDD7]">
+                  <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-[#1D2630] flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#A8432F]"></span>
                     Latest Notices
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">From live sources</span>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">From live sources</span>
                 </div>
-                <div className="divide-y divide-[#E5DFD5] max-h-72 overflow-y-auto mt-1">
+                <div className="divide-y divide-[#D3DDD7] max-h-72 overflow-y-auto mt-1">
                   {notifications.map((n) => (
                     <div
                       key={n.id}
@@ -188,15 +188,15 @@ export const Header: React.FC<HeaderProps> = ({
                         onSelectNotice(n.linkId);
                         setShowNotifications(false);
                       }}
-                      className="py-2 px-1.5 hover:bg-[#FAF8F5] rounded cursor-pointer transition-colors"
+                      className="py-2 px-1.5 hover:bg-[#F4F7F4] rounded cursor-pointer transition-colors"
                     >
                       <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-['JetBrains_Mono'] font-bold text-[#0D5C63]">
+                        <span className="font-['JetBrains_Mono'] font-bold text-[#1F4E79]">
                           {n.regulator}
                         </span>
-                        <span className="font-['JetBrains_Mono'] text-[#857F74]">{n.time}</span>
+                        <span className="font-['JetBrains_Mono'] text-[#56636B]">{n.time}</span>
                       </div>
-                      <p className="font-['Inter'] text-[12px] text-[#1E1B18] line-clamp-2">
+                      <p className="font-['Inter'] text-[12px] text-[#1D2630] line-clamp-2">
                         {n.title}
                       </p>
                     </div>
@@ -209,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Export Button */}
           <button
             onClick={onOpenExport}
-            className="hidden sm:flex items-center gap-1.5 px-3 h-8 bg-[#FFFFFF] hover:bg-[#F5F1E8] border border-[#E5DFD5] text-[#57534E] hover:text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs"
+            className="hidden sm:flex items-center gap-1.5 px-3 h-8 bg-[#FBFCFA] hover:bg-[#E3EBE6] border border-[#D3DDD7] text-[#3C4852] hover:text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs"
           >
             <span className="material-symbols-outlined text-base">download</span>
             <span>Export</span>
@@ -222,15 +222,15 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-2 pl-1 cursor-pointer group"
               title="Local session"
             >
-              <span className="w-8 h-8 rounded-full shrink-0 ring-1 ring-[#E5DFD5] group-hover:ring-[#0D5C63] transition-all bg-[#F5F1E8] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[#57534E] text-lg">person</span>
+              <span className="w-8 h-8 rounded-full shrink-0 ring-1 ring-[#D3DDD7] group-hover:ring-[#1F4E79] transition-all bg-[#E3EBE6] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#3C4852] text-lg">person</span>
               </span>
             </div>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-64 bg-[#FFFFFF] border border-[#D8D0C2] rounded-lg shadow-xl p-3 z-50 text-[12px]">
-                <p className="font-semibold text-[#1E1B18]">Local session</p>
-                <p className="text-[11px] text-[#57534E] mt-1 leading-relaxed">
+              <div className="absolute right-0 mt-2 w-64 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50 text-[12px]">
+                <p className="font-semibold text-[#1D2630]">Local session</p>
+                <p className="text-[11px] text-[#3C4852] mt-1 leading-relaxed">
                   RegSonar has no accounts or sign-in. Filters and watch rules live in this browser tab only.
                 </p>
               </div>

@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #FAF7F2;
-  --color-surface-dim: #F4EFE6;
-  --color-surface-bright: #FFFFFF;
-  --color-surface-container-lowest: #FFFFFF;
-  --color-surface-container-low: #F5F1E8;
-  --color-surface-container: #EFEBE0;
-  --color-surface-container-high: #E8E2D5;
-  --color-surface-container-highest: #DDD6C8;
-  --color-surface-panel: #FFFFFF;
-  --color-surface-panel-elevated: #FAF8F5;
-  --color-border-subtle: #E5DFD5;
-  --color-border-strong: #D8D0C2;
+  --color-surface: #EEF3EF;
+  --color-surface-dim: #E8EFEA;
+  --color-surface-bright: #FBFCFA;
+  --color-surface-container-lowest: #FBFCFA;
+  --color-surface-container-low: #E3EBE6;
+  --color-surface-container: #D9E3DD;
+  --color-surface-container-high: #DCE4DF;
+  --color-surface-container-highest: #CFDAD3;
+  --color-surface-panel: #FBFCFA;
+  --color-surface-panel-elevated: #F4F7F4;
+  --color-border-subtle: #D3DDD7;
+  --color-border-strong: #C5D2CA;
   
-  /* Darker Teal Accent & Warm Colors */
-  --color-primary: #0D5C63;
-  --color-primary-container: #0D5C63;
-  --color-secondary-container: #09454A;
+  /* Wada Sanzo "Porcelain & Prussian": Prussian blue accent on porcelain green */
+  --color-primary: #1F4E79;
+  --color-primary-container: #1F4E79;
+  --color-secondary-container: #163A5C;
   --color-on-primary-container: #FFFFFF;
-  --color-secondary: #78716C;
-  --color-tertiary: #15803D;
+  --color-secondary: #56636B;
+  --color-tertiary: #2F6249;
 
-  /* Semantic Status Colors with light beige backgrounds */
-  --color-status-in-force: #15803D;
-  --color-status-in-force-bg: #DCFCE7;
-  --color-status-pending: #0D5C63;
-  --color-status-pending-bg: #E6F4F4;
-  --color-status-enforcement: #DC2626;
-  --color-status-enforcement-bg: #FEE2E2;
-  --color-status-consultation: #6D28D9;
-  --color-status-consultation-bg: #EDE9FE;
+  /* Semantic status colours: cobalt green, Prussian blue, Venetian red, violet */
+  --color-status-in-force: #2F6249;
+  --color-status-in-force-bg: #D7E9DD;
+  --color-status-pending: #1F4E79;
+  --color-status-pending-bg: #D9E5EE;
+  --color-status-enforcement: #A8432F;
+  --color-status-enforcement-bg: #F4DCD3;
+  --color-status-consultation: #4E4560;
+  --color-status-consultation-bg: #E4E1EA;
 
   /* Typography Colors */
-  --color-text-primary: #1E1B18;
-  --color-text-secondary: #57534E;
-  --color-text-muted: #857F74;
-  --color-on-surface: #1E1B18;
-  --color-on-surface-variant: #44403C;
-  --color-error: #DC2626;
+  --color-text-primary: #1D2630;
+  --color-text-secondary: #3C4852;
+  --color-text-muted: #56636B;
+  --color-on-surface: #1D2630;
+  --color-on-surface-variant: #3C4852;
+  --color-error: #A8432F;
 
   --font-headline-xl: "Hanken Grotesk", sans-serif;
   --font-headline-lg: "Hanken Grotesk", sans-serif;
@@ -54,8 +54,8 @@
 
 @layer base {
   body {
-    background-color: #FAF7F2;
-    color: #1E1B18;
+    background-color: #EEF3EF;
+    color: #1D2630;
     font-family: "Inter", sans-serif;
   }
 }
@@ -66,14 +66,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF7F2;
+  background: #EEF3EF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DDD6C8;
+  background: #CFDAD3;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C8BFB0;
+  background: #B8C6BD;
 }
 
 .material-symbols-outlined {

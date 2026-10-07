@@ -356,7 +356,7 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#FAF7F2] font-['Inter'] text-[#1E1B18] antialiased min-h-screen flex flex-col">
+    <div className="bg-[#EEF3EF] font-['Inter'] text-[#1D2630] antialiased min-h-screen flex flex-col">
       {/* Fixed Top Header */}
       <Header
         searchQuery={searchQuery}
@@ -385,7 +385,7 @@ export default function App() {
       />
 
       {/* Main Content Viewport */}
-      <main className="w-full pt-32 bg-[#FAF7F2] min-h-screen flex-1 flex flex-col">
+      <main className="w-full pt-32 bg-[#EEF3EF] min-h-screen flex-1 flex flex-col">
         {activeTab === 'feed' && (
           <div className="flex flex-col w-full">
             {/* Executive KPI Ribbon */}
@@ -433,25 +433,25 @@ export default function App() {
                 {/* Center Feed (6 cols): Active Notices Feed */}
                 <section className="lg:col-span-6 flex flex-col gap-3">
                   {/* Live Feeds Connected Status Strip */}
-                  <div className="bg-[#FFFFFF] border border-[#E5DFD5] px-3.5 py-2 rounded-lg flex items-center justify-between text-[11px] shadow-2xs">
+                  <div className="bg-[#FBFCFA] border border-[#D3DDD7] px-3.5 py-2 rounded-lg flex items-center justify-between text-[11px] shadow-2xs">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse"></span>
-                      <span className="font-['JetBrains_Mono'] font-bold text-[#1E1B18]">
+                      <span className="w-2 h-2 rounded-full bg-[#2F6249] animate-pulse"></span>
+                      <span className="font-['JetBrains_Mono'] font-bold text-[#1D2630]">
                         Automated Feed Ingestion
                       </span>
-                      <span className="text-[#857F74] hidden sm:inline">•</span>
-                      <span className="text-[#857F74] hidden sm:inline">
+                      <span className="text-[#56636B] hidden sm:inline">•</span>
+                      <span className="text-[#56636B] hidden sm:inline">
                         {ingestingSources.length > 0 ? ingestingSources.join(', ') : 'Waiting for first sync'}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74]">
+                      <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">
                         {lastSyncTime}
                       </span>
                       <button
                         onClick={() => setIsEndpointsModalOpen(true)}
-                        className="text-[#0D5C63] hover:text-[#0A474D] font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
+                        className="text-[#1F4E79] hover:text-[#163A5C] font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
                       >
                         <span>Endpoints Gateway</span>
                         <span className="material-symbols-outlined text-[13px]">open_in_new</span>
@@ -460,9 +460,9 @@ export default function App() {
                   </div>
 
                   {/* Feed Search & Sort Bar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#FFFFFF] border border-[#E5DFD5] p-2.5 rounded-lg shadow-xs">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#FBFCFA] border border-[#D3DDD7] p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
-                      <span className="material-symbols-outlined absolute left-3 top-2 text-[#857F74] text-lg pointer-events-none">
+                      <span className="material-symbols-outlined absolute left-3 top-2 text-[#56636B] text-lg pointer-events-none">
                         search
                       </span>
                       <input
@@ -473,18 +473,18 @@ export default function App() {
                           setCurrentPage(1);
                         }}
                         placeholder="Filter alerts by legal keyword, citation, act..."
-                        className="w-full h-8 pl-9 pr-3 bg-[#FAF8F5] border border-[#E5DFD5] rounded text-[#1E1B18] placeholder:text-[#857F74] font-['Inter'] text-[12px] focus:outline-none focus:bg-[#FFFFFF] focus:border-[#0D5C63] transition-all"
+                        className="w-full h-8 pl-9 pr-3 bg-[#F4F7F4] border border-[#D3DDD7] rounded text-[#1D2630] placeholder:text-[#56636B] font-['Inter'] text-[12px] focus:outline-none focus:bg-[#FBFCFA] focus:border-[#1F4E79] transition-all"
                       />
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] hidden md:inline font-medium">
+                      <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] hidden md:inline font-medium">
                         Sort:
                       </span>
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
-                        className="h-8 px-2 bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-[#0D5C63] cursor-pointer"
+                        className="h-8 px-2 bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-[#1F4E79] cursor-pointer"
                       >
                         <option value="Highest Impact Score">Highest Impact Score</option>
                         <option value="Most Recent First">Most Recent First</option>
@@ -495,8 +495,8 @@ export default function App() {
                         onClick={() => setDensity(density === 'comfortable' ? 'compact' : 'comfortable')}
                         className={`h-8 w-8 flex items-center justify-center border rounded transition-colors ${
                           density === 'compact'
-                            ? 'bg-[#0D5C63] text-white border-[#0D5C63]'
-                            : 'bg-[#FAF8F5] border-[#E5DFD5] text-[#57534E] hover:text-[#1E1B18]'
+                            ? 'bg-[#1F4E79] text-white border-[#1F4E79]'
+                            : 'bg-[#F4F7F4] border-[#D3DDD7] text-[#3C4852] hover:text-[#1D2630]'
                         }`}
                         title="Feed Density Toggle"
                       >
@@ -520,44 +520,44 @@ export default function App() {
                         />
                       ))
                     ) : !hasSynced && syncError ? (
-                      <div className="bg-[#FFFFFF] border border-[#FDE68A] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#B45309]">cloud_off</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                      <div className="bg-[#FBFCFA] border border-[#DCC68A] rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-[#6E5410]">cloud_off</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
                           Live notices could not be loaded
                         </h4>
-                        <p className="text-[12px] text-[#57534E]">
+                        <p className="text-[12px] text-[#3C4852]">
                           {syncError} RegSonar shows no sample data, so the feed stays empty until a sync succeeds.
                         </p>
                         <button
                           onClick={handleSyncFeeds}
                           disabled={isSyncing}
-                          className="mt-1 px-3 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white text-[12px] font-semibold rounded disabled:opacity-60"
+                          className="mt-1 px-3 py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white text-[12px] font-semibold rounded disabled:opacity-60"
                         >
                           {isSyncing ? 'Retrying...' : 'Retry sync'}
                         </button>
                       </div>
                     ) : !hasSynced ? (
-                      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#0D5C63] animate-spin">sync</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-[#1F4E79] animate-spin">sync</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
                           Loading live notices from regulators...
                         </h4>
-                        <p className="text-[12px] text-[#57534E]">
+                        <p className="text-[12px] text-[#3C4852]">
                           The first sync fetches each source document, so it can take a few seconds.
                         </p>
                       </div>
                     ) : (
-                      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-[#857F74]">find_in_page</span>
-                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1E1B18]">
+                      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-[#56636B]">find_in_page</span>
+                        <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
                           No statutory publications match current filters
                         </h4>
-                        <p className="text-[12px] text-[#57534E]">
+                        <p className="text-[12px] text-[#3C4852]">
                           Try adjusting your jurisdiction selections or reset the filter facets.
                         </p>
                         <button
                           onClick={handleResetFilters}
-                          className="px-3.5 py-1.5 bg-[#0D5C63] text-white text-[12px] font-semibold rounded hover:bg-[#09454A] transition-colors mt-2 shadow-xs"
+                          className="px-3.5 py-1.5 bg-[#1F4E79] text-white text-[12px] font-semibold rounded hover:bg-[#163A5C] transition-colors mt-2 shadow-xs"
                         >
                           Reset Filters
                         </button>
@@ -566,7 +566,7 @@ export default function App() {
                   </div>
 
                   {/* Pagination Ribbon */}
-                  <div className="p-3 bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg flex items-center justify-between text-[12px] text-[#57534E] shadow-xs">
+                  <div className="p-3 bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg flex items-center justify-between text-[12px] text-[#3C4852] shadow-xs">
                     <span>
                       Showing {Math.min(filteredNotices.length, (currentPage - 1) * itemsPerPage + 1)} to{' '}
                       {Math.min(filteredNotices.length, currentPage * itemsPerPage)} of{' '}
@@ -578,8 +578,8 @@ export default function App() {
                         disabled={currentPage === 1}
                         className={`px-3 py-1 rounded text-[11px] font-semibold transition-colors ${
                           currentPage === 1
-                            ? 'bg-[#F5F1E8] text-[#857F74] cursor-not-allowed border border-[#E5DFD5]'
-                            : 'bg-[#FAF8F5] text-[#1E1B18] border border-[#E5DFD5] hover:bg-[#F5F1E8]'
+                            ? 'bg-[#E3EBE6] text-[#56636B] cursor-not-allowed border border-[#D3DDD7]'
+                            : 'bg-[#F4F7F4] text-[#1D2630] border border-[#D3DDD7] hover:bg-[#E3EBE6]'
                         }`}
                       >
                         Previous
@@ -591,8 +591,8 @@ export default function App() {
                           onClick={() => setCurrentPage(idx + 1)}
                           className={`px-3 py-1 rounded font-['Inter'] text-[11px] font-semibold transition-colors ${
                             currentPage === idx + 1
-                              ? 'bg-[#0D5C63] text-white shadow-2xs'
-                              : 'bg-[#FAF8F5] border border-[#E5DFD5] text-[#1E1B18] hover:bg-[#F5F1E8]'
+                              ? 'bg-[#1F4E79] text-white shadow-2xs'
+                              : 'bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] hover:bg-[#E3EBE6]'
                           }`}
                         >
                           {idx + 1}
@@ -604,8 +604,8 @@ export default function App() {
                         disabled={currentPage === totalPages}
                         className={`px-3 py-1 rounded text-[11px] font-semibold transition-colors ${
                           currentPage === totalPages
-                            ? 'bg-[#F5F1E8] text-[#857F74] cursor-not-allowed border border-[#E5DFD5]'
-                            : 'bg-[#FAF8F5] text-[#1E1B18] border border-[#E5DFD5] hover:bg-[#F5F1E8]'
+                            ? 'bg-[#E3EBE6] text-[#56636B] cursor-not-allowed border border-[#D3DDD7]'
+                            : 'bg-[#F4F7F4] text-[#1D2630] border border-[#D3DDD7] hover:bg-[#E3EBE6]'
                         }`}
                       >
                         Next
@@ -711,25 +711,25 @@ export default function App() {
       {/* Info Notice Modal */}
       {infoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-[#FFFFFF] border border-[#D8D0C2] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E5DFD5]">
-              <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1E1B18]">
+          <div className="bg-[#FBFCFA] border border-[#C5D2CA] rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#D3DDD7]">
+              <h3 className="font-['Hanken_Grotesk'] text-[17px] font-bold text-[#1D2630]">
                 {infoModal.title}
               </h3>
               <button
                 onClick={() => setInfoModal(null)}
-                className="text-[#857F74] hover:text-[#1E1B18]"
+                className="text-[#56636B] hover:text-[#1D2630]"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
             </div>
-            <p className="text-[13px] text-[#57534E] leading-relaxed whitespace-pre-wrap font-['Inter']">
+            <p className="text-[13px] text-[#3C4852] leading-relaxed whitespace-pre-wrap font-['Inter']">
               {infoModal.body}
             </p>
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setInfoModal(null)}
-                className="px-4 py-1.5 bg-[#0D5C63] text-white text-[12px] font-semibold rounded hover:bg-[#09454A] shadow-xs"
+                className="px-4 py-1.5 bg-[#1F4E79] text-white text-[12px] font-semibold rounded hover:bg-[#163A5C] shadow-xs"
               >
                 Close
               </button>

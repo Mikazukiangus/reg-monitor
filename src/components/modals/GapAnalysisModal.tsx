@@ -69,23 +69,23 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-[#FFFFFF] border border-[#D8D0C2] rounded-xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-[#FBFCFA] border border-[#C5D2CA] rounded-xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="p-4 bg-[#F5F1E8] border-b border-[#E5DFD5] flex items-center justify-between">
+        <div className="p-4 bg-[#E3EBE6] border-b border-[#D3DDD7] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#0D5C63] text-2xl">assignment</span>
+            <span className="material-symbols-outlined text-[#1F4E79] text-2xl">assignment</span>
             <div>
-              <h2 className="font-['Hanken_Grotesk'] text-[18px] text-[#1E1B18] font-bold">
+              <h2 className="font-['Hanken_Grotesk'] text-[18px] text-[#1D2630] font-bold">
                 Institutional Gap Analysis &amp; Action Matrix
               </h2>
-              <p className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
+              <p className="font-['JetBrains_Mono'] text-[11px] text-[#56636B]">
                 {notice.regulator} • {notice.ref} • Date: {notice.statutoryDeadline || 'None found in source'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded text-[#857F74] hover:text-[#1E1B18] hover:bg-[#EAE4D7] transition-colors"
+            className="p-1 rounded text-[#56636B] hover:text-[#1D2630] hover:bg-[#DCE4DF] transition-colors"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -94,21 +94,21 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
         {/* Modal Body */}
         <div className="p-5 overflow-y-auto flex-1 space-y-4">
           {/* Summary Banner */}
-          <div className="p-3.5 bg-[#FAF7F2] border border-[#E8E2D5] rounded-lg">
-            <span className="font-['JetBrains_Mono'] text-[10px] text-[#0D5C63] uppercase font-bold tracking-wider block mb-1">
+          <div className="p-3.5 bg-[#EEF3EF] border border-[#DCE4DF] rounded-lg">
+            <span className="font-['JetBrains_Mono'] text-[10px] text-[#1F4E79] uppercase font-bold tracking-wider block mb-1">
               Active Regulatory Matter
             </span>
-            <h3 className="font-['Hanken_Grotesk'] text-[15px] font-bold text-[#1E1B18] mb-1">
+            <h3 className="font-['Hanken_Grotesk'] text-[15px] font-bold text-[#1D2630] mb-1">
               {notice.title}
             </h3>
-            <div className="flex flex-wrap gap-2 text-[11px] text-[#57534E] font-['JetBrains_Mono'] mt-2">
-              <span className="px-2 py-0.5 bg-[#FFFFFF] rounded border border-[#E5DFD5]">
+            <div className="flex flex-wrap gap-2 text-[11px] text-[#3C4852] font-['JetBrains_Mono'] mt-2">
+              <span className="px-2 py-0.5 bg-[#FBFCFA] rounded border border-[#D3DDD7]">
                 Impact Score: {notice.impactScore}/10
               </span>
-              <span className="px-2 py-0.5 bg-[#FFFFFF] rounded border border-[#E5DFD5]">
+              <span className="px-2 py-0.5 bg-[#FBFCFA] rounded border border-[#D3DDD7]">
                 Jurisdiction: {notice.jurisdiction}
               </span>
-              <span className="px-2 py-0.5 bg-[#FEE2E2] text-[#B91C1C] rounded border border-[#FCA5A5] font-semibold">
+              <span className="px-2 py-0.5 bg-[#F4DCD3] text-[#8A3524] rounded border border-[#E2B5A6] font-semibold">
                 SEAR CISO Liability: Active
               </span>
             </div>
@@ -117,10 +117,10 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
           {/* Checklist Table */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="font-['Hanken_Grotesk'] text-[14px] font-bold text-[#1E1B18]">
+              <span className="font-['Hanken_Grotesk'] text-[14px] font-bold text-[#1D2630]">
                 Statutory Obligations &amp; Readiness Checklist
               </span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#15803D] font-bold">
+              <span className="font-['JetBrains_Mono'] text-[11px] text-[#2F6249] font-bold">
                 {checklist.filter(c => c.status === 'Compliant').length} of {checklist.length} Controls Verified
               </span>
             </div>
@@ -129,16 +129,16 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               {checklist.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 bg-[#FAF7F2] border border-[#E5DFD5] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-[#F5F1E8] transition-colors"
+                  className="p-3 bg-[#EEF3EF] border border-[#D3DDD7] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-[#E3EBE6] transition-colors"
                 >
                   <div className="flex-1">
-                    <p className="font-['Inter'] text-[13px] font-semibold text-[#1E1B18]">
+                    <p className="font-['Inter'] text-[13px] font-semibold text-[#1D2630]">
                       {item.requirement}
                     </p>
-                    <div className="flex flex-wrap items-center gap-3 mt-1.5 font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
-                      <span>Owner: <strong className="text-[#1E1B18]">{item.owner}</strong></span>
-                      <span>Target: <strong className="text-[#0D5C63]">{item.deadline || "Not set"}</strong></span>
-                      <span className="text-[#57534E] italic">{item.notes}</span>
+                    <div className="flex flex-wrap items-center gap-3 mt-1.5 font-['JetBrains_Mono'] text-[11px] text-[#56636B]">
+                      <span>Owner: <strong className="text-[#1D2630]">{item.owner}</strong></span>
+                      <span>Target: <strong className="text-[#1F4E79]">{item.deadline || "Not set"}</strong></span>
+                      <span className="text-[#3C4852] italic">{item.notes}</span>
                     </div>
                   </div>
 
@@ -148,10 +148,10 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                       onChange={(e) => handleStatusChange(item.id, e.target.value as ChecklistItem['status'])}
                       className={`text-[11px] font-['JetBrains_Mono'] font-bold px-2.5 py-1 rounded border cursor-pointer focus:outline-none ${
                         item.status === 'Compliant'
-                          ? 'bg-[#DCFCE7] text-[#15803D] border-[#86EFAC]'
+                          ? 'bg-[#D7E9DD] text-[#2F6249] border-[#ABCDB7]'
                           : item.status === 'In-Progress'
-                          ? 'bg-[#E6F4F4] text-[#0D5C63] border-[#B2DFDB]'
-                          : 'bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5]'
+                          ? 'bg-[#D9E5EE] text-[#1F4E79] border-[#B3C8D9]'
+                          : 'bg-[#F4DCD3] text-[#A8432F] border-[#E2B5A6]'
                       }`}
                     >
                       <option value="Compliant">✓ Compliant</option>
@@ -165,8 +165,8 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
           </div>
 
           {/* Add Requirement Form */}
-          <form onSubmit={handleAddItem} className="p-3 bg-[#FAF7F2] border border-[#E5DFD5] rounded-lg">
-            <span className="font-['JetBrains_Mono'] text-[10px] text-[#857F74] uppercase tracking-wider block mb-2 font-medium">
+          <form onSubmit={handleAddItem} className="p-3 bg-[#EEF3EF] border border-[#D3DDD7] rounded-lg">
+            <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B] uppercase tracking-wider block mb-2 font-medium">
               Add Internal Remediation Action Item
             </span>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -175,12 +175,12 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                 value={newRequirement}
                 onChange={(e) => setNewRequirement(e.target.value)}
                 placeholder="e.g. Schedule emergency external key custodian drill..."
-                className="flex-1 bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[12px] text-[#1E1B18] focus:outline-none focus:border-[#0D5C63]"
+                className="flex-1 bg-[#FBFCFA] border border-[#D3DDD7] px-3 py-1.5 rounded text-[12px] text-[#1D2630] focus:outline-none focus:border-[#1F4E79]"
               />
               <select
                 value={newOwner}
                 onChange={(e) => setNewOwner(e.target.value)}
-                className="bg-[#FFFFFF] border border-[#E5DFD5] px-3 py-1.5 rounded text-[12px] text-[#1E1B18] focus:outline-none"
+                className="bg-[#FBFCFA] border border-[#D3DDD7] px-3 py-1.5 rounded text-[12px] text-[#1D2630] focus:outline-none"
               >
                 <option value="Custody Operations">Custody Operations</option>
                 <option value="Wealth Tech">Wealth Tech</option>
@@ -189,7 +189,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               </select>
               <button
                 type="submit"
-                className="px-3.5 py-1.5 bg-[#0D5C63] text-white text-[12px] font-semibold rounded hover:bg-[#09454A] transition-colors shadow-xs"
+                className="px-3.5 py-1.5 bg-[#1F4E79] text-white text-[12px] font-semibold rounded hover:bg-[#163A5C] transition-colors shadow-xs"
               >
                 Add Action
               </button>
@@ -198,20 +198,20 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-[#F5F1E8] border-t border-[#E5DFD5] flex items-center justify-between">
-          <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74]">
+        <div className="p-4 bg-[#E3EBE6] border-t border-[#D3DDD7] flex items-center justify-between">
+          <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B]">
             Syncs to Jira, ServiceNow, and GRC Enterprise Systems
           </span>
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-3.5 py-1.5 bg-[#FFFFFF] hover:bg-[#FAF8F5] border border-[#E5DFD5] text-[#57534E] font-['Inter'] text-[12px] rounded transition-colors shadow-2xs"
+              className="px-3.5 py-1.5 bg-[#FBFCFA] hover:bg-[#F4F7F4] border border-[#D3DDD7] text-[#3C4852] font-['Inter'] text-[12px] rounded transition-colors shadow-2xs"
             >
               Close
             </button>
             <button
               onClick={handleExportGapReport}
-              className="px-4 py-1.5 bg-[#0D5C63] hover:bg-[#09454A] text-white font-['Inter'] text-[12px] font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
+              className="px-4 py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[12px] font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm">
                 download

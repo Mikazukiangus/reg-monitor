@@ -40,17 +40,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   return (
     <aside className="lg:col-span-3 flex flex-col gap-3">
       {/* Filters & Facets Panel */}
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
-        <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#E5DFD5]">
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+        <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#D3DDD7]">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[#0D5C63] text-base">filter_alt</span>
-            <span className="font-['Hanken_Grotesk'] text-[16px] text-[#1E1B18] font-bold">
+            <span className="material-symbols-outlined text-[#1F4E79] text-base">filter_alt</span>
+            <span className="font-['Hanken_Grotesk'] text-[16px] text-[#1D2630] font-bold">
               Filters &amp; Facets
             </span>
           </div>
           <button
             onClick={onResetFilters}
-            className="font-['Inter'] text-[11px] font-semibold text-[#857F74] hover:text-[#1E1B18] transition-colors"
+            className="font-['Inter'] text-[11px] font-semibold text-[#56636B] hover:text-[#1D2630] transition-colors"
             id="reset-filters"
           >
             Reset
@@ -60,7 +60,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="space-y-4">
           {/* Urgency Severity */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#857F74] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
               Urgency Severity
             </span>
             <div className="grid grid-cols-3 gap-1.5">
@@ -69,11 +69,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('critical')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('critical')
-                    ? 'bg-[#FEE2E2] border-[#FCA5A5] text-[#DC2626] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#57534E]'
+                    ? 'bg-[#F4DCD3] border-[#E2B5A6] text-[#A8432F] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#A8432F]"></span>
                 Critical ({severityCounts.critical})
               </button>
 
@@ -82,11 +82,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('high')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('high')
-                    ? 'bg-[#E6F4F4] border-[#B2DFDB] text-[#0D5C63] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#57534E]'
+                    ? 'bg-[#D9E5EE] border-[#B3C8D9] text-[#1F4E79] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5C63]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1F4E79]"></span>
                 High ({severityCounts.high})
               </button>
 
@@ -95,11 +95,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('info')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('info')
-                    ? 'bg-[#EAE4D7] border-[#D8D0C2] text-[#1E1B18] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#57534E]'
+                    ? 'bg-[#DCE4DF] border-[#C5D2CA] text-[#1D2630] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#78716C]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#56636B]"></span>
                 Info ({severityCounts.info})
               </button>
             </div>
@@ -107,125 +107,125 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Primary Jurisdiction */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#857F74] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
               Primary Jurisdiction
             </span>
             <div className="space-y-1">
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.SG}
                     onChange={() => onToggleJurisdiction('SG')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.SG ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.SG ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     Singapore (MAS)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.SG}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.HK}
                     onChange={() => onToggleJurisdiction('HK')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.HK ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.HK ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     Hong Kong (HKMA, SFC)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.HK}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.AU}
                     onChange={() => onToggleJurisdiction('AU')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.AU ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.AU ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     Australia (ASIC, APRA)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.AU}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.JP}
                     onChange={() => onToggleJurisdiction('JP')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.JP ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.JP ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     Japan (JFSA)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.JP}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.UK_EU}
                     onChange={() => onToggleJurisdiction('UK_EU')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.UK_EU ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.UK_EU ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     UK &amp; EU (PRA, FCA, ESMA)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.UK_EU}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.US}
                     onChange={() => onToggleJurisdiction('US')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.US ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.US ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     United States (SEC, CFTC)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.US}
                 </span>
               </label>
 
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors">
+              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedJurisdictions.GLOBAL}
                     onChange={() => onToggleJurisdiction('GLOBAL')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.GLOBAL ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'}`}>
+                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.GLOBAL ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
                     Global (BIS, Basel Committee)
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#857F74] bg-[#F5F1E8] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
                   {jurisdictionCounts.GLOBAL}
                 </span>
               </label>
@@ -234,7 +234,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Sector / Domain */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#857F74] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
               Sector / Domain
             </span>
             <div className="space-y-1">
@@ -249,17 +249,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               ).map((sector) => (
                 <label
                   key={sector}
-                  className="flex items-center gap-2 p-1.5 rounded hover:bg-[#FAF8F5] cursor-pointer transition-colors"
+                  className="flex items-center gap-2 p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedSectors[sector]}
                     onChange={() => onToggleSector(sector)}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#D8D0C2] text-[#0D5C63] focus:ring-0 cursor-pointer accent-[#0D5C63]"
+                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
                   />
                   <span
                     className={`font-['Inter'] text-[12px] ${
-                      selectedSectors[sector] ? 'text-[#1E1B18] font-medium' : 'text-[#57534E]'
+                      selectedSectors[sector] ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'
                     }`}
                   >
                     {sector}
@@ -271,7 +271,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           {/* Instrument Format */}
           <div>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#857F74] block mb-1.5">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wider text-[#56636B] block mb-1.5">
               Instrument Format
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -280,8 +280,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Circulars' ? null : 'Circulars')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Circulars'
-                    ? 'bg-[#0D5C63] text-white border-[#0D5C63] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#1E1B18]'
+                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#1D2630]'
                 }`}
               >
                 Circulars ({formatCounts.Circulars || 0})
@@ -292,8 +292,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Consultations' ? null : 'Consultations')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Consultations'
-                    ? 'bg-[#0D5C63] text-white border-[#0D5C63] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#1E1B18]'
+                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#1D2630]'
                 }`}
               >
                 Consultations ({formatCounts.Consultations || 0})
@@ -304,8 +304,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Enforcement' ? null : 'Enforcement')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Enforcement'
-                    ? 'bg-[#DC2626] text-white border-[#DC2626] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#DC2626]'
+                    ? 'bg-[#A8432F] text-white border-[#A8432F] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#A8432F]'
                 }`}
               >
                 Enforcement ({formatCounts.Enforcement || 0})
@@ -316,8 +316,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Guidelines' ? null : 'Guidelines')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Guidelines'
-                    ? 'bg-[#0D5C63] text-white border-[#0D5C63] shadow-2xs'
-                    : 'bg-[#FAF8F5] border-[#E5DFD5] hover:bg-[#F5F1E8] text-[#57534E]'
+                    ? 'bg-[#1F4E79] text-white border-[#1F4E79] shadow-2xs'
+                    : 'bg-[#F4F7F4] border-[#D3DDD7] hover:bg-[#E3EBE6] text-[#3C4852]'
                 }`}
               >
                 Guidelines ({formatCounts.Guidelines || 0})
@@ -328,34 +328,34 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Jurisdiction Mesh Card */}
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg p-3.5 shadow-xs">
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-1">
-          <span className="font-['Inter'] text-[13px] font-bold text-[#1E1B18]">
+          <span className="font-['Inter'] text-[13px] font-bold text-[#1D2630]">
             Jurisdiction Mesh
           </span>
           <button
             onClick={onPingEndpoints}
             disabled={isPinging}
-            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#0D5C63] hover:underline font-semibold disabled:opacity-60"
+            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#1F4E79] hover:underline font-semibold disabled:opacity-60"
             title="Re-check the monitored endpoints"
           >
-            <span className={`w-1.5 h-1.5 rounded-full bg-[#0D5C63] ${isPinging ? 'animate-ping' : ''}`}></span>
+            <span className={`w-1.5 h-1.5 rounded-full bg-[#1F4E79] ${isPinging ? 'animate-ping' : ''}`}></span>
             {isPinging ? 'Checking...' : 'Check Now'}
           </button>
         </div>
-        <p className="font-['Inter'] text-[12px] text-[#857F74] mb-2.5">
+        <p className="font-['Inter'] text-[12px] text-[#56636B] mb-2.5">
           Response time from the RegSonar server to each monitored source.
         </p>
 
         <div className="space-y-2">
           {endpoints.map((ep) => (
             <div key={ep.id} className="flex items-center justify-between text-[12px]" title={ep.detail}>
-              <span className="text-[#57534E] font-['Inter']">{ep.agency}</span>
+              <span className="text-[#3C4852] font-['Inter']">{ep.agency}</span>
               <span className={`font-['JetBrains_Mono'] text-[11px] font-semibold flex items-center gap-1 ${STATUS_STYLES[ep.status].text}`}>
                 {ep.pingMs !== null && (
                   <>
                     <span>{ep.pingMs}ms</span>
-                    <span className="text-[#857F74]">•</span>
+                    <span className="text-[#56636B]">•</span>
                   </>
                 )}
                 <span>{ep.status}</span>
