@@ -678,23 +678,22 @@ const SOURCES: { endpointId: string; name: string; fetch: () => Promise<Normaliz
 ];
 
 // Key points per notice id. Documents don't change once published, so each is
-// fetched and summarised once per server process.
+// fetched and summarised once per server process. A failed fetch is not
+// cached, so it is retried the next time its source refreshes.
 const keyPointsCache = new Map<string, KeyPoints | null>();
 
 async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null> {
   if (keyPointsCache.has(notice.id)) return keyPointsCache.get(notice.id)!;
-  let result: KeyPoints | null = null;
   try {
     const res = await fetchOrThrow(notice.dossierUrl!);
     const text = extractArticleText(await res.text(), notice.dossierUrl!);
-    if (text.length > 200) {
-      result = summarize(text, { sourceUrl: notice.dossierUrl });
-    }
+    const result = text.length > 200 ? summarize(text, { sourceUrl: notice.dossierUrl }) : null;
+    keyPointsCache.set(notice.id, result);
+    return result;
   } catch (err: any) {
     console.log(`[RegSonar Summaries] Could not fetch ${notice.dossierUrl}: ${describeError(err)}`);
+    return null;
   }
-  keyPointsCache.set(notice.id, result);
-  return result;
 }
 
 // HKMA circulars and consultations link to BRDR landing pages that only hold

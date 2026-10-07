@@ -187,7 +187,8 @@ This document records the full chronological instructions, technical requirement
   1. HKMA press releases now come from `rss_press-release.xml` instead of the Open API. HKMA circulars (`rss_circulars.xml`, 3 newest) and consultations (`rss_consultations.xml`, 3 newest) were added. Routine items (tender results, bond issues, monetary statistics) are filtered out.
   2. New endpoint `hkma-rss` (HKMA RSS Feeds). The `hkma-api` endpoint now only provides the daily liquidity figures, which are not in any feed, and is labelled "HKMA liquidity data" so a failure there doesn't read as HKMA being down.
   3. Circulars and consultations link to BRDR (`brdr.hkma.gov.hk`) pages that only hold metadata (the text is a PDF) and sit behind the same WAF, so they are not fetched for key points. Cards without extractable text now say so and point to the source document.
-* **Verified:** locally, with `api.hkma.gov.hk` and `brdr.hkma.gov.hk` made to time out (as on Vercel), a sync returned 10 HKMA notices (4 press releases with key points, 3 circulars, 3 consultations); only the liquidity source failed. `tsc --noEmit` and `vite build` pass; no console errors.
+  4. A failed key-point fetch is no longer cached. Previously one timeout meant that notice never got key points for the life of the server instance; now it is retried when its source next refreshes (every 10 minutes). In production two HKMA press-release pages timed out once from Vercel's Singapore region, although they load in under 1s elsewhere.
+* **Verified:** locally, with `api.hkma.gov.hk` and `brdr.hkma.gov.hk` made to time out (as on Vercel), a sync returned 10 HKMA notices (4 press releases with key points, 3 circulars, 3 consultations); only the liquidity source failed. `tsc --noEmit` and `vite build` pass; no console errors. In production after deploy: 29 notices, HKMA RSS Operational with 10 notices; only the liquidity figures (Open API) failed.
 
 ---
 
