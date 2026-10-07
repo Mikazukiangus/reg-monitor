@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, extractPdfText, earliestDeadline, KeyPoints } from './summarize.js';
+import { summarize, extractArticleText, extractPdfText, earliestDeadline, htmlToText, KeyPoints } from './summarize.js';
+import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
+import { DIGEST_RULES } from './digest-rules.js';
 
 dotenv.config();
 
@@ -91,7 +93,8 @@ function classifyFormat(type: string, title: string): 'Circulars' | 'Consultatio
   if (lower.includes('proposed') || lower.includes('consult') || lower.includes('comment') || lower.includes('draft')) {
     return 'Consultations';
   }
-  if (lower.includes('enforcement') || lower.includes('penalty') || lower.includes('proceeding') || lower.includes('action') || lower.includes('order')) {
+  if (lower.includes('enforcement') || lower.includes('penalty') || lower.includes('proceeding') || lower.includes('action') || lower.includes('order') ||
+      /\b(reprimand(s|ed)?|fine[sd]|ban(s|ned)|sentenced|convicted|prosecut\w*|disciplinary)\b/.test(lower)) {
     return 'Enforcement';
   }
   if (lower.includes('standard') || lower.includes('technical') || lower.includes('interoperability')) {
@@ -164,12 +167,12 @@ async function fetchOrThrow(url: string): Promise<globalThis.Response> {
 }
 
 // Fetch US Federal Register API notices (SEC & CFTC)
-async function fetchFederalRegister(): Promise<NormalizedNotice[]> {
+async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
   // Date fields are only returned when requested by name
   const fields = ['title', 'type', 'abstract', 'agencies', 'document_number', 'citation', 'publication_date', 'comments_close_on', 'effective_on', 'dates', 'html_url', 'pdf_url']
     .map((f) => `&fields[]=${f}`)
     .join('');
-  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=4${fields}`;
+  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=${limit}${fields}`;
   const res = await fetchOrThrow(url);
   const data = await res.json();
   const results = data.results || [];
@@ -228,7 +231,7 @@ async function fetchFederalRegister(): Promise<NormalizedNotice[]> {
 
 // Fetch UK FCA RSS feed. The FCA site sits behind a Cloudflare bot challenge,
 // so this usually fails with HTTP 403 from server environments.
-async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
+async function fetchFcaFeed(limit = 3): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow('https://www.fca.org.uk/news/rss.xml');
   const xml = await res.text();
   const parsed = xmlParser.parse(xml);
@@ -236,7 +239,7 @@ async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
     throw new Error('Response was not an RSS feed');
   }
   const items = parsed.rss.channel.item || [];
-  const slice = (Array.isArray(items) ? items : [items]).slice(0, 3);
+  const slice = (Array.isArray(items) ? items : [items]).slice(0, limit);
 
   return slice.map((item: any) => {
     const title = String(item.title || 'FCA publication');
@@ -270,7 +273,7 @@ async function fetchFcaFeed(): Promise<NormalizedNotice[]> {
 }
 
 // Fetch Bank of England Prudential Regulation Authority publications (RSS 2.0)
-async function fetchPraPublications(): Promise<NormalizedNotice[]> {
+async function fetchPraPublications(limit = 4): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow('https://www.bankofengland.co.uk/rss/prudential-regulation-publications');
   const parsed = xmlParser.parse(await res.text());
   if (!parsed.rss?.channel) {
@@ -278,7 +281,7 @@ async function fetchPraPublications(): Promise<NormalizedNotice[]> {
   }
   const items = parsed.rss.channel.item || [];
 
-  return (Array.isArray(items) ? items : [items]).slice(0, 4).map((item: any) => {
+  return (Array.isArray(items) ? items : [items]).slice(0, limit).map((item: any) => {
     const title = stripHtml(String(item.title));
     const description = item.description ? stripHtml(String(item.description)) : undefined;
     const format = classifyFormat('', title + ' ' + (description || ''));
@@ -327,7 +330,7 @@ interface HkmaFeed {
   limit: number;
 }
 
-async function fetchHkmaRss(feed: HkmaFeed): Promise<NormalizedNotice[]> {
+async function fetchHkmaRss(feed: HkmaFeed, limit = feed.limit): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow(`${HKMA_RSS}/${feed.file}`);
   const parsed = xmlParser.parse(await res.text());
   if (!parsed.rss?.channel) {
@@ -337,7 +340,7 @@ async function fetchHkmaRss(feed: HkmaFeed): Promise<NormalizedNotice[]> {
 
   return (Array.isArray(items) ? items : [items])
     .filter((item: any) => item.title && !HKMA_ROUTINE_RELEASE.test(String(item.title)))
-    .slice(0, feed.limit)
+    .slice(0, limit)
     .map((item: any) => {
       const title = stripHtml(String(item.title));
       const format = feed.format || classifyFormat('', title);
@@ -368,12 +371,12 @@ async function fetchHkmaRss(feed: HkmaFeed): Promise<NormalizedNotice[]> {
     });
 }
 
-const fetchHkmaPressReleases = () =>
-  fetchHkmaRss({ file: 'rss_press-release.xml', idPrefix: 'hkma-pr', refLabel: 'HKMA Press Release', type: 'PRESS RELEASE', limit: 4 });
-const fetchHkmaCirculars = () =>
-  fetchHkmaRss({ file: 'rss_circulars.xml', idPrefix: 'hkma-cir', refLabel: 'HKMA Circular', type: 'CIRCULAR', limit: 3 });
-const fetchHkmaConsultations = () =>
-  fetchHkmaRss({ file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 });
+const fetchHkmaPressReleases = (limit?: number) =>
+  fetchHkmaRss({ file: 'rss_press-release.xml', idPrefix: 'hkma-pr', refLabel: 'HKMA Press Release', type: 'PRESS RELEASE', limit: 4 }, limit);
+const fetchHkmaCirculars = (limit?: number) =>
+  fetchHkmaRss({ file: 'rss_circulars.xml', idPrefix: 'hkma-cir', refLabel: 'HKMA Circular', type: 'CIRCULAR', limit: 3 }, limit);
+const fetchHkmaConsultations = (limit?: number) =>
+  fetchHkmaRss({ file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 }, limit);
 
 // Fetch the latest HKMA interbank liquidity figures from the Daily Monetary
 // Statistics page on www.hkma.gov.hk. The same figures are in the HKMA Open
@@ -473,13 +476,13 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
 // Fetch MAS media releases and enforcement actions from the search API behind
 // mas.gov.sg/news. It is undocumented, and MAS serves a "Maintenance" page to
 // non-browser user agents, so this relies on REG_USER_AGENT.
-async function fetchMasMediaReleases(): Promise<NormalizedNotice[]> {
+async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
   const params = new URLSearchParams();
   params.append('q', '*:*');
   params.append('fq', 'mas_mastercontenttypes_sm:"News"');
   params.append('fq', 'mas_contenttype_s:("Media Releases" OR "Enforcement Actions Media Releases")');
   params.append('sort', 'mas_date_tdt desc');
-  params.append('rows', '4');
+  params.append('rows', String(limit));
   params.append('wt', 'json');
   const res = await fetchOrThrow(`https://www.mas.gov.sg/api/v1/search?${params}`);
   if (!res.headers.get('content-type')?.includes('json')) {
@@ -521,7 +524,7 @@ async function fetchMasMediaReleases(): Promise<NormalizedNotice[]> {
 }
 
 // Fetch BIS media releases (RSS 1.0 / RDF), which include Basel Committee announcements
-async function fetchBisPressReleases(): Promise<NormalizedNotice[]> {
+async function fetchBisPressReleases(limit = 4): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow('https://www.bis.org/doclist/all_pressrels.rss');
   const parsed = xmlParser.parse(await res.text());
   const items = parsed['rdf:RDF']?.item;
@@ -529,7 +532,7 @@ async function fetchBisPressReleases(): Promise<NormalizedNotice[]> {
     throw new Error('Response was not an RSS feed');
   }
 
-  return (Array.isArray(items) ? items : [items]).slice(0, 4).map((item: any) => {
+  return (Array.isArray(items) ? items : [items]).slice(0, limit).map((item: any) => {
     const title = stripHtml(String(item.title));
     const description = item.description ? stripHtml(String(item.description)) : undefined;
     const format = classifyFormat('', title);
@@ -559,6 +562,178 @@ async function fetchBisPressReleases(): Promise<NormalizedNotice[]> {
       isLiveFeed: true
     };
   });
+}
+
+// Hong Kong Securities and Futures Commission official RSS feeds (RSS 2.0)
+const SFC_RSS = 'https://www.sfc.hk/en/RSS-Feeds';
+
+interface SfcFeed {
+  path: string;
+  idPrefix: string;
+  type: string;
+  format?: 'Consultations';
+  limit: number;
+}
+
+async function fetchSfcRss(feed: SfcFeed, limit = feed.limit): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(`${SFC_RSS}/${feed.path}`);
+  const parsed = xmlParser.parse(await res.text());
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
+  }
+  const items = parsed.rss.channel.item || [];
+
+  return (Array.isArray(items) ? items : [items]).slice(0, limit).map((item: any) => {
+    // Circular titles start with the audience on its own line ("Circular to Intermediaries")
+    const title = stripHtml(String(item.title).split('\n').pop() || String(item.title));
+    const refNo = String(item.guid?.['#text'] ?? item.guid ?? '').trim()
+      || new URL(String(item.link)).searchParams.get('refNo')
+      || title;
+    const format = feed.format || classifyFormat('', title);
+    const sector = classifySector(title);
+    const score = estimateImpact(format);
+
+    return {
+      id: `${feed.idPrefix}-${refNo}`,
+      ref: `SFC ${refNo}`,
+      title,
+      regulator: 'SFC',
+      jurisdiction: 'HONG KONG',
+      jurisdictionCode: 'HK',
+      type: feed.type,
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item.pubDate),
+      publishedAt: toIso(item.pubDate),
+      tags: ['SFC', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: String(item.link),
+      isLiveFeed: true
+    };
+  });
+}
+
+const fetchSfcPressReleases = (limit?: number) =>
+  fetchSfcRss({ path: 'Press-releases', idPrefix: 'sfc-pr', type: 'PRESS RELEASE', limit: 4 }, limit);
+const fetchSfcCirculars = (limit?: number) =>
+  fetchSfcRss({ path: 'Circulars', idPrefix: 'sfc-cir', type: 'CIRCULAR', limit: 3 }, limit);
+const fetchSfcConsultations = (limit?: number) =>
+  fetchSfcRss({ path: 'Consultations-and-Conclusions', idPrefix: 'sfc-con', type: 'CONSULTATION', format: 'Consultations', limit: 3 }, limit);
+
+// Convert a local date-time without offset ("2026-10-07T11:13:00") in the
+// given time zone to an ISO timestamp
+function zonedToIso(local: string, timeZone: string): string | undefined {
+  const asUtc = new Date(`${local.slice(0, 19)}Z`).getTime();
+  if (isNaN(asUtc)) return undefined;
+  const offset = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
+    .formatToParts(new Date(asUtc))
+    .find(p => p.type === 'timeZoneName')?.value.match(/GMT([+-])(\d{2}):(\d{2})/);
+  const offsetMs = offset ? (offset[1] === '-' ? -1 : 1) * (Number(offset[2]) * 60 + Number(offset[3])) * 60_000 : 0;
+  return new Date(asUtc - offsetMs).toISOString();
+}
+
+// ASIC has no RSS feed. Its media releases page is filled in from this JSON
+// file on ASIC's own download server, which is read here in the same way.
+const ASIC_MEDIA_RELEASES = 'https://download.asic.gov.au/asic-nga/data/newsroom/newsroom-mr-latest.json';
+
+async function fetchAsicMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(ASIC_MEDIA_RELEASES);
+  const items = await res.json();
+  if (!Array.isArray(items)) {
+    throw new Error('ASIC media releases file was not a list');
+  }
+
+  return items
+    .filter((item: any) => item.name && item.url && item.publishedDate)
+    // publishedDate is Sydney local time even though it ends in "Z"
+    .map((item: any) => ({ item, publishedAt: zonedToIso(String(item.publishedDate), 'Australia/Sydney') }))
+    .sort((a, b) => String(b.publishedAt).localeCompare(String(a.publishedAt)))
+    .slice(0, limit)
+    .map(({ item, publishedAt }) => {
+      const docNumber = String(item.documentNumber || '');
+      const title = stripHtml(String(item.name)).replace(new RegExp(`^${docNumber}\\s+`), '');
+      const summary = item.metaDescription ? stripHtml(String(item.metaDescription)) : undefined;
+      const isEnforcement = Array.isArray(item.metaFunction) && item.metaFunction.includes('enforcement');
+      const format = isEnforcement ? 'Enforcement' : classifyFormat('', title);
+      const sector = classifySector(title + ' ' + (summary || ''));
+      const score = estimateImpact(format);
+
+      return {
+        id: `asic-${docNumber || item.id}`,
+        ref: `ASIC ${docNumber || 'media release'}`,
+        title,
+        regulator: 'ASIC',
+        jurisdiction: 'AUSTRALIA',
+        jurisdictionCode: 'AU' as const,
+        type: isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE',
+        typeColorClass: getTypeColor(format),
+        impactScore: score,
+        issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+        publishedAt,
+        summary,
+        tags: ['ASIC', format, sector],
+        sector,
+        format,
+        severity: severityFor(score),
+        dossierUrl: new URL(String(item.url), 'https://asic.gov.au').toString(),
+        isLiveFeed: true
+      };
+    });
+}
+
+// Japan Financial Services Agency English "What's New" RSS feed. Titles are
+// "Category,Title". Press conference transcripts and the weekly newsletter
+// are left out because they are not regulatory notices.
+const JFSA_RSS = 'https://www.fsa.go.jp/fsaEnNewsList_rss2.xml';
+const JFSA_SKIPPED = /^(press conferences|international)$/i;
+
+async function fetchJfsaNews(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(JFSA_RSS);
+  const parsed = xmlParser.parse(await res.text());
+  if (!parsed.rss?.channel) {
+    throw new Error('Response was not an RSS feed');
+  }
+  const items = parsed.rss.channel.item || [];
+
+  return (Array.isArray(items) ? items : [items])
+    .map((item: any) => {
+      const raw = stripHtml(String(item.title));
+      const comma = raw.indexOf(',');
+      const category = comma > 0 ? raw.slice(0, comma).trim() : '';
+      return { item, category, title: comma > 0 ? raw.slice(comma + 1).trim() : raw };
+    })
+    .filter(({ category, title }) => !JFSA_SKIPPED.test(category) && !/^FSA Weekly Review/i.test(title))
+    .slice(0, limit)
+    .map(({ item, category, title }) => {
+      const format = classifyFormat(category, title);
+      const sector = classifySector(title);
+      const score = estimateImpact(format);
+      // Dates end in "JST", which JavaScript does not parse
+      const pubDate = String(item.pubDate || '').replace(/\bJST$/, '+0900');
+      const slug = String(item.link).replace(/^https?:\/\/www\.fsa\.go\.jp\/en\//, '').replace(/\.html?$/, '').replace(/[^\w-]+/g, '-');
+
+      return {
+        id: `jfsa-${slug}`,
+        ref: `JFSA ${category || 'News'}`,
+        title,
+        regulator: 'JFSA',
+        jurisdiction: 'JAPAN',
+        jurisdictionCode: 'JP' as const,
+        type: (category || 'NEWS').toUpperCase(),
+        typeColorClass: getTypeColor(format),
+        impactScore: score,
+        issuedTimeAgo: getRelativeTime(pubDate),
+        publishedAt: toIso(pubDate),
+        tags: ['JFSA', format, sector],
+        sector,
+        format,
+        severity: severityFor(score),
+        dossierUrl: String(item.link),
+        isLiveFeed: true
+      };
+    });
 }
 
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
@@ -636,14 +811,34 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
+    id: 'sfc-rss',
+    name: 'SFC RSS Feeds',
+    agency: 'SFC (Hong Kong)',
+    jurisdiction: 'Hong Kong',
+    url: `${SFC_RSS}/Press-releases`,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
     id: 'asic-gov',
-    name: 'Australia ASIC Portal',
+    name: 'ASIC Media Releases',
     agency: 'ASIC (Australia)',
     jurisdiction: 'Australia',
-    url: 'https://asic.gov.au',
-    protocol: 'HTTPS Portal',
+    url: ASIC_MEDIA_RELEASES,
+    protocol: 'JSON (behind ASIC newsroom page)',
     auth: 'Public / None',
-    ingests: false
+    ingests: true
+  },
+  {
+    id: 'jfsa-rss',
+    name: 'JFSA English News RSS',
+    agency: 'JFSA (Japan)',
+    jurisdiction: 'Japan',
+    url: JFSA_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
   },
   {
     id: 'bis-portal',
@@ -796,15 +991,21 @@ async function getLiquidityHistory(range: LiquidityRange) {
 }
 
 // Ingestion sources, keyed to the endpoint they read from
-const SOURCES: { endpointId: string; name: string; fetch: () => Promise<NormalizedNotice[]>; ttlMs?: number }[] = [
+// fetch(limit) reads more than the feed's usual number of items; the email digest uses this
+const SOURCES: { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false }[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
   { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
   { endpointId: 'boe-pra', name: 'UK PRA Publications', fetch: fetchPraPublications },
   { endpointId: 'hkma-rss', name: 'HKMA Press Releases', fetch: fetchHkmaPressReleases },
   { endpointId: 'hkma-rss', name: 'HKMA Circulars', fetch: fetchHkmaCirculars },
   { endpointId: 'hkma-rss', name: 'HKMA Consultations', fetch: fetchHkmaConsultations },
-  { endpointId: 'hkma-dms', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS },
+  { endpointId: 'hkma-dms', name: 'HKMA Interbank Liquidity', fetch: fetchHkmaLiquidity, ttlMs: HKMA_SOURCE_TTL_MS, inDigest: false },
+  { endpointId: 'sfc-rss', name: 'SFC Press Releases', fetch: fetchSfcPressReleases },
+  { endpointId: 'sfc-rss', name: 'SFC Circulars', fetch: fetchSfcCirculars },
+  { endpointId: 'sfc-rss', name: 'SFC Consultations', fetch: fetchSfcConsultations },
   { endpointId: 'mas-gov', name: 'MAS Media Releases', fetch: fetchMasMediaReleases },
+  { endpointId: 'asic-gov', name: 'ASIC Media Releases', fetch: fetchAsicMediaReleases },
+  { endpointId: 'jfsa-rss', name: 'JFSA News', fetch: fetchJfsaNews },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];
 
@@ -829,13 +1030,29 @@ async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; ocr: b
   return { ...(await extractPdfText(data)), pdfUrl };
 }
 
+// SFC document pages are an empty shell filled in from a JSON API on the same
+// site; the document's HTML is read from that API instead
+const SFC_DOC_PAGE = /^https:\/\/apps\.sfc\.hk\/edistributionWeb\/gateway\/EN\/(news-and-announcements\/news|circular)\/doc\?refNo=([\w-]+)/;
+
+async function fetchSfcDocText(pageUrl: string): Promise<string | null> {
+  const match = pageUrl.match(SFC_DOC_PAGE);
+  if (!match) return null;
+  const kind = match[1] === 'circular' ? 'circular' : 'news';
+  const res = await fetchOrThrow(`https://apps.sfc.hk/edistributionWeb/api/${kind}/content?refNo=${match[2]}&lang=EN`);
+  const doc = await res.json();
+  return typeof doc?.html === 'string' ? htmlToText(doc.html) : '';
+}
+
 async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null> {
   if (keyPointsCache.has(notice.id)) return keyPointsCache.get(notice.id)!;
   try {
     let text: string;
     let ocr = false;
     let sourceUrl = notice.dossierUrl!;
-    if (BRDR_PAGE.test(sourceUrl)) {
+    const sfcText = await fetchSfcDocText(sourceUrl);
+    if (sfcText !== null) {
+      text = sfcText;
+    } else if (BRDR_PAGE.test(sourceUrl)) {
       ({ text, ocr, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
     } else {
       const res = await fetchOrThrow(sourceUrl);
@@ -927,6 +1144,33 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
   return state;
 }
 
+// The email digest reads up to this many items per source, so a source that
+// publishes more in a day than the feed shows is still covered
+const DIGEST_FETCH_LIMIT = 20;
+
+async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
+  const sources = SOURCES.filter(s => s.inDigest !== false);
+  const [states, wide] = await Promise.all([
+    Promise.all(sources.map(refreshSource)),
+    Promise.allSettled(sources.map(s => s.fetch(DIGEST_FETCH_LIMIT)))
+  ]);
+  const byId = new Map<string, NormalizedNotice>();
+  const failed: string[] = [];
+  wide.forEach((result, i) => {
+    if (result.status === 'fulfilled') result.value.forEach(n => byId.set(n.id, n));
+    else failed.push(sources[i].name);
+  });
+  // Notices already in the feed carry key points, so they replace the wider read's copies
+  states.forEach(st => st.notices.forEach(n => byId.set(n.id, n)));
+  return { notices: [...byId.values()], failed };
+}
+
+function siteUrl(): string {
+  if (process.env.DIGEST_SITE_URL) return process.env.DIGEST_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  return `http://localhost:${process.env.PORT || 3000}`;
+}
+
 // API routes only. Used by the local server below and by the Vercel
 // function in api/index.ts, where the frontend is served as static files.
 export function createApp() {
@@ -997,6 +1241,64 @@ export function createApp() {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
       res.status(500).json({ success: false, error: error?.message || 'Sync error' });
     }
+  });
+
+  // Daily email digest, run by the cron job in vercel.json. Vercel sends
+  // "Authorization: Bearer <CRON_SECRET>"; without that secret nothing runs, so
+  // nobody else can trigger emails. ?dryRun=1 returns the email instead of
+  // sending it, and ?date=YYYY-MM-DD picks the Singapore day (default yesterday).
+  app.get('/api/digest', async (req: Request, res: Response) => {
+    res.set('Cache-Control', 'no-store');
+    const secret = process.env.CRON_SECRET;
+    if (!secret) {
+      res.status(503).json({ success: false, error: 'CRON_SECRET is not set, so the digest is turned off' });
+      return;
+    }
+    if (req.get('authorization') !== `Bearer ${secret}`) {
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
+    }
+    try {
+      const date = typeof req.query.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date) ? req.query.date : null;
+      const day = date || singaporeDate(new Date(), 1);
+      const { notices, failed } = await collectDigestNotices();
+      const matches = matchDigest(notices, DIGEST_RULES, day);
+      const email = renderDigest(matches, day, siteUrl(), failed);
+      const summary = { day, checked: notices.length, matched: matches.length, failedSources: failed, subject: email.subject };
+      console.log(`[RegSonar Digest] ${day}: ${matches.length} matching of ${notices.length} notices checked${failed.length ? `; could not read ${failed.join(', ')}` : ''}`);
+
+      if (req.query.dryRun === '1') {
+        res.json({ success: true, sent: false, ...summary, matches: matches.map(m => ({ id: m.notice.id, title: m.notice.title, rules: m.rules })), html: email.html, text: email.text });
+        return;
+      }
+      if (matches.length === 0) {
+        res.json({ success: true, sent: false, reason: 'No matching notices', ...summary });
+        return;
+      }
+      const apiKey = process.env.RESEND_API_KEY;
+      const to = (process.env.DIGEST_TO || '').split(',').map(a => a.trim()).filter(Boolean);
+      if (!apiKey || to.length === 0) {
+        res.status(503).json({ success: false, error: 'RESEND_API_KEY and DIGEST_TO must be set to send the digest', ...summary });
+        return;
+      }
+      const result = await sendWithResend({ apiKey, from: process.env.DIGEST_FROM || 'RegSonar <onboarding@resend.dev>', to, ...email });
+      console.log(`[RegSonar Digest] Sent ${day} digest (Resend id ${result.id})`);
+      res.json({ success: true, sent: true, id: result.id, ...summary });
+    } catch (error: any) {
+      console.log('[RegSonar Digest] Failed:', error?.message);
+      res.status(500).json({ success: false, error: error?.message || 'Digest failed' });
+    }
+  });
+
+  // The digest's rules and whether sending is set up (never the address)
+  app.get('/api/digest/rules', (_req: Request, res: Response) => {
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      success: true,
+      rules: DIGEST_RULES,
+      schedule: 'Daily at about 08:00 Singapore time',
+      configured: Boolean(process.env.CRON_SECRET && process.env.RESEND_API_KEY && process.env.DIGEST_TO)
+    });
   });
 
   // API Route: daily HKMA liquidity figures for the dashboard chart

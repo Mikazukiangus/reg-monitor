@@ -40,7 +40,9 @@ const DEFAULT_ENDPOINTS: EndpointMetric[] = [
   { id: 'fca-rss', name: 'UK FCA News RSS', agency: 'FCA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.fca.org.uk/news/rss.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'boe-pra', name: 'Bank of England PRA Publications RSS', agency: 'PRA (United Kingdom)', jurisdiction: 'United Kingdom', url: 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'mas-gov', name: 'Singapore MAS News Search API', agency: 'MAS (Singapore)', jurisdiction: 'Singapore', url: 'https://www.mas.gov.sg/api/v1/search', protocol: 'JSON (undocumented)', auth: 'Public / None', ingests: true },
-  { id: 'asic-gov', name: 'Australia ASIC Portal', agency: 'ASIC (Australia)', jurisdiction: 'Australia', url: 'https://asic.gov.au', protocol: 'HTTPS Portal', auth: 'Public / None', ingests: false },
+  { id: 'sfc-rss', name: 'SFC RSS Feeds', agency: 'SFC (Hong Kong)', jurisdiction: 'Hong Kong', url: 'https://www.sfc.hk/en/RSS-Feeds/Press-releases', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'asic-gov', name: 'ASIC Media Releases', agency: 'ASIC (Australia)', jurisdiction: 'Australia', url: 'https://download.asic.gov.au/asic-nga/data/newsroom/newsroom-mr-latest.json', protocol: 'JSON (behind ASIC newsroom page)', auth: 'Public / None', ingests: true },
+  { id: 'jfsa-rss', name: 'JFSA English News RSS', agency: 'JFSA (Japan)', jurisdiction: 'Japan', url: 'https://www.fsa.go.jp/fsaEnNewsList_rss2.xml', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', url: 'https://www.bis.org/doclist/all_pressrels.rss', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
 ].map(ep => ({ ...ep, status: 'Checking' as const, pingMs: null }));
 
@@ -93,6 +95,9 @@ export default function App() {
   const [endpoints, setEndpoints] = useState<EndpointMetric[]>(DEFAULT_ENDPOINTS);
   const [isEndpointsModalOpen, setIsEndpointsModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  // Set when the notices shown are the copy saved on this device (offline)
+  const [savedCopyAt, setSavedCopyAt] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== 'undefined' && navigator.onLine === false);
   const [isPinging, setIsPinging] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState('Not synced yet');
   const [lastSyncAt, setLastSyncAt] = useState<string | null>(null);
@@ -209,7 +214,10 @@ export default function App() {
         const syncedAt: string = data.lastSync || new Date().toISOString();
         setLastSyncAt(syncedAt);
         setLastSyncTime(sgtTime(syncedAt));
-        return syncedAt;
+        // The service worker marks a copy it saved earlier; no point refreshing it while offline
+        const savedAt = res.headers.get('X-RegSonar-Saved');
+        setSavedCopyAt(savedAt);
+        return savedAt ? null : syncedAt;
       }
       setSyncError(`The feed server returned HTTP ${res.status}.`);
     } catch (err) {
@@ -244,6 +252,21 @@ export default function App() {
       setIsPinging(false);
     }
   };
+
+  // Refresh as soon as the connection comes back
+  React.useEffect(() => {
+    const goOffline = () => setIsOffline(true);
+    const goOnline = () => {
+      setIsOffline(false);
+      handleSyncFeeds(true);
+    };
+    window.addEventListener('offline', goOffline);
+    window.addEventListener('online', goOnline);
+    return () => {
+      window.removeEventListener('offline', goOffline);
+      window.removeEventListener('online', goOnline);
+    };
+  }, []);
 
   // Automated background polling
   React.useEffect(() => {
@@ -311,6 +334,7 @@ export default function App() {
       // Header dropdown filter
       if (headerJurisdiction === 'Singapore MAS' && notice.jurisdictionCode !== 'SG') return false;
       if (headerJurisdiction === 'Hong Kong HKMA' && notice.jurisdictionCode !== 'HK') return false;
+      if (headerJurisdiction === 'Australia Japan' && !['AU', 'JP'].includes(notice.jurisdictionCode)) return false;
       if (headerJurisdiction === 'UK US Global' && !['UK_EU', 'US', 'GLOBAL'].includes(notice.jurisdictionCode)) return false;
 
       // Severity check
@@ -552,6 +576,17 @@ export default function App() {
                       </button>
                     </div>
                   </div>
+
+                  {/* Offline: the notices are the copy saved on this device */}
+                  {hasSynced && (isOffline || savedCopyAt) && (
+                    <div role="status" className="bg-[#F8F1DC] border border-[#DCC68A] px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-[#6E5410]">
+                      <span className="material-symbols-outlined text-[16px]">cloud_off</span>
+                      <span>
+                        {isOffline ? "You're offline. " : 'The feed server could not be reached. '}
+                        Showing the notices saved on this device (data as of {lastSyncTime}); they refresh when the connection is back.
+                      </span>
+                    </div>
+                  )}
 
                   {/* New since the last visit in this browser */}
                   {previousVisit && hasSynced && (
@@ -809,7 +844,7 @@ export default function App() {
         onOpenMethodology={() =>
           setInfoModal({
             title: 'Statutory Ingestion Methodology',
-            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the MAS news search API, and the BIS media releases RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. ASIC is status-checked only. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents.'
+            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the SFC press release, circular and consultation RSS feeds, the MAS news search API, ASIC media releases (from the JSON file behind the ASIC newsroom page, as ASIC publishes no RSS feed), the JFSA English news RSS feed (press conference transcripts and the weekly newsletter are left out), and the BIS media releases RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents.'
           })
         }
         onOpenAuditLog={() =>

@@ -28,7 +28,7 @@ const BLOCK_CLOSE = /<\/(p|li|h[1-6]|div|tr|td|th|section|article|blockquote|dd|
 
 // HTML to plain text with paragraph breaks preserved, so headings and list
 // items don't run into the following sentence.
-function htmlToText(html: string): string {
+export function htmlToText(html: string): string {
   const { document } = parseHTML(`<!doctype html><html><body>${html.replace(BLOCK_CLOSE, '$&\n')}</body></html>`);
   const lines = (document.body.textContent || '')
     .split('\n')

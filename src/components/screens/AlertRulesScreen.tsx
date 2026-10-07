@@ -1,42 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
+import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
+import { copyText } from '../../lib/urlState';
 
-const DEFAULT_RULES: CustomAlertRule[] = [
-  {
-    id: 'rule-1',
-    name: 'Consultations & Deadlines',
-    jurisdictions: ['MAS', 'HKMA', 'PRA', 'SEC'],
-    minImpact: 7.5,
-    keywords: ['consult', 'comments', 'deadline', 'feedback'],
-    enabled: true
-  },
-  {
-    id: 'rule-2',
-    name: 'Digital Assets & Tokenisation',
-    jurisdictions: ['MAS', 'HKMA', 'SEC', 'BIS', 'BCBS'],
-    minImpact: 0,
-    keywords: ['crypto', 'stablecoin', 'tokenis', 'digital asset', 'custody'],
-    enabled: true
-  },
-  {
-    id: 'rule-3',
-    name: 'Enforcement Actions',
-    jurisdictions: ['MAS', 'SEC', 'PRA', 'HKMA'],
-    minImpact: 0,
-    keywords: ['enforcement', 'penalty', 'fine', 'prohibition'],
-    enabled: true
-  }
-];
-
-// A notice matches when it is from a listed regulator, meets the impact
-// threshold, and mentions at least one keyword (if any are set).
-export function ruleMatches(rule: CustomAlertRule, notice: RegulatoryNotice): boolean {
-  const regulator = notice.regulator.toLowerCase();
-  if (rule.jurisdictions.length > 0 && !rule.jurisdictions.some(j => regulator.includes(j.toLowerCase()))) return false;
-  if (notice.impactScore < rule.minImpact) return false;
-  if (rule.keywords.length === 0) return true;
-  const text = [notice.title, notice.summary, ...(notice.keyPoints?.points || [])].join(' ').toLowerCase();
-  return rule.keywords.some(k => text.includes(k.toLowerCase()));
+interface DigestInfo {
+  rules: CustomAlertRule[];
+  schedule: string;
+  configured: boolean;
 }
 
 interface AlertRulesScreenProps {
@@ -50,6 +20,22 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   const [ruleName, setRuleName] = useState('');
   const [minImpact, setMinImpact] = useState(8.0);
   const [keywords, setKeywords] = useState('');
+  const [digest, setDigest] = useState<DigestInfo | null>(null);
+  const [digestError, setDigestError] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/digest/rules')
+      .then(res => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then(data => setDigest({ rules: data.rules, schedule: data.schedule, configured: data.configured }))
+      .catch(() => setDigestError(true));
+  }, []);
+
+  const handleCopyRules = async () => {
+    const ok = await copyText(JSON.stringify(rules.map(({ id, name, jurisdictions, minImpact, keywords, enabled }) => ({ id, name, jurisdictions, minImpact, keywords, enabled })), null, 2));
+    setCopied(ok);
+    if (ok) setTimeout(() => setCopied(false), 2500);
+  };
 
   const handleToggleRule = (id: string) => {
     setRules(prev =>
@@ -88,7 +74,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
             </h1>
           </div>
           <p className="font-['Inter'] text-[13px] text-[#3C4852]">
-            Rules are checked against the live notices currently loaded. Matches are shown here only; delivery to Slack, webhooks or email is not implemented.
+            Rules here are checked against the live notices currently loaded and are kept in this tab only. The daily email digest below uses its own rules, stored on the server.
           </p>
         </div>
 
@@ -99,6 +85,49 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
           <span className="material-symbols-outlined text-base">add</span>
           <span>New Alert Rule</span>
         </button>
+      </div>
+
+      {/* Daily email digest (server side, to the site owner only) */}
+      <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-xl p-5 shadow-xs space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#1F4E79] text-xl">mail</span>
+            <h2 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">Daily email digest</h2>
+          </div>
+          {digest && (
+            <span
+              className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                digest.configured ? 'bg-[#D7E9DD] text-[#2F6249] border-[#ABCDB7]' : 'bg-[#F8F1DC] text-[#6E5410] border-[#DCC68A]'
+              }`}
+            >
+              {digest.configured ? 'Sending is set up' : 'Not sending yet'}
+            </span>
+          )}
+        </div>
+        <p className="font-['Inter'] text-[13px] text-[#3C4852]">
+          {digest ? `${digest.schedule}, ` : ''}one email to the site owner listing the previous day's notices (Singapore time) that match these rules, read from up to 20 recent items per source. No email is sent on days with no matches.
+          {digest && !digest.configured && ' It starts once the CRON_SECRET, RESEND_API_KEY and DIGEST_TO settings are added to the Vercel project.'}
+        </p>
+        {digestError && <p className="font-['Inter'] text-[12px] text-[#A8432F]">The digest settings could not be loaded.</p>}
+        {digest && (
+          <ul className="flex flex-wrap gap-2">
+            {digest.rules.filter(r => r.enabled).map(r => (
+              <li key={r.id} className="font-['Inter'] text-[12px] bg-[#E3EBE6] text-[#1D2630] px-2.5 py-1 rounded-md" title={`${r.jurisdictions.join(', ') || 'Any regulator'} · impact ≥ ${r.minImpact} · ${r.keywords.join(', ') || 'any keywords'}`}>
+                {r.name}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={handleCopyRules}
+            className="px-3 py-1.5 border border-[#C5D2CA] hover:bg-[#E3EBE6] text-[#1D2630] text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">{copied ? 'check' : 'content_copy'}</span>
+            {copied ? 'Copied' : 'Copy the rules on this tab'}
+          </button>
+          <span className="font-['Inter'] text-[11px] text-[#56636B]">To use them for the digest, put them in digest-rules.ts in the project.</span>
+        </div>
       </div>
 
       {/* Rules Grid */}

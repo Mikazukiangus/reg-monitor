@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
             <img
               alt="RegSonar APAC Regulatory Logo"
               className="h-8 w-auto object-contain cursor-pointer"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1WqTvLdQl_IMZ0jnfuyfBhwV9yP0z46r_GR8vYW7is_oWJTWU6HbsT8TTRjAAFLrbFNEpdRuccJ5YYvVbXQ5x9Jvy_HkTSXxNmSJr4V8G2F3mUX6xsP-9vXPsc6S48uyKyv7vaa_jXGAZPTA8teELaSAylEEovWZ54H5ImXJnZ_KgTAOGWwp2onVP45wnA1t3vwu22Qvu_xrX6Le_L1rfImvOeYCoMqNwPeFVHb6TCq_mxP9qxZtk4jl1s"
+              src="/icon-192.png"
               onClick={() => onJurisdictionFilterChange('All')}
             />
             <div className="flex flex-col">
@@ -87,7 +87,8 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <option value="All">All jurisdictions</option>
               <option value="Singapore MAS">Singapore (MAS)</option>
-              <option value="Hong Kong HKMA">Hong Kong (HKMA)</option>
+              <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC)</option>
+              <option value="Australia Japan">Australia &amp; Japan</option>
               <option value="UK US Global">UK, US &amp; Global</option>
             </select>
           </div>

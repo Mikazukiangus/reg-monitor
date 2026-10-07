@@ -90,7 +90,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                 </span>
               </div>
               <p className="font-['Inter'] text-[11px] text-[#56636B]">
-                Notices ingested from US Federal Register, UK PRA, HKMA, MAS and BIS. UK FCA attempted; ASIC status only.
+                Notices ingested from US Federal Register, UK PRA and FCA, HKMA, SFC, MAS, ASIC, JFSA and BIS.
               </p>
             </div>
           </div>

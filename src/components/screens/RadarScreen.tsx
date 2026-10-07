@@ -12,9 +12,11 @@ const SECTORS: SectorDomain[] = [
 
 const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'SG', label: 'SINGAPORE (MAS)' },
-  { code: 'HK', label: 'HONG KONG (HKMA)' },
+  { code: 'HK', label: 'HONG KONG (HKMA, SFC)' },
   { code: 'US', label: 'UNITED STATES (SEC/CFTC)' },
   { code: 'UK_EU', label: 'UNITED KINGDOM (PRA, FCA)' },
+  { code: 'AU', label: 'AUSTRALIA (ASIC)' },
+  { code: 'JP', label: 'JAPAN (JFSA)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS)' }
 ];
 
@@ -38,7 +40,7 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
           </h1>
         </div>
         <p className="font-['Inter'] text-[13px] text-[#3C4852]">
-          Live publications by jurisdiction and sector, newest first. Sectors are assigned by keyword rules. Australia and Japan have no live source yet.
+          Live publications by jurisdiction and sector, newest first. Sectors are assigned by keyword rules.
         </p>
       </div>
 

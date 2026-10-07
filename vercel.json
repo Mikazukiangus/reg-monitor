@@ -14,5 +14,11 @@
       "maxDuration": 120,
       "includeFiles": "node_modules/{tesseract.js,tesseract.js-core,@tesseract.js-data/eng,bmp-js,idb-keyval,is-url,node-fetch,whatwg-url,tr46,webidl-conversions,regenerator-runtime,wasm-feature-detect,zlibjs}/**"
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/digest",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }
