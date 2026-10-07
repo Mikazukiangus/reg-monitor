@@ -247,6 +247,7 @@ This document records the full chronological instructions, technical requirement
 * **Fix found while testing:** until about 7pm Hong Kong time the Daily Monetary Statistics page says today's figures "will be published later today", so the liquidity source failed during the Hong Kong day. The server now falls back to the most recent dated page (up to 7 days back), and the notice links to that dated page. This bug is live on `main` until the branch is merged.
 * **Changed default:** all sectors are now shown by default; before, AI Governance and AML/CFT notices were hidden unless switched on.
 * **Verified locally:** `tsc --noEmit` and `vite build` pass; at 375px the page is 375px wide, the drawer, search, bottom bar and 3M chart work; a shared link with filters and a notice opens that view; the .ics file has 8 events with no line over 75 octets.
+* **Merged:** the user said "merge into main"; `main` was fast-forwarded to the branch and deployed. On production the first GET of `/api/feeds/sync` took 18.8s (`x-vercel-cache: MISS`) and the next ones 0.05–0.7s (`HIT`). At 13:48 Hong Kong time the liquidity source returned the 6 Oct figures from the dated page, and all 9 sources were OK.
 
 ---
 
