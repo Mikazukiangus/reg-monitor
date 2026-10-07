@@ -197,7 +197,7 @@ This document records the full chronological instructions, technical requirement
   1. `summarize.ts` gained `extractPdfText()`, using `unpdf` (a serverless build of pdf.js). It rebuilds paragraphs from PDF lines: joins lines that wrap mid-sentence, keeps headings, subject lines and numbered items separate, and drops letter furniture (letterhead, Chinese address, "Dear Sir/Madam", sign-off, contact line, page markers, footnotes).
   2. For BRDR links, the server fetches the landing page, takes the first linked PDF (the document itself), downloads it (15 MB cap) and summarises it with the same TextRank code. The "Verify in document" link points at the PDF.
 * **Verified locally:** 4 of the 6 current HKMA circulars and consultations got key points quoted from their PDFs. The other 2 (GS-2 Transition Planning; Phase 2B taxonomy consultation) are scanned PDFs with no text, so they keep the "No text could be extracted" note. OCR was not added, as it is too heavy for a serverless function.
-* **Open question:** BRDR uses the same Alibaba Cloud WAF family as `api.hkma.gov.hk`, so it may be unreachable from Vercel; see the production check below.
+* **Verified in production:** BRDR is reachable from Vercel (unlike `api.hkma.gov.hk`, despite a similar Alibaba Cloud WAF). After deploy, the same 4 of 6 documents had key points from their PDFs, and all four HKMA sources succeeded.
 
 ---
 
