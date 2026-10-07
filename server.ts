@@ -420,8 +420,13 @@ let latestLiquidity: LiquidityDay | null = null;
 
 async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
   const html = await (await fetchOrThrow(HKMA_DAILY_STATS_PAGE)).text();
-  const latest = parseHkmaDailyStats(html);
-  if (!latest) throw new Error('Figures not found on the HKMA Daily Monetary Statistics page');
+  let latest = parseHkmaDailyStats(html);
+  // Until about 7pm Hong Kong time the page says today's figures "will be
+  // published later today", so use the most recent dated page instead
+  for (let i = 1; !latest && i <= 7; i++) {
+    latest = await fetchLiquidityDay(hongKongDate(i));
+  }
+  if (!latest) throw new Error('No figures found on the HKMA Daily Monetary Statistics pages for the last 7 days');
   latestLiquidity = latest;
 
   const { date, time } = latest;
@@ -459,7 +464,7 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
       sector: 'Banking & Capital Markets',
       format: 'Circulars',
       severity: 'info',
-      dossierUrl: HKMA_DAILY_STATS_PAGE,
+      dossierUrl: liquidityDayUrl(date),
       isLiveFeed: true
     }
   ];
@@ -719,19 +724,25 @@ function getEndpointsHealth() {
 // publishes each date at .../daily-monetary-statistics/YYYY/MM/ms-YYYYMMDD/.
 // Past dates never change, so each is fetched once per server process; the
 // latest figures come from the liquidity source.
-const LIQUIDITY_HISTORY_DAYS = 28;
+// Calendar days of history for each range the chart offers
+export const LIQUIDITY_RANGES = { '1m': 28, '3m': 91 } as const;
+export type LiquidityRange = keyof typeof LIQUIDITY_RANGES;
 const liquidityDayCache = new Map<string, LiquidityDay | null>();
-let liquidityHistoryInFlight: Promise<{ days: LiquidityDay[]; failed: number }> | null = null;
+const liquidityHistoryInFlight = new Map<LiquidityRange, Promise<{ days: LiquidityDay[]; failed: number }>>();
 
 function hongKongDate(offsetDays = 0): string {
   const d = new Date(Date.now() - offsetDays * 86_400_000);
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Hong_Kong' }).format(d);
 }
 
+function liquidityDayUrl(date: string): string {
+  const [y, m, d] = date.split('-');
+  return `${HKMA_DAILY_STATS_PAGE}${y}/${m}/ms-${y}${m}${d}/`;
+}
+
 async function fetchLiquidityDay(date: string): Promise<LiquidityDay | null> {
   if (liquidityDayCache.has(date)) return liquidityDayCache.get(date)!;
-  const [y, m, d] = date.split('-');
-  const html = await (await fetchOrThrow(`${HKMA_DAILY_STATS_PAGE}${y}/${m}/ms-${y}${m}${d}/`)).text();
+  const html = await (await fetchOrThrow(liquidityDayUrl(date))).text();
   const parsed = parseHkmaDailyStats(html);
   // A page for another date than the one asked for is treated as no figures
   const day = parsed?.date === date ? parsed : null;
@@ -739,10 +750,10 @@ async function fetchLiquidityDay(date: string): Promise<LiquidityDay | null> {
   return day;
 }
 
-async function loadLiquidityHistory(): Promise<{ days: LiquidityDay[]; failed: number }> {
+async function loadLiquidityHistory(range: LiquidityRange): Promise<{ days: LiquidityDay[]; failed: number }> {
   // Weekdays before today (Hong Kong); today's figures appear after 7pm
   const dates: string[] = [];
-  for (let i = 1; i <= LIQUIDITY_HISTORY_DAYS; i++) {
+  for (let i = 1; i <= LIQUIDITY_RANGES[range]; i++) {
     const date = hongKongDate(i);
     const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
     if (weekday !== 0 && weekday !== 6) dates.push(date);
@@ -761,12 +772,14 @@ async function loadLiquidityHistory(): Promise<{ days: LiquidityDay[]; failed: n
   return { days, failed };
 }
 
-async function getLiquidityHistory() {
-  liquidityHistoryInFlight ??= loadLiquidityHistory().finally(() => {
-    liquidityHistoryInFlight = null;
-  });
+async function getLiquidityHistory(range: LiquidityRange) {
+  let inFlight = liquidityHistoryInFlight.get(range);
+  if (!inFlight) {
+    inFlight = loadLiquidityHistory(range).finally(() => liquidityHistoryInFlight.delete(range));
+    liquidityHistoryInFlight.set(range, inFlight);
+  }
   const [{ days, failed }, latestState] = await Promise.all([
-    liquidityHistoryInFlight,
+    inFlight,
     refreshSource(SOURCES.find(src => src.fetch === fetchHkmaLiquidity)!)
   ]);
 
@@ -775,6 +788,7 @@ async function getLiquidityHistory() {
   if (latestLiquidity && !byDate.has(latestLiquidity.date)) byDate.set(latestLiquidity.date, latestLiquidity);
   return {
     days: [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    range,
     failed,
     latestError: latestState.error,
     source: HKMA_DAILY_STATS_PAGE
@@ -946,8 +960,11 @@ export function createApp() {
     }
   });
 
-  // API Route: Trigger live sync across all connected endpoints
-  app.all('/api/feeds/sync', async (_req: Request, res: Response) => {
+  // API Route: Trigger live sync across all connected endpoints. GET responses
+  // may be served from Vercel's CDN cache (up to 5 minutes old, or older while
+  // a fresh copy is fetched in the background), so a cold function never makes
+  // a visitor wait; lastSync says how old the data is. POST always runs.
+  app.all('/api/feeds/sync', async (req: Request, res: Response) => {
     try {
       console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
       const [states, endpoints] = await Promise.all([
@@ -967,6 +984,7 @@ export function createApp() {
       const liveNotices = states.flatMap(st => st.notices);
       lastSyncTimestamp = new Date().toISOString();
 
+      res.set('Cache-Control', req.method === 'GET' ? 'public, s-maxage=300, stale-while-revalidate=86400' : 'no-store');
       res.json({
         success: true,
         count: liveNotices.length,
@@ -982,9 +1000,13 @@ export function createApp() {
   });
 
   // API Route: daily HKMA liquidity figures for the dashboard chart
-  app.get('/api/hkma/liquidity-history', async (_req: Request, res: Response) => {
+  app.get('/api/hkma/liquidity-history', async (req: Request, res: Response) => {
     try {
-      res.json({ success: true, ...(await getLiquidityHistory()) });
+      const range: LiquidityRange = req.query.range === '3m' ? '3m' : '1m';
+      const history = await getLiquidityHistory(range);
+      // Past figures never change and new ones appear once a business day
+      res.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
+      res.json({ success: true, ...history });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error?.message || 'Could not load liquidity history' });
     }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { RegulatoryNotice } from '../types/regulatory';
+import { daysUntil } from '../lib/derived';
 
 interface NoticeCardProps {
   notice: RegulatoryNotice;
@@ -8,7 +9,17 @@ interface NoticeCardProps {
   onToggleBookmark: (id: string) => void;
   isBookmarked: boolean;
   density?: 'comfortable' | 'compact';
+  // Not seen in this browser before
+  isNew?: boolean;
+  onCopyLink?: (notice: RegulatoryNotice) => void;
+  onAddToCalendar?: (notice: RegulatoryNotice) => void;
 }
+
+const NewBadge = () => (
+  <span className="px-1.5 py-0.5 rounded bg-[#1F4E79] text-white font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider" title="Not seen in this browser before">
+    New
+  </span>
+);
 
 export const NoticeCard: React.FC<NoticeCardProps> = ({
   notice,
@@ -16,8 +27,13 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   onOpenPdfDossier,
   onToggleBookmark,
   isBookmarked,
-  density = 'comfortable'
+  density = 'comfortable',
+  isNew = false,
+  onCopyLink,
+  onAddToCalendar
 }) => {
+  const hasUpcomingDate = !!notice.deadlineDate && daysUntil(notice.deadlineDate) >= 0;
+
   // Score badge icon and color tailored for light theme
   const getScoreBadge = (score: number) => {
     if (score >= 9.0) {
@@ -51,6 +67,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       <article className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3 hover:bg-[#F4F7F4] transition-colors flex items-center justify-between gap-3 shadow-xs">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
+            {isNew && <NewBadge />}
             <span className="px-1.5 py-0.5 rounded bg-[#E3EBE6] border border-[#D3DDD7] text-[#1F4E79] font-['JetBrains_Mono'] text-[10px] font-bold">
               {notice.regulator}
             </span>
@@ -88,6 +105,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       {/* Top Badge Cluster & Impact Score */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex flex-wrap items-center gap-1.5">
+          {isNew && <NewBadge />}
           <span className="px-2 py-0.5 rounded bg-[#E3EBE6] border border-[#D3DDD7] text-[#1F4E79] font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider">
             {notice.regulator} • {notice.jurisdiction}
           </span>
@@ -248,11 +266,34 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {onCopyLink && (
+            <button
+              onClick={() => onCopyLink(notice)}
+              className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded text-[#56636B] hover:text-[#1D2630] hover:bg-[#E3EBE6] transition-colors"
+              title="Copy a link to this notice"
+              aria-label="Copy a link to this notice"
+            >
+              <span className="material-symbols-outlined text-lg">link</span>
+            </button>
+          )}
+
+          {onAddToCalendar && hasUpcomingDate && (
+            <button
+              onClick={() => onAddToCalendar(notice)}
+              className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded text-[#56636B] hover:text-[#1D2630] hover:bg-[#E3EBE6] transition-colors"
+              title={`Add ${notice.deadlineDate} to your calendar (.ics)`}
+              aria-label="Add this date to your calendar"
+            >
+              <span className="material-symbols-outlined text-lg">calendar_add_on</span>
+            </button>
+          )}
+
           {/* Bookmark Button */}
           <button
             onClick={() => onToggleBookmark(notice.id)}
-            className={`p-1.5 rounded transition-colors ${
+            aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+            className={`w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded transition-colors ${
               isBookmarked
                 ? 'text-[#1F4E79] bg-[#D9E5EE]'
                 : 'text-[#56636B] hover:text-[#1D2630] hover:bg-[#F4F7F4]'
@@ -266,14 +307,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
 
           <button
             onClick={() => onOpenGapAnalysis(notice)}
-            className="px-2.5 py-1.5 bg-[#FBFCFA] hover:bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+            className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-[#FBFCFA] hover:bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
           >
             <span className="material-symbols-outlined text-sm">assignment</span>
             Gap Checklist
           </button>
           <button
             onClick={() => onOpenPdfDossier(notice)}
-            className="px-2.5 py-1.5 bg-[#FBFCFA] hover:bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+            className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-[#FBFCFA] hover:bg-[#F4F7F4] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
           >
             <span className="material-symbols-outlined text-sm">description</span>
             Dossier
@@ -283,7 +324,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               href={notice.dossierUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-2.5 py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
+              className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm">open_in_new</span>
               Source

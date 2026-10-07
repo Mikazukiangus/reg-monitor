@@ -9,11 +9,23 @@ interface LiquidityDay {
   baseRate: number | null;
 }
 
+type Range = '1m' | '3m';
+
 interface LiquidityHistory {
   days: LiquidityDay[];
   failed: number;
   source: string;
 }
+
+const RANGE_LABELS: Record<Range, string> = { '1m': '1M', '3m': '3M' };
+
+// Signed change, e.g. "+612" or "−38 bp"
+function signed(value: number, suffix = ''): string {
+  if (value === 0) return `0${suffix}`;
+  return `${value > 0 ? '+' : '−'}${Math.abs(value).toLocaleString('en-US')}${suffix}`;
+}
+
+const bp = (a: number | null, b: number | null) => (a === null || b === null ? null : Math.round((a - b) * 100));
 
 const WIDTH = 280;
 const HEIGHT = 84;
@@ -36,25 +48,31 @@ const shortDate = (iso: string) =>
 // Daily HKMA interbank liquidity, read by the server from the HKMA Daily
 // Monetary Statistics pages. Only figures stated on those pages are plotted.
 export const LiquidityChart: React.FC = () => {
-  const [history, setHistory] = useState<LiquidityHistory | null>(null);
+  const [range, setRange] = useState<Range>('1m');
+  const [histories, setHistories] = useState<Partial<Record<Range, LiquidityHistory>>>({});
   const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState<number | null>(null);
 
   useEffect(() => {
+    if (histories[range]) return;
     let cancelled = false;
-    fetch('/api/hkma/liquidity-history')
+    setError(null);
+    fetch(`/api/hkma/liquidity-history?range=${range}`)
       .then(res => res.json())
       .then(data => {
         if (cancelled) return;
-        if (data.success) setHistory(data);
+        if (data.success) setHistories(prev => ({ ...prev, [range]: data }));
         else setError(data.error || 'Could not load figures');
       })
       .catch(() => !cancelled && setError('Could not load figures'));
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [range]);
 
+  // While a longer range loads, keep showing the one already loaded
+  const history = histories[range] ?? histories['1m'] ?? null;
+  const loadingRange = !histories[range] && !error;
   const days = history?.days ?? [];
   const x = (i: number) => PAD.left + (days.length > 1 ? (i / (days.length - 1)) * (WIDTH - PAD.left - PAD.right) : 0);
 
@@ -67,9 +85,21 @@ export const LiquidityChart: React.FC = () => {
   const ratePoints = (key: 'overnightHibor' | 'hiborFixing1m') =>
     days.flatMap((d, i) => (d[key] === null ? [] : [[x(i), yRate(d[key]!)] as [number, number]]));
 
-  const shown = hover !== null ? days[hover] : days[days.length - 1];
+  const shownIndex = hover !== null && hover < days.length ? hover : days.length - 1;
+  const shown = days[shownIndex];
+  const previous = shownIndex > 0 ? days[shownIndex - 1] : null;
 
-  const handleMove = (e: React.MouseEvent<SVGSVGElement>) => {
+  // Most recent change of the discount window base rate within the range
+  let baseRateChange: { from: number; date: string } | null = null;
+  for (let i = days.length - 1; i > 0; i--) {
+    const [a, b] = [days[i - 1].baseRate, days[i].baseRate];
+    if (a !== null && b !== null && a !== b) {
+      baseRateChange = { from: a, date: days[i].date };
+      break;
+    }
+  }
+
+  const handleMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const rel = ((e.clientX - rect.left) / rect.width) * WIDTH;
     const i = Math.round(((rel - PAD.left) / (WIDTH - PAD.left - PAD.right)) * (days.length - 1));
@@ -86,8 +116,10 @@ export const LiquidityChart: React.FC = () => {
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         className="w-full h-auto block bg-[#EEF3EF] rounded border border-[#DCE4DF]"
-        onMouseMove={handleMove}
-        onMouseLeave={() => setHover(null)}
+        onPointerMove={handleMove}
+        onPointerDown={handleMove}
+        onPointerLeave={() => setHover(null)}
+        style={{ touchAction: 'pan-y' }}
         role="img"
         aria-label={title}
       >
@@ -100,17 +132,38 @@ export const LiquidityChart: React.FC = () => {
   );
 
   return (
-    <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
+    <div id="liquidity-card" className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs scroll-mt-28">
       <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-[#D3DDD7]">
         <div className="flex items-center gap-1.5">
           <span className="material-symbols-outlined text-[#1F4E79] text-lg">show_chart</span>
           <span className="font-['Hanken_Grotesk'] text-[15px] text-[#1D2630] font-bold">HKMA Interbank Liquidity</span>
         </div>
-        <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">Daily</span>
+        <div role="group" aria-label="Chart range" className="flex rounded border border-[#D3DDD7] overflow-hidden">
+          {(Object.keys(RANGE_LABELS) as Range[]).map(r => (
+            <button
+              key={r}
+              onClick={() => {
+                setHover(null);
+                setRange(r);
+              }}
+              aria-pressed={range === r}
+              className={`px-2.5 min-h-[28px] font-['JetBrains_Mono'] text-[11px] font-semibold transition-colors ${
+                range === r ? 'bg-[#1F4E79] text-white' : 'bg-[#F4F7F4] text-[#3C4852] hover:bg-[#E3EBE6]'
+              }`}
+            >
+              {RANGE_LABELS[r]}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {error && <p className="font-['Inter'] text-[12px] text-[#56636B]">{error}. Open the HKMA page for the figures.</p>}
+      {error && <p className="font-['Inter'] text-[12px] text-[#56636B] mb-2">{error}. Open the HKMA page for the figures.</p>}
       {!error && !history && <p className="font-['Inter'] text-[12px] text-[#56636B]">Loading figures from HKMA…</p>}
+      {history && loadingRange && (
+        <p className="font-['Inter'] text-[11px] text-[#56636B] mb-2">
+          Loading {range === '3m' ? 'three months' : 'one month'} of daily pages from HKMA; this can take up to a minute the first time…
+        </p>
+      )}
       {history && days.length < 2 && (
         <p className="font-['Inter'] text-[12px] text-[#56636B]">Not enough daily figures could be read to draw a chart.</p>
       )}
@@ -119,8 +172,17 @@ export const LiquidityChart: React.FC = () => {
         <div className="space-y-2.5">
           <div className="flex items-baseline justify-between gap-2">
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#3C4852]">{shortDate(shown.date)}</span>
-            <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
-              HK${shown.closingBalance.toLocaleString('en-US')}M
+            <span className="flex items-baseline gap-1.5">
+              <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-[#1D2630]">
+                HK${shown.closingBalance.toLocaleString('en-US')}M
+              </span>
+              {previous && (
+                <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B]">
+                  {shown.closingBalance === previous.closingBalance
+                    ? `unchanged from ${shortDate(previous.date)}`
+                    : `${signed(shown.closingBalance - previous.closingBalance)} vs ${shortDate(previous.date)}`}
+                </span>
+              )}
             </span>
           </div>
 
@@ -148,21 +210,36 @@ export const LiquidityChart: React.FC = () => {
               </>
             )}
 
-          <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[10px]">
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 font-['JetBrains_Mono'] text-[10px]">
             <span className="text-[#6E5410]">
               ● Overnight {shown.overnightHibor !== null ? `${shown.overnightHibor.toFixed(2)}%` : 'n/a'}
+              {previous && bp(shown.overnightHibor, previous.overnightHibor) !== null && (
+                <span className="text-[#56636B]"> ({signed(bp(shown.overnightHibor, previous.overnightHibor)!, ' bp')})</span>
+              )}
             </span>
             <span className="text-[#1F4E79]">
               ● 1-month fixing {shown.hiborFixing1m !== null ? `${shown.hiborFixing1m.toFixed(5)}%` : 'n/a'}
+              {previous && bp(shown.hiborFixing1m, previous.hiborFixing1m) !== null && (
+                <span className="text-[#56636B]"> ({signed(bp(shown.hiborFixing1m, previous.hiborFixing1m)!, ' bp')})</span>
+              )}
             </span>
           </div>
+
+          {shown.baseRate !== null && (
+            <p className="font-['Inter'] text-[12px] text-[#3C4852]">
+              Discount window base rate <strong className="font-semibold text-[#1D2630]">{shown.baseRate.toFixed(2)}%</strong>
+              {baseRateChange && hover === null && (
+                <span className="text-[#56636B]">, changed from {baseRateChange.from.toFixed(2)}% on {shortDate(baseRateChange.date)}</span>
+              )}
+            </p>
+          )}
 
           <p className="font-['Inter'] text-[11px] text-[#56636B] leading-snug">
             {days.length} business days, {shortDate(days[0].date)} to {shortDate(days[days.length - 1].date)}, as stated on the{' '}
             <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-[#1F4E79] hover:underline">
               HKMA Daily Monetary Statistics
             </a>{' '}
-            pages (figures as at {shown.time} Hong Kong time).
+            pages (figures as at {shown.time} Hong Kong time). Changes are against the previous business day shown.
             {history.failed > 0 && ` ${history.failed} day${history.failed === 1 ? '' : 's'} could not be fetched and ${history.failed === 1 ? 'is' : 'are'} not shown.`}
           </p>
         </div>

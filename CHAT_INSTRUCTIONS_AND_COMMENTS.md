@@ -234,6 +234,20 @@ This document records the full chronological instructions, technical requirement
 * **Change:** every hex colour in `src/` (Tailwind arbitrary classes and the `@theme` tokens in `src/index.css`) was mapped from the old warm cream and teal palette to the new one (41 colours). White card surfaces became `#FBFCFA`; white text on buttons is unchanged. The HIBOR overnight line uses a darker pyrite (`#A8862A`) so it stays visible on the light chart background. Fonts are unchanged.
 * **Verified:** `tsc --noEmit` and `vite build` pass. The dashboard, notice cards and liquidity chart render in the new colours, with no console errors.
 
+### Request 18: Desktop and Mobile Improvements 1–11 (Claude Code, 2026-10-07)
+* **Instruction:** "suggest what other improvements or useful information for both desktop and mobile users. Let me check before merging into main", then "Build 1-11 first". Built on the branch `improvements-1-11`, not `main`; the user checks the Vercel preview before merging.
+* **1. Honest filter labels:** jurisdiction filters name the sources behind them (for example "United Kingdom (PRA, FCA)"); Australia and Japan say "No live source yet". The header dropdown and the Radar label match. The false "Jurisdiction: APAC Pinned" label was removed, and the page description lists the real sources.
+* **2. Fast first load:** GET `/api/feeds/sync` may be served from Vercel's CDN cache (`s-maxage=300, stale-while-revalidate=86400`); the page shows "Data as of" the server's `lastSync` time and refreshes with a POST when the data is over 10 minutes old. Liquidity history is cached for 30 minutes.
+* **3–6. Phones:** notices come first and filters open in a drawer; the header fits a 375px screen and has a search button; a bottom tab bar replaces the top tab row; a strip at the top of the feed shows the next date and the latest HKMA aggregate balance. Touch targets are larger, and the pagination no longer makes the page wider than the screen.
+* **7. Calendar export:** "Add N dates to calendar (.ics)" in the right column, and a calendar button on each notice with a date today or later. Events are all-day, and each says the date is as stated in the source.
+* **8. New since last visit:** notice IDs already seen are stored in this browser only; new ones get a "New" badge, with a count and a "Show only new" toggle.
+* **9. Shareable links:** tab, filters, search, sort and the open notice are kept in the URL; each notice has a copy-link button, and the toolbar copies a link to the current view.
+* **10. Data freshness:** each gateway line says when its data was last fetched, or when the last good fetch was if the latest one failed.
+* **11. Liquidity card:** day-on-day change in the balance and in HIBOR (bp), the discount window base rate and its last change, and a 1M/3M toggle (3 months is about 64 business days and takes about 10 seconds to load the first time). Works with touch.
+* **Fix found while testing:** until about 7pm Hong Kong time the Daily Monetary Statistics page says today's figures "will be published later today", so the liquidity source failed during the Hong Kong day. The server now falls back to the most recent dated page (up to 7 days back), and the notice links to that dated page. This bug is live on `main` until the branch is merged.
+* **Changed default:** all sectors are now shown by default; before, AI Governance and AML/CFT notices were hidden unless switched on.
+* **Verified locally:** `tsc --noEmit` and `vite build` pass; at 375px the page is 375px wide, the drawer, search, bottom bar and 3M chart work; a shared link with filters and a notice opens that view; the .ics file has 8 events with no line over 75 octets.
+
 ---
 
 ## 3. Key Files & Modifications Summary

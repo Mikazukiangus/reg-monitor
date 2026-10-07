@@ -2,6 +2,7 @@ import React from 'react';
 import { DeadlineItem } from '../types/regulatory';
 import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 import { LiquidityChart } from './LiquidityChart';
+import { timeAgo } from '../lib/derived';
 
 interface RightSidebarProps {
   deadlines: DeadlineItem[];
@@ -12,6 +13,9 @@ interface RightSidebarProps {
   onTriggerSync?: () => void;
   isSyncing?: boolean;
   endpoints?: EndpointMetric[];
+  // Number of upcoming dates that can be exported to a calendar
+  calendarCount?: number;
+  onExportCalendar?: () => void;
 }
 
 export const RightSidebar: React.FC<RightSidebarProps> = ({
@@ -22,7 +26,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onOpenLiveEndpointsModal,
   onTriggerSync,
   isSyncing = false,
-  endpoints = []
+  endpoints = [],
+  calendarCount = 0,
+  onExportCalendar
 }) => {
   const operationalCount = endpoints.filter(e => e.status === 'Operational').length;
 
@@ -73,6 +79,17 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             </div>
           ))}
         </div>
+
+        {onExportCalendar && calendarCount > 0 && (
+          <button
+            onClick={onExportCalendar}
+            className="mt-2.5 w-full min-h-[40px] py-1.5 bg-[#F4F7F4] hover:bg-[#E3EBE6] border border-[#D3DDD7] text-[#1D2630] font-['Inter'] text-[12px] font-semibold rounded flex items-center justify-center gap-1.5 transition-colors"
+            title="Download an .ics file for Outlook, Google Calendar or Apple Calendar"
+          >
+            <span className="material-symbols-outlined text-base text-[#1F4E79]">calendar_add_on</span>
+            Add {calendarCount} {calendarCount === 1 ? 'date' : 'dates'} to calendar (.ics)
+          </button>
+        )}
       </div>
 
       <LiquidityChart />
@@ -95,9 +112,19 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
         <div className="space-y-1.5 mb-3 text-[11px]">
           {endpoints.map((ep) => (
-            <div key={ep.id} className="flex items-center justify-between py-1 border-b border-[#EEF3EF] last:border-b-0" title={ep.detail}>
-              <span className="font-['JetBrains_Mono'] text-[#3C4852]">{ep.name}</span>
-              <span className={`font-['JetBrains_Mono'] font-bold ${STATUS_STYLES[ep.status].text}`}>
+            <div key={ep.id} className="flex items-start justify-between gap-2 py-1 border-b border-[#EEF3EF] last:border-b-0" title={ep.detail}>
+              <span className="flex flex-col min-w-0">
+                <span className="font-['JetBrains_Mono'] text-[#3C4852]">{ep.name}</span>
+                {ep.ingests && ep.sync && (
+                  <span className={`font-['Inter'] text-[11px] ${ep.sync.ok ? 'text-[#56636B]' : 'text-[#A8432F]'}`}>
+                    {ep.sync.ok
+                      ? ep.sync.lastSuccessAt ? `Data fetched ${timeAgo(ep.sync.lastSuccessAt)}` : 'Fetched'
+                      : ep.sync.lastSuccessAt ? `Failed; last good fetch ${timeAgo(ep.sync.lastSuccessAt)}` : 'Failed; no data yet'}
+                  </span>
+                )}
+                {!ep.ingests && <span className="font-['Inter'] text-[11px] text-[#56636B]">Status check only</span>}
+              </span>
+              <span className={`font-['JetBrains_Mono'] font-bold shrink-0 ${STATUS_STYLES[ep.status].text}`}>
                 {ep.status}
                 {ep.statusCode ? ` (${ep.statusCode})` : ''}
               </span>

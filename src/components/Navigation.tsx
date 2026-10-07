@@ -30,7 +30,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <div className="fixed top-14 left-0 right-0 z-40 bg-[#EEF3EF]">
       {/* Tab Navigation Row */}
-      <div className="h-10 w-full px-4 sm:px-6 bg-[#E3EBE6] border-b border-[#D3DDD7] flex items-center justify-between overflow-x-auto scrollbar-none">
+      <div className="hidden md:flex h-10 w-full px-4 sm:px-6 bg-[#E3EBE6] border-b border-[#D3DDD7] items-center justify-between overflow-x-auto scrollbar-none">
         <nav className="flex items-center gap-1.5 h-full shrink-0">
           <button
             onClick={() => onTabChange('feed')}
@@ -88,10 +88,6 @@ export const Navigation: React.FC<NavigationProps> = ({
           </button>
         </nav>
 
-        <div className="hidden md:flex items-center gap-1.5 text-[#56636B] font-['JetBrains_Mono'] text-[11px] shrink-0 font-medium">
-          <span className="material-symbols-outlined text-sm">tune</span>
-          <span>Jurisdiction: APAC Pinned</span>
-        </div>
       </div>
 
       {/* Real-Time Wire Banner */}
@@ -110,13 +106,13 @@ export const Navigation: React.FC<NavigationProps> = ({
           {wireItems.map((n, idx) => (
             <React.Fragment key={n.id}>
               {idx > 0 && <span className="text-[#56636B]">•</span>}
-              <span
+              <button
                 onClick={() => onSelectNotice(n.id)}
                 className="flex items-center gap-1.5 cursor-pointer hover:text-[#1D2630] transition-colors"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${SEVERITY_DOT[n.severity]}`}></span>
                 <strong className="text-[#1D2630] font-medium">{n.regulator}:</strong> {n.title} ({n.issuedTimeAgo})
-              </span>
+              </button>
             </React.Fragment>
           ))}
         </div>

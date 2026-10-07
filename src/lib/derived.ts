@@ -58,3 +58,18 @@ export function deriveNotifications(notices: RegulatoryNotice[], now = new Date(
       linkId: n.id
     }));
 }
+
+// "4 min ago", "2 h ago", "3 d ago" for an ISO timestamp
+export function timeAgo(iso: string, now = new Date()): string {
+  const mins = Math.max(0, Math.round((now.getTime() - new Date(iso).getTime()) / 60000));
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 48) return `${hours} h ago`;
+  return `${Math.round(hours / 24)} d ago`;
+}
+
+// Hong Kong / Singapore clock time, e.g. "13:20 SGT"
+export function sgtTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Singapore' }) + ' SGT';
+}

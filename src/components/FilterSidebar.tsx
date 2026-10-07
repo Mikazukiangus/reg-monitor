@@ -2,6 +2,17 @@ import React from 'react';
 import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
 import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
+// Labels name only the regulators RegSonar actually reads
+const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: string }[] = [
+  { code: 'SG', label: 'Singapore (MAS)' },
+  { code: 'HK', label: 'Hong Kong (HKMA)' },
+  { code: 'UK_EU', label: 'United Kingdom (PRA, FCA)' },
+  { code: 'US', label: 'United States (SEC, CFTC)' },
+  { code: 'GLOBAL', label: 'Global (BIS, Basel Committee)' },
+  { code: 'AU', label: 'Australia', note: 'No live source yet' },
+  { code: 'JP', label: 'Japan', note: 'No live source yet' }
+];
+
 interface FilterSidebarProps {
   selectedSeverities: UrgencySeverity[];
   onToggleSeverity: (sev: UrgencySeverity) => void;
@@ -18,6 +29,8 @@ interface FilterSidebarProps {
   endpoints: EndpointMetric[];
   onPingEndpoints: () => void;
   isPinging: boolean;
+  // 'rail' is the desktop left column; 'drawer' is the mobile filter sheet
+  variant?: 'rail' | 'drawer';
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -35,10 +48,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   formatCounts,
   endpoints,
   onPingEndpoints,
-  isPinging
+  isPinging,
+  variant = 'rail'
 }) => {
   return (
-    <aside className="lg:col-span-3 flex flex-col gap-3">
+    <aside className={variant === 'rail' ? 'hidden lg:flex lg:col-span-3 flex-col gap-3' : 'flex flex-col gap-3'}>
       {/* Filters & Facets Panel */}
       <div className="bg-[#FBFCFA] border border-[#D3DDD7] rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#D3DDD7]">
@@ -111,124 +125,30 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               Primary Jurisdiction
             </span>
             <div className="space-y-1">
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.SG}
-                    onChange={() => onToggleJurisdiction('SG')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.SG ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    Singapore (MAS)
+              {JURISDICTION_OPTIONS.map(({ code, label, note }) => (
+                <label
+                  key={code}
+                  className="flex items-center justify-between gap-2 p-1.5 min-h-[40px] lg:min-h-0 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={selectedJurisdictions[code]}
+                      onChange={() => onToggleJurisdiction(code)}
+                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
+                    />
+                    <span className="flex flex-col min-w-0">
+                      <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions[code] ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
+                        {label}
+                      </span>
+                      {note && <span className="font-['Inter'] text-[11px] text-[#56636B]">{note}</span>}
+                    </span>
+                  </div>
+                  <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7] shrink-0">
+                    {jurisdictionCounts[code]}
                   </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.SG}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.HK}
-                    onChange={() => onToggleJurisdiction('HK')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.HK ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    Hong Kong (HKMA, SFC)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.HK}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.AU}
-                    onChange={() => onToggleJurisdiction('AU')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.AU ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    Australia (ASIC, APRA)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.AU}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.JP}
-                    onChange={() => onToggleJurisdiction('JP')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.JP ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    Japan (JFSA)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.JP}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.UK_EU}
-                    onChange={() => onToggleJurisdiction('UK_EU')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.UK_EU ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    UK &amp; EU (PRA, FCA, ESMA)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.UK_EU}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.US}
-                    onChange={() => onToggleJurisdiction('US')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.US ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    United States (SEC, CFTC)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.US}
-                </span>
-              </label>
-
-              <label className="flex items-center justify-between p-1.5 rounded hover:bg-[#F4F7F4] cursor-pointer transition-colors">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedJurisdictions.GLOBAL}
-                    onChange={() => onToggleJurisdiction('GLOBAL')}
-                    className="w-3.5 h-3.5 rounded bg-white border-[#C5D2CA] text-[#1F4E79] focus:ring-0 cursor-pointer accent-[#1F4E79]"
-                  />
-                  <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions.GLOBAL ? 'text-[#1D2630] font-medium' : 'text-[#3C4852]'}`}>
-                    Global (BIS, Basel Committee)
-                  </span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#56636B] bg-[#E3EBE6] px-1.5 py-0.5 rounded border border-[#D3DDD7]">
-                  {jurisdictionCounts.GLOBAL}
-                </span>
-              </label>
+                </label>
+              ))}
             </div>
           </div>
 

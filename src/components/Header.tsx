@@ -33,6 +33,8 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  // Phones have no room for the search box, so it opens below the header
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -57,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#EEF3EF]/95 backdrop-blur-md border-b border-[#D3DDD7] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-      <div className="h-14 w-full px-4 sm:px-6 flex items-center justify-between gap-4">
+      <div className="h-14 w-full px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3 shrink-0">
           <div className="flex items-center gap-2.5">
@@ -65,13 +67,13 @@ export const Header: React.FC<HeaderProps> = ({
               alt="RegSonar APAC Regulatory Logo"
               className="h-8 w-auto object-contain cursor-pointer"
               src="https://lh3.googleusercontent.com/aida/AEtjO1WqTvLdQl_IMZ0jnfuyfBhwV9yP0z46r_GR8vYW7is_oWJTWU6HbsT8TTRjAAFLrbFNEpdRuccJ5YYvVbXQ5x9Jvy_HkTSXxNmSJr4V8G2F3mUX6xsP-9vXPsc6S48uyKyv7vaa_jXGAZPTA8teELaSAylEEovWZ54H5ImXJnZ_KgTAOGWwp2onVP45wnA1t3vwu22Qvu_xrX6Le_L1rfImvOeYCoMqNwPeFVHb6TCq_mxP9qxZtk4jl1s"
-              onClick={() => onJurisdictionFilterChange('All APAC')}
+              onClick={() => onJurisdictionFilterChange('All')}
             />
             <div className="flex flex-col">
               <span className="font-['Hanken_Grotesk'] text-[19px] text-[#1D2630] tracking-tight font-bold leading-none">
                 RegSonar
               </span>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-[#56636B] tracking-wider uppercase mt-0.5 font-medium">
+              <span className="hidden sm:block font-['JetBrains_Mono'] text-[10px] text-[#56636B] tracking-wider uppercase mt-0.5 font-medium">
                 Intelligence APAC &amp; Global
               </span>
             </div>
@@ -83,12 +85,10 @@ export const Header: React.FC<HeaderProps> = ({
               onChange={(e) => onJurisdictionFilterChange(e.target.value)}
               className="bg-[#FBFCFA] border border-[#D3DDD7] text-[#3C4852] font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-[#1F4E79] focus:text-[#1D2630] cursor-pointer transition-colors shadow-xs"
             >
-              <option value="All APAC">All APAC</option>
-              <option value="Singapore MAS">Singapore MAS</option>
-              <option value="Hong Kong HKMA/SFC">Hong Kong HKMA/SFC</option>
-              <option value="Australia ASIC">Australia ASIC</option>
-              <option value="Japan JFSA">Japan JFSA</option>
-              <option value="Global Cross-Border">Global Cross-Border</option>
+              <option value="All">All jurisdictions</option>
+              <option value="Singapore MAS">Singapore (MAS)</option>
+              <option value="Hong Kong HKMA">Hong Kong (HKMA)</option>
+              <option value="UK US Global">UK, US &amp; Global</option>
             </select>
           </div>
         </div>
@@ -119,7 +119,17 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Right Action Cluster */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Search toggle (phones) */}
+          <button
+            onClick={() => setShowMobileSearch(v => !v)}
+            aria-label={showMobileSearch ? 'Close search' : 'Search notices'}
+            aria-expanded={showMobileSearch}
+            className="md:hidden w-9 h-9 flex items-center justify-center text-[#3C4852] bg-[#FBFCFA] hover:bg-[#E3EBE6] rounded-lg border border-[#D3DDD7] shadow-xs"
+          >
+            <span className="material-symbols-outlined text-xl">{showMobileSearch ? 'close' : 'search'}</span>
+          </button>
+
           {/* Live Ingestion Indicator & Gateway Trigger */}
           <button
             onClick={onOpenEndpointsModal}
@@ -144,8 +154,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex items-center gap-1.5 px-2.5 h-8 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
-              title="Poll live regulatory APIs for latest circulars and rules"
+              className="flex items-center justify-center gap-1.5 min-w-9 px-2.5 h-9 sm:h-8 bg-[#1F4E79] hover:bg-[#163A5C] text-white font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
+              title="Fetch the latest notices from every source now"
+              aria-label="Sync feeds now"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`}>
                 sync
@@ -161,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               aria-label="Notifications"
-              className="relative p-1.5 text-[#3C4852] hover:text-[#1D2630] bg-[#FBFCFA] hover:bg-[#E3EBE6] rounded-lg border border-[#D3DDD7] transition-colors shadow-xs"
+              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-[#3C4852] hover:text-[#1D2630] bg-[#FBFCFA] hover:bg-[#E3EBE6] rounded-lg border border-[#D3DDD7] transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-xl">notifications</span>
               {unreadCount > 0 && (
@@ -172,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50">
+              <div className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-14 sm:top-auto mt-2 sm:w-96 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50">
                 <div className="flex items-center justify-between pb-2 border-b border-[#D3DDD7]">
                   <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-[#1D2630] flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#A8432F]"></span>
@@ -217,27 +228,47 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* User Profile */}
           <div className="relative" ref={profileRef}>
-            <div
+            <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-2 pl-1 cursor-pointer group"
+              className="flex items-center cursor-pointer group"
               title="Local session"
+              aria-label="Session details"
+              aria-expanded={showProfileMenu}
             >
-              <span className="w-8 h-8 rounded-full shrink-0 ring-1 ring-[#D3DDD7] group-hover:ring-[#1F4E79] transition-all bg-[#E3EBE6] flex items-center justify-center">
+              <span className="w-9 h-9 sm:w-8 sm:h-8 rounded-full shrink-0 ring-1 ring-[#D3DDD7] group-hover:ring-[#1F4E79] transition-all bg-[#E3EBE6] flex items-center justify-center">
                 <span className="material-symbols-outlined text-[#3C4852] text-lg">person</span>
               </span>
-            </div>
+            </button>
 
             {showProfileMenu && (
               <div className="absolute right-0 mt-2 w-64 bg-[#FBFCFA] border border-[#C5D2CA] rounded-lg shadow-xl p-3 z-50 text-[12px]">
                 <p className="font-semibold text-[#1D2630]">Local session</p>
                 <p className="text-[11px] text-[#3C4852] mt-1 leading-relaxed">
-                  RegSonar has no accounts or sign-in. Filters and watch rules live in this browser tab only.
+                  RegSonar has no accounts or sign-in. Watch rules live in this browser tab only; the notices you have seen are remembered in this browser to mark new ones.
                 </p>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {showMobileSearch && (
+        <div className="md:hidden absolute left-0 right-0 top-14 px-3 py-2 bg-[#EEF3EF] border-b border-[#D3DDD7] shadow-md">
+          <label className="relative flex items-center w-full">
+            <span className="sr-only">Search notices</span>
+            <span className="material-symbols-outlined absolute left-3 text-[#56636B] text-lg pointer-events-none">search</span>
+            <input
+              type="search"
+              autoFocus
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && setShowMobileSearch(false)}
+              placeholder="Search title, regulator, reference, key point"
+              className="w-full h-11 pl-10 pr-3 bg-[#FBFCFA] border border-[#D3DDD7] text-[#1D2630] placeholder:text-[#56636B] font-['Inter'] text-[16px] rounded-lg focus:outline-none focus:border-[#1F4E79]"
+            />
+          </label>
+        </div>
+      )}
     </header>
   );
 };

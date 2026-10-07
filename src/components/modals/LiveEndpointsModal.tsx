@@ -14,7 +14,8 @@ export interface EndpointMetric {
   detail?: string;
   ingests?: boolean;
   // Result of the most recent notice sync for sources read from this endpoint
-  sync?: { ok: boolean; count: number; error?: string };
+  // lastSuccessAt: when the oldest of its sources last fetched successfully
+  sync?: { ok: boolean; count: number; error?: string; lastSuccessAt?: string | null };
 }
 
 export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';

@@ -14,7 +14,7 @@ const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'SG', label: 'SINGAPORE (MAS)' },
   { code: 'HK', label: 'HONG KONG (HKMA)' },
   { code: 'US', label: 'UNITED STATES (SEC/CFTC)' },
-  { code: 'UK_EU', label: 'UNITED KINGDOM (PRA)' },
+  { code: 'UK_EU', label: 'UNITED KINGDOM (PRA, FCA)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS)' }
 ];
 
