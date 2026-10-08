@@ -15,6 +15,7 @@ const EXAMPLES: [string, string, string | undefined, number][] = [
   ['PRESS RELEASE', 'MAS Announces Senior Leadership Changes', undefined, 3],
   ['SPEECH', 'Keynote by Tan Boon Gin, SGX RegCo CEO, at the Singapore Governance and Transparency Forum 2026', undefined, 3],
   ['PRESS RELEASE', 'HKMA hosts Cargox Solution Day to promote regional trade data connectivity', undefined, 3],
+  ['NEWS', 'AI Board holds its ninth meeting', undefined, 3],
   ['PRESS RELEASE', 'Signing of the Third Bilateral Swap Arrangement between Japan and Malaysia', undefined, 3],
   ['NOTICE', 'Sunshine Act Meetings', undefined, 3],
   ['NOTICE', 'Agency Information Collection Activities; Proposed Collection; Comment Request; Extension: Rule 2a-7', 'Comments close: 2026-11-30', 3],

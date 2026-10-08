@@ -49,7 +49,14 @@ const SENTENCES: [string, DateKind?, string?, boolean?][] = [
   ['The Single Submission Arrangement brings into operation the simplified dual IPO listing framework set out in the Memorandum of Understanding (MoU) signed by the two regulators on 23 July 2026.'],
   ['The European Securities and Markets Authority (ESMA) has published today a statement clarifying that EU market participants should not be prevented from accessing third-country Central Securities Depositories (CSDs) beyond 17 January 2027 and until the EU finalises the legislation.'],
   ['The policy will apply to reporting reference dates falling on or after 31 December 2026.'],
-  ['MAS met industry on 4 October 2026.']
+  ['MAS met industry on 4 October 2026.'],
+  // Chinese rules (CAC) and Japanese calls for comments (Cabinet Office)
+  ['《人工智能拟人化互动服务管理暂行办法》已经2026年2月2日国家互联网信息办公室2026年第3次室务会会议审议通过，并经国家发展和改革委员会、工业和信息化部、公安部、国家市场监督管理总局同意，现予公布，自2026年7月15日起施行。', 'takesEffect', '2026-07-15'],
+  ['第三十二条 本办法自2026年7月15日起施行。', 'takesEffect', '2026-07-15'],
+  ['意见反馈截止时间为2026年10月18日。', 'closes', '2026-10-18'],
+  ['第二十条 本办法自2027年1月1日起施行。（征求意见稿）'],
+  ['人工知能基本計画の改定に向け、人工知能基本計画（素案）について、令和８年６月19日（金）から令和８年６月23日（火）までの間、意見を募集します。', 'closes', '2026-06-23'],
+  ['政府は、人工知能関連技術の研究開発及び活用の推進に関する法律（令和７年法律第53号）に基づき、我が国初の人工知能基本計画を令和７年12月23日に閣議決定したところです。']
 ];
 
 for (const [sentence, kind, date, general] of SENTENCES) {

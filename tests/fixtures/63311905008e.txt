@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Search results for &quot;artificial intelligence&quot; | Governor of California</title>
+	<atom:link href="https://www.gov.ca.gov/?s=artificial+intelligence&#038;feed=rss2" rel="self" type="application/rss+xml" />
+	<link>https://www.gov.ca.gov</link>
+	<description></description>
+	<lastBuildDate>Thu, 01 Oct 2026 01:40:51 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=7.1.2</generator>
+	<item>
+		<title>At the top of the Golden Gate Bridge, Governor Newsom signs his final bill — investing in California’s next generation of innovation</title>
+		<link>https://www.gov.ca.gov/2026/09/30/at-the-top-of-the-golden-gate-bridge-governor-newsom-signs-his-final-bill-investing-in-californias-next-generation-of-innovation/</link>
+		
+		<dc:creator><![CDATA[Diana Crofts-Pelayo]]></dc:creator>
+		<pubDate>Thu, 01 Oct 2026 01:13:31 +0000</pubDate>
+				<category><![CDATA[Economy]]></category>
+		<category><![CDATA[Featured]]></category>
+		<category><![CDATA[Health care]]></category>
+		<category><![CDATA[Housing and homelessness]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Public safety]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[California for All]]></category>
+		<category><![CDATA[Legislation]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=113199</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/DSC5465-1-150x150.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" />
+<p><a href="https://www.gov.ca.gov/2026/09/30/at-the-top-of-the-golden-gate-bridge-governor-newsom-signs-his-final-bill-investing-in-californias-next-generation-of-innovation/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom issues legislative update 9.30.2026</title>
+		<link>https://www.gov.ca.gov/2026/09/30/governor-newsom-issues-legislative-update-9-30-2026/</link>
+		
+		<dc:creator><![CDATA[dafnecruzrodriguez]]></dc:creator>
+		<pubDate>Thu, 01 Oct 2026 00:04:03 +0000</pubDate>
+				<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Legislation]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=113269</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2024/05/6C94C750-0DF8-46C6-A8E3-00EA4F1B1ADD-150x150.jpeg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="White “Governor Gavin Newsom” logo beside a walking California grizzly bear and star on a blue background." decoding="async" />
+<p><a href="https://www.gov.ca.gov/2026/09/30/governor-newsom-issues-legislative-update-9-30-2026/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>California’s nation-leading AI framework just got stronger, Governor Newsom signs more first-in-the-nation worker protections and more</title>
+		<link>https://www.gov.ca.gov/2026/09/30/californias-nation-leading-ai-framework-just-got-stronger-governor-newsom-signs-more-first-in-the-nation-worker-protections-and-more/</link>
+		
+		<dc:creator><![CDATA[corbinfarias]]></dc:creator>
+		<pubDate>Wed, 30 Sep 2026 23:01:39 +0000</pubDate>
+				<category><![CDATA[Economy]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=113214</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/AI-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" />
+<p><a href="https://www.gov.ca.gov/2026/09/30/californias-nation-leading-ai-framework-just-got-stronger-governor-newsom-signs-more-first-in-the-nation-worker-protections-and-more/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom signs legislation to accelerate California’s fusion industry, announces major investment for quantum research</title>
+		<link>https://www.gov.ca.gov/2026/09/30/governor-newsom-signs-legislation-to-accelerate-californias-fusion-industry-announces-major-investment-for-quantum-research/</link>
+		
+		<dc:creator><![CDATA[corbinfarias]]></dc:creator>
+		<pubDate>Wed, 30 Sep 2026 15:06:55 +0000</pubDate>
+				<category><![CDATA[Economy]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=113156</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/bill7-150x150.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/30/governor-newsom-signs-legislation-to-accelerate-californias-fusion-industry-announces-major-investment-for-quantum-research/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom announces world-leading experts to deliver on his AI executive order, including advancing creation of a “kill switch”</title>
+		<link>https://www.gov.ca.gov/2026/09/23/governor-newsom-announces-world-leading-experts-to-deliver-on-his-ai-executive-order-including-advancing-creation-of-a-kill-switch/</link>
+		
+		<dc:creator><![CDATA[corbinfarias]]></dc:creator>
+		<pubDate>Wed, 23 Sep 2026 15:02:07 +0000</pubDate>
+				<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112874</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/Governor-Newsom-announces-world-leading-experts-to-deliver-on-his-AI-executive-order-including-advancing-creation-of-a-kill-switch-SEO-GFX-v2-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/23/governor-newsom-announces-world-leading-experts-to-deliver-on-his-ai-executive-order-including-advancing-creation-of-a-kill-switch/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom issues legislative update 9.18.26</title>
+		<link>https://www.gov.ca.gov/2026/09/18/governor-newsom-issues-legislative-update-9-18-26/</link>
+		
+		<dc:creator><![CDATA[dafnecruzrodriguez]]></dc:creator>
+		<pubDate>Sat, 19 Sep 2026 00:45:33 +0000</pubDate>
+				<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Legislation]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112699</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2019/02/GovernorSeal-Blue.png?resize=150,150" class="attachment-thumbnail size-thumbnail wp-post-image" alt="Blue graphic featuring the official Seal of the Governor of the State of California in white and blue." decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/18/governor-newsom-issues-legislative-update-9-18-26/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom issues executive order to accelerate independent oversight and advance the creation of an AI kill switch</title>
+		<link>https://www.gov.ca.gov/2026/09/18/governor-newsom-issues-executive-order-to-accelerate-independent-oversight-and-advance-the-creation-of-an-ai-kill-switch/</link>
+		
+		<dc:creator><![CDATA[Diana Crofts-Pelayo]]></dc:creator>
+		<pubDate>Fri, 18 Sep 2026 15:08:17 +0000</pubDate>
+				<category><![CDATA[Executive orders]]></category>
+		<category><![CDATA[Featured]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Public safety]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112651</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/Governor-Newsom-issues-executive-order-to-accelerate-independent-oversight-and-advance-the-creation-of-an-AI-kill-switch-SEO-GFX-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="A graphic that says Governor Newsom issues executive order to accelerate independent oversight and advance the creation of an AI kill switch" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/18/governor-newsom-issues-executive-order-to-accelerate-independent-oversight-and-advance-the-creation-of-an-ai-kill-switch/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom signs new law to protect workers, require disclosures on AI-generated advertising</title>
+		<link>https://www.gov.ca.gov/2026/09/16/governor-newsom-signs-new-law-to-protect-workers-require-disclosures-on-ai-generated-advertising/</link>
+		
+		<dc:creator><![CDATA[corbinfarias]]></dc:creator>
+		<pubDate>Wed, 16 Sep 2026 17:10:37 +0000</pubDate>
+				<category><![CDATA[Featured]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Top story]]></category>
+		<category><![CDATA[Legislation]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112608</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/file-1-150x150.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/16/governor-newsom-signs-new-law-to-protect-workers-require-disclosures-on-ai-generated-advertising/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Ready is how California leads, and every Californian has a role to play</title>
+		<link>https://www.gov.ca.gov/2026/09/14/ready-is-how-california-leads-and-every-californian-has-a-role-to-play/</link>
+		
+		<dc:creator><![CDATA[anthonymartinez]]></dc:creator>
+		<pubDate>Mon, 14 Sep 2026 16:00:57 +0000</pubDate>
+				<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Public safety]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Climate]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112552</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/Ready-is-how-California-leads-and-every-Californian-has-a-role-to-play-SEO-GFX-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/14/ready-is-how-california-leads-and-every-californian-has-a-role-to-play/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Governor Newsom signs the strongest child safety chatbot and social media laws in the nation</title>
+		<link>https://www.gov.ca.gov/2026/09/10/governor-newsom-signs-the-strongest-child-safety-chatbot-and-social-media-laws-in-the-nation/</link>
+		
+		<dc:creator><![CDATA[dafnecruzrodriguez]]></dc:creator>
+		<pubDate>Thu, 10 Sep 2026 21:26:49 +0000</pubDate>
+				<category><![CDATA[Featured]]></category>
+		<category><![CDATA[Press releases]]></category>
+		<category><![CDATA[Recent news]]></category>
+		<category><![CDATA[Technology]]></category>
+		<guid isPermaLink="false">https://www.gov.ca.gov/?p=112526</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://www.gov.ca.gov/wp-content/uploads/2026/09/IMG_0102-150x150.jpeg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" decoding="async" loading="lazy" />
+<p><a href="https://www.gov.ca.gov/2026/09/10/governor-newsom-signs-the-strongest-child-safety-chatbot-and-social-media-laws-in-the-nation/" rel="nofollow">Source</a></p>]]></description>
+		
+		
+		
+			</item>
+	</channel>
+</rss>

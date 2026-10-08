@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>You searched for artificial intelligence - Colorado Attorney General</title>
+	<atom:link href="https://coag.gov/?feed=rss2&#038;s=artificial+intelligence" rel="self" type="application/rss+xml" />
+	<link>https://coag.gov/</link>
+	<description>Phil Weiser</description>
+	<lastBuildDate>Tue, 08 Sep 2026 17:10:37 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.9.9</generator>
+
+<image>
+	<url>https://coag.gov/app/uploads/2020/07/cropped-LOGO-favicon.png</url>
+	<title>You searched for artificial intelligence - Colorado Attorney General</title>
+	<link>https://coag.gov/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>Safe2Tell report shows students speaking up as new school year begins</title>
+		<link>https://coag.gov/press-releases/safe2tell-report-august-2026/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Tue, 08 Sep 2026 16:44:01 +0000</pubDate>
+				<category><![CDATA[2026]]></category>
+		<category><![CDATA[Press Releases]]></category>
+		<category><![CDATA[Attorney General Phil Weiser]]></category>
+		<category><![CDATA[Safe2Tell]]></category>
+		<category><![CDATA[Safe2Tell Colorado]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=24704</guid>
+
+					<description><![CDATA[<p>Sept. 8, 2026 (DENVER) – As Colorado students returned to classrooms for the new school year, Safe2Tell received 1,508 reports in August, helping schools and law enforcement respond to concerns ranging from threats of violence to the misuse of artificial [&#8230;]</p>
+<p>The post <a href="https://coag.gov/press-releases/safe2tell-report-august-2026/">Safe2Tell report shows students speaking up as new school year begins</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Attorney General Phil Weiser joins coalition opposing KIDS Act, supports stronger online protections for children</title>
+		<link>https://coag.gov/press-releases/weiser-joins-coalition-opposing-kids-act-supports-stronger-online-protections-for-children/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Tue, 26 May 2026 16:52:46 +0000</pubDate>
+				<category><![CDATA[2026]]></category>
+		<category><![CDATA[Press Releases]]></category>
+		<category><![CDATA[consumer protection]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=23745</guid>
+
+					<description><![CDATA[<p>May 26, 2026 (DENVER) — Today, Attorney General Phil Weiser announced he has joined a bipartisan coalition of attorneys general opposing the federal Kids Internet and Digital Safety Act (KIDS Act), H.R. 7757, arguing the bill would weaken states’ ability [&#8230;]</p>
+<p>The post <a href="https://coag.gov/press-releases/weiser-joins-coalition-opposing-kids-act-supports-stronger-online-protections-for-children/">Attorney General Phil Weiser joins coalition opposing KIDS Act, supports stronger online protections for children</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Attorney General Weiser launches crackdown on fraudulent Colorado businesses tied to national and international scam networks</title>
+		<link>https://coag.gov/press-releases/weiser-launches-crackdown-on-fraudulent-colorado-businesses/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Thu, 21 May 2026 15:27:13 +0000</pubDate>
+				<category><![CDATA[2026]]></category>
+		<category><![CDATA[Press Releases]]></category>
+		<category><![CDATA[Attorney General Phil Weiser]]></category>
+		<category><![CDATA[consumer protection]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=23718</guid>
+
+					<description><![CDATA[<p>Actions target thousands of fraudulently filed entities, including those linked to cryptocurrency scams, investment fraud, romance scams, and other unlawful activities May 21, 2026 (DENVER) — Attorney General Phil Weiser today announced a major enforcement sweep targeting thousands of allegedly [&#8230;]</p>
+<p>The post <a href="https://coag.gov/press-releases/weiser-launches-crackdown-on-fraudulent-colorado-businesses/">Attorney General Weiser launches crackdown on fraudulent Colorado businesses tied to national and international scam networks</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>ETHDenver Address (Feb. 20, 2026)</title>
+		<link>https://coag.gov/blog-post/ethdenver-address-feb-20-2026/</link>
+		
+		<dc:creator><![CDATA[Maxwell Mead]]></dc:creator>
+		<pubDate>Fri, 20 Feb 2026 17:02:51 +0000</pubDate>
+				<category><![CDATA[2026]]></category>
+		<category><![CDATA[Blog Post]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=22943</guid>
+
+					<description><![CDATA[<p>Thank you for the opportunity to join you today. As Colorado’s Attorney General and a part of Colorado’s entrepreneurial ecosystem for over 25 years, I am proud that ETHDenver is now an institution and Colorado is a center for innovation [&#8230;]</p>
+<p>The post <a href="https://coag.gov/blog-post/ethdenver-address-feb-20-2026/">ETHDenver Address (Feb. 20, 2026)</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>January Safe2Tell data reflects emerging student safety challenges, including AI misuse</title>
+		<link>https://coag.gov/press-releases/safe2tell-report-january-2026/</link>
+		
+		<dc:creator><![CDATA[Maxwell Mead]]></dc:creator>
+		<pubDate>Tue, 10 Feb 2026 21:13:36 +0000</pubDate>
+				<category><![CDATA[2026]]></category>
+		<category><![CDATA[Press Releases]]></category>
+		<category><![CDATA[Safe2Tell]]></category>
+		<category><![CDATA[Safe2Tell Colorado]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=22851</guid>
+
+					<description><![CDATA[<p>Feb. 10, 2026 (DENVER) – The Colorado Attorney General’s Office today released the January 2026 Safe2Tell monthly report (PDF), showing continued use of the program to report concerns related to student safety, mental health, and emerging issues such as the misuse of [&#8230;]</p>
+<p>The post <a href="https://coag.gov/press-releases/safe2tell-report-january-2026/">January Safe2Tell data reflects emerging student safety challenges, including AI misuse</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Attorney General Phil Weiser letter to Congress RE: AI Moratorium Comment</title>
+		<link>https://coag.gov/blog-post/attorney-general-phil-weiser-letter-to-congress-re-ai-moratorium-comment/</link>
+		
+		<dc:creator><![CDATA[Maxwell Mead]]></dc:creator>
+		<pubDate>Tue, 25 Nov 2025 22:40:02 +0000</pubDate>
+				<category><![CDATA[2025]]></category>
+		<category><![CDATA[Blog Post]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=22247</guid>
+
+					<description><![CDATA[<p>Dear Speaker Johnson, Majority Leader Thune, Minority Leader Jeffries, and Minority Leader Schumer: As Attorney General for the State of Colorado, I write separately from my State Attorney General colleagues to emphasize certain points made in their letter opposing a [&#8230;]</p>
+<p>The post <a href="https://coag.gov/blog-post/attorney-general-phil-weiser-letter-to-congress-re-ai-moratorium-comment/">Attorney General Phil Weiser letter to Congress RE: AI Moratorium Comment</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Prepared remarks: Artificial Intelligence Symposium (Sept. 30, 2025)</title>
+		<link>https://coag.gov/blog-post/attorney-general-phil-weiser-prepared-remarks-artificial-intelligence-symposium-9-30-2025/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Tue, 30 Sep 2025 19:44:15 +0000</pubDate>
+				<category><![CDATA[2025]]></category>
+		<category><![CDATA[Blog Post]]></category>
+		<category><![CDATA[prepared remarks]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=21573</guid>
+
+					<description><![CDATA[<p>Towards Effective AI Governance: Promoting Trust and Preventing Harms It is a pleasure to join this Artificial Intelligence Symposium for an important conversation during a pivotal moment for technology policy. We are both bracing for and working to adapt to [&#8230;]</p>
+<p>The post <a href="https://coag.gov/blog-post/attorney-general-phil-weiser-prepared-remarks-artificial-intelligence-symposium-9-30-2025/">Prepared remarks: Artificial Intelligence Symposium (Sept. 30, 2025)</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Prepared remarks: Colorado Bar Association Business Law Institute Keynote Address (September 19, 2025)</title>
+		<link>https://coag.gov/2025/attorney-general-phil-weiser-regulatory-colorado-bar-association-9-19-2025/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Fri, 19 Sep 2025 19:57:57 +0000</pubDate>
+				<category><![CDATA[2025]]></category>
+		<category><![CDATA[Blog Post]]></category>
+		<category><![CDATA[prepared remarks]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=21497</guid>
+
+					<description><![CDATA[<p>Rebuilding Trust Through Regulatory Excellence Let me begin by acknowledging that we are living in a time of low trust in a range of institutions, including government.  When people talk about how government operates, they highlight a range of concerns—it [&#8230;]</p>
+<p>The post <a href="https://coag.gov/2025/attorney-general-phil-weiser-regulatory-colorado-bar-association-9-19-2025/">Prepared remarks: Colorado Bar Association Business Law Institute Keynote Address (September 19, 2025)</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Prepared remarks: The Foundations of Effective Governance, Innovation, and Economic Growth (August 17, 2025)</title>
+		<link>https://coag.gov/blog-post/prepared-remarks-foundations-effective-governance-innovation-economic-growth-8-17-25/</link>
+		
+		<dc:creator><![CDATA[Mallory Boyce]]></dc:creator>
+		<pubDate>Mon, 18 Aug 2025 14:25:19 +0000</pubDate>
+				<category><![CDATA[2025]]></category>
+		<category><![CDATA[Blog Post]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=21250</guid>
+
+					<description><![CDATA[<p>Remarks delivered at the Technology Policy Institute on August 17, 2025 The American experiment in democratic governance and a free enterprise economy—subject to responsible public oversight—remains a work in progress.  In my remarks today, I will highlight a few pillars [&#8230;]</p>
+<p>The post <a href="https://coag.gov/blog-post/prepared-remarks-foundations-effective-governance-innovation-economic-growth-8-17-25/">Prepared remarks: The Foundations of Effective Governance, Innovation, and Economic Growth (August 17, 2025)</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+		<item>
+		<title>Attorney General Phil Weiser sues Trump administration over illegal cuts to National Science Foundation funding</title>
+		<link>https://coag.gov/2025/attorney-general-phil-weiser-sues-trump-administration-over-illegal-cuts-to-national-science-foundation-funding/</link>
+		
+		<dc:creator><![CDATA[Maxwell Mead]]></dc:creator>
+		<pubDate>Wed, 28 May 2025 20:46:21 +0000</pubDate>
+				<category><![CDATA[2025]]></category>
+		<category><![CDATA[Press Releases]]></category>
+		<guid isPermaLink="false">https://coag.gov/?p=20383</guid>
+
+					<description><![CDATA[<p>May 28, 2025 (DENVER) – Attorney General Phil Weiser today joined a coalition of 15 other attorneys general in suing the Trump administration to stop its illegal attempts to cut critical funding for the National Science Foundation, or NSF, including millions [&#8230;]</p>
+<p>The post <a href="https://coag.gov/2025/attorney-general-phil-weiser-sues-trump-administration-over-illegal-cuts-to-national-science-foundation-funding/">Attorney General Phil Weiser sues Trump administration over illegal cuts to National Science Foundation funding</a> appeared first on <a href="https://coag.gov">Colorado Attorney General</a>.</p>
+]]></description>
+		
+		
+		
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="keywords" content="政府,政策,科学,技術,イノベーション,基礎研究,国,日本,科学,技術,イノベーション,ソサイエティ,5.0,政府,Society 5.0,産学官連携,政策討議,統合イノベーション,AI戦略">
+<meta name="description" content="過去のトピックス一覧">
+
+<meta name="theme-color" content="#004697">
+<meta property="og:site_name" content="内閣府ホームページ">
+<meta property="og:title" content="">
+<meta property="og:image" content="https://www.cao.go.jp/common4/img/ogp_image001.jpg">
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:url" content="">
+<title>過去のトピックス一覧 - 科学技術・イノベーション - 内閣府</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="https://www.cao.go.jp/common4/css/import.css">
+<link rel="stylesheet" href="https://www.cao.go.jp/common4/css/print.css" media="print">
+<link rel="stylesheet" href="../../common/css/cstp_style.css" media="screen,print">
+<script src="https://www.cao.go.jp/common4/js/jquery.min.js"></script>
+<script src="https://www.cao.go.jp/common4/js/function.js"></script>
+
+</head>
+<body data-snav="cstp-jp" data-fnav="cstp-jp">
+
+<div id="container" class="standard">
+<div id="containerInner">
+<div id="containerInner2">
+
+<header id="headerArea" role="banner">
+<!-- ================================== headerArea Start ================================== -->
+  <div id="headerBlock">
+    <div id="headerBlockInner">
+      <div id="headerBox">
+        <div id="spCiBlock">
+          <a href="https://www.cao.go.jp/">
+            <img src="https://www.cao.go.jp/common4/img/logo_pc.svg" alt="内閣府 Cabinet Office, Government of Japan" role="img" class="pcDisp">
+            <img src="https://www.cao.go.jp/common4/img/logo_sp.svg" alt="内閣府" role="img" class="spDisp">
+          </a>
+        </div>
+      </div>
+    <!-- headerBlockInner End --></div>
+  <!-- headerBlock End --></div>
+
+  <nav id="topicPathBlock" role="navigation" aria-label="現在位置"><!-- topicPathBlock Start-->
+    <ul>
+      <li><a href="https://www.cao.go.jp/">内閣府ホーム</a></li>
+      <li><a href="https://www.cao.go.jp/seisaku/seisaku.html">内閣府の政策</a></li>
+      <li><a href="../../stmain.html">科学技術・イノベーション</a></li>
+      <li><a href="../index.html">AI戦略</a></li>
+      <li><span aria-current="page">過去のトピックス一覧</span></li>
+    </ul>
+  <!-- topicPathBlock End --></nav>
+<!-- ********************************** ヘッダー ここまで ********************************** -->
+</header>
+
+
+
+<div id="contentsArea" class="contents">
+<!-- ********************************** コンテンツ全体 ここから ********************************** -->
+<main id="contents" role="main">
+<h1>過去のトピックス一覧</h1>
+
+<!-- mainContentsBlock Start -->
+<div id="mainContentsBlock">
+  <div id="mainContents"><!-- mainContentsBlock Start -->
+<!-- ================================== コンテンツ ここから ================================== -->
+<div class="grayBox2">
+<ul class="linkMonthly">
+
+<li><a href="#lst1">2025年</a></li>
+<li><a href="#lst2">2026年</a></li>
+
+</ul>
+</div>
+
+
+<a id="lst2"></a>
+
+<h2>2026年9月</h2>
+<dl class="topicsList">
+<dt>2026年9月18日</dt>
+<dd><a href="../index.html#BudgetList">令和9年度予算の概算要求におけるＡＩ関連予算を公表しました。</a></dd>
+</dl>
+
+<h2>2026年7月</h2>
+<dl class="topicsList">
+<dt>2026年7月14日</dt>
+<dd><a href="../ai_plan/ai_plan.html">人工知能基本計画（第Ⅱ期）を閣議決定しました。</a></dd>
+<dt>2026年7月10日</dt>
+<dd><a href="../ai_hq/kaisai.html">第５回人工知能戦略本部を開催しました。</a></dd>
+</dl>
+
+<h2>2026年6月</h2>
+<dl class="topicsList">
+<dt>2026年6月26日</dt>
+<dd><a href="../ai_expert_panel/ai_expert_panel.html">第６回人工知能戦略専門調査会を開催しました。</a></dd>
+<dt>2026年6月19日</dt>
+<dd><a href="../../stmain/20260619ai.html">人工知能基本計画（素案）に関する御意見の募集について</a></dd>
+<dt>2026年6月19日</dt>
+<dd><a href="../ai_hq/kaisai.html">第４回人工知能戦略本部を開催しました。</a></dd>
+</dl>
+
+<h2>2026年5月</h2>
+<dl class="topicsList">
+<dt>2026年5月29日</dt>
+<dd><a href="../../stmain/20260529ai.html">米国OpenAI社と日本AISIのMOC締結について</a></dd>
+<dt>2026年５月19日</dt>
+<dd><a href="../ai_expert_panel/ai_expert_panel.html">第５回人工知能戦略専門調査会を開催しました。</a></dd>
+</dl>
+
+<h2>2026年4月</h2>
+<dl class="topicsList">
+<dt>2026年4月9日</dt>
+<dd><a href="../ai_expert_panel/ai_expert_panel.html">第４回人工知能戦略専門調査会を開催しました。</a></dd>
+<dt>2026年4月3日</dt>
+<dd><a href="../ai-semi_wg/ai-semi_wg.html">第２回ＡＩ・半導体ワーキンググループを開催しました。</a></dd>
+</dl>
+
+<h2>2026年2月</h2>
+<dl class="topicsList">
+<dt>2026年2月27日</dt>
+<dd><a href="../../stmain/20260227ai.html">インド主催AIインパクト・サミットが開催されました。</a></dd>
+<dt>2026年2月12日</dt>
+<dd><a href="../ai-semi_wg/ai-semi_wg.html">第１回ＡＩ・半導体ワーキンググループを開催しました。</a></dd>
+<dt>2026年2月10日</dt>
+<dd><a href="../../../kisei-kaikaku/kisei/forms/260210_forms.html">ＡＩの社会実装において、障害となる又は不十分な効果をもたらす規制・制度についての情報提供のお願いの情報を掲載しました。</a></dd>
+</dl>
+
+
+<a id="lst1"></a>
+
+<h2>2025年12月</h2>
+<dl class="topicsList">
+<dt>2025年12月19日</dt>
+<dd><a href="../ai_hq/kaisai.html">第３回人工知能戦略本部を開催しました。</a></dd>
+<dt>2025年12月10日</dt>
+<dd><a href="../ai_spc/2kai/2kai.html">第２回人工知能戦略推進会議を開催しました。</a></dd>
+<dt>2025年12月5日</dt>
+<dd><a href="../../stmain/20251205ai.html">人工知能関連技術の研究開発及び活用の適正性確保に関する指針（案）に関する御意見の募集について</a></dd>
+<dt>2025年12月5日</dt>
+<dd><a href="../ai_expert_panel/ai_expert_panel.html">第３回人工知能戦略専門調査会を開催しました。</a></dd>
+</dl>
+
+<h2>2025年11月</h2>
+<dl class="topicsList">
+<dt>2025年11月21日</dt>
+<dd><a href="../../stmain/20251121ai.html">人工知能基本計画骨子等に関する御意見の募集について</a></dd>
+<dt>2025年11月21日</dt>
+<dd><a href="../ai_hq/kaisai.html">第２回人工知能戦略本部を開催しました。</a></dd>
+<dt>2025年11月4日</dt>
+<dd><a href="../ai_expert_panel/2kai/2kai.html">第２回人工知能戦略専門調査会を開催しました。</a></dd>
+</dl>
+
+<h2>2025年10月</h2>
+<dl class="topicsList">
+<dt>2025年10月29日</dt>
+<dd><a href="../../stmain/20251029ai.html">信頼できるAIエコシステムのための米・アンソロピック社との協力について</a></dd>
+</dl>
+<h2>2025年9月</h2>
+<dl class="topicsList">
+<dt>2025年9月19日</dt>
+<dd><a href="../ai_expert_panel/1kai/1kai.html">第１回人工知能戦略専門調査会を開催しました。</a></dd>
+<dt>2025年9月12日</dt>
+<dd><a href="../ai_hq/1kai/1kai.html">第１回人工知能戦略本部を開催しました。</a></dd>
+<dt>2025年9月1日</dt>
+<dd><a href="../../stmain/20250901ai.html">AI法全面施行及びAI戦略担当大臣発令が実施されました。</a></dd>
+</dl>
+
+<h2>2025年8月</h2>
+<dl class="topicsList">
+<dt>2025年8月1日</dt>
+<dd><a href="../../stmain/20250801ai.html">人工知能政策推進室の立ち上げについて</a></dd>
+</dl>
+
+<h2>2025年6月</h2>
+<dl class="topicsList">
+<dt>2025年6月4日</dt>
+<dd><a href="https://laws.e-gov.go.jp/law/507AC0000000053">AI法公布及び一部施行されました。</a></dd>
+<dt>2025年6月2日</dt>
+<dd><a href="../ai_senryaku/ai_senryaku.html">官邸にて第14回AI戦略会議が開催されました。</a></dd>
+</dl>
+
+
+<!-- ================================== コンテンツ ここまで ================================== -->
+
+
+<div class="pageTop"><a href="#container">このページの先頭へ</a></div>
+</div>
+</div>
+</main>
+</div>
+<footer id="footerArea" role="contentinfo">
+<!-- ********************************** フッター ここから ********************************** -->
+<div id="footerNavBlock"></div>
+
+<div id="copyrightBlock"><!-- copyrightBlock Start -->
+<div>
+<address><img src="https://www.cao.go.jp/common4/img/logo_footer.svg" alt="内閣府 Cabinet Office, Government of Japan"><span>〒100-8914　東京都千代田区永田町1-6-1<br>電話番号　03-5253-2111（大代表）</span></address>
+<p>内閣府法人番号 2000012010019</p>
+<p id="txt_copyright" lang="en">&copy; Cabinet Office, Government of Japan</p>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</div>
+</body>
+</html>

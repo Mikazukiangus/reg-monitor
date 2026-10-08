@@ -9,7 +9,7 @@ process.env.DATABASE_URL = 'pglite';
 
 const fixtures: Record<string, { file: string; contentType: string }> = JSON.parse(readFileSync('tests/fixtures/index.json', 'utf8'));
 const withoutLimit = (url: string) =>
-  url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN');
+  url.replace(/([?&])(per_page|rows|count)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN');
 const byUrl = new Map(Object.entries(fixtures).map(([url, f]) => [withoutLimit(url), f]));
 
 const requested: string[] = [];

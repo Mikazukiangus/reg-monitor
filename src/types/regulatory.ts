@@ -6,6 +6,8 @@ export type JurisdictionCode =
   | 'HK'
   | 'AU'
   | 'JP'
+  | 'KR'
+  | 'CN'
   | 'UK_EU'
   | 'US'
   | 'GLOBAL';
@@ -114,6 +116,8 @@ export interface RegulatoryNotice {
   // From the stored history rather than the latest read of the source
   archived?: boolean;
   related?: RelatedLink[];
+  // The title's and document's language, when not English
+  language?: 'zh' | 'ja';
 }
 
 export interface DeadlineItem {

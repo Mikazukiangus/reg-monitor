@@ -8,10 +8,12 @@ const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'SG', label: 'SINGAPORE (MAS, SGX REGCO)' },
   { code: 'MY', label: 'MALAYSIA (BNM, SC)' },
   { code: 'HK', label: 'HONG KONG (HKMA, SFC, HKEX)' },
-  { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA)' },
-  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
+  { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA; AI RULES)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI RULES)' },
   { code: 'AU', label: 'AUSTRALIA (ASIC, ASX)' },
-  { code: 'JP', label: 'JAPAN (JFSA, JPX)' },
+  { code: 'JP', label: 'JAPAN (JFSA, JPX; AI STRATEGY)' },
+  { code: 'KR', label: 'SOUTH KOREA (MSIT, AI RULES)' },
+  { code: 'CN', label: 'CHINA (CAC, AI RULES)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS, FSB)' }
 ];
 

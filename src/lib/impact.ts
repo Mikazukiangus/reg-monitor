@@ -11,7 +11,8 @@
 //   Consultation open for comment                             7
 //   Enforcement action                                        7
 //   Rules made (final rules, amendments, policy statements,
-//     consultation conclusions, requirements taking effect)  7.5
+//     consultation conclusions, requirements taking effect,
+//     China's department rules)                              7.5
 //   Guidance                                                 6.5
 //   Technical standards                                       6
 //   Other circulars and announcements                         5
@@ -52,12 +53,12 @@ const ROUTINE: [RegExp, string, boolean?][] = [
   [/\binformation collection\b|\bpaperwork reduction\b|\bomb review\b|\bsunshine act\b/i, 'a paperwork notice', true],
   [/\b(re)?appoint(s|ed|ment|ments)?\b|\bleadership changes\b|\bnew (chair|chief executive|ceo|member)\b/i, 'an appointment'],
   [/^(new )?(keynote|opening|welcome|closing|speech|remarks|address)\b|\b(keynote|speech|remarks|address) by\b|\bnew speech\b|\bfireside chat\b/i, 'a speech'],
-  [/\b(conference|summit|symposium|forum|festival|roundtable|roadshow|awards?|anniversary|solution day|showcase|webinar|seminar)\b|\bhosts?\b/i, 'an event'],
+  [/\b(conference|summit|symposium|forum|festival|roundtable|roadshow|awards?|anniversary|solution day|showcase|webinar|seminar)\b|\bhosts?\b|\bholds? (its |a )?(\w+ )?meetings?\b|を開催しました|が開催されました|会议召开|召开|举行/i, 'an event'],
   [/\bmemorand(um|a) of (understanding|cooperation)\b|\bmou\b|\bstrengthen(s|ing)? (bilateral |regional )?(cooperation|collaboration|ties)\b|\bswap arrangement\b|\bcooperation agreement\b|\bjoint statement\b/i, 'a cooperation agreement or joint statement'],
   [/\bannual (financial )?report\b|\bregulatory digest\b|\bnewsletter\b|\bcomplaints watch\b|\bhalf-yearly\b/i, 'a periodic report']
 ];
 
-const RULES_MADE = /\bfinal rules?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|\bconsultation conclusions?\b|\bresponse to (the )?consultation\b|\bfeedback statement\b|\bresponse paper\b|\btakes? effect\b|\bto take effect\b|\bcomes? into (force|effect)\b|\b(has |have )?amended\b|\bamendments? to\b|\brevisions? to\b|\brevised\b|\bupdate to notice\b|\bfinalis(ed|es|ation)\b|\bnew (rules|requirements|listing rules|framework)\b|\bimplement(s|ing)? new\b|\bto implement\b|\brule changes to\b|\bissues? (new |revised )?(notice|rules|regulations)\b/i;
+const RULES_MADE = /\bfinal rules?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|\bconsultation conclusions?\b|\bresponse to (the )?consultation\b|\bfeedback statement\b|\bresponse paper\b|\btakes? effect\b|\bto take effect\b|\bcomes? into (force|effect)\b|\b(has |have )?amended\b|\bamendments? to\b|\brevisions? to\b|\brevised\b|\bupdate to notice\b|\bfinalis(ed|es|ation)\b|\bnew (rules|requirements|listing rules|framework)\b|\bimplement(s|ing)? new\b|\bto implement\b|\brule changes to\b|\bissues? (new |revised )?(notice|rules|regulations)\b|\bdepartment rules\b/i;
 
 // Base scores by what the document does, for each format
 const BASE: Record<InstrumentFormat, [number, string]> = {

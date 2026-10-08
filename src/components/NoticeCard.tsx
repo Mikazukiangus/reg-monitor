@@ -91,7 +91,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           </div>
           <h4 className="font-['Hanken_Grotesk'] text-[14px] text-ink font-bold truncate">
             <button onClick={() => onOpenPdfDossier(notice)} className="max-w-full truncate text-left hover:text-prussian cursor-pointer">
-              <Highlight text={notice.title} terms={highlight} />
+              <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
             </button>
           </h4>
         </div>
@@ -166,7 +166,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       {/* Main Title */}
       <h3 className="font-['Hanken_Grotesk'] text-[18px] text-ink font-bold mb-1 leading-snug">
         <button onClick={() => onOpenPdfDossier(notice)} className="text-left hover:text-prussian transition-colors cursor-pointer">
-          <Highlight text={notice.title} terms={highlight} />
+          <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
         </button>
       </h3>
 
@@ -231,7 +231,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               </a>
             )}
           </div>
-          <ul className="space-y-1.5 font-['Inter'] text-[12px] text-ink">
+          <ul lang={notice.language} className="space-y-1.5 font-['Inter'] text-[12px] text-ink">
             {notice.keyPoints.points.map((point, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="text-prussian mt-0.5 text-xs font-bold shrink-0">“</span>

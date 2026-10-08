@@ -74,7 +74,10 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     /\btechnology risk\b/, /\btechnology resilience\b/, /\boperational resilience\b/, /\boutsourcing\b/,
     /\bthird-party risk\b/, /\bcloud\b/, /\bincident reporting\b/, /\bquantum\b/, /\bict\b/,
     /\binformation and communication technology\b/, /\bdata (protection|governance)\b/, /\bit risk\b/,
-    /\boperational risk\b/
+    /\boperational risk\b/, /\bchatbots?\b/, /\bdeepfakes?\b/, /\bautomated decision[- ]?making\b/, /\badmt\b/,
+    /\b(frontier|foundation|large language) models?\b/, /\bllms?\b/, /\bgpai\b/, /\bsuper ?intelligen\w*/,
+    // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents
+    /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ/
   ],
   'ESG & Sustainability': [
     /\besg\b/, /\bclimate\b/, /\bsustainab(le|ility)\b/, /\bgreen (bonds?|finance|taxonomy|loans?)\b/,
@@ -214,13 +217,13 @@ export const CONCLUSION = /\bconsultation conclusions?\b|\bconclude[sd]? (\w+ )?
 export const SRO_FILING = /^self-regulatory organizations[;:]/i;
 // FINRA information notices are reminders and notices of operational changes
 const INFORMATION_NOTICE = /\binformation notice\b/i;
-const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b/i;
+const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b|征求意见|意見募集|御意見の募集|パブリックコメント/i;
 const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary committee|takes? action|reprimand(s|ed)?|censure[sd]?|fine[sd]?|fines|penalt(y|ies)|infringement notices?|charged|charges against|sues|sued|sentenced|convicted|jailed|imprisonment|prosecut\w*|banned|bans?|disqualified|suspends|revok(es|ed)|cancels|cancelled|stop orders?|halts offers|prohibition orders?|cease[- ]and[- ]desist|compound(s|ed)|falls? short of|wins suit|suit against|injunction|committal|judgment against|appeal against|cancellation of listing|court of appeal|high court|federal court|in (its|the \w+['’]s|\w+['’]s) favour)\b/i;
 // "SC Charges Brothers…": an agency charging someone, at the start of a title
 // (not "Bank Charges and Fees")
 const CHARGES = /^[a-z][\w.&'’-]* charges\b(?! (and|for|on|of|to|payable|levied|applicable)\b)/i;
 const TECHNICAL = /\b(technical standards?|regulatory technical|implementing technical|data standards?|reporting templates?|return templates?|disclosure templates?|xbrl|interoperab\w*|toolkit)\b/i;
-const GUIDELINES = /\bguidelines?\b|(?<!forward )\bguidance\b|\bcodes? of practice\b|\bpractice notes?\b|\bpolicy (manual|documents?)\b|\bfaqs?\b|\binterpretation note\b|\bsupervisory policy manual\b|\bsupervisory expectations?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b/i;
+const GUIDELINES = /\bguidelines?\b|(?<!forward )\bguidance\b|\bcodes? of practice\b|\bpractice notes?\b|\bpolicy (manual|documents?)\b|\bfaqs?\b|\binterpretation note\b|\bsupervisory policy manual\b|\bsupervisory expectations?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|指南|指引|指針|ガイドライン/i;
 
 export interface FormatTagging {
   format: InstrumentFormat;

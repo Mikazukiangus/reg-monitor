@@ -7,7 +7,7 @@ export type SortOption = 'Highest Impact Score' | 'Most Recent First' | 'Consult
 export type TabId = 'feed' | 'radar' | 'horizon' | 'enforcement' | 'alert-rules';
 
 export const ALL_SEVERITIES: UrgencySeverity[] = ['critical', 'high', 'info'];
-export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
+export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
 export const SECTOR_KEYS: Record<SectorDomain, string> = {
   'Banking & Prudential': 'banking',
   'Capital Markets & Listings': 'markets',

@@ -90,7 +90,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
         <div tabIndex={0} aria-label="Dossier contents" className="p-6 overflow-y-auto flex-1 bg-page font-['Inter'] space-y-5">
           <div className="border-b-2 border-line pb-4 flex justify-between items-start gap-4">
             <div>
-              <h1 className="font-['Hanken_Grotesk'] text-[20px] font-bold text-ink leading-snug">
+              <h1 lang={notice.language} className="font-['Hanken_Grotesk'] text-[20px] font-bold text-ink leading-snug">
                 {notice.title}
               </h1>
               <p className="font-['JetBrains_Mono'] text-[12px] text-ink-soft mt-1">

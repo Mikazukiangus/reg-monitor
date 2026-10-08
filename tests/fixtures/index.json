@@ -114,5 +114,57 @@
   "https://www.sc.com.my/resources/media/media-release": {
     "file": "0c247742a8a0.txt",
     "contentType": "text/html; charset=utf-8"
+  },
+  "https://digital-strategy.ec.europa.eu/en/news?topic=119": {
+    "file": "c25d3ab593e5.txt",
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "https://www.federalregister.gov/api/v1/documents.json?conditions[term]=%22artificial+intelligence%22&order=newest&per_page=100&fields[]=title&fields[]=type&fields[]=abstract&fields[]=agencies&fields[]=document_number&fields[]=citation&fields[]=publication_date&fields[]=comments_close_on&fields[]=effective_on&fields[]=dates&fields[]=html_url&fields[]=pdf_url": {
+    "file": "a24ee99ae571.txt",
+    "contentType": "application/json; charset=utf-8"
+  },
+  "https://www.ftc.gov/feeds/press-release.xml": {
+    "file": "f6a34a8af81d.txt",
+    "contentType": "application/rss+xml; charset=utf-8"
+  },
+  "https://www.gov.ca.gov/?s=artificial+intelligence&feed=rss2": {
+    "file": "63311905008e.txt",
+    "contentType": "application/rss+xml; charset=UTF-8"
+  },
+  "https://privacy.ca.gov/feed/": {
+    "file": "68d2f000c077.txt",
+    "contentType": "application/rss+xml; charset=UTF-8"
+  },
+  "https://coag.gov/?s=artificial+intelligence&feed=rss2": {
+    "file": "398510b007da.txt",
+    "contentType": "application/rss+xml; charset=UTF-8"
+  },
+  "https://www.msit.go.kr/eng/bbs/list.do?sCode=eng&mId=4&mPid=2": {
+    "file": "b130fa13b806.txt",
+    "contentType": "text/html;charset=UTF-8"
+  },
+  "https://www.cac.gov.cn/wxzw/zcfg/zcwj/A09370306index_1.htm": {
+    "file": "23c43b9cb01f.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www.cac.gov.cn/wxzw/zcfg/bmgz/A09370303index_1.htm": {
+    "file": "d7af9d228b1b.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www.cac.gov.cn/wxzw/A0937index_1.htm": {
+    "file": "4aeeeace586e.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www.cac.gov.cn/wxzw/zcfg/gfxwj/A09370305index_1.htm": {
+    "file": "685b91d73935.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www8.cao.go.jp/cstp/ai/ai_topics/ai_topics.html": {
+    "file": "46cd976f8fb2.txt",
+    "contentType": "text/html"
+  },
+  "https://www.gov.uk/api/search.json?filter_organisations=department-for-science-innovation-and-technology&filter_organisations=ai-security-institute&filter_content_purpose_supergroup=news_and_communications&filter_content_purpose_supergroup=guidance_and_regulation&filter_content_purpose_supergroup=policy_and_engagement&order=-public_timestamp&fields=title&fields=description&fields=link&fields=public_timestamp&fields=format&fields=primary_publishing_organisation&count=100": {
+    "file": "32a6a619b4b9.txt",
+    "contentType": "application/json"
   }
 }

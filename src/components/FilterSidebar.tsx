@@ -8,11 +8,13 @@ const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: stri
   { code: 'SG', label: 'Singapore (MAS, SGX RegCo)' },
   { code: 'MY', label: 'Malaysia (BNM, SC)' },
   { code: 'HK', label: 'Hong Kong (HKMA, SFC, HKEX)' },
-  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
-  { code: 'US', label: 'United States (SEC, CFTC, FINRA)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI: European Commission, DSIT)' },
+  { code: 'US', label: 'United States (SEC, CFTC, FINRA; AI: federal agencies, FTC, California, Colorado)' },
   { code: 'GLOBAL', label: 'Global (BIS, Basel Committee, FSB)' },
   { code: 'AU', label: 'Australia (ASIC, ASX)' },
-  { code: 'JP', label: 'Japan (JFSA, JPX)' }
+  { code: 'JP', label: 'Japan (JFSA, JPX; AI: Cabinet Office)' },
+  { code: 'KR', label: 'South Korea (AI: MSIT)' },
+  { code: 'CN', label: 'China (AI: CAC)' }
 ];
 
 interface FilterSidebarProps {

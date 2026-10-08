@@ -13,6 +13,8 @@ import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidate
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
 import { rateLimit, reuseFor } from './src/lib/throttle.js';
+import { isAiRuleNews, mentionsAi } from './src/lib/aiTopics.js';
+import { createHash } from 'crypto';
 
 dotenv.config();
 
@@ -30,7 +32,7 @@ interface NormalizedNotice {
   title: string;
   regulator: string;
   jurisdiction: string;
-  jurisdictionCode: 'SG' | 'MY' | 'HK' | 'AU' | 'JP' | 'UK_EU' | 'US' | 'GLOBAL';
+  jurisdictionCode: 'SG' | 'MY' | 'HK' | 'AU' | 'JP' | 'KR' | 'CN' | 'UK_EU' | 'US' | 'GLOBAL';
   type: string;
   typeColorClass: {
     bg: string;
@@ -60,6 +62,8 @@ interface NormalizedNotice {
   // From the stored history rather than the latest read of the source
   archived?: boolean;
   related?: RelatedLink[];
+  // The title's and document's language, when not English
+  language?: 'zh' | 'ja';
 }
 
 
@@ -208,13 +212,14 @@ async function fetchOrThrow(url: string): Promise<globalThis.Response> {
   return res;
 }
 
+// Date fields are only returned when requested by name
+const FEDERAL_REGISTER_FIELDS = ['title', 'type', 'abstract', 'agencies', 'document_number', 'citation', 'publication_date', 'comments_close_on', 'effective_on', 'dates', 'html_url', 'pdf_url']
+  .map((f) => `&fields[]=${f}`)
+  .join('');
+
 // Fetch US Federal Register API notices (SEC & CFTC)
 async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
-  // Date fields are only returned when requested by name
-  const fields = ['title', 'type', 'abstract', 'agencies', 'document_number', 'citation', 'publication_date', 'comments_close_on', 'effective_on', 'dates', 'html_url', 'pdf_url']
-    .map((f) => `&fields[]=${f}`)
-    .join('');
-  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=${limit}${fields}`;
+  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=${limit}${FEDERAL_REGISTER_FIELDS}`;
   const res = await fetchOrThrow(url);
   const data = await res.json();
   const results = data.results || [];
@@ -222,54 +227,57 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
   return results.map((doc: any, idx: number) => {
     const agencies = doc.agencies?.map((a: any) => a.raw_name || a.name).join(' & ') || 'US SEC & CFTC';
     const isSec = agencies.toLowerCase().includes('securities');
-    const reg = isSec ? 'US SEC' : 'US CFTC';
-    const format = formatOf(doc.type || '', doc.title || '');
-    const sector = sectorOf((doc.title || '') + ' ' + (doc.abstract || ''));
-    const commentsClose: string | undefined = doc.comments_close_on || undefined;
-    const effectiveOn: string | undefined = doc.effective_on || undefined;
-
-    const score = estimateImpact(format);
-
-    let statutoryDeadline = NO_DATE;
-    let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
-    if (commentsClose) {
-      statutoryDeadline = `Comments close: ${commentsClose}`;
-      statusBadge = { text: `Comments close: ${commentsClose}`, type: 'deadline' };
-    } else if (effectiveOn) {
-      statutoryDeadline = `Effective: ${effectiveOn}`;
-      statusBadge = { text: `Effective: ${effectiveOn}`, type: 'action' };
-    }
-
-    const notice: NormalizedNotice = {
-      id: `fedreg-${doc.document_number || idx}`,
-      ref: `FedReg: ${doc.citation || doc.document_number}`,
-      title: doc.title,
-      regulator: reg,
-      jurisdiction: 'UNITED STATES',
-      jurisdictionCode: 'US',
-      type: (doc.type || 'NOTICE').toUpperCase(),
-      typeColorClass: getTypeColor(format),
-      impactScore: score,
-      issuedTimeAgo: getRelativeTime(doc.publication_date),
-      publishedAt: toIso(doc.publication_date),
-      statutoryDeadline,
-      deadlineDate: commentsClose || effectiveOn,
-      statusBadge,
-      summary: doc.abstract || 'No abstract published in the Federal Register for this document.',
-      keyPoints: doc.abstract
-        ? summarize(doc.abstract, { datesText: doc.dates, sourceUrl: doc.html_url })
-        : undefined,
-      tags: [reg, format, 'Federal Register', sector],
-      sector,
-      format,
-      severity: severityFor(score),
-      dossierUrl: doc.html_url || doc.pdf_url,
-      isLiveFeed: true
-    };
-    // A date the text states (such as an exchange filing's comment deadline)
-    // when the Federal Register's own fields give none
-    return notice.keyPoints ? withKeyPointsUntagged(notice, notice.keyPoints) : notice;
+    return federalRegisterNotice(doc, idx, isSec ? 'US SEC' : 'US CFTC');
   });
+}
+
+function federalRegisterNotice(doc: any, idx: number, reg: string, extraTags: string[] = []): NormalizedNotice {
+  const format = formatOf(doc.type || '', doc.title || '');
+  const sector = sectorOf((doc.title || '') + ' ' + (doc.abstract || ''));
+  const commentsClose: string | undefined = doc.comments_close_on || undefined;
+  const effectiveOn: string | undefined = doc.effective_on || undefined;
+
+  const score = estimateImpact(format);
+
+  let statutoryDeadline = NO_DATE;
+  let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
+  if (commentsClose) {
+    statutoryDeadline = `Comments close: ${commentsClose}`;
+    statusBadge = { text: `Comments close: ${commentsClose}`, type: 'deadline' };
+  } else if (effectiveOn) {
+    statutoryDeadline = `Effective: ${effectiveOn}`;
+    statusBadge = { text: `Effective: ${effectiveOn}`, type: 'action' };
+  }
+
+  const notice: NormalizedNotice = {
+    id: `fedreg-${doc.document_number || idx}`,
+    ref: `FedReg: ${doc.citation || doc.document_number}`,
+    title: doc.title,
+    regulator: reg,
+    jurisdiction: 'UNITED STATES',
+    jurisdictionCode: 'US',
+    type: (doc.type || 'NOTICE').toUpperCase(),
+    typeColorClass: getTypeColor(format),
+    impactScore: score,
+    issuedTimeAgo: getRelativeTime(doc.publication_date),
+    publishedAt: toIso(doc.publication_date),
+    statutoryDeadline,
+    deadlineDate: commentsClose || effectiveOn,
+    statusBadge,
+    summary: doc.abstract || 'No abstract published in the Federal Register for this document.',
+    keyPoints: doc.abstract
+      ? summarize(doc.abstract, { datesText: doc.dates, sourceUrl: doc.html_url })
+      : undefined,
+    tags: [reg, format, 'Federal Register', sector, ...extraTags],
+    sector,
+    format,
+    severity: severityFor(score),
+    dossierUrl: doc.html_url || doc.pdf_url,
+    isLiveFeed: true
+  };
+  // A date the text states (such as an exchange filing's comment deadline)
+  // when the Federal Register's own fields give none
+  return notice.keyPoints ? withKeyPointsUntagged(notice, notice.keyPoints) : notice;
 }
 
 // Fetch UK FCA RSS feed. The FCA site sits behind a Cloudflare bot challenge,
@@ -1347,6 +1355,345 @@ async function fetchJpxRuleRevisions(limit = 4): Promise<NormalizedNotice[]> {
     });
 }
 
+// ---------------------------------------------------------------------------
+// Rules for artificial intelligence, from the official source in each
+// jurisdiction that makes or enforces them. General government feeds are
+// narrowed to items about AI rules (src/lib/aiTopics.ts), so a read of one may
+// find none.
+
+// Plain text of a fragment of HTML, with its entities decoded
+const plainText = (html: string) => stripHtml(htmlToText(html));
+
+// "06 October 2026", "Oct 8, 2026" -> 2026-10-08
+function isoDay(text: string): string | undefined {
+  if (!/^(\d{1,2} [A-Z][a-z]+ \d{4}|[A-Z][a-z]+ \d{1,2}, \d{4})$/.test(text.trim())) return undefined;
+  const t = Date.parse(`${text.trim()} 12:00 UTC`);
+  return isNaN(t) ? undefined : new Date(t).toISOString().slice(0, 10);
+}
+
+// List pages read for `limit` items: one for the feed's usual read, more for
+// a scheduled check or a backfill
+const pagesFor = (limit: number, perPage: number, max: number) => Math.min(max, Math.max(1, Math.ceil(limit / perPage)));
+
+// Rows of a paged list. The first page must load; later pages are read one at
+// a time and skipped if they fail.
+async function readPages<T>(urls: string[], parse: (html: string) => T[]): Promise<T[]> {
+  const rows = parse(await (await fetchOrThrow(urls[0])).text());
+  for (const url of urls.slice(1)) {
+    try {
+      rows.push(...parse(await (await fetchOrThrow(url)).text()));
+    } catch (err: any) {
+      console.log(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
+    }
+  }
+  return rows;
+}
+
+interface AiItem {
+  id: string;
+  ref: string;
+  title: string;
+  regulator: string;
+  jurisdiction: string;
+  jurisdictionCode: NormalizedNotice['jurisdictionCode'];
+  type: string;
+  publishedAt?: string;
+  summary?: string;
+  url: string;
+  // Of the title and document, when not English
+  language?: 'zh' | 'ja';
+}
+
+function aiNotice(item: AiItem): NormalizedNotice {
+  const format = formatOf(item.type, item.title);
+  const sector = sectorOf(`${item.title} ${item.summary || ''}`);
+  const score = estimateImpact(format);
+  return {
+    id: item.id,
+    ref: item.ref,
+    title: item.title,
+    regulator: item.regulator,
+    jurisdiction: item.jurisdiction,
+    jurisdictionCode: item.jurisdictionCode,
+    type: item.type,
+    typeColorClass: getTypeColor(format),
+    impactScore: score,
+    issuedTimeAgo: item.publishedAt ? getRelativeTime(item.publishedAt) : 'Recently',
+    publishedAt: item.publishedAt,
+    ...(item.summary ? { summary: item.summary } : {}),
+    tags: [item.regulator, format, sector, 'AI rules'],
+    sector,
+    format,
+    severity: severityFor(score),
+    dossierUrl: item.url,
+    isLiveFeed: true,
+    ...(item.language ? { language: item.language } : {})
+  };
+}
+
+const newestFirst = <T extends { date: string }>(rows: T[]) => rows.sort((a, b) => b.date.localeCompare(a.date));
+const uniqueBy = <T>(rows: T[], key: (row: T) => string) => {
+  const seen = new Set<string>();
+  return rows.filter(r => !seen.has(key(r)) && !!seen.add(key(r)));
+};
+
+// European Commission news on AI (the AI Act, its guidelines, the AI Office
+// and AI Board), from the news list of the Commission's "Shaping Europe's
+// digital future" site, filtered to its artificial intelligence topic. The
+// site's RSS feed covers every digital topic and can't be filtered.
+const EC_SITE = 'https://digital-strategy.ec.europa.eu';
+const EC_AI_NEWS = `${EC_SITE}/en/news?topic=119`;
+
+export function parseEcNews(html: string): { kind: string; date: string; url: string; title: string; teaser: string }[] {
+  return html.split('<article').slice(1).flatMap(chunk => {
+    const meta = [...chunk.matchAll(/class="ecl-content-block__primary-meta-item">([^<]+)</g)].map(m => m[1].trim());
+    const link = chunk.match(/class="ecl-content-block__title"><a\s+href="([^"]+)"[\s\S]*?<span>([\s\S]*?)<\/span>/);
+    const date = meta.map(isoDay).find(Boolean);
+    if (!link || !date) return [];
+    const teaser = chunk.match(/class="ecl-content-block__description">([\s\S]*)/)?.[1] ?? '';
+    return [{ kind: meta[0], date, url: new URL(link[1], EC_SITE).toString(), title: plainText(link[2]), teaser: plainText(teaser) }];
+  });
+}
+
+async function fetchEcAiNews(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = Array.from({ length: pagesFor(limit, 5, 4) }, (_, page) => (page ? `${EC_AI_NEWS}&page=${page}` : EC_AI_NEWS));
+  const rows = await readPages(pages, parseEcNews);
+  return newestFirst(uniqueBy(rows, r => r.url))
+    .filter(r => isAiRuleNews(r.title, r.teaser))
+    .slice(0, limit)
+    .map(r => aiNotice({
+      id: `ec-${lastPathPart(r.url)}`.slice(0, 120),
+      ref: `European Commission · ${r.kind}`,
+      title: r.title,
+      regulator: 'European Commission',
+      jurisdiction: 'EUROPEAN UNION',
+      jurisdictionCode: 'UK_EU',
+      type: r.kind.toUpperCase(),
+      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Europe/Brussels'),
+      summary: r.teaser || undefined,
+      url: r.url
+    }));
+}
+
+// US federal documents on AI from any agency: executive orders, rules,
+// proposals and requests for information. The Federal Register's search finds
+// "artificial intelligence" anywhere in a document, often in passing, so only
+// documents whose title is about AI are kept, less meeting, nomination and
+// paperwork notices.
+const FEDERAL_REGISTER_AI = 'https://www.federalregister.gov/api/v1/documents.json?conditions[term]=%22artificial+intelligence%22&order=newest';
+const NOT_A_RULE = /\bmeetings?\b|\bnominations?\b|\bsunshine act\b|\binformation collection\b/i;
+const FEDERAL_AGENCIES: Record<string, string> = {
+  'Executive Office of the President': 'US President',
+  'National Institute of Standards and Technology': 'NIST',
+  'Federal Trade Commission': 'US FTC',
+  'Industry and Security Bureau': 'US Commerce (BIS)',
+  'Science and Technology Policy Office': 'US OSTP',
+  'Management and Budget Office': 'US OMB',
+  'Securities and Exchange Commission': 'US SEC',
+  'Commodity Futures Trading Commission': 'US CFTC'
+};
+
+async function fetchFederalRegisterAi(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(`${FEDERAL_REGISTER_AI}&per_page=${limit <= 4 ? 100 : 300}${FEDERAL_REGISTER_FIELDS}`);
+  const docs: any[] = (await res.json()).results || [];
+  return docs
+    .filter(doc => mentionsAi(doc.title || '') && !NOT_A_RULE.test(doc.title || ''))
+    .slice(0, limit)
+    .map((doc, idx) => {
+      // The most specific agency: "National Institute of Standards and Technology" rather than "Commerce Department"
+      const agency = doc.agencies?.at(-1);
+      const name: string = agency?.name || agency?.raw_name || '';
+      return federalRegisterNotice(doc, idx, FEDERAL_AGENCIES[name] || (name ? `US ${name}` : 'US Federal Register'), ['AI rules']);
+    });
+}
+
+// RSS feeds of US agencies and states with AI rules. Their feeds cover all
+// their work, so only items about AI rules are kept (a regulator whose every
+// item is a rule matter needs only an AI mention).
+interface AiFeed {
+  id: string;
+  url: string;
+  regulator: string;
+  jurisdiction: string;
+  type: string;
+  aiMentionOnly?: true;
+}
+
+// The FTC: inquiries, enforcement and policy statements on AI
+const FTC_AI: AiFeed = { id: 'ftc', url: 'https://www.ftc.gov/feeds/press-release.xml', regulator: 'US FTC', jurisdiction: 'UNITED STATES', type: 'PRESS RELEASE' };
+// California's governor signs the state's AI laws (such as SB 53 on frontier
+// AI); the office's site search for "artificial intelligence", as a feed
+const CALIFORNIA_GOVERNOR_AI: AiFeed = { id: 'ca-gov', url: 'https://www.gov.ca.gov/?s=artificial+intelligence&feed=rss2', regulator: 'California Governor', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS' };
+// California's privacy regulator (CalPrivacy, the CPPA), which makes the rules
+// on automated decisionmaking technology (ADMT)
+const CALPRIVACY_AI: AiFeed = { id: 'calprivacy', url: 'https://privacy.ca.gov/feed/', regulator: 'CalPrivacy (CPPA)', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS', aiMentionOnly: true };
+// Colorado's attorney general enforces, and makes rules under, the Colorado AI Act
+const COLORADO_AG_AI: AiFeed = { id: 'co-ag', url: 'https://coag.gov/?s=artificial+intelligence&feed=rss2', regulator: 'Colorado AG', jurisdiction: 'UNITED STATES (COLORADO)', type: 'NEWS' };
+
+async function fetchAiFeed(feed: AiFeed, limit: number): Promise<NormalizedNotice[]> {
+  const items = await rssItems(feed.url);
+  return items
+    .map((item: any) => ({
+      title: plainText(String(item.title)),
+      description: item.description ? plainText(String(item.description)).replace(/\s*View Press Release$/, '').replace(/\s*The post .* appeared first on .*$/, '') : '',
+      link: String(item.link),
+      published: toIso(item.pubDate)
+    }))
+    .filter(x => (feed.aiMentionOnly ? mentionsAi(`${x.title} ${x.description}`) : isAiRuleNews(x.title, x.description)))
+    .slice(0, limit)
+    .map(x => aiNotice({
+      id: `${feed.id}-${lastPathPart(x.link)}`.slice(0, 120),
+      ref: `${feed.regulator} ${x.published?.slice(0, 10) ?? ''}`.trim(),
+      title: x.title,
+      regulator: feed.regulator,
+      jurisdiction: feed.jurisdiction,
+      jurisdictionCode: 'US',
+      type: feed.type,
+      publishedAt: x.published,
+      summary: x.description || undefined,
+      url: x.link
+    }));
+}
+
+// South Korea's Ministry of Science and ICT administers the Framework Act on
+// AI: its English press releases. The list page writes each row's title and
+// date in a script, and a row opens view.do with the row's number.
+const MSIT_LIST = 'https://www.msit.go.kr/eng/bbs/list.do?sCode=eng&mId=4&mPid=2';
+const msitPage = (n: string) => `https://www.msit.go.kr/eng/bbs/view.do?sCode=eng&mId=4&mPid=2&bbsSeqNo=42&nttSeqNo=${n}`;
+
+export function parseMsitPressReleases(html: string): { id: string; title: string; date: string }[] {
+  const ids = [...html.matchAll(/onclick="fn_detail\((\d+)\);"/g)].map(m => m[1]);
+  return ids.flatMap((id, i) => {
+    const row = `'NO'+'_${i}')`;
+    const start = html.indexOf(row);
+    const end = html.indexOf(`'NO'+'_${i + 1}')`, start);
+    if (start < 0) return [];
+    const script = html.slice(start, end < 0 ? undefined : end);
+    const title = script.match(/unescape\('([^']*)'\)/)?.[1];
+    const day = script.match(/'REG_DT'\)\{\s*\$\('#td_'\+'NO'\+'_\d+'\)\.html\('([^']+)'\)/)?.[1];
+    const date = day && isoDay(day);
+    return title && date ? [{ id, title: plainText(title), date }] : [];
+  });
+}
+
+async function fetchMsitPressReleases(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = Array.from({ length: pagesFor(limit, 10, 3) }, (_, i) => (i ? `${MSIT_LIST}&pageIndex=${i + 1}` : MSIT_LIST));
+  const rows = await readPages(pages, parseMsitPressReleases);
+  return newestFirst(uniqueBy(rows, r => r.id))
+    .filter(r => isAiRuleNews(r.title))
+    .slice(0, limit)
+    .map(r => aiNotice({
+      id: `msit-${r.id}`,
+      ref: `MSIT Press Release ${r.date}`,
+      title: r.title,
+      regulator: 'MSIT',
+      jurisdiction: 'SOUTH KOREA',
+      jurisdictionCode: 'KR',
+      type: 'PRESS RELEASE',
+      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Seoul'),
+      url: msitPage(r.id)
+    }));
+}
+
+// China's Cyberspace Administration (CAC) makes China's AI rules (generative
+// AI services, deep synthesis, labelling of AI-generated content, humanlike
+// AI interaction services). Its lists of department rules, normative and
+// policy documents, and its notices (which carry drafts for comment and the
+// register of generative AI services), in Chinese; titles stay in Chinese.
+const CAC_LISTS = [
+  { url: 'https://www.cac.gov.cn/wxzw/zcfg/bmgz/A09370303index_1.htm', type: 'DEPARTMENT RULES' },
+  { url: 'https://www.cac.gov.cn/wxzw/zcfg/gfxwj/A09370305index_1.htm', type: 'NORMATIVE DOCUMENT' },
+  { url: 'https://www.cac.gov.cn/wxzw/zcfg/zcwj/A09370306index_1.htm', type: 'POLICY DOCUMENT' },
+  { url: 'https://www.cac.gov.cn/wxzw/A0937index_1.htm', type: 'NOTICE' }
+];
+const CAC_ROW = /<a href=(\/\/www\.cac\.gov\.cn\/[^ >]+\.htm) target=_blank title="([^"]+)">[\s\S]*?<div class="times">(\d{4}-\d{2}-\d{2})<\/div>/g;
+
+export function parseCacList(html: string): { url: string; title: string; date: string }[] {
+  return [...html.matchAll(CAC_ROW)].map(m => ({ url: `https:${m[1]}`, title: plainText(m[2]), date: m[3] }));
+}
+
+async function fetchCacAiRules(limit = 4): Promise<NormalizedNotice[]> {
+  const lists = await Promise.all(CAC_LISTS.map(async list =>
+    parseCacList(await (await fetchOrThrow(list.url)).text()).map(row => ({ ...row, type: list.type }))
+  ));
+  return newestFirst(uniqueBy(lists.flat(), r => r.url))
+    .filter(r => mentionsAi(r.title))
+    .slice(0, limit)
+    .map(r => aiNotice({
+      id: `cac-${lastPathPart(r.url)}`,
+      ref: `CAC ${r.date}`,
+      title: r.title,
+      regulator: 'CAC',
+      jurisdiction: 'CHINA',
+      jurisdictionCode: 'CN',
+      type: r.type,
+      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Shanghai'),
+      url: r.url,
+      language: 'zh'
+    }));
+}
+
+// The UK has no AI act; its regulators apply their existing rules (the PRA's
+// and FCA's are read already). AI policy comes from the Department for
+// Science, Innovation and Technology and the AI Security Institute, from
+// GOV.UK's search API.
+const GOV_UK_AI = 'https://www.gov.uk/api/search.json?filter_organisations=department-for-science-innovation-and-technology&filter_organisations=ai-security-institute' +
+  '&filter_content_purpose_supergroup=news_and_communications&filter_content_purpose_supergroup=guidance_and_regulation&filter_content_purpose_supergroup=policy_and_engagement' +
+  '&order=-public_timestamp&fields=title&fields=description&fields=link&fields=public_timestamp&fields=format&fields=primary_publishing_organisation';
+
+async function fetchUkAiPolicy(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(`${GOV_UK_AI}&count=${limit <= 4 ? 100 : 300}`);
+  const results: any[] = (await res.json()).results || [];
+  return results
+    .filter(r => isAiRuleNews(String(r.title), String(r.description || '')))
+    .slice(0, limit)
+    .map(r => {
+      const aisi = (r.primary_publishing_organisation || []).includes('ai-security-institute');
+      const regulator = aisi ? 'UK AI Security Institute' : 'UK DSIT';
+      return aiNotice({
+        id: `govuk-${lastPathPart(`https://www.gov.uk${r.link}`)}`.slice(0, 120),
+        ref: `GOV.UK ${String(r.format || '').replace(/_/g, ' ')}`,
+        title: String(r.title).trim(),
+        regulator,
+        jurisdiction: 'UNITED KINGDOM',
+        jurisdictionCode: 'UK_EU',
+        type: String(r.format || 'publication').replace(/_/g, ' ').toUpperCase(),
+        publishedAt: toIso(r.public_timestamp),
+        summary: r.description || undefined,
+        url: `https://www.gov.uk${r.link}`
+      });
+    });
+}
+
+// Japan's AI policy under the AI Promotion Act: the topics list of the Cabinet
+// Office's AI strategy pages (the secretariat of the AI Strategy Headquarters),
+// in Japanese. Every topic is about AI.
+const CAO_AI_TOPICS = 'https://www8.cao.go.jp/cstp/ai/ai_topics/ai_topics.html';
+
+export function parseCaoAiTopics(html: string, pageUrl: string): { date: string; url: string; title: string }[] {
+  return [...html.matchAll(/<dt>(\d{4})年(\d{1,2})月(\d{1,2})日<\/dt>\s*<dd><a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map(m => ({
+    date: `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`,
+    url: new URL(m[4], pageUrl).toString(),
+    title: plainText(m[5])
+  }));
+}
+
+async function fetchCaoAiTopics(limit = 4): Promise<NormalizedNotice[]> {
+  const rows = parseCaoAiTopics(await (await fetchOrThrow(CAO_AI_TOPICS)).text(), CAO_AI_TOPICS);
+  return newestFirst(rows).slice(0, limit).map(r => aiNotice({
+    id: `cao-ai-${r.date}-${createHash('sha1').update(r.title).digest('hex').slice(0, 8)}`,
+    ref: `Cabinet Office AI Strategy ${r.date}`,
+    title: r.title,
+    regulator: 'Cabinet Office',
+    jurisdiction: 'JAPAN',
+    jurisdictionCode: 'JP',
+    type: 'AI STRATEGY',
+    publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Tokyo'),
+    url: r.url,
+    language: 'ja'
+  }));
+}
+
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
 
 interface EndpointDefinition {
@@ -1448,6 +1795,106 @@ const ENDPOINTS: EndpointDefinition[] = [
     jurisdiction: 'European Union',
     url: ESMA_RSS,
     protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'ec-ai',
+    name: 'European Commission AI News',
+    agency: 'European Commission (European Union)',
+    jurisdiction: 'European Union',
+    url: EC_AI_NEWS,
+    protocol: 'HTML (news list, AI topic)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'govuk-ai',
+    name: 'GOV.UK Search API: DSIT & AI Security Institute',
+    agency: 'DSIT & AI Security Institute (UK)',
+    jurisdiction: 'United Kingdom',
+    url: `${GOV_UK_AI}&count=1`,
+    protocol: 'REST JSON (items on AI rules only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'fedreg-ai',
+    name: 'Federal Register API: AI documents',
+    agency: 'US federal agencies',
+    jurisdiction: 'US Federal',
+    url: `${FEDERAL_REGISTER_AI}&per_page=1`,
+    protocol: 'REST JSON (titles about AI only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'ftc-rss',
+    name: 'FTC Press Releases RSS',
+    agency: 'FTC (United States)',
+    jurisdiction: 'US Federal',
+    url: FTC_AI.url,
+    protocol: 'RSS XML (items on AI rules only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'ca-gov',
+    name: 'California Governor: site search feed',
+    agency: 'Governor of California',
+    jurisdiction: 'US · California',
+    url: CALIFORNIA_GOVERNOR_AI.url,
+    protocol: 'RSS XML (search for AI; items on AI rules only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'calprivacy',
+    name: 'CalPrivacy News RSS',
+    agency: 'California Privacy Protection Agency',
+    jurisdiction: 'US · California',
+    url: CALPRIVACY_AI.url,
+    protocol: 'RSS XML (items mentioning AI only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'co-ag',
+    name: 'Colorado AG: site search feed',
+    agency: 'Colorado Attorney General',
+    jurisdiction: 'US · Colorado',
+    url: COLORADO_AG_AI.url,
+    protocol: 'RSS XML (search for AI; items on AI rules only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'msit-kr',
+    name: 'MSIT English Press Releases',
+    agency: 'Ministry of Science and ICT (South Korea)',
+    jurisdiction: 'South Korea',
+    url: MSIT_LIST,
+    protocol: 'HTML (list data in page; items on AI rules only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'cac-cn',
+    name: 'CAC Rules & Notices',
+    agency: 'Cyberspace Administration of China',
+    jurisdiction: 'China',
+    url: CAC_LISTS[0].url,
+    protocol: 'HTML (lists in Chinese; AI items only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'cao-ai',
+    name: 'Cabinet Office AI Strategy Topics',
+    agency: 'Cabinet Office (Japan)',
+    jurisdiction: 'Japan',
+    url: CAO_AI_TOPICS,
+    protocol: 'HTML (topics list, in Japanese)',
     auth: 'Public / None',
     ingests: true
   },
@@ -1693,7 +2140,8 @@ async function getLiquidityHistory(range: LiquidityRange) {
 
 // Ingestion sources, keyed to the endpoint they read from
 // fetch(limit) reads more than the feed's usual number of items; the email digest uses this
-type SourceDefinition = { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false };
+// narrowed: keeps only the feed's items about AI rules, so a read may find none
+type SourceDefinition = { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false; narrowed?: true };
 
 const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
@@ -1722,7 +2170,18 @@ const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'finra-rss', name: 'FINRA Notices', fetch: fetchFinraNotices },
   { endpointId: 'bnm-rss', name: 'BNM Press Releases', fetch: fetchBnmPressReleases },
   { endpointId: 'sc-my', name: 'SC Malaysia Media Releases', fetch: fetchScMediaReleases },
-  { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
+  { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases },
+  // Rules for artificial intelligence
+  { endpointId: 'ec-ai', name: 'European Commission AI News', fetch: fetchEcAiNews, narrowed: true },
+  { endpointId: 'govuk-ai', name: 'UK DSIT & AI Security Institute', fetch: fetchUkAiPolicy, narrowed: true },
+  { endpointId: 'fedreg-ai', name: 'US Federal Register: AI', fetch: fetchFederalRegisterAi, narrowed: true },
+  { endpointId: 'ftc-rss', name: 'FTC on AI', fetch: (limit = 4) => fetchAiFeed(FTC_AI, limit), narrowed: true },
+  { endpointId: 'ca-gov', name: 'California Governor on AI', fetch: (limit = 4) => fetchAiFeed(CALIFORNIA_GOVERNOR_AI, limit), narrowed: true },
+  { endpointId: 'calprivacy', name: 'CalPrivacy on AI', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY_AI, limit), narrowed: true },
+  { endpointId: 'co-ag', name: 'Colorado AG on AI', fetch: (limit = 4) => fetchAiFeed(COLORADO_AG_AI, limit), narrowed: true },
+  { endpointId: 'msit-kr', name: 'Korea MSIT on AI', fetch: fetchMsitPressReleases, narrowed: true },
+  { endpointId: 'cac-cn', name: 'China CAC AI Rules', fetch: fetchCacAiRules, narrowed: true },
+  { endpointId: 'cao-ai', name: 'Japan Cabinet Office AI Strategy', fetch: fetchCaoAiTopics }
 ];
 
 // Every source's notices get their sectors (with reasons) the same way

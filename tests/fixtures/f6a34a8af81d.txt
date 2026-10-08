@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:og="http://ogp.me/ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:schema="http://schema.org/" xmlns:sioc="http://rdfs.org/sioc/ns#" xmlns:sioct="http://rdfs.org/sioc/types#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0" xml:base="https://www.ftc.gov/">
+  <channel>
+    <title>Press Release Feed</title>
+    <link>https://www.ftc.gov/</link>
+    <description/>
+    <language>en</language>
+    <atom:link href="https://www.ftc.gov/feeds/press-release.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+  <title>FTC and USDA Seek Public Comment on Agricultural Equipment Manufacturing and Distribution Market Practices</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-usda-seek-public-comment-agricultural-equipment-manufacturing-distribution-market-practices</link>
+  <description>&lt;p&gt;The Federal Trade Commission and the U.S. Department of Agriculture launched a joint public inquiry regarding issues affecting agricultural equipment manufacturing and distribution markets, including potential anticompetitive conduct.&amp;nbsp;&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-usda-seek-public-comment-agricultural-equipment-manufacturing-distribution-market-practices"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Wed, 07 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>bacree</dc:creator>
+    <guid isPermaLink="false">337601</guid>
+    </item>
+<item>
+  <title>FTC Issues Redress Payments to Consumers Impacted by GOAT’s Deceptive Shipping, Refund Policies</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-issues-redress-payments-consumers-impacted-goats-deceptive-shipping-refund-policies</link>
+  <description>&lt;p&gt;The Federal Trade Commission announced it is sending more than $100,000 in redress payments to consumers deceived by online marketplace GOAT. The refunds are part of a settlement over allegations the company failed to honor its refund policies and violated an FTC rule requiring companies to have reasonable shipping practices.&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-issues-redress-payments-consumers-impacted-goats-deceptive-shipping-refund-policies"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Tue, 06 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>jhenderson2</dc:creator>
+    <guid isPermaLink="false">337559</guid>
+    </item>
+<item>
+  <title>Premier Martial Arts Franchisor and its Former Franchise Sales Organization Settle FTC Charges that the Companies Made Deceptive Claims and Violated the Franchise Rule </title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/premier-martial-arts-franchisor-its-former-franchise-sales-organization-settle-ftc-charges-companies</link>
+  <description>Proposed settlements recover $1.85 million for injured consumers and give certain franchisees the option to cancel their franchise agreements without penalty 
+&lt;p&gt;Franchisor Premier Franchising Group LLC (PFG) and its former franchise sales organization, Franchise Fastlane LLC (FFL), will pay $1.85 million to settle Federal Trade Commission allegations that they made misleading representations about the Premier Martial Arts (PMA) franchise opportunity and violated the Franchise Rule.&amp;nbsp;&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/premier-martial-arts-franchisor-its-former-franchise-sales-organization-settle-ftc-charges-companies"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Mon, 05 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>bacree</dc:creator>
+    <guid isPermaLink="false">337518</guid>
+    </item>
+<item>
+  <title> FTC Issues Letters Warning Hospitals Against Deceptive Pricing Practices </title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-issues-letters-warning-hospitals-against-deceptive-pricing-practices</link>
+  <description>&lt;p&gt;Federal Trade Commission Chairman Andrew N. Ferguson today sent letters to 24 of the nation’s largest healthcare services companies, reminding them of their legal obligation to provide patients with timely, accurate and complete pricing information for healthcare services, and that failing to do so can be an unfair or deceptive practice.&amp;nbsp;&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-issues-letters-warning-hospitals-against-deceptive-pricing-practices"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Mon, 05 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>vgraham</dc:creator>
+    <guid isPermaLink="false">337515</guid>
+    </item>
+<item>
+  <title>FTC, States Sue Lens.com for Misrepresenting the Price of Contact Lenses in Search Ads and on Its Website</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-states-sue-lenscom-misrepresenting-price-contact-lenses-search-ads-its-website</link>
+  <description>Lens.com hides bogus ‘taxes &amp;amp; fees’ charge that often doubles the price of contact lenses for consumers, the FTC and states allege
+&lt;p&gt;Today, the Federal Trade Commission, joined by the Utah and Nevada Attorneys General, sued to stop a long-running deceptive pricing scheme run by contact lens retailer Lens.com Inc.&amp;nbsp;&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-states-sue-lenscom-misrepresenting-price-contact-lenses-search-ads-its-website"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Fri, 02 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>vgraham</dc:creator>
+    <guid isPermaLink="false">337447</guid>
+    </item>
+<item>
+  <title>FTC Secures Settlement that Protects Small Businesses from Illegal Price Discrimination</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-secures-settlement-protects-small-businesses-illegal-price-discrimination</link>
+  <description>Settlement with Southern Glazer’s will help level the playing field for small businesses and facilitate consumer access to lower-priced wine and spirits at local retailers 
+&lt;p&gt;The Federal Trade Commission secured a settlement agreement with Southern Glazer’s Wine and Spirits LLC, the nation’s largest distributor of wine and spirits, that will redress allegedly illegal price discrimination practices and make it easier for small businesses to compete against large chain retailers.&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/10/ftc-secures-settlement-protects-small-businesses-illegal-price-discrimination"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Fri, 02 Oct 2026 08:00:00 -0400</pubDate>
+    <dc:creator>vgraham</dc:creator>
+    <guid isPermaLink="false">337449</guid>
+    </item>
+<item>
+  <title>FTC, States Win Protections to Lower Pesticide Prices for American Farmers in Antitrust Case Against Corteva</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-states-win-protections-lower-pesticide-prices-american-farmers-antitrust-case-against-corteva</link>
+  <description>&lt;p&gt;The Federal Trade Commission and a coalition of state attorneys general have secured a significant settlement agreement with pesticide manufacturing giant Corteva Inc. that will lead to lower pesticide prices for American farmers.&amp;nbsp;&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-states-win-protections-lower-pesticide-prices-american-farmers-antitrust-case-against-corteva"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Mon, 28 Sep 2026 08:00:00 -0400</pubDate>
+    <dc:creator>vgraham</dc:creator>
+    <guid isPermaLink="false">337235</guid>
+    </item>
+<item>
+  <title>FTC Approves Publication of Federal Register Notices Revising the Commission’s Rules of Practice</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-approves-publication-federal-register-notices-revising-commissions-rules-practice</link>
+  <description>&lt;p&gt;The Federal Trade Commission amended the agency’s Rules of Practice to better align with the FTC Act and reflect organizational changes, including the creation of the American Competition Enforcement Division. The amendments also correct a number of minor errors and omissions in the previous version of the Rules.&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-approves-publication-federal-register-notices-revising-commissions-rules-practice"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Thu, 24 Sep 2026 08:00:00 -0400</pubDate>
+    <dc:creator>ndrayton</dc:creator>
+    <guid isPermaLink="false">337195</guid>
+    </item>
+<item>
+  <title>FTC Seeks Public Comment on Whether to Update Rule on Impersonation of Government and Businesses to Address Platforms’ Role in Promoting Impersonation Scams</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-seeks-public-comment-whether-update-rule-impersonation-government-businesses-address-platforms</link>
+  <description>&lt;p&gt;The Federal Trade Commission announced today that is considering whether to update its &lt;a href="https://www.ftc.gov/legal-library/browse/rules/impersonation-government-businesses-rule" data-entity-type="node" data-entity-uuid="15df9e39-239f-4676-b4cd-6bfc12f5fb22" data-entity-substitution="canonical" aria-label="Link Rule on Impersonation of Government and Businesses" rel="noreferrer noopener" target="_blank" tit&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-seeks-public-comment-whether-update-rule-impersonation-government-businesses-address-platforms"&gt;View Press Release&lt;/a&gt;
+&lt;/a&gt;&lt;/p&gt;</description>
+  <pubDate>Thu, 24 Sep 2026 08:00:00 -0400</pubDate>
+    <dc:creator>bacree</dc:creator>
+    <guid isPermaLink="false">337184</guid>
+    </item>
+<item>
+  <title>FTC Endorses Education Department Proposal to Expand Higher Education Accreditation Options</title>
+  <link>https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-endorses-education-department-proposal-expand-higher-education-accreditation-options</link>
+  <description>&lt;p&gt;The Federal Trade Commission strongly endorsed the Department of Education’s proposed reforms to promote competition among accreditation agencies. Increased competition among accreditors and lower administrative burdens could lower the cost and improve the quality of higher education for millions of American students.&lt;/p&gt;&lt;a href="https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-endorses-education-department-proposal-expand-higher-education-accreditation-options"&gt;View Press Release&lt;/a&gt;
+</description>
+  <pubDate>Tue, 22 Sep 2026 08:00:00 -0400</pubDate>
+    <dc:creator>bacree</dc:creator>
+    <guid isPermaLink="false">337085</guid>
+    </item>
+
+  </channel>
+</rss>

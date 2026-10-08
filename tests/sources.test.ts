@@ -9,11 +9,11 @@ delete process.env.DATABASE_URL;
 
 const fixtures: Record<string, { file: string; contentType: string }> = JSON.parse(readFileSync('tests/fixtures/index.json', 'utf8'));
 
-// The Federal Register, MAS and SGX put the item limit in the URL; the recorded
+// The Federal Register, GOV.UK, MAS and SGX put the item limit in the URL; the recorded
 // response holds more items than any test asks for, so the limit is ignored.
 // BNM's page is per year, so any year gets the recorded one.
 const withoutLimit = (url: string) =>
-  url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN')
+  url.replace(/([?&])(per_page|rows|count)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN')
     .replace(/bnm\.gov\.my\/press-release-\d{4}/, 'bnm.gov.my/press-release-YEAR');
 const byUrl = new Map(Object.entries(fixtures).map(([url, f]) => [withoutLimit(url), f]));
 
@@ -29,10 +29,10 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle, tagNotice } = await import('../server.ts');
+const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle, tagNotice, parseMsitPressReleases } = await import('../server.ts');
 const { severityOf } = await import('../src/lib/impact.ts');
 
-const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
+const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 for (const source of SOURCES) {
@@ -47,7 +47,8 @@ for (const source of SOURCES) {
 
   test(`${source.name}: notices are complete and well formed`, async () => {
     const notices = await source.fetch();
-    assert.ok(notices.length > 0, 'no notices parsed');
+    // A feed narrowed to AI rules may have none in the recorded response
+    if (!source.narrowed) assert.ok(notices.length > 0, 'no notices parsed');
     assert.equal(new Set(notices.map(n => n.id)).size, notices.length, 'duplicate ids');
     for (const n of notices) {
       assert.ok(n.title && n.title.trim().length > 5, `title: ${n.title}`);
@@ -72,7 +73,7 @@ for (const source of SOURCES) {
     const few = await source.fetch(1);
     // APIs that apply the limit themselves are asked for one item
     const askedForOne = requested.some(url => /[?&](per_page|rows)=1(&|$)|%22limit%22%3A1%2C/.test(url));
-    assert.ok(few.length === 1 || askedForOne, `${few.length} items`);
+    assert.ok(few.length === 1 || askedForOne || (source.narrowed && few.length === 0), `${few.length} items`);
   });
 }
 
@@ -230,4 +231,72 @@ test('FINRA: election notices are left out and "transaction" is not enforcement'
   assert.ok(trace, notices.map(n => n.title).join(' | '));
   assert.notEqual(trace!.format, 'Enforcement');
   assert.match(trace!.title, /^Regulatory Notice 26-16: FINRA has amended its TRACE rules/);
+});
+
+test('AI rules: each source is tagged and placed in its jurisdiction', async () => {
+  const expected: Record<string, string> = {
+    'European Commission AI News': 'UK_EU', 'UK DSIT & AI Security Institute': 'UK_EU', 'US Federal Register: AI': 'US',
+    'California Governor on AI': 'US', 'Colorado AG on AI': 'US', 'Korea MSIT on AI': 'KR', 'China CAC AI Rules': 'CN',
+    'Japan Cabinet Office AI Strategy': 'JP'
+  };
+  for (const [name, code] of Object.entries(expected)) {
+    const notices = await byName(name).fetch(20);
+    assert.ok(notices.length > 0, name);
+    assert.ok(notices.every(n => n.jurisdictionCode === code && n.tags.includes('AI rules')), name);
+  }
+});
+
+test('European Commission AI news keeps items on AI rules, dated as Brussels days', async () => {
+  const notices = await byName('European Commission AI News').fetch(20);
+  const enforcing = notices.find(n => /^Commission starts enforcing AI Act rules/.test(n.title));
+  assert.equal(enforcing?.publishedAt, '2026-07-30T22:00:00.000Z');
+  assert.equal(enforcing?.dossierUrl, 'https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august');
+  assert.ok(notices.every(n => n.regulator === 'European Commission' && n.sectors?.includes('AI, Cyber & Tech Risk')));
+  // On the AI topic but not about AI rules
+  assert.ok(!notices.some(n => /Startup Award|EDIC for Agri-Food/.test(n.title)));
+});
+
+test('Federal Register AI documents are those whose title is about AI, less meeting notices', async () => {
+  const notices = await byName('US Federal Register: AI').fetch(20);
+  assert.deepEqual(notices.map(n => n.title), [
+    'Inaugurating the Era of Super Intelligence',
+    'Request for Information (RFI) on Modernizing the National Vulnerability Database in the Age of AI'
+  ].map(t => notices.find(n => n.title.startsWith(t.slice(0, 60)))?.title));
+  assert.equal(notices[0].regulator, 'US President');
+  assert.equal(notices[1].regulator, 'NIST');
+  assert.equal(notices[1].statutoryDeadline, 'Comments close: 2026-10-13');
+});
+
+test('Korea MSIT press releases: titles and dates from the list script, linked to the release', async () => {
+  const html = readFileSync(`tests/fixtures/${fixtures['https://www.msit.go.kr/eng/bbs/list.do?sCode=eng&mId=4&mPid=2'].file}`, 'utf8');
+  const rows = parseMsitPressReleases(html);
+  assert.ok(rows.length >= 10);
+  assert.deepEqual(rows.find(r => r.id === '1311'), { id: '1311', title: 'Public and Private Sectors Work Together to Develop a National AI Safety Master Plan', date: '2026-10-08' });
+  const notices = await byName('Korea MSIT on AI').fetch(20);
+  // AI programmes and funding are left out; only the safety plan is about AI rules
+  assert.deepEqual(notices.map(n => n.id), ['msit-1311']);
+  assert.equal(notices[0].dossierUrl, 'https://www.msit.go.kr/eng/bbs/view.do?sCode=eng&mId=4&mPid=2&bbsSeqNo=42&nttSeqNo=1311');
+});
+
+test('China CAC: AI rules in Chinese, binding department rules scored as rules made', async () => {
+  const notices = await byName('China CAC AI Rules').fetch(20);
+  const humanlike = notices.find(n => n.title === '人工智能拟人化互动服务管理暂行办法');
+  assert.equal(humanlike?.type, 'DEPARTMENT RULES');
+  assert.equal(humanlike?.impactScore, 7.5);
+  assert.equal(humanlike?.publishedAt, '2026-04-09T16:00:00.000Z');
+  assert.ok(notices.every(n => n.language === 'zh' && n.sectors?.includes('AI, Cyber & Tech Risk')));
+  assert.ok(!notices.some(n => /数字乡村|未成年人/.test(n.title)), 'items not about AI are left out');
+});
+
+test('Japan Cabinet Office AI topics: meetings are routine, calls for comments are consultations', async () => {
+  const notices = await byName('Japan Cabinet Office AI Strategy').fetch(30);
+  assert.ok(notices.every(n => n.language === 'ja' && n.jurisdictionCode === 'JP'));
+  assert.equal(notices.find(n => n.title === '第５回人工知能戦略本部を開催しました。')?.impactScore, 3);
+  assert.equal(notices.find(n => n.title.startsWith('人工知能基本計画（素案）に関する御意見の募集'))?.format, 'Consultations');
+});
+
+test('UK AI policy: items whose title is about AI, from DSIT or the AI Security Institute', async () => {
+  const notices = await byName('UK DSIT & AI Security Institute').fetch(20);
+  assert.ok(notices.every(n => ['UK DSIT', 'UK AI Security Institute'].includes(n.regulator)));
+  assert.ok(notices.every(n => /\bAI\b|Artificial Intelligence/i.test(n.title)), 'AI in every title');
 });

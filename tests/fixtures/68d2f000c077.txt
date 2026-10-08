@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>privacy.ca.gov</title>
+	<atom:link href="https://privacy.ca.gov/feed/" rel="self" type="application/rss+xml" />
+	<link>https://privacy.ca.gov</link>
+	<description>A website brought to you by the California Privacy Protection Agency</description>
+	<lastBuildDate>Tue, 06 Oct 2026 22:21:38 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=7.1.2</generator>
+	<item>
+		<title>DROP FAQ: 10 Common Questions about DROP</title>
+		<link>https://privacy.ca.gov/2026/10/drop-faq-blog/</link>
+		
+		<dc:creator><![CDATA[bryceavalos]]></dc:creator>
+		<pubDate>Tue, 06 Oct 2026 20:23:00 +0000</pubDate>
+				<category><![CDATA[Content Types]]></category>
+		<category><![CDATA[CPPA Blog]]></category>
+		<category><![CDATA[News]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386373</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://privacy.ca.gov/wp-content/uploads/sites/357/2026/10/Copy-of-CPPA-Blog-images-1300-x-1005-px-2-150x150.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="Raccoon speaks with question marks with &quot;DROP FAQs&quot; title overhead" decoding="async" />Now that DROP is up and running and data brokers are processing deletion requests, we're answering some common questions about DROP.]]></description>
+										<content:encoded><![CDATA[<p>The Delete Request and Opt-out Platform (DROP) is a new platform that quickly and easily lets California consumers delete their personal information from over 650 registered data brokers. Now that the system is up and running and data brokers are processing deletion requests, we wanted to answer some common questions about DROP. You must enter and verify some of your…</p>
+<p><a href="https://privacy.ca.gov/2026/10/drop-faq-blog/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>California Expands Privacy Protections by Strengthening Deletion Rights</title>
+		<link>https://privacy.ca.gov/2026/09/california-expands-privacy-protections-by-strengthening-deletion-rights/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Mon, 28 Sep 2026 00:03:19 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386292</guid>
+
+					<description><![CDATA[The legislation was authored by Senator Josh Becker (D-Menlo Park) and sponsored by the California Privacy Protection Agency. ]]></description>
+										<content:encoded><![CDATA[<p>September 27, 2026 SACRAMENTO, CA — Today, Governor Newsom signed the Expanding Privacy Rights Act (SB 923, Becker), closing a loophole in the California Consumer Privacy Act’s (CCPA) right to delete and making it easier for consumers to exercise their privacy rights. The legislation was authored by Senator Josh Becker (D-Menlo Park) and sponsored by the California Privacy Protection Agency.</p>
+<p><a href="https://privacy.ca.gov/2026/09/california-expands-privacy-protections-by-strengthening-deletion-rights/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Enforcement Advisory Targets Incorrect Information in Data Broker Registration</title>
+		<link>https://privacy.ca.gov/2026/09/enforcement-advisory-targets-incorrect-information-in-data-broker-registration/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Thu, 03 Sep 2026 07:01:36 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386201</guid>
+
+					<description><![CDATA[]]></description>
+										<content:encoded><![CDATA[<p>September 3, 2026 SACRAMENTO, CA — CalPrivacy has issued Enforcement Advisory 2026-01 highlighting data brokers who provide incorrect information in their annual registration with California’s data broker registry. The advisory stresses that data brokers are liable to pay a fine for each day incorrect information appears in the registry, observing that the Enforcement Division has brought multiple…</p>
+<p><a href="https://privacy.ca.gov/2026/09/enforcement-advisory-targets-incorrect-information-in-data-broker-registration/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>A Mini-Guide to Making Sense of Personal Information</title>
+		<link>https://privacy.ca.gov/2026/09/a-mini-guide-to-making-sense-of-personal-information/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Wed, 02 Sep 2026 16:30:15 +0000</pubDate>
+				<category><![CDATA[Content Types]]></category>
+		<category><![CDATA[CPPA Blog]]></category>
+		<category><![CDATA[News]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386167</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://privacy.ca.gov/wp-content/uploads/sites/357/2026/08/Mini-Guide-Personal-Information-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="A mini guide to making sense of personal information. A hand holding a lightbulb with icons for an ID badge, location pin, shopping cart, and laptop" decoding="async" loading="lazy" />Personal information can take many different forms. Because it covers such a wide range of data, understanding what counts as personal information is a great first step to better protecting your privacy.]]></description>
+										<content:encoded><![CDATA[<p></p>
+<p><a href="https://privacy.ca.gov/2026/09/a-mini-guide-to-making-sense-of-personal-information/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>CalPrivacy Continues Enforcement Blitz with Action Against Virginia Data Broker</title>
+		<link>https://privacy.ca.gov/2026/09/calprivacy-continues-enforcement-blitz-with-action-against-virginia-data-broker/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Tue, 01 Sep 2026 07:01:13 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386175</guid>
+
+					<description><![CDATA[]]></description>
+										<content:encoded><![CDATA[<p>September 1, 2026 SACRAMENTO, CA — Adding to a string of recent enforcement actions, the California Privacy Protection Agency Board has issued a decision requiring a Virginia-based data broker, SalesIntel Research, Inc., to pay a $36,400 fine and change certain practices after failing to register timely with the Agency’s Data Broker Registry. SalesIntel Research sells consumers’ personal…</p>
+<p><a href="https://privacy.ca.gov/2026/09/calprivacy-continues-enforcement-blitz-with-action-against-virginia-data-broker/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>California Legislature Advances Bill to Strengthen Deletion Rights</title>
+		<link>https://privacy.ca.gov/2026/08/california-legislature-advances-bill-to-strengthen-deletion-rights/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Fri, 28 Aug 2026 07:01:12 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386158</guid>
+
+					<description><![CDATA[This bill will bring the CCPA’s deletion rights in line with those provided in other states.]]></description>
+										<content:encoded><![CDATA[<p>August 28, 2026 SACRAMENTO, CA — The California Privacy Protection Agency (CalPrivacy) applauds the California State Legislature for approving the Expanding Privacy Rights Act (SB 923), which will expand the California Consumer Privacy Act’s (CCPA) right to delete to cover all non-exempt personal information collected about them. It will also make it easier for consumers to submit privacy requests.</p>
+<p><a href="https://privacy.ca.gov/2026/08/california-legislature-advances-bill-to-strengthen-deletion-rights/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>SalesIntel Research, Inc.</title>
+		<link>https://privacy.ca.gov/2026/08/salesintel-research-inc/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Thu, 27 Aug 2026 23:37:20 +0000</pubDate>
+				<category><![CDATA[Board decision]]></category>
+		<category><![CDATA[Delete Act]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386226</guid>
+
+					<description><![CDATA[August 27, 2026 – Delete Act
+<ul>
+ 	<li><a href="https://privacy.ca.gov/wp-content/uploads/sites/357/2026/08/SalesIntel-Research-Inc_Decision-and-Final-Stipulated-Order.pdf">Decision</a></li>
+ 	<li><a href="https://privacy.ca.gov/2026/09/calprivacy-continues-enforcement-blitz-with-action-against-virginia-data-broker/">Press release</a></li>
+</ul>]]></description>
+										<content:encoded><![CDATA[<p>August 27, 2026 – Delete Act The California Privacy Protection Agency Board issued a decision requiring Virginia data broker SalesIntel Research, Inc. to pay a $36,400 fine and change certain practices after failing to register timely with the California Data Broker Registry.</p>
+<p><a href="https://privacy.ca.gov/2026/08/salesintel-research-inc/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Half a Million Californians Have Signed up for DROP to Delete their Personal Information from Data Brokers</title>
+		<link>https://privacy.ca.gov/2026/08/half-a-million-californians-have-signed-up-for-drop-to-delete-their-personal-information-from-data-brokers/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Tue, 25 Aug 2026 07:01:30 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=386104</guid>
+
+					<description><![CDATA[Since launching on January 1, California’s Delete Request and Opt-out Platform (DROP) has crossed a major milestone: More than 500,000 Californians have registered.]]></description>
+										<content:encoded><![CDATA[<p>August 25, 2026 SACRAMENTO, CA — Since launching on January 1, California’s Delete Request and Opt-out Platform (DROP) has crossed a major milestone: More than 500,000 Californians have registered. Signing up for DROP is quick, easy, and impactful. It’s a one-time process that generally takes less than 10 minutes. Data brokers must delete eligible personal information of the individuals who signed…</p>
+<p><a href="https://privacy.ca.gov/2026/08/half-a-million-californians-have-signed-up-for-drop-to-delete-their-personal-information-from-data-brokers/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Privacy Enforcement: A Rare Opportunity to Guide a World Class Enforcement Team</title>
+		<link>https://privacy.ca.gov/2026/08/privacy-enforcement-a-rare-opportunity-to-guide-a-world-class-enforcement-team/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Fri, 21 Aug 2026 18:15:52 +0000</pubDate>
+				<category><![CDATA[Content Types]]></category>
+		<category><![CDATA[CPPA Blog]]></category>
+		<category><![CDATA[News]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=385956</guid>
+
+					<description><![CDATA[<img width="150" height="150" src="https://privacy.ca.gov/wp-content/uploads/sites/357/2026/08/Privacy-Enforcement-Blog-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="Privacy Enforcement: A Rare Opportunity to Guide a World Class Enforcement Team" decoding="async" loading="lazy" />The Enforcement Division is seeking a new leader to guide the team into its next chapter. As deputy director Michael Macko departs, the agency is seeking a qualified candidate dedicated to protecting Californians’ privacy rights.]]></description>
+										<content:encoded><![CDATA[<p>The Enforcement Division is seeking a new leader to guide the team into its next chapter. As deputy director Michael Macko departs, the agency is seeking a qualified candidate dedicated to protecting Californians’ privacy rights. CalPrivacy is looking for the next Deputy Director of the Enforcement Division and welcomes qualified applications by September 4.</p>
+<p><a href="https://privacy.ca.gov/2026/08/privacy-enforcement-a-rare-opportunity-to-guide-a-world-class-enforcement-team/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>CalPrivacy Announces Second Data Broker Enforcement Action in Less than a Week</title>
+		<link>https://privacy.ca.gov/2026/08/calprivacy-announces-second-data-broker-enforcement-action-in-less-than-a-week/</link>
+		
+		<dc:creator><![CDATA[nicolecameron]]></dc:creator>
+		<pubDate>Thu, 13 Aug 2026 07:00:28 +0000</pubDate>
+				<category><![CDATA[Press release]]></category>
+		<guid isPermaLink="false">https://privacy.ca.gov/?p=385816</guid>
+
+					<description><![CDATA[]]></description>
+										<content:encoded><![CDATA[<p>August 13, 2026 SACRAMENTO, CA — Following this week’s decision in LocateSmarter, the California Privacy Protection Agency Board has announced a decision requiring an additional data broker, Cybba, Inc., to pay a $52,400 fine after failing to register with the Agency’s Data Broker Registry by the 2025 deadline. Cybba is a Boston-based data broker that sells personal information—including…</p>
+<p><a href="https://privacy.ca.gov/2026/08/calprivacy-announces-second-data-broker-enforcement-action-in-less-than-a-week/" rel="nofollow">Source</a></p>]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

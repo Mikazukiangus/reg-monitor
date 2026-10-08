@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>网信政务_中央网络安全和信息化委员会办公室</title>
+<META NAME="Keywords" CONTENT="">
+<META NAME="Abstract" CONTENT="">
+<META NAME="Description" CONTENT="">
+</head>
+<body leftmargin='0' topmargin='0'>
+
+<script language="JavaScript" src="//www.cac.gov.cn/inc/appvar.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/appfunction.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/pub.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/date/WdatePicker.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/flv.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/tree.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/tree_tpl.js"></script>
+<script language="JavaScript" src="//www.cac.gov.cn/inc/jquery.min.js"></script><link rel="stylesheet" type="text/css" href="//www.cac.gov.cn/lib/pc/scheme/css/index.css" />
+<link rel="stylesheet" type="text/css" href="//www.cac.gov.cn/lib/pc/scheme/css/common.css" />
+<link rel="stylesheet" type="text/css" href="//www.cac.gov.cn/lib/pc/scheme/css/gov.css" />   <script type="text/javascript" src="//www.cac.gov.cn/lib/pc/scheme/js/jquery.SuperSlide.js"></script>  <!-- header -->
+<div class="header">
+<div class="head-line">
+<div class="top-bar">
+<div id="time" class="left"> </div>
+<div class="right"><a class="t1" onclick="SetHome(this, window.location)" href="###">设为首页</a><a class="t2" onclick="AddFavorite(window.location, document.title)" href="###">加入收藏</a><a id="rwk_btn_ss" class="ydb" data-reveal-id="myModal" href="//wap.cac.gov.cn/" rel="noopener noreferrer">手机版</a><a id="StranLink" class="t3" href="/###">繁体</a></div>
+</div>
+</div>
+<div class="logo-area">
+<div class="logo">
+<ul>
+    <li><img src="//www.cac.gov.cn/lib/pc/scheme/images/logo01.png" alt="" /></li>
+    <li><img src="//www.cac.gov.cn/lib/pc/scheme/images/logo02.png" alt="" /></li>
+</ul>
+</div>
+<div class="search right">
+<div class="con"><i id="logo"></i>                     <input id="sw" class="input1" onKeyDown="KeyDown();" name="huopro" value="请输入检索关键词" type="text" />                     <a class="btn_ss" onClick="searchsearch()" href="javascript:">搜索</a>
+<form id="zlb" method="get" action="//search.cac.gov.cn/cms/cmsadmin/infopub/gjjs.jsp" target="_blank" name="frm">
+    <input id="searchword" type="hidden" name="huopro" />                         <input type="hidden" name="pubtype" value="S" />                         <input type="hidden" name="pubpath" value="portal" />                         <input type="hidden" name="templetid" value="1563339473064626" />                         <input type="hidden" name="startDate" />                         <input type="hidden" name="endDate" />                         <input type="hidden" name="searchfield" />                         <input type="hidden" name="sort" value="1" />                         <input type="hidden" name="webappcode" value="A09" />                         <input type="hidden" name="searchdir" value="A09" />
+</form>
+<div class="clear"> </div>
+</div>
+</div>
+</div>
+<div class="top-nav">
+<ul id="nav" class="nav clearfix">
+    <li class="nLi" id="home">
+    <h3><a href="//www.cac.gov.cn/index.htm" target="_blank" rel="noopener noreferrer"><i></i>首 页</a></h3>
+    </li>
+    <li class="nLi" id="central">
+    <h3><a href="//www.cac.gov.cn/yaowen/szyw/A093601index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>时政要闻</a></h3>
+    </li>
+    <li class="nLi" id="gov">
+    <h3><a href="//www.cac.gov.cn/wxzw/A0937index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>网信政务</a></h3>
+    </li>
+    <li class="nLi" id="service">
+    <h3><a href="//www.cac.gov.cn/hdfw/A0938index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>互动服务</a></h3>
+    </li>
+    <li class="nLi" id="topic">
+    <h3><a href="//www.cac.gov.cn/gzzt/ztzl/A092001index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>热点专题</a></h3>
+    </li>
+</ul>
+</div>
+</div>
+<!-- 当前位置 -->
+<div class="current-path">
+<p>当前位置：
+<a  href='//www.cac.gov.cn/index.htm'>首页</a> > <a class='channelLink' href='//www.cac.gov.cn/wxzw/A0937index_1.htm'>网信政务</a></p>
+</div>
+<!-- 内容区 -->
+<div class="main">
+<div class="section gov clearfix">
+<div class="gov-content clearfix">
+<div class="fragment">
+<div class="gov-section left" id="office">
+<div class="news-normal-title">
+<p class="normal-title on"><a href="//www.cac.gov.cn/wxzw/bgs/blddt/A09370102index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>办领导动态</a></p>
+<div class="sub-title">
+<p><a href="//www.cac.gov.cn/wxzw/bgs/bld/A09370101index_1.htm" target="_blank" rel="noopener noreferrer">办领导</a></p>
+</div>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/bgs/blddt/A09370102index_1.htm" target="_blank" rel="noopener noreferrer">查看办领导动态详情</a>                             <a href="//www.cac.gov.cn/wxzw/bgs/bld/A09370101index_1.htm" target="_blank" rel="noopener noreferrer">查看办领导详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/29/c_1792433418017384.htm target=_blank title="中国共产党中央网信办机关第二次党员代表大会召开">中国共产党中央网信办机关第二次党员代表大会召开</a></h5><div class="times">2026-09-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/22/c_1791740786782496.htm target=_blank title="中央网信办召开网络直播规范发展工作会议">中央网信办召开网络直播规范发展工作会议</a></h5><div class="times">2026-09-22</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/14/c_1791137129321291.htm target=_blank title="2026年国家网络安全宣传周网络安全技术高峰论坛在济南举行">2026年国家网络安全宣传周网络安全技术高峰论坛在济南举行</a></h5><div class="times">2026-09-14</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/14/c_1791137133265127.htm target=_blank title="2026年国家网络安全宣传周开幕式在山东济南举行">2026年国家网络安全宣传周开幕式在山东济南举行</a></h5><div class="times">2026-09-14</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/07/c_1790481801044829.htm target=_blank title="2026“把青春华章写在祖国大地上”大思政课网络主题宣传和互动引导活动在中国科学技术大学举行">2026“把青春华章写在祖国大地上”大思政课网络主题宣传和互动引导活动在中国科学技术大学举行</a></h5><div class="times">2026-09-07</div></li>
+</ul>
+<div class="leader-content">
+<div class="clearfix">
+<h5>主　任</h5>
+<ul class="clearfix" id="onePerson">
+    <li><a href="//www.cac.gov.cn/wxzw/bgs/bld/zrw/A0937010101index_1.htm" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/rootimages/2023/10/17/1699167004283509.jpg" alt="庄荣文" />
+    <div class="leader-name">庄荣文</div>
+    </a></li>
+</ul>
+</div>
+<div class="clearfix">
+<h5>副主任</h5>
+<ul class="clearfix" id="fourPerson">
+    <li><a href="//www.cac.gov.cn/wxzw/bgs/bld/wjt/A0937010107index_1.htm" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/rootimages/2023/10/16/1699114770303056.png" alt="王京涛" />
+    <div class="leader-name">王京涛</div>
+    </a></li>
+    <li><a href="//www.cac.gov.cn/wxzw/bgs/bld/yjw/A0937010108index_1.htm" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/rootimages/2024/05/08/1716867114367411-1716867114428035.jpg" alt="杨建文" />
+    <div class="leader-name">杨建文</div>
+    </a></li>
+    <li><a href="//www.cac.gov.cn/wxzw/bgs/bld/lcx/A0937010109index_1.htm" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/rootimages/2025/05/17/1749183251794142-1749183251905488.jpg" alt="李长喜" />
+    <div class="leader-name">李长喜</div>
+    </a></li>
+    <li><a href="//www.cac.gov.cn/wxzw/bgs/bld/zyj/A0937010110index_1.htm" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/rootimages/2026/09/21/1791660726191158-1791740747454985.jpg" alt="张拥军" />
+    <div class="leader-name">张拥军</div>
+    </a></li>
+</ul>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+                            /**
+                             * 网信政务-办领导 栏目切换
+                             */
+                            jQuery("#office").slide({
+                                titCell: ".news-normal-title p",
+                                mainCell: ".newsList",
+                                targetCell: ".more a",
+                                effect: "fold"
+                            });
+                        </script></div>
+<div class="gov-section right" id="publish">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/wxfb/A093702index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>网信发布</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/wxfb/A093702index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/23/c_1791913977404975.htm target=_blank title="关于发布3款提供手机端侧生成式人工智能服务已备案信息的公告">关于发布3款提供手机端侧生成式人工智能服务已备案信息的公告</a></h5><div class="times">2026-09-23</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/18/c_1791396347229199.htm target=_blank title="关于加强涉企侵权信息管理 持续推动营商网络环境优化的通知">关于加强涉企侵权信息管理 持续推动营商网络环境优化的通知</a></h5><div class="times">2026-09-18</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/14/c_1791137092283345.htm target=_blank title="《人工智能安全治理框架3.0》发布">《人工智能安全治理框架3.0》发布</a></h5><div class="times">2026-09-14</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/14/c_1791136833136332.htm target=_blank title="关于发布生成式人工智能服务已备案信息的公告（2026年7月至8月）">关于发布生成式人工智能服务已备案信息的公告（2026年7月至8月）</a></h5><div class="times">2026-09-14</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/11/c_1790876575302919.htm target=_blank title="《数字乡村高质量发展行动计划（2026—2030年）》答记者问">《数字乡村高质量发展行动计划（2026—2030年）》答记者问</a></h5><div class="times">2026-09-11</div></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="gov-section left" id="policy">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/zcfg/A093703index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>政策法规</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/zcfg/A093703index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/18/c_1791482018217645.htm target=_blank title="专家解读｜分类施策精准保护 筑牢网络护苗屏障">专家解读｜分类施策精准保护 筑牢网络护苗屏障</a></h5><div class="times">2026-09-18</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/18/c_1791482018324840.htm target=_blank title="专家解读｜完善未成年人网络保护规则 护航信息时代未成年人健康成长">专家解读｜完善未成年人网络保护规则 护航信息时代未成年人健康成长</a></h5><div class="times">2026-09-18</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/17/c_1789925195600209.htm target=_blank title="专家解读｜乘“数”而上  向“智”而行——大力发展智慧农业  加快建设数字乡村">专家解读｜乘“数”而上  向“智”而行——大力发展智慧农业  加快建设数字乡村</a></h5><div class="times">2026-09-17</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/11/c_1790876176806566.htm target=_blank title="专家解读｜以数字乡村高质量发展赋能农业农村现代化">专家解读｜以数字乡村高质量发展赋能农业农村现代化</a></h5><div class="times">2026-09-11</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/11/c_1790876176680857.htm target=_blank title="专家解读｜提升乡村建设信息化水平 助力数字乡村高质量发展新征程">专家解读｜提升乡村建设信息化水平 助力数字乡村高质量发展新征程</a></h5><div class="times">2026-09-11</div></li>
+</ul>
+</div>
+</div>
+<div class="gov-section right" id="content">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/hlwnrgl/A093704index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>互联网内容管理</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/hlwnrgl/A093704index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/19/c_1791481878005956.htm target=_blank title="“清朗·优化营商网络环境 整治恶意炒作涉企信息”专项行动公开曝光第二批典型案例">“清朗·优化营商网络环境 整治恶意炒作涉企信息”专项行动公开曝光第二批典型案例</a></h5><div class="times">2026-09-19</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/15/c_1790876152357946.htm target=_blank title="国家网信办发布近期网络安全、数据安全、个人信息保护等领域执法典型案例">国家网信办发布近期网络安全、数据安全、个人信息保护等领域执法典型案例</a></h5><div class="times">2026-09-15</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/24/c_1789324354533963.htm target=_blank title="中央网信办深入推进网络娱乐团播乱象整治工作">中央网信办深入推进网络娱乐团播乱象整治工作</a></h5><div class="times">2026-08-24</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/03/c_1787433940332620.htm target=_blank title="中央网信办从严处置一批违规网络娱乐团播账号">中央网信办从严处置一批违规网络娱乐团播账号</a></h5><div class="times">2026-08-03</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/27/c_1786897886145841.htm target=_blank title="网信部门严管“自媒体”未规范标注信息来源行为">网信部门严管“自媒体”未规范标注信息来源行为</a></h5><div class="times">2026-07-27</div></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="gov-section left" id="qinglang">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/qinglang/A093711index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>&ldquo;清朗&rdquo;系列专项行动</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/qinglang/A093711index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/30/c_1792520301987752.htm target=_blank title="中央网信办部署开展“清朗·整治短视频虚假人设乱象”专项行动">中央网信办部署开展“清朗·整治短视频虚假人设乱象”专项行动</a></h5><div class="times">2026-09-30</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/02/c_1790099041364574.htm target=_blank title="中央网信办深入开展“清朗·整治AI应用乱象”专项行动第二阶段工作">中央网信办深入开展“清朗·整治AI应用乱象”专项行动第二阶段工作</a></h5><div class="times">2026-09-02</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/04/c_1787588879723730.htm target=_blank title="“清朗·优化营商网络环境 整治恶意炒作涉企信息”专项行动公开曝光一批典型案例">“清朗·优化营商网络环境 整治恶意炒作涉企信息”专项行动公开曝光一批典型案例</a></h5><div class="times">2026-08-04</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/20/c_1786294052406609.htm target=_blank title="中央网信办部署开展“清朗·未成年人网络保护”专项行动">中央网信办部署开展“清朗·未成年人网络保护”专项行动</a></h5><div class="times">2026-07-20</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/03/c_1784735652192477.htm target=_blank title="关于开展“清朗・网络娱乐团播乱象整治”专项行动的通知">关于开展“清朗・网络娱乐团播乱象整治”专项行动的通知</a></h5><div class="times">2026-07-03</div></li>
+</ul>
+</div>
+</div>
+<div class="gov-section right" id="security">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/wlaq/A093705index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>网络安全</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/wlaq/A093705index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/17/c_1791397055656100.htm target=_blank title="《电子产品信息清除技术要求》强制性国家标准实施配套的3项标准实践指南正式发布">《电子产品信息清除技术要求》强制性国家标准实施配套的3项标准实践指南正式发布</a></h5><div class="times">2026-09-17</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/11/c_1790876170765345.htm target=_blank title="通过云计算服务安全评估的云平台">通过云计算服务安全评估的云平台</a></h5><div class="times">2026-09-11</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/01/c_1790012394774828.htm target=_blank title="精彩剧透！2026年国家网络安全宣传周亮点一览">精彩剧透！2026年国家网络安全宣传周亮点一览</a></h5><div class="times">2026-09-01</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/01/c_1790011556066214.htm target=_blank title="2026年国家网络安全宣传周将于9月14日至20日在全国范围举行">2026年国家网络安全宣传周将于9月14日至20日在全国范围举行</a></h5><div class="times">2026-09-01</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/06/c_1787764332950791.htm target=_blank title="关于对派拓公司在华销售产品启动网络安全审查的公告">关于对派拓公司在华销售产品启动网络安全审查的公告</a></h5><div class="times">2026-08-06</div></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="gov-section left" id="data">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/sjzl/A093708index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>数据治理</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/sjzl/A093708index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/20/c_1791481881543149.htm target=_blank title="关于30款App个人信息收集使用问题的通报">关于30款App个人信息收集使用问题的通报</a></h5><div class="times">2026-09-20</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/11/c_1790876549989064.htm target=_blank title="数据出境安全管理政策法规问答（2026年9月）">数据出境安全管理政策法规问答（2026年9月）</a></h5><div class="times">2026-09-11</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/20/c_1788889498173657.htm target=_blank title="《网络数据安全风险评估办法》实施有关事项答记者问">《网络数据安全风险评估办法》实施有关事项答记者问</a></h5><div class="times">2026-08-20</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/19/c_1788889479389148.htm target=_blank title="2026年个人信息保护系列专项行动取得阶段性成效">2026年个人信息保护系列专项行动取得阶段性成效</a></h5><div class="times">2026-08-19</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/12/c_1788195297373459.htm target=_blank title="个人信息保护政策法规问答（2026年8月）">个人信息保护政策法规问答（2026年8月）</a></h5><div class="times">2026-08-12</div></li>
+</ul>
+</div>
+</div>
+<div class="gov-section right" id="information">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/xxh/A093706index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>信息化</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/xxh/A093706index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-08/31/c_1789924786220368.htm target=_blank title="国家互联网信息办公室、农业农村部发布《中国数字乡村发展报告（2019—2025年）》">国家互联网信息办公室、农业农村部发布《中国数字乡村发展报告（2019—2025年）》</a></h5><div class="times">2026-08-31</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/31/c_1789925195322972.htm target=_blank title="专家解读｜以数字乡村发展助力乡村全面振兴">专家解读｜以数字乡村发展助力乡村全面振兴</a></h5><div class="times">2026-08-31</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/29/c_1789665114197079.htm target=_blank title="《中国新电商发展报告（2026）》正式发布">《中国新电商发展报告（2026）》正式发布</a></h5><div class="times">2026-08-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/29/c_1789665114459307.htm target=_blank title="一图读懂《中国新电商发展报告（2026）》">一图读懂《中国新电商发展报告（2026）》</a></h5><div class="times">2026-08-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/27/c_1786897925636214.htm target=_blank title="专家解读｜主动顺应新形势新要求 体系化深层次推进信息化发展">专家解读｜主动顺应新形势新要求 体系化深层次推进信息化发展</a></h5><div class="times">2026-07-27</div></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="gov-section left" id="international">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/gjjl/A093707index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>国际交流</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/gjjl/A093707index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+    <li><h5><a href=//www.cac.gov.cn/2026-07/24/c_1786639246282926.htm target=_blank title="APEC人工智能高级别论坛关于促进亚太地区人工智能发展的声明">APEC人工智能高级别论坛关于促进亚太地区人工智能发展的声明</a></h5><div class="times">2026-07-24</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/11/c_1785427830619328.htm target=_blank title="国家网信办将在2026年APEC数字周期间举办系列活动">国家网信办将在2026年APEC数字周期间举办系列活动</a></h5><div class="times">2026-07-11</div></li><li><h5><a href=//www.cac.gov.cn/2025-12/04/c_1766577618120237.htm target=_blank title="中方关于深化中国—东盟数字治理合作的倡议">中方关于深化中国—东盟数字治理合作的倡议</a></h5><div class="times">2025-12-04</div></li><li><h5><a href=//www.cac.gov.cn/2025-12/04/c_1766577618173846.htm target=_blank title="China&#x0027s Initiative on Deepening China-ASEAN Cooperation on Digital Governance">China&#x0027s Initiative on Deepening China-ASEAN Cooperation on Digital Governance</a></h5><div class="times">2025-12-04</div></li><li><h5><a href=//www.cac.gov.cn/2025-11/09/c_1764411962759098.htm target=_blank title="专家解读｜以普惠包容数字合作弥合数智鸿沟">专家解读｜以普惠包容数字合作弥合数智鸿沟</a></h5><div class="times">2025-11-09</div></li>
+</ul>
+</div>
+</div>
+<!-- <div class="gov-section right" id="gangaotai">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/gangaotai/A093712index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>港澳台事务</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/gangaotai/A093712index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal">
+     
+</ul>
+</div>
+</div> -->
+<div class="gov-section right" id="more" style="width: 585px;">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/gdgz/A093709index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>更多工作</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/gdgz/A093709index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal clearfix" style="width: 570px;">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/30/c_1792519026365050.htm target=_blank title="中国网络社会组织联合会第二届理事会第五次会议在北京召开">中国网络社会组织联合会第二届理事会第五次会议在北京召开</a></h5><div class="times">2026-09-30</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/29/c_1792432586683117.htm target=_blank title="2026年世界互联网大会乌镇峰会新闻发布会在北京举行">2026年世界互联网大会乌镇峰会新闻发布会在北京举行</a></h5><div class="times">2026-09-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/16/c_1791306277101208.htm target=_blank title="中文互联网基础语料4.0等三类高质量数据集正式发布">中文互联网基础语料4.0等三类高质量数据集正式发布</a></h5><div class="times">2026-09-16</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/15/c_1791223917393375.htm target=_blank title="2026年人工智能技术赋能网络安全应用测试结果发布">2026年人工智能技术赋能网络安全应用测试结果发布</a></h5><div class="times">2026-09-15</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/02/c_1790100928293899.htm target=_blank title="中国互联网发展基金会主办公益项目荣获第十三届“中华慈善奖”">中国互联网发展基金会主办公益项目荣获第十三届“中华慈善奖”</a></h5><div class="times">2026-09-02</div></li>
+</ul>
+</div>
+</div>
+</div>
+<!-- <div class="gov-section left" id="more">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/gdgz/A093709index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>更多工作</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/gdgz/A093709index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<div class="newsList">
+<ul class="news-normal clearfix">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/30/c_1792519026365050.htm target=_blank title="中国网络社会组织联合会第二届理事会第五次会议在北京召开">中国网络社会组织联合会第二届理事会第五次会议在北京召开</a></h5><div class="times">2026-09-30</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/29/c_1792432586683117.htm target=_blank title="2026年世界互联网大会乌镇峰会新闻发布会在北京举行">2026年世界互联网大会乌镇峰会新闻发布会在北京举行</a></h5><div class="times">2026-09-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/16/c_1791306277101208.htm target=_blank title="中文互联网基础语料4.0等三类高质量数据集正式发布">中文互联网基础语料4.0等三类高质量数据集正式发布</a></h5><div class="times">2026-09-16</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/15/c_1791223917393375.htm target=_blank title="2026年人工智能技术赋能网络安全应用测试结果发布">2026年人工智能技术赋能网络安全应用测试结果发布</a></h5><div class="times">2026-09-15</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/02/c_1790100928293899.htm target=_blank title="中国互联网发展基金会主办公益项目荣获第十三届“中华慈善奖”">中国互联网发展基金会主办公益项目荣获第十三届“中华慈善奖”</a></h5><div class="times">2026-09-02</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/06/c_1785081376776673.htm target=_blank title="“2026港澳台大学生网信企业实习计划”正式启幕">“2026港澳台大学生网信企业实习计划”正式启幕</a></h5><div class="times">2026-07-06</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/06/c_1785081374282413.htm target=_blank title="2026年世界互联网大会数字丝路发展论坛新闻发布会在北京召开">2026年世界互联网大会数字丝路发展论坛新闻发布会在北京召开</a></h5><div class="times">2026-07-06</div></li><li><h5><a href=//www.cac.gov.cn/2026-03/31/c_1776693856372394.htm target=_blank title="中央网络安全和信息化委员会办公室关于二十届中央第四轮巡视整改进展情况的通报">中央网络安全和信息化委员会办公室关于二十届中央第四轮巡视整改进展情况的通报</a></h5><div class="times">2026-03-31</div></li><li><h5><a href=//www.cac.gov.cn/2026-03/24/c_1776086890471296.htm target=_blank title="中国互联网发展基金会召开第二届理事会第十二次会议">中国互联网发展基金会召开第二届理事会第十二次会议</a></h5><div class="times">2026-03-24</div></li><li><h5><a href=//www.cac.gov.cn/2026-03/17/c_1775482000390424.htm target=_blank title="世界互联网大会举行2026年亚太峰会新闻发布会">世界互联网大会举行2026年亚太峰会新闻发布会</a></h5><div class="times">2026-03-17</div></li>
+</ul>
+</div>
+</div> -->
+<div class="gov-section left" id="local">
+<div class="news-normal-title">
+<p class="normal-title"><a href="//www.cac.gov.cn/wxzw/dfwx/A093710index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>地方网信</a></p>
+<div class="more"><a href="//www.cac.gov.cn/wxzw/dfwx/A093710index_1.htm" target="_blank" rel="noopener noreferrer">查看详情</a></div>
+</div>
+<ul class="local-box left">
+    <li id="beijing"><a href="//www.cac.gov.cn/wxzw/dfwx/beijing/A09371001index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>北京</a></li>
+    <li id="tianjin"><a href="//www.cac.gov.cn/wxzw/dfwx/tianjin/A09371002index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>天津</a></li>
+    <li id="hebei"><a href="//www.cac.gov.cn/wxzw/dfwx/hebei/A09371003index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>河北</a></li>
+    <li id="shanxi"><a href="//www.cac.gov.cn/wxzw/dfwx/shanxi/A09371004index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>山西</a></li>
+    <li id="neimenggu"><a href="//www.cac.gov.cn/wxzw/dfwx/neimenggu/A09371005index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>内蒙古</a></li>
+    <li id="liaoning"><a href="//www.cac.gov.cn/wxzw/dfwx/liaoning/A09371006index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>辽宁</a></li>
+    <li id="jilin"><a href="//www.cac.gov.cn/wxzw/dfwx/jilin/A09371007index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>吉林</a></li>
+    <li id="heilongjiang"><a href="//www.cac.gov.cn/wxzw/dfwx/heilongjiang/A09371008index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>黑龙江</a></li>
+    <li id="shanghai"><a href="//www.cac.gov.cn/wxzw/dfwx/shanghai/A09371009index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>上海</a></li>
+    <li id="jiangsu"><a href="//www.cac.gov.cn/wxzw/dfwx/jiangsu/A09371010index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>江苏</a></li>
+    <li id="zhejiang"><a href="//www.cac.gov.cn/wxzw/dfwx/zhejiang/A09371011index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>浙江</a></li>
+    <li id="anhui"><a href="//www.cac.gov.cn/wxzw/dfwx/anhui/A09371012index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>安徽</a></li>
+    <li id="fujian"><a href="//www.cac.gov.cn/wxzw/dfwx/fujian/A09371013index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>福建</a></li>
+    <li id="jiangxi"><a href="//www.cac.gov.cn/wxzw/dfwx/jiangxi/A09371014index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>江西</a></li>
+    <li id="shandong"><a href="//www.cac.gov.cn/wxzw/dfwx/shandong/A09371015index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>山东</a></li>
+    <li id="henan"><a href="//www.cac.gov.cn/wxzw/dfwx/henan/A09371016index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>河南</a></li>
+    <li id="hubei"><a href="//www.cac.gov.cn/wxzw/dfwx/hubei/A09371017index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>湖北</a></li>
+    <li id="hunan"><a href="//www.cac.gov.cn/wxzw/dfwx/hunan/A09371018index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>湖南</a></li>
+    <li id="guangdong"><a href="//www.cac.gov.cn/wxzw/dfwx/guangdong/A09371019index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>广东</a></li>
+    <li id="guangxi"><a href="//www.cac.gov.cn/wxzw/dfwx/guangxi/A09371020index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>广西</a></li>
+    <li id="hainan"><a href="//www.cac.gov.cn/wxzw/dfwx/hainan/A09371021index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>海南</a></li>
+    <li id="chongqing"><a href="//www.cac.gov.cn/wxzw/dfwx/chongqing/A09371022index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>重庆</a></li>
+    <li id="sichuan"><a href="//www.cac.gov.cn/wxzw/dfwx/sichuan/A09371023index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>四川</a></li>
+    <li id="guizhou"><a href="//www.cac.gov.cn/wxzw/dfwx/yunnan/A09371024index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>贵州</a></li>
+    <li id="yunnan"><a href="//www.cac.gov.cn/wxzw/dfwx/yunnan/A09371025index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>云南</a></li>
+    <li id="xizang"><a href="//www.cac.gov.cn/wxzw/dfwx/xizang/A09371026index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>西藏</a></li>
+    <li id="shan"><a href="//www.cac.gov.cn/wxzw/dfwx/shanxisheng/A09371027index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>陕西</a></li>
+    <li id="gansu"><a href="//www.cac.gov.cn/wxzw/dfwx/gansu/A09371028index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>甘肃</a></li>
+    <li id="qinghai"><a href="//www.cac.gov.cn/wxzw/dfwx/qinghai/A09371029index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>青海</a></li>
+    <li id="ningxia"><a href="//www.cac.gov.cn/wxzw/dfwx/ningxia/A09371030index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>宁夏</a></li>
+    <li id="xinjiang"><a href="//www.cac.gov.cn/wxzw/dfwx/xinjiang/A09371031index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>新疆</a></li>
+    <li id="bingtuan"><a href="//www.cac.gov.cn/wxzw/dfwx/bingtuan/A09371032index_1.htm" target="_blank" rel="noopener noreferrer"><i></i>兵团</a></li>
+</ul>
+<div class="newsList right">
+<ul class="news-normal clearfix">
+    <li><h5><a href=//www.cac.gov.cn/2026-09/28/c_1792346240613004.htm target=_blank title="“智能互联网 庭州新对话”活动在昌吉市举办">“智能互联网 庭州新对话”活动在昌吉市举办</a></h5><div class="times">2026-09-28</div></li><li><h5><a href=//www.cac.gov.cn/2026-09/21/c_1791740772540035.htm target=_blank title="“以数赋能 向绿而行”数字化绿色化协同转型经验新疆行活动在伊宁市启动">“以数赋能 向绿而行”数字化绿色化协同转型经验新疆行活动在伊宁市启动</a></h5><div class="times">2026-09-21</div></li><li><h5><a href=//www.cac.gov.cn/2026-08/06/c_1787764314688476.htm target=_blank title="江西省委网信办召开全省涉企网络侵权举报工作座谈会">江西省委网信办召开全省涉企网络侵权举报工作座谈会</a></h5><div class="times">2026-08-06</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/29/c_1787072684602682.htm target=_blank title="“开局之年看中国·解码创新浙江”网络主题宣传活动在温州启动">“开局之年看中国·解码创新浙江”网络主题宣传活动在温州启动</a></h5><div class="times">2026-07-29</div></li><li><h5><a href=//www.cac.gov.cn/2026-07/29/c_1787072683754509.htm target=_blank title="甘肃省委网络安全和信息化委员会第三次会议召开">甘肃省委网络安全和信息化委员会第三次会议召开</a></h5><div class="times">2026-07-29</div></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- footer -->
+<div class="footer">
+<div class="foot">
+<p><span>中央网络安全和信息化委员会办公室</span>                 <span>中华人民共和国国家互联网信息办公室 &copy; 版权所有</span>                 <a href="//www.cac.gov.cn/hdfw/lxwm/A093812index_1.htm" target="_blank" rel="noopener noreferrer">联系我们</a></p>
+<p>承办：国家互联网应急中心　技术支持：长安通信科技有限责任公司　<a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14042428号</a>　<a id="beian" href="https://www.beian.gov.cn//www.cac.gov.cn/registerSystemInfo?recordcode=11040102700108" target="_blank" rel="noopener noreferrer"><i class="gwa"></i>京公网安备11040102700108号</a></p>
+<div id="conac"><a href="https://bszs.conac.cn/sitename?method=show&amp;id=04E495BC1FB45E52E053022819AC1EB7" target="_blank" rel="noopener noreferrer"><img src="//www.cac.gov.cn/lib/pc/scheme/images/conac.png" alt="党政机关标识" /></a></div>
+</div>
+</div>
+<!-- 侧边栏飘窗 返回顶部 -->
+<div class="right-nav">
+<ul>
+    <li class="qg">
+    <h6>学习强国</h6>
+    <div class="ewm" id="qg">
+    <div class="share_triangle"><em class="border_triangle">◆</em> <span class="con_triangle">◆</span></div>
+    <img src="//www.cac.gov.cn/lib/pc/scheme/images/QR-qg.jpg" alt="" srcset="" /></div>
+    </li>
+    <li class="wx">
+    <h6>微信</h6>
+    <div class="ewm" id="wx">
+    <div class="share_triangle"><em class="border_triangle">◆</em> <span class="con_triangle">◆</span></div>
+    <img src="//www.cac.gov.cn/lib/pc/scheme/images/QR-wx.jpg" alt="" srcset="" /></div>
+    </li>
+    <li class="top">
+    <h6>返回顶部</h6>
+    </li>
+</ul>
+</div>
+<script src="//www.cac.gov.cn/lib/pc/scheme/js/foot.js"></script> <script type="text/javascript" src="//www.cac.gov.cn/lib/template/scheme/js/crToken.js"></script>
+<script src="//www.cac.gov.cn/lib/pc/scheme/js/stran.js"></script>     <script src="//www.cac.gov.cn/lib/pc/scheme/js/common.js"></script><div style='display:none'>Produced By CMS 网站群内容管理系统 publishdate:2026/10/08 10:08:20</div><div><script>function pagestat(){var newCrToken = "";
+for(var i=0;i<6;i++) //6位随机数，用以加在时间戳后面。
+{
+	newCrToken += Math.floor(Math.random()*10);
+}
+newCrToken = new Date().getTime() + newCrToken;  
+
+	$.ajax({
+		type:"POST",
+		url:"/cms/pub/interact/newCrToken.jsp?outTradeNo="+newCrToken,
+		dataType:"text",
+		success:function(data){
+var urlfrom = ''; 
+if (document.referrer.length > 0) { 
+urlfrom = document.referrer; 
+} 
+try { 
+ if (urlfrom.length == 0 && opener.location.href.length > 0) { 
+ urlfrom = opener.location.href; 
+} 
+ } catch (e) {}  
+var re=new RegExp(" ","gi");
+urlfrom = urlfrom.replace(re,"");
+if(urlfrom.indexOf("tagpre")>0||urlfrom.indexOf("result")>0)  urlfrom="";
+var title = document.title;
+$.ajax({type:'POST',url: '/cms/pub/interact/stat/newPagestat.jsp?crToken='+newCrToken,data:{webappcode:"A09",code:"A0937",infoId:"",title:title,urlfrom:encodeURI(urlfrom)},success:function(data){}});		}
+	});
+
+}pagestat();</script></div><script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script> 
+<script src="//www.cac.gov.cn/inc/weixinshare.js"></script></body></html>

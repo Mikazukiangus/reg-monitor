@@ -6,7 +6,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 
 1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes when someone visits; the HKMA liquidity page every 30. Separately, a scheduled check reads every source every three hours (see "Keeping every source up to date" below).
 2. **Each item is put into a common format:** title, regulator, date, link, type and so on.
-3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR".
+3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR". Chinese and Japanese documents are split into sentences at "。" and quoted as published, not translated.
 4. **Each notice is saved to the history database** (`db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
 5. **Vercel's CDN keeps a copy** of the combined result for up to 5 minutes. Visitors get it instantly, and "Data as of" shows when it was built. A refresh (the Sync button, or a copy older than 10 minutes) skips the CDN; the server then reuses a result it built in the last minute, and each visitor may refresh 6 times a minute (after that the server answers HTTP 429 and the page says when to try again). Both limits are kept per server instance.
 6. **The visitor's device keeps its own copy** (`public/sw.js`) for offline use.
@@ -34,6 +34,24 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **ESMA** | Official news RSS feed | The publication date is read from the item's description |
 | **BIS & Basel Committee** | Official BIS media-release feed (RSS, older RDF format) | Basel Committee items are tagged BCBS |
 | **FSB** | Official publications RSS feed | Regional consultative group meetings and auditor reports are left out |
+
+### Rules for artificial intelligence
+
+These come from the official body in each jurisdiction that makes or enforces AI rules. Feeds that cover all of an agency's work are narrowed by `src/lib/aiTopics.ts`: the title must be about AI (English, Chinese or Japanese words for it) and the title or summary must concern rules or their enforcement (a law, rules, guidance, consultation, investigation, executive order and so on), so funding rounds, industry programmes and passing mentions are left out. A narrowed feed often has nothing new; that is not an error. Every notice from these sources is tagged "AI rules".
+
+| Jurisdiction | Source | Notes |
+| --- | --- | --- |
+| **EU** | The European Commission's news list on its "Shaping Europe's digital future" site, filtered to the AI topic (HTML) | Covers the AI Act, its guidelines and codes of practice, and the AI Office and AI Board. The site's RSS feed covers every digital topic and can't be filtered. Dates are Brussels days |
+| **UK** | GOV.UK's search API: the Department for Science, Innovation and Technology and the AI Security Institute (JSON) | The UK has no AI act; its regulators apply their own rules (the PRA's and FCA's are read already) |
+| **US federal** | Federal Register API: documents containing "artificial intelligence" whose title is about AI | Executive orders, rules, policy statements and requests for information from any agency. Meeting, nomination and paperwork notices are left out. The most specific agency is named |
+| **US federal** | FTC press releases (RSS) | Inquiries, enforcement and policy statements on AI |
+| **California** | The Governor's site search for "artificial intelligence" (WordPress RSS), and CalPrivacy's news feed (RSS) | The Governor signs the state's AI laws; CalPrivacy (the CPPA) makes the rules on automated decisionmaking technology. CalPrivacy items need only mention AI |
+| **Colorado** | The Attorney General's site search for "artificial intelligence" (WordPress RSS) | The Attorney General enforces, and makes rules under, the Colorado AI Act |
+| **South Korea** | The Ministry of Science and ICT's English press releases (HTML) | MSIT administers the Framework Act on AI. Titles and dates are written into the list page by a script, which the server reads. Dates are Korean days |
+| **China** | The Cyberspace Administration of China's lists of department rules, normative documents and policy documents, and its notices (HTML, in Chinese) | Titles and key points stay in Chinese, as published. Department rules are binding, so they score as rules made. Dates such as "自2026年7月15日起施行" (takes effect from) are read from the text |
+| **Japan** | The topics list of the Cabinet Office's AI strategy pages (HTML, in Japanese) | Under the AI Promotion Act. Meetings count as routine; calls for comments are consultations, with the closing date read from the page ("…までの間、意見を募集します"; Reiwa years converted) |
+
+Left out: Texas (its AI law is enforced by the Attorney General, whose news releases rarely concern AI: two of the 90 most recent mentioned it, neither about the law), EUR-Lex (it answers automated requests with a bot check), the CAC's JSON list service (it refuses automated requests; its HTML lists are used), China's State Council English site (one AI item in its last 150 releases) and Singapore's IMDA (its AI news is mostly industry programmes; MAS covers Singapore's AI rules for financial firms).
 
 Sources considered and left out: SGX Group news releases about listings, awards, indices and results (only regulatory items are kept), JPX market news (mostly listings and index changes), IOSCO (its site refuses automated requests), Bursa Malaysia (its site is behind a Cloudflare check), EBA (its feed only carries daily e-mail alert bulletins) and APRA (its feed only carries statistics releases).
 

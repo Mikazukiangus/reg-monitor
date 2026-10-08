@@ -202,16 +202,27 @@ const DATELINE = /^[A-Z][A-Za-z]+(?: [A-Z][A-Za-z]+)?, \d{1,2} [A-Z][a-z]+ 20\d\
 const FOOTNOTE = /^\d{1,2}\s+(?=[A-Z])/;
 const PHOTO_CAPTION = /\((?:left|right|centre|center|middle)\)/i;
 
+// Chinese and Japanese characters. Their sentences end in "。" and need no
+// space after it; a character carries more meaning, so they may be shorter.
+const CJK_RUN = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]+/g;
+const CJK_START = /^[《“（\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/;
+
+const isLatinSentence = (s: string) => s.length >= 40 && s.length <= 400 && /^[A-Z“"(]/.test(s) && /[.!?:]$/.test(s) && !PHOTO_CAPTION.test(s);
+const isCjkSentence = (s: string) => s.length >= 15 && s.length <= 300 && CJK_START.test(s) && /[。！？]$/.test(s);
+
 function splitSentences(text: string): string[] {
   return text
     .split('\n')
-    .flatMap((para) => para.split(/(?<=[.!?])\s+(?=[A-Z“"(])/))
+    .flatMap((para) => para.split(/(?<=[.!?])\s+(?=[A-Z“"(])|(?<=[。！？])/))
     .map((s) => s.trim().replace(DATELINE, '').replace(FOOTNOTE, ''))
-    .filter((s) => s.length >= 40 && s.length <= 400 && /^[A-Z“"(]/.test(s) && /[.!?:]$/.test(s) && !PHOTO_CAPTION.test(s));
+    .filter((s) => isLatinSentence(s) || isCjkSentence(s));
 }
 
+// Words, and for Chinese and Japanese text each pair of adjacent characters
 function tokenize(s: string): string[] {
-  return (s.toLowerCase().match(/[a-z][a-z-]+/g) || []).filter((w) => w.length > 2 && !STOP.has(w));
+  const words = (s.toLowerCase().match(/[a-z][a-z-]+/g) || []).filter((w) => w.length > 2 && !STOP.has(w));
+  const pairs = (s.match(CJK_RUN) || []).flatMap((run) => Array.from({ length: run.length - 1 }, (_, i) => run.slice(i, i + 2)));
+  return [...words, ...pairs];
 }
 
 // TextRank over sentence cosine similarity, with a lead-position bonus and a
@@ -348,11 +359,38 @@ const UNSETTLED = /\b(?:propos(?:ed?|es|als?)|would|could|might|if|subject to|di
 // A date being replaced: "from 1 January 2028, instead of 1 January 2027"
 const REPLACED_DATE = new RegExp(`,?\\s*\\b(?:instead of|rather than|replacing|previously|originally)\\s+(?:the\\s+)?${DATE_TEXT}`, 'gi');
 
+// Chinese rules state their dates in a set form: "本办法自2026年7月15日起施行"
+// (these measures take effect from ...), and a call for comments
+// "意见反馈截止时间为2026年10月18日" (feedback closes on ...). A draft's
+// date is only proposed.
+const CJK_DATE = String.raw`(20\d\d)年(\d{1,2})月(\d{1,2})日`;
+const CJK_TAKES_EFFECT = new RegExp(`自${CJK_DATE}起(?:施行|实施|执行|生效)`);
+const CJK_CLOSES = new RegExp(`(?:反馈|意见)[^。]{0,20}?截止(?:时间|日期)?(?:为|是|至)?${CJK_DATE}`);
+const CJK_DRAFT = /征求意见稿|草案/;
+const cjkIso = (m: RegExpMatchArray) => `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+// Japanese calls for comments: "令和８年６月19日（金）から令和８年６月23日（火）
+// までの間、意見を募集します" (comments are invited from ... until ...). Year N of
+// the Reiwa era is 2018 + N; digits may be full-width.
+const JA_CLOSES = /(?:令和(\d{1,2})|(20\d\d))年(\d{1,2})月(\d{1,2})日(?:（.）)?までの間[^。]{0,10}意見を募集/;
+const halfWidth = (s: string) => s.replace(/[０-９]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xfee0));
+const jaIso = (m: RegExpMatchArray) => `${m[1] ? 2018 + Number(m[1]) : m[2]}-${m[3].padStart(2, '0')}-${m[4].padStart(2, '0')}`;
+
 // Each sentence that states a date for the document it comes from, with the
 // kind of date. Takes the sentences in document order; one date per sentence.
 export function documentDates(sentences: string[]): DocumentDate[] {
   const found: DocumentDate[] = [];
   for (const text of new Set(sentences)) {
+    const jaCloses = halfWidth(text).match(JA_CLOSES);
+    if (jaCloses) {
+      found.push({ kind: 'closes', date: jaIso(jaCloses), text });
+      continue;
+    }
+    const cjkCloses = text.match(CJK_CLOSES);
+    const cjkEffect = cjkCloses || CJK_DRAFT.test(text) ? null : text.match(CJK_TAKES_EFFECT);
+    if (cjkCloses || cjkEffect) {
+      found.push({ kind: cjkCloses ? 'closes' : 'takesEffect', date: cjkIso((cjkCloses || cjkEffect)!), text });
+      continue;
+    }
     const s = text.replace(REPLACED_DATE, '');
     const asks = s.match(ASKS_FOR_COMMENTS);
     const states = asks ? null : s.match(STATES_CLOSING);
