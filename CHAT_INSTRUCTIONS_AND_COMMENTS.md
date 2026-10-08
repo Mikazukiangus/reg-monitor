@@ -366,6 +366,8 @@ This document records the full chronological instructions, technical requirement
 * **Type badges** (`NoticeCard.tsx`): colours now come from the theme by format. The fixed hex colours the server attaches to each notice (`typeColorClass`, from the AI Studio version) ignored the dark theme, and the Enforcement red was 4.41:1, below AA.
 * **Icons** (`public/*.png`): the logo was recoloured pixel by pixel to the new palette (lake background, cinnamon arcs, Antwarp node, olive dot), keeping its shape and anti-aliased edges.
 * **Verified locally:** axe (WCAG 2 A/AA) finds no issues on all five tabs, the notifications list and the endpoints, export, gap checklist and dossier windows, in both themes; desktop (1440px) and phone (375×812) checked by eye; type check, build and 359 tests pass.
+* **Deployment:** the first two preview builds stopped after about 1.5s with Vercel's "Resource provisioning failed" and no build log. The user redeployed from the Vercel dashboard, which sent the branch to production; it worked there.
+* **Merged (2026-10-08):** the user said "Merge to main." On production: theme-color #802626, the new script hash in the security policy, the new colours in the stylesheet and the recoloured icon are served; no console errors; the header band is burnt lake and the active tab lake with cinnamon text; the dark theme switches to the dark colours; 241 notices, 29 of 29 sources up.
 
 ---
 
