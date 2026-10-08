@@ -288,6 +288,7 @@ This document records the full chronological instructions, technical requirement
 * **Fix found while testing:** the format classifier matched "action" and "order" inside other words, so "transaction" counted as enforcement. It now matches whole words.
 * **Also:** filter labels, the Radar, the page description, the sources window and the methodology name the new regulators; the starting alert rules (and the email digest) include SGX, ASX and FINRA consultations and SGX enforcement. Rules already saved in a browser are not changed.
 * **Verified locally:** all six new sources load against the live sites with key points (FINRA after its rate limit cleared); 72 tests pass with recorded responses; `tsc` and `vite build` pass.
+* **Merged (2026-10-08):** the user said "merge to main". On production: 25 of 25 source feeds OK, 180 notices, no repeated document links; history holds 554 notices back to 2024-04-01.
 
 ---
 
