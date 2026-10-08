@@ -202,6 +202,7 @@ const FORMAT_EXAMPLES: [string, string, string][] = [
   ['', 'Court of Appeal Dismisses Ricky Wong’s Appeal against Injunction Order', 'Enforcement'],
   ['', 'Bank Charges and Fees: Transparency Requirements', 'Circulars'],
   ['', 'MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions', 'Guidelines'],
+  ['', 'Monetary Policy Statement', 'Circulars'],
   ['', 'PS16/26 – PRA rule changes to accommodate HM Treasury’s Overseas Prudential Requirements Regime', 'Guidelines'],
   ['', 'Announcement - In relation to the matter of Paladin Limited (Stock Code: 495) Cancellation of listing', 'Enforcement']
 ];

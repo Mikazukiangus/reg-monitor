@@ -212,7 +212,7 @@ const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary 
 // (not "Bank Charges and Fees")
 const CHARGES = /^[a-z][\w.&'’-]* charges\b(?! (and|for|on|of|to|payable|levied|applicable)\b)/i;
 const TECHNICAL = /\b(technical standards?|regulatory technical|implementing technical|data standards?|reporting templates?|return templates?|disclosure templates?|xbrl|interoperab\w*|toolkit)\b/i;
-const GUIDELINES = /\bguidelines?\b|(?<!forward )\bguidance\b|\bcodes? of practice\b|\bpractice notes?\b|\bpolicy (manual|documents?)\b|\bfaqs?\b|\binterpretation note\b|\bsupervisory policy manual\b|\bsupervisory expectations?\b|\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b/i;
+const GUIDELINES = /\bguidelines?\b|(?<!forward )\bguidance\b|\bcodes? of practice\b|\bpractice notes?\b|\bpolicy (manual|documents?)\b|\bfaqs?\b|\binterpretation note\b|\bsupervisory policy manual\b|\bsupervisory expectations?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b/i;
 
 export interface FormatTagging {
   format: InstrumentFormat;
