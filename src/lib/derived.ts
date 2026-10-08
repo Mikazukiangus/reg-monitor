@@ -30,7 +30,7 @@ export function deriveDeadlines(notices: RegulatoryNotice[], now = new Date()): 
       return {
         id: `deadline-${n.id}`,
         title: `${n.regulator}: ${n.title}`,
-        subtitle: n.statutoryDeadline || 'Date in source',
+        subtitle: n.statutoryDeadline || '',
         daysRemaining: days,
         dateStr: formatDate(n.deadlineDate!),
         colorClass: days <= 14 ? 'bg-venetian-wash' : 'bg-page',

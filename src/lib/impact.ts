@@ -19,6 +19,8 @@
 //   Comments close within 14 days                          +1.5
 //   Comments closed                                   score 4
 //   Takes effect within 30 days                            +1.5
+//     (the Federal Register's effective date, or a date the document
+//     states as when it takes effect)
 //
 // Critical (8.5 and up) is therefore only something with a date close at
 // hand: a consultation about to close, or rules about to take effect.
@@ -83,7 +85,7 @@ export function commentsClosed(statutoryDeadline: string | undefined, today = ne
 
 export function assessImpact(n: ImpactInput, today = new Date()): ImpactAssessment {
   const text = `${n.type} ${n.title}`;
-  const deadline = n.statutoryDeadline?.match(/^(Comments close|Comments closed|Effective): (\d{4}-\d{2}-\d{2})/);
+  const deadline = n.statutoryDeadline?.match(/^(Comments close|Comments closed|Effective|Takes effect): (\d{4}-\d{2}-\d{2})/);
   const result = (score: number, reasons: string[]): ImpactAssessment => ({ score, severity: severityOf(score), reasons });
 
   for (const [pattern, label, forConsultations] of ROUTINE) {
@@ -121,7 +123,7 @@ export function assessImpact(n: ImpactInput, today = new Date()): ImpactAssessme
         score += 1.5;
         reasons.push(`comments close ${days === 0 ? 'today' : `in ${days} day${days === 1 ? '' : 's'}`}: +1.5`);
       }
-    } else if (kind === 'Effective' && days >= 0 && days <= 30) {
+    } else if ((kind === 'Effective' || kind === 'Takes effect') && days >= 0 && days <= 30) {
       score += 1.5;
       reasons.push(`takes effect ${days === 0 ? 'today' : `in ${days} day${days === 1 ? '' : 's'}`}: +1.5`);
     }

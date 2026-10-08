@@ -33,7 +33,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
       date: n.deadlineDate!,
       quarter: quarterOf(n.deadlineDate!),
       days: daysUntil(n.deadlineDate!),
-      quote: n.keyPoints?.facts.find(f => f.date === n.deadlineDate)?.text
+      quote: n.deadlineQuote ?? n.keyPoints?.facts.find(f => f.date === n.deadlineDate)?.text
     }))
     .sort((a, b) => a.date.localeCompare(b.date));
 

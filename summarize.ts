@@ -22,8 +22,26 @@ export interface KeyPoints {
   method: 'extractive';
   // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
   ocr?: boolean;
-  // A sentence stating when comments or responses are due, with that date
+  // Dates the document states for itself, each with its kind and sentence
+  dates?: DocumentDate[];
+  // Copies stored before October 2026 have this instead of dates
   closingDate?: KeyFact;
+}
+
+export type DateKind = 'closes' | 'takesEffect' | 'complyBy';
+
+// A date a document states for itself: when comments close, when it takes
+// effect, or when firms must comply by
+export interface DocumentDate {
+  kind: DateKind;
+  // ISO date (YYYY-MM-DD)
+  date: string;
+  // The sentence it comes from, verbatim
+  text: string;
+  // "The consultation closes on ..." rather than a request for comments.
+  // Counts only on a consultation: a digest or event notice may be quoting
+  // another paper's closing date.
+  general?: boolean;
 }
 
 const BLOCK_CLOSE = /<\/(p|li|h[1-6]|div|tr|td|th|section|article|blockquote|dd|dt)>|<br\s*\/?>/gi;
@@ -231,7 +249,8 @@ function rankSentences(sentences: string[], count: number): string[] {
 
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 const MONTH_RE = 'January|February|March|April|May|June|July|August|September|October|November|December';
-const FULL_DATE = new RegExp(`\\b(\\d{1,2}) (${MONTH_RE}) (20\\d\\d)\\b|\\b(${MONTH_RE}) (\\d{1,2}),? (20\\d\\d)\\b`, 'g');
+const DAY_RE = String.raw`(\d{1,2})(?:st|nd|rd|th)?`;
+const FULL_DATE = new RegExp(`\\b${DAY_RE} (${MONTH_RE}),? (20\\d\\d)\\b|\\b(${MONTH_RE}) ${DAY_RE},? (20\\d\\d)\\b`, 'g');
 const ANY_DATE = new RegExp(`\\b(?:\\d{1,2} )?(?:${MONTH_RE})(?: \\d{1,2},?)? 20\\d\\d\\b`);
 const MONTH_YEAR = new RegExp(`\\b(${MONTH_RE}) (20\\d\\d)\\b`, 'g');
 const DEADLINE_CUE = /\b(by|before|until|no later than|deadline|close[sd]?|due|submit\w*|comments?|feedback|responses?|effective|take[s]? effect|come[s]? into (?:force|effect)|apply|applies|commence\w*|implement\w*)\b/i;
@@ -279,24 +298,81 @@ function extractDateFacts(sentences: string[], now: Date): KeyFact[] {
   return kept;
 }
 
-// Sentences that state when a consultation closes, e.g. "Comments should be
-// submitted on or before 9 December 2026", "The consultation closes on ..."
-// or "The public consultation ... will last until 7 October 2026"
-const CLOSING_CUE = new RegExp([
-  String.raw`\b(?:comments?|responses?|feedback|submissions?|views|representations)\b[^.;]{0,140}\b(?:by|on or before|no later than|before|until)\b`,
-  String.raw`\b(?:consultation|comment period|consultation period)\b[^.;]{0,80}\b(?:closes?|closing|ends?|will end|runs? until|lasts? until|will (?:last|run|remain open|be open) until|(?:is|remains) open until)\b`,
-  String.raw`\bclosing date\b`,
-  String.raw`\bdeadline for (?:responses|comments|submissions|feedback)\b`
-].join('|'), 'i');
+// Dates a document states for itself. Each kind needs its cue right before the
+// date ("comments ... by 9 December 2026", "will take effect on 1 November
+// 2026"), so another date in the same sentence is not taken for it.
+const DATE_TEXT = String.raw`(?:\d{1,2}(?:st|nd|rd|th)? (?:${MONTH_RE}),? 20\d\d|(?:${MONTH_RE}) \d{1,2}(?:st|nd|rd|th)?,? 20\d\d)`;
+// Within one clause; dots inside e-mail addresses and times are allowed
+const IN_CLAUSE = String.raw`(?:[^.;]|\.(?=\S))`;
+// Words between a cue and its date, as in "by 5pm (AEDT) on Thursday, 5 November
+// 2026" or "beginning on or after 1 January 2028"
+const TIME = String.raw`(?:at )?(?:\d{1,2}(?:[.:]\d{2})?\s?(?:am|pm|a\.m\.|p\.m\.)|noon|midnight)(?: \([A-Za-z ]+\))?,? `;
+const TO_DATE = String.raw`,?\s+(?:(?:on or after|on|from|as (?:of|from)|is|was|will be)\s+)?(?:${TIME})?(?:on )?` +
+  String.raw`(?:(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),? )?(?:the )?(${DATE_TEXT})`;
+const withDate = (cue: string) => new RegExp(`(?:${cue})${TO_DATE}`, 'i');
 
-export function extractClosingDate(sentences: string[]): KeyFact | undefined {
-  for (const s of sentences) {
-    if (!CLOSING_CUE.test(s)) continue;
-    const dates = parseFullDates(s).sort();
-    // The latest date in the sentence: "published on 3 October ... comments by 9 December"
-    if (dates.length) return { text: s, date: dates[dates.length - 1] };
+// A request for comments: "Comments should be submitted on or before ...",
+// "Stakeholders are invited to respond to the consultation by ..."
+const ASKS_FOR_COMMENTS = withDate(
+  String.raw`\b(?:comments?|respond|responses?|feedback|submissions?|submitted|views|representations)\b${IN_CLAUSE}{0,140}?\b(?:by|on or before|no later than|before|until)`
+);
+// A statement of when comments close: "The consultation closes on ...", "The
+// consultation period ends on ...", "... will last until ..."
+const STATES_CLOSING = withDate([
+  String.raw`\b(?:consultation|consultation period|comment period|consultation paper|submissions?|comments?)\b${IN_CLAUSE}{0,80}?\b(?:closes?|closed|closing|ends?|ended|will end|runs? until|ran until|lasts? until|will (?:last|run|remain open|be open) until|(?:is|remains) open until)`,
+  String.raw`\bclosing date\b${IN_CLAUSE}{0,80}?\b(?:is|was|of)`,
+  String.raw`\bdeadline for (?:responses|comments|submissions|feedback)\b${IN_CLAUSE}{0,60}?\b(?:is|was)`
+].join('|'));
+const THIS_DOCUMENT = /\bthis (?:consultation|paper|consultation paper|document|notice|request)\b|\btoday\b/i;
+// "will take effect on ...", "become effective on ...", "The effective date of
+// the amendments ... is ...", "shall apply on ...", "take effect for annual
+// reporting periods beginning on or after ..."
+const TAKES_EFFECT = withDate([
+  String.raw`\b(?:takes?|took|taking) effect(?: for${IN_CLAUSE}{0,60}?\b(?:beginning|starting|commencing))?`,
+  String.raw`\bbecomes? effective`,
+  String.raw`\b(?:comes?|came|coming) into (?:force|effect|operation)`,
+  String.raw`\beffective(?= (?:on|from|as (?:of|from)) )`,
+  String.raw`\bwith effect from`,
+  String.raw`\beffective date\b${IN_CLAUSE}{0,80}?\b(?:is|will be|was)`,
+  String.raw`\b(?:shall|will) (?:apply|commence|start)`,
+  String.raw`\bcommences?`
+].join('|'));
+// An obligation with a date: "should have ... in place by ...", "are required to
+// be completed by ..."
+const COMPLY_BY = withDate(
+  String.raw`\b(?:must|should|shall|(?:is|are) required to|required to be|needs? to|ha(?:ve|s) to)\b${IN_CLAUSE}{0,120}?\b(?:by|no later than|on or before)`
+);
+// Effective and compliance dates that are not settled: proposals, conditions,
+// views on a proposed date
+const UNSETTLED = /\b(?:propos(?:ed?|es|als?)|would|could|might|if|subject to|differing views|expected to|intends? to|plans? to|aims? to)\b/i;
+// A date being replaced: "from 1 January 2028, instead of 1 January 2027"
+const REPLACED_DATE = new RegExp(`,?\\s*\\b(?:instead of|rather than|replacing|previously|originally)\\s+(?:the\\s+)?${DATE_TEXT}`, 'gi');
+
+// Each sentence that states a date for the document it comes from, with the
+// kind of date. Takes the sentences in document order; one date per sentence.
+export function documentDates(sentences: string[]): DocumentDate[] {
+  const found: DocumentDate[] = [];
+  for (const text of new Set(sentences)) {
+    const s = text.replace(REPLACED_DATE, '');
+    const asks = s.match(ASKS_FOR_COMMENTS);
+    const states = asks ? null : s.match(STATES_CLOSING);
+    const settled = !asks && !states && !UNSETTLED.test(s);
+    const effect = settled ? s.match(TAKES_EFFECT) : null;
+    const comply = settled && !effect ? s.match(COMPLY_BY) : null;
+    const m = asks || states || effect || comply;
+    const date = m && parseFullDates(m[1])[0];
+    if (!date) continue;
+    const kind: DateKind = effect ? 'takesEffect' : comply ? 'complyBy' : 'closes';
+    found.push({ kind, date, text, ...(states && !THIS_DOCUMENT.test(s) ? { general: true } : {}) });
   }
-  return undefined;
+  return found;
+}
+
+// The first closing date in the sentences, e.g. "Written submissions are
+// requested by 30 October 2026"
+export function extractClosingDate(sentences: string[]): KeyFact | undefined {
+  const closes = documentDates(sentences).find((d) => d.kind === 'closes');
+  return closes && { text: closes.text, date: closes.date };
 }
 
 const REF_RE = /\b(?:CP|PS|SS|DP|CR)\d{1,2}\/\d{2}\b|\bRelease No\. [\w-]+|\bFile No\. [\w-]+|\b(?:Consultation Paper|Policy Statement) No\. [\w/-]+/g;
@@ -308,11 +384,6 @@ export function summarize(text: string, options: { datesText?: string; sourceUrl
   const dateSentences = options.datesText ? splitSentences(options.datesText) : sentences;
   const facts = extractDateFacts(dateSentences, now);
   const refs = [...new Set(text.match(REF_RE) || [])].slice(0, 5);
-  const closingDate = extractClosingDate(sentences);
-  return { points, facts, refs, sourceUrl: options.sourceUrl, method: 'extractive', ...(closingDate ? { closingDate } : {}) };
-}
-
-// Earliest upcoming deadline named in the facts, if any
-export function earliestDeadline(keyPoints: KeyPoints): KeyFact | undefined {
-  return keyPoints.facts.filter((f) => f.date).sort((a, b) => (a.date! < b.date! ? -1 : 1))[0];
+  const dates = documentDates(options.datesText ? [...dateSentences, ...sentences] : sentences).slice(0, 6);
+  return { points, facts, refs, ...(dates.length ? { dates } : {}), sourceUrl: options.sourceUrl, method: 'extractive' };
 }

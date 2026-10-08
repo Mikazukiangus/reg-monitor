@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, extractPdfText, earliestDeadline, extractClosingDate, htmlToText, KeyPoints } from './summarize.js';
+import { summarize, extractArticleText, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
@@ -12,6 +12,7 @@ import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/reg
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
+import { rateLimit, reuseFor } from './src/lib/throttle.js';
 
 dotenv.config();
 
@@ -39,6 +40,8 @@ interface NormalizedNotice {
   issuedTimeAgo: string;
   statutoryDeadline?: string;
   deadlineDate?: string;
+  // The sentence the date was taken from, when it comes from the document's text
+  deadlineQuote?: string;
   statusBadge?: {
     text: string;
     type: 'deadline' | 'immediate' | 'action' | 'standard';
@@ -59,7 +62,6 @@ interface NormalizedNotice {
   related?: RelatedLink[];
 }
 
-let lastSyncTimestamp = new Date().toISOString();
 
 // Helper to calculate relative time
 function getRelativeTime(dateString: string): string {
@@ -228,7 +230,7 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
 
     const score = estimateImpact(format);
 
-    let statutoryDeadline = 'No date published';
+    let statutoryDeadline = NO_DATE;
     let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
     if (commentsClose) {
       statutoryDeadline = `Comments close: ${commentsClose}`;
@@ -238,7 +240,7 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
       statusBadge = { text: `Effective: ${effectiveOn}`, type: 'action' };
     }
 
-    return {
+    const notice: NormalizedNotice = {
       id: `fedreg-${doc.document_number || idx}`,
       ref: `FedReg: ${doc.citation || doc.document_number}`,
       title: doc.title,
@@ -264,6 +266,9 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
       dossierUrl: doc.html_url || doc.pdf_url,
       isLiveFeed: true
     };
+    // A date the text states (such as an exchange filing's comment deadline)
+    // when the Federal Register's own fields give none
+    return notice.keyPoints ? withKeyPointsUntagged(notice, notice.keyPoints) : notice;
   });
 }
 
@@ -1788,27 +1793,59 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
   }
 }
 
-// A notice with its key points, and the closing date or earliest date they give
+// A notice with its key points, and the date they give
 function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): NormalizedNotice {
   return tagNotice(withKeyPointsUntagged(notice, keyPoints));
 }
 
+const NO_DATE = 'No date published';
+const DATE_LABELS: Record<DateKind, string> = { closes: 'Comments close', takesEffect: 'Takes effect', complyBy: 'Comply by' };
+// Round-ups quote the dates of the papers they list
+const ROUND_UP = /\b(?:digest|newsletter|bulletin|round-?up)\b/i;
+
+// The date a notice shows, chosen from the dates its document states for itself:
+// - when comments close, if the document asks for comments or the notice is a
+//   consultation (a digest or event notice may give another paper's closing date)
+// - else the soonest date it takes effect or must be complied with, except on
+//   consultations (where those dates are only proposed) and enforcement actions
+// - else a closing date that has passed, as "Comments closed"
+// A round-up's dates belong to the papers it lists, so it shows none.
+export function noticeDate(notice: { type: string; title: string }, dates: DocumentDate[], today = hongKongDate()): Partial<NormalizedNotice> | undefined {
+  if (ROUND_UP.test(notice.title)) return undefined;
+  const format = formatOf(notice.type, notice.title);
+  const closes = dates.find(d => d.kind === 'closes' && (!d.general || format === 'Consultations'));
+  const next = closes && closes.date >= today ? closes
+    : format === 'Consultations' || format === 'Enforcement' ? undefined
+    : dates.filter(d => d.kind !== 'closes' && d.date >= today).sort((a, b) => a.date.localeCompare(b.date))[0];
+  if (next) {
+    const text = `${DATE_LABELS[next.kind]}: ${next.date}`;
+    return { deadlineDate: next.date, statutoryDeadline: text, deadlineQuote: next.text, statusBadge: { text, type: next.kind === 'takesEffect' ? 'action' : 'deadline' } };
+  }
+  if (closes) {
+    const text = `Comments closed: ${closes.date}`;
+    return { statutoryDeadline: text, deadlineQuote: closes.text, statusBadge: { text, type: 'standard' } };
+  }
+  return undefined;
+}
+
+// Sentences of the key points that can state a date: those found by the
+// current rules and, in copies stored before them, the closing and dated sentences
+const dateSentences = (keyPoints: KeyPoints): string[] => [
+  ...(keyPoints.dates || []).map(d => d.text),
+  ...(keyPoints.closingDate ? [keyPoints.closingDate.text] : []),
+  ...keyPoints.facts.map(f => f.text)
+];
+
 function withKeyPointsUntagged(notice: NormalizedNotice, keyPoints: KeyPoints): NormalizedNotice {
-  // A stated closing date for comments wins over other dates in the document
-  const closing = keyPoints.closingDate?.date && keyPoints.closingDate.date >= hongKongDate() ? keyPoints.closingDate : undefined;
-  const deadline = closing || earliestDeadline(keyPoints);
-  const label = closing ? 'Comments close' : 'Date in source';
+  // Worked out again from the sentences each time, so a rule change reaches stored copies
+  const dates = documentDates(dateSentences(keyPoints));
+  const { closingDate: _legacy, dates: _previous, ...rest } = keyPoints;
+  // Dates the source itself gives (Federal Register, MAS and SGX consultations) are kept
+  const own = !notice.deadlineDate && (!notice.statutoryDeadline || notice.statutoryDeadline === NO_DATE);
   return {
     ...notice,
-    keyPoints,
-    // Dates the source itself gives (Federal Register, MAS consultations) are kept
-    ...(deadline && !notice.deadlineDate && !notice.statutoryDeadline
-      ? {
-          deadlineDate: deadline.date,
-          statutoryDeadline: `${label}: ${deadline.date}`,
-          statusBadge: { text: `${label}: ${deadline.date}`, type: 'deadline' as const }
-        }
-      : {})
+    keyPoints: { ...rest, ...(dates.length ? { dates } : {}) },
+    ...(own ? noticeDate(notice, dates) : {})
   };
 }
 
@@ -1984,12 +2021,31 @@ async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; fa
 const ARCHIVE_FEED_DAYS = 30;
 const ARCHIVE_FEED_LIMIT = 300;
 
-const fromArchive = (n: any): NormalizedNotice => tagNotice({
-  ...n,
-  archived: true,
-  isLiveFeed: false,
-  issuedTimeAgo: n.publishedAt ? getRelativeTime(n.publishedAt) : 'Earlier'
-});
+// Dates taken from a document's text are worked out again whenever a stored
+// notice is read, so a rule change reaches the whole history. Copies stored
+// before October 2026 mark them "Date in source", or have a closing date from
+// the text on a notice that is not a consultation.
+function withoutTextDates(n: NormalizedNotice): NormalizedNotice {
+  const legacyClosing = n.keyPoints?.closingDate?.date;
+  const fromText = !!n.deadlineQuote || /^Date in source: /.test(n.statutoryDeadline || '') ||
+    (!!legacyClosing && n.statutoryDeadline?.match(/^Comments closed?: (.*)$/)?.[1] === legacyClosing && formatOf(n.type, n.title) !== 'Consultations');
+  if (!fromText) return n;
+  const { deadlineDate: _d, statutoryDeadline: _s, statusBadge: _b, deadlineQuote: _q, ...rest } = n;
+  return rest;
+}
+
+export const fromArchive = (stored: any): NormalizedNotice => {
+  let n = withoutTextDates({
+    ...stored,
+    archived: true,
+    isLiveFeed: false,
+    issuedTimeAgo: stored.publishedAt ? getRelativeTime(stored.publishedAt) : 'Earlier'
+  });
+  // A source's closing date stored while it was still ahead
+  const closes = n.statutoryDeadline?.match(/^Comments close: (\d{4}-\d{2}-\d{2})$/)?.[1];
+  if (closes) n = { ...n, deadlineDate: undefined, ...closingDateFields(closes) };
+  return n.keyPoints ? withKeyPoints(n, n.keyPoints) : tagNotice(n);
+};
 
 // Add the last 30 days from the history to the live notices, and link
 // consultations to their conclusions
@@ -2044,10 +2100,45 @@ function siteUrl(): string {
   return `http://localhost:${process.env.PORT || 3000}`;
 }
 
+// The feed, built at most once a minute per server instance and shared by
+// every request in between. Sources are re-read at most every 10 minutes
+// anyway; this stops refreshes from re-reading the history database each time.
+const SYNC_REUSE_MS = 60_000;
+const currentSync = reuseFor(SYNC_REUSE_MS, async () => {
+  console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
+  const [states, endpoints] = await Promise.all([
+    Promise.all(SOURCES.map(refreshSource)),
+    getEndpointsHealth()
+  ]);
+  const sources = SOURCES.map((s, i) => ({
+    endpointId: s.endpointId,
+    name: s.name,
+    ok: !states[i].error,
+    count: states[i].notices.length,
+    lastSuccessAt: states[i].lastSuccessAt,
+    error: states[i].error
+  }));
+  const { notices, archive } = await withHistory(states.flatMap(st => st.notices));
+  return { success: true, count: notices.length, lastSync: new Date().toISOString(), notices, archive, sources, endpoints };
+});
+
+// Refreshes each visitor may ask for per minute
+const REFRESH_LIMIT = 6;
+const refreshLimit = rateLimit(REFRESH_LIMIT, 60_000);
+
+// The visitor's IP address. On Vercel, X-Forwarded-For is set by Vercel (a
+// value sent by the client is replaced); elsewhere the connection's address.
+function visitorIp(req: Request): string {
+  const forwarded = process.env.VERCEL ? req.get('x-forwarded-for')?.split(',')[0].trim() : undefined;
+  return forwarded || req.socket.remoteAddress || 'unknown';
+}
+
 // API routes only. Used by the local server below and by the Vercel
 // function in api/index.ts, where the frontend is served as static files.
 export function createApp() {
   const app = express();
+  // Don't announce the server software
+  app.disable('x-powered-by');
 
   app.use(express.json());
 
@@ -2082,35 +2173,19 @@ export function createApp() {
   // a fresh copy is fetched in the background), so a cold function never makes
   // a visitor wait; lastSync says how old the data is. POST always runs.
   app.all('/api/feeds/sync', async (req: Request, res: Response) => {
+    // A refresh (POST) skips the CDN cache, so each visitor may ask for only a few a minute
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      const wait = refreshLimit(visitorIp(req));
+      if (wait) {
+        res.set({ 'Cache-Control': 'no-store', 'Retry-After': String(wait) });
+        res.status(429).json({ success: false, error: `Too many refreshes. Try again in ${wait} seconds.` });
+        return;
+      }
+    }
     try {
-      console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
-      const [states, endpoints] = await Promise.all([
-        Promise.all(SOURCES.map(refreshSource)),
-        getEndpointsHealth()
-      ]);
-
-      const sources = SOURCES.map((s, i) => ({
-        endpointId: s.endpointId,
-        name: s.name,
-        ok: !states[i].error,
-        count: states[i].notices.length,
-        lastSuccessAt: states[i].lastSuccessAt,
-        error: states[i].error
-      }));
-
-      const { notices: allNotices, archive } = await withHistory(states.flatMap(st => st.notices));
-      lastSyncTimestamp = new Date().toISOString();
-
+      const body = await currentSync();
       res.set('Cache-Control', req.method === 'GET' ? 'public, s-maxage=300, stale-while-revalidate=86400' : 'no-store');
-      res.json({
-        success: true,
-        count: allNotices.length,
-        lastSync: lastSyncTimestamp,
-        notices: allNotices,
-        archive,
-        sources,
-        endpoints
-      });
+      res.json(body);
     } catch (error: any) {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
       res.status(500).json({ success: false, error: error?.message || 'Sync error' });

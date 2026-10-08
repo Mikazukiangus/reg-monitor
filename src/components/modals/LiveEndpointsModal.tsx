@@ -335,7 +335,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   </span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-muted leading-relaxed">
-                  The server fetches each source document, extracts the article text (or the text layer of a PDF, for HKMA circulars and consultations) and ranks its sentences with TextRank. Scanned PDFs are first read with Tesseract OCR on the server; those key points are labelled OCR because recognition can misread characters. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences (comment deadlines, effective dates) are picked out by rule, and only future dates are kept.
+                  The server fetches each source document, extracts the article text (or the text layer of a PDF, for HKMA circulars and consultations) and ranks its sentences with TextRank. Scanned PDFs are first read with Tesseract OCR on the server; those key points are labelled OCR because recognition can misread characters. The top sentences are shown word for word, so every key point can be checked against the source. Dated sentences are picked out by rule, and only future dates are kept. A notice's date comes from a sentence that states it for the document itself and is labelled by kind: comments close, takes effect or comply by.
                 </p>
               </div>
             </div>

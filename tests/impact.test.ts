@@ -64,7 +64,7 @@ test('critical needs a date close at hand', () => {
   for (const [type, title, deadline] of EXAMPLES) {
     const { format } = classifyFormat(type, title);
     if (assessImpact({ format, type, title, statutoryDeadline: deadline }, TODAY).severity === 'critical') {
-      assert.match(deadline || '', /^(Comments close|Effective): /, title);
+      assert.match(deadline || '', /^(Comments close|Effective|Takes effect): /, title);
     }
   }
 });

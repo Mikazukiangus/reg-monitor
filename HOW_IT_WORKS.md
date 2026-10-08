@@ -8,7 +8,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 2. **Each item is put into a common format:** title, regulator, date, link, type and so on.
 3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR".
 4. **Each notice is saved to the history database** (`db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
-5. **Vercel's CDN keeps a copy** of the combined result for up to 5 minutes. Visitors get it instantly, and "Data as of" shows when it was built.
+5. **Vercel's CDN keeps a copy** of the combined result for up to 5 minutes. Visitors get it instantly, and "Data as of" shows when it was built. A refresh (the Sync button, or a copy older than 10 minutes) skips the CDN; the server then reuses a result it built in the last minute, and each visitor may refresh 6 times a minute (after that the server answers HTTP 429 and the page says when to try again). Both limits are kept per server instance.
 6. **The visitor's device keeps its own copy** (`public/sw.js`) for offline use.
 
 ## Where each source comes from
@@ -43,8 +43,13 @@ These come from rules in the code, not from the regulators:
 
 - **Impact score and severity:** one rubric for every source, described below.
 - **Sector and format:** assigned by keyword rules in `src/lib/tagging.ts`, described below.
-- **Deadlines:** taken from the source's own date fields where there are any (the Federal Register's comment and effective dates, MAS's consultation closing date), or from dated sentences found in the document.
-- **Comments close:** for consultations without a date field, the server looks for a sentence in the document that says when comments, responses or submissions are due (for example "Comments should be submitted by 30 November 2026") and shows the date from it. A closing date already past is shown as "Comments closed".
+- **Dates:** taken from the source's own date fields where there are any (the Federal Register's comment and effective dates, MAS's and SGX's consultation closing dates). Otherwise from a sentence in the document that states a date for the document itself, and every date says what kind it is:
+  - **Comments close:** a request for comments with its date ("Comments should be submitted by 30 November 2026"), or, on a consultation only, a statement such as "The consultation closes on 14 October 2026". A digest or event notice can mention another paper's closing date, so there the general statement is not used. A closing date already past is shown as "Comments closed".
+  - **Takes effect:** "will take effect on", "become effective on", "the effective date ... is", "shall apply on". Not used on consultations, where the date is only proposed.
+  - **Comply by:** an obligation with a date ("should have ... in place by 1 July 2030").
+  - The cue must come right before the date, so another date in the same sentence is not taken for it ("gazetted on 16 October and become effective on 1 November" gives 1 November). Sentences about proposals, conditions or views ("proposed", "would", "if", "differing views") give no effective or compliance date, a date being replaced ("instead of 1 January 2027") is skipped, and enforcement actions and digests take no dates from their text.
+  - The date shown is the closing date if comments are still open, else the soonest upcoming effective or compliance date, else a past closing date. The sentence it came from is shown with the notice's dated statements and on hover.
+  - The rules are tested on sentences from real notices (`tests/dates.test.ts`). Dates from the text are worked out again whenever a stored notice is read, so a rule change applies to the whole history.
 - **Consultation links:** a consultation is linked to the conclusions or response published later by the same regulator, and back, when their titles share most of their topic words. Regulators don't publish this link in a form a program can read, so it is labelled "matched by title".
 
 ## Keeping every source up to date
@@ -100,7 +105,7 @@ What the document does (the first that applies):
 | Consultation open for comment | 7 |
 | Rules made: final rules, amendments, policy statements, consultation conclusions, requirements taking effect | 7.5 |
 
-Dates move it: +1.5 when comments close within 14 days or rules take effect within 30 days; a consultation whose closing date has passed scores 4. Severity follows the score: Critical from 8.5 (so only something with a date close at hand), High from 6.5, Info below. The steps are shown on each notice under "Why these tags and score?". Because dates move scores, they are worked out each time notices are served, not stored.
+Dates move it: +1.5 when comments close within 14 days or rules take effect within 30 days (the Federal Register's effective date, or a "Takes effect" date from the document's text; a "Comply by" date does not move the score); a consultation whose closing date has passed scores 4. Severity follows the score: Critical from 8.5 (so only something with a date close at hand), High from 6.5, Info below. The steps are shown on each notice under "Why these tags and score?". Because dates move scores, they are worked out each time notices are served, not stored.
 
 The format also comes from the source's own category and the title alone, every time. Consultation conclusions and responses are not counted as open consultations, nor are SEC rule filings by exchanges. The Consultations card counts only consultations still open for comment and shows how many have closed.
 
@@ -108,6 +113,7 @@ The score does not know how much a notice matters to a particular firm, and is n
 
 ## Checks
 
+- **Dates:** `tests/dates.test.ts` checks the date rules on sentences from real notices, including ones that used to be given the wrong date.
 - **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). The impact rubric is tested the same way (`tests/impact.test.ts`), and every source's notices are checked to carry the rubric's reasons. GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
 
 ## Ground rules
@@ -115,3 +121,9 @@ The score does not know how much a notice matters to a particular firm, and is n
 - No firewalls are bypassed. Where a source blocks cloud servers, the site uses another page the regulator publishes.
 - Requests are spaced out to stay polite to the regulators' sites.
 - There is no sample or made-up data. If a source fails, the last good data is kept and the error is shown.
+
+## Security headers
+
+`vercel.json` sends a Content Security Policy with every response: scripts only from the site itself (plus the one inline script in `index.html` that sets the theme before the page draws, allowed by its hash), styles and fonts only from the site and Google Fonts, no framing by other sites, and no plugins. It also sends `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, a `Referrer-Policy` that sends other sites only the origin, and a `Permissions-Policy` that turns off camera, microphone and location. A test fails if the inline script changes without its hash. The server does not send `X-Powered-By`.
+
+The icon font is loaded with only the icons the page uses (`icon_names` in `index.html`, about 13 KB instead of 4 MB), and nothing is drawn until it arrives, so icon names never show as words. A test fails if the page uses an icon that is not in the list.

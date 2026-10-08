@@ -25,7 +25,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
       `Reference: ${notice.ref}`,
       `Type: ${notice.type}`,
       `Published: ${published}`,
-      `Date in source: ${notice.statutoryDeadline || 'None found'}`,
+      `Key date: ${notice.statutoryDeadline || 'None found'}${notice.deadlineQuote ? ` (from: "${notice.deadlineQuote}")` : ''}`,
       `Impact score (rubric by document kind and dates): ${notice.impactScore.toFixed(1)}/10${notice.tagging?.impact ? ` (${notice.tagging.impact.join('; ')})` : ''}`,
       `Source: ${notice.dossierUrl || 'n/a'}`,
       ``,
@@ -50,7 +50,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
     ['Reference', notice.ref],
     ['Type', notice.type],
     ['Published', published],
-    ['Date in Source', notice.statutoryDeadline || 'None found']
+    ['Key Date', notice.statutoryDeadline || 'None found']
   ];
 
   return (

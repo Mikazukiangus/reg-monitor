@@ -43,7 +43,7 @@ export function calendarNotices(notices: RegulatoryNotice[]): RegulatoryNotice[]
 export function buildIcs(notices: RegulatoryNotice[], now = new Date()): string {
   const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const events = calendarNotices(notices).map(n => {
-    const what = n.statutoryDeadline?.replace(/:\s*\d{4}-\d{2}-\d{2}$/, '') || 'Date in source';
+    const what = n.statutoryDeadline?.replace(/:\s*\d{4}-\d{2}-\d{2}$/, '') || 'Key date';
     const description = [
       `${what}: ${n.deadlineDate} (as stated in the source; check the document before relying on it).`,
       `${n.regulator} · ${n.ref}`,

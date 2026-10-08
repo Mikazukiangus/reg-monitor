@@ -1,7 +1,8 @@
 // Pure helpers shared by the server and the page
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'fs';
+import { createHash } from 'crypto';
+import { readdirSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import { extractClosingDate } from '../summarize.ts';
 import { dedupeByDocument } from '../src/lib/dedupe.ts';
@@ -103,4 +104,57 @@ test('every module the server loads uses .js on its relative imports', () => {
   };
   visit('api/index.ts');
   assert.ok(seen.has(path.join('src', 'lib', 'impact.ts')), 'the walk reached src/lib');
+});
+
+// Icon names in the page's source: the text of each icon span, names chosen
+// in the span ({done ? 'check' : 'content_copy'}), and names in icon fields or
+// icon tables that a span shows ({tab.icon}, {ICON[choice]}). A span whose name
+// comes from anywhere else is reported, so its icons can be added here.
+function iconNamesInSource(dir = 'src', unknown: string[] = []): Set<string> {
+  const names = new Set<string>();
+  for (const entry of readdirSync(dir)) {
+    const file = path.join(dir, entry);
+    if (statSync(file).isDirectory()) {
+      iconNamesInSource(file, unknown).forEach(n => names.add(n));
+      continue;
+    }
+    if (!/\.tsx?$/.test(file)) continue;
+    const source = readFileSync(file, 'utf8');
+    for (const m of source.matchAll(/material-symbols-outlined[^>]*>([\s\S]*?)<\/span>/g)) {
+      const body = m[1];
+      const plain = body.replace(/\{[\s\S]*\}/g, '').trim();
+      if (/^[a-z][a-z0-9_]*$/.test(plain)) names.add(plain);
+      // Not the values compared against ({type === 'action' ? ...})
+      const chosen = [...body.replace(/===?\s*'[^']*'/g, '').matchAll(/'([a-z][a-z0-9_]*)'/g)].map(l => l[1]);
+      chosen.forEach(n => names.add(n));
+      if (/\{/.test(body) && !chosen.length && !/\.icon\b|\bICON\w*\[/.test(body)) unknown.push(`${file}: ${body.trim()}`);
+    }
+    for (const m of source.matchAll(/\bicon: '([a-z][a-z0-9_]*)'/g)) names.add(m[1]);
+    for (const table of source.matchAll(/const \w*ICON\w*[^=]*=\s*\{([^}]*)\}/g)) {
+      for (const m of table[1].matchAll(/'([a-z][a-z0-9_]*)'/g)) names.add(m[1]);
+    }
+  }
+  return names;
+}
+
+test('the icon font holds every icon the page uses, listed in order', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const listed = decodeURIComponent(html.match(/icon_names=([^&"]+)/)?.[1] || '').split(',');
+  assert.deepEqual(listed, [...listed].sort(), 'Google Fonts needs icon_names in alphabetical order');
+  const unknown: string[] = [];
+  const missing = [...iconNamesInSource('src', unknown)].filter(n => !listed.includes(n));
+  assert.deepEqual(unknown, [], 'icon names chosen in a way this test cannot read');
+  assert.deepEqual(missing, [], 'add these to icon_names in index.html');
+});
+
+test('the security policy allows the page\'s one inline script, and no others', () => {
+  const vercel = JSON.parse(readFileSync('vercel.json', 'utf8'));
+  const headers: { key: string; value: string }[] = vercel.headers.find((h: any) => h.source === '/(.*)').headers;
+  const csp = headers.find(h => h.key === 'Content-Security-Policy')!.value;
+  const scripts = [...readFileSync('index.html', 'utf8').matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const hashes = scripts.map(s => `'sha256-${createHash('sha256').update(s).digest('base64')}'`);
+  const scriptSrc = csp.split('; ').find(d => d.startsWith('script-src '))!.split(' ').slice(1);
+  assert.deepEqual(scriptSrc, ["'self'", ...hashes], 'update the hash in vercel.json after editing the inline script in index.html');
+  assert.match(csp, /frame-ancestors 'none'/);
+  assert.equal(headers.find(h => h.key === 'X-Content-Type-Options')?.value, 'nosniff');
 });

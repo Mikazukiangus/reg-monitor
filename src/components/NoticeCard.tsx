@@ -40,6 +40,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   onOpenRelated
 }) => {
   const hasUpcomingDate = !!notice.deadlineDate && daysUntil(notice.deadlineDate) >= 0;
+  // Dated sentences from the document, led by the one the notice's date comes from
+  const facts = notice.keyPoints?.facts.map(f => f.text) || [];
+  const datedSentences = notice.deadlineQuote && !facts.includes(notice.deadlineQuote) ? [notice.deadlineQuote, ...facts] : facts;
+  const dateLabel = notice.statutoryDeadline?.replace(/:.*$/, '');
 
   // Score badge icon and color tailored for light theme
   const getScoreBadge = (score: number) => {
@@ -177,6 +181,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
 
         {notice.statutoryDeadline && (
           <span
+            title={notice.deadlineQuote ? `From the document: “${notice.deadlineQuote}”` : undefined}
             className={`flex items-center gap-1 font-semibold ${
               notice.statusBadge?.type === 'deadline'
                 ? 'text-prussian'
@@ -234,12 +239,17 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               </li>
             ))}
           </ul>
-          {notice.keyPoints.facts.length > 0 && (
+          {datedSentences.length > 0 && (
             <div className="mt-2.5 pt-2 border-t border-wash-strong space-y-1">
-              {notice.keyPoints.facts.map((fact, idx) => (
+              {datedSentences.map((text, idx) => (
                 <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-ink-soft">
                   <span className="material-symbols-outlined text-sm text-ochre shrink-0" aria-hidden="true">event</span>
-                  <span className="leading-relaxed">{fact.text}</span>
+                  <span className="leading-relaxed">
+                    {text === notice.deadlineQuote && dateLabel && (
+                      <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-prussian mr-1.5">{dateLabel}:</span>
+                    )}
+                    {text}
+                  </span>
                 </div>
               ))}
             </div>

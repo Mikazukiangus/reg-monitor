@@ -52,8 +52,16 @@ export interface KeyPoints {
   method: 'extractive';
   // Text was read from a scanned PDF by OCR, so quotes may contain recognition errors
   ocr?: boolean;
-  // A sentence stating when comments or responses are due, with that date
-  closingDate?: KeyFact;
+  // Dates the document states for itself, each with its kind and sentence
+  dates?: DocumentDate[];
+}
+
+// Mirrors DocumentDate in summarize.ts
+export interface DocumentDate {
+  kind: 'closes' | 'takesEffect' | 'complyBy';
+  date: string;
+  text: string;
+  general?: boolean;
 }
 
 // A consultation and its conclusions, matched by regulator and title words
@@ -81,6 +89,8 @@ export interface RegulatoryNotice {
   issuedTimeAgo: string;
   statutoryDeadline?: string;
   deadlineDate?: string;
+  // The sentence the date was taken from, when it comes from the document's text
+  deadlineQuote?: string;
   statusBadge?: {
     text: string;
     type: 'deadline' | 'immediate' | 'action' | 'standard';
