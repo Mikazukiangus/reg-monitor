@@ -175,9 +175,6 @@ function stripHtml(text: string): string {
 // out. After an HTTP 429 a site is left alone for as long as its Retry-After
 // header says, or 15 minutes when it doesn't say (FINRA doesn't).
 const HOST_SPACING_MS: Record<string, number> = { 'www.finra.org': 4000 };
-// Hosts that answer slowly from the server's region get longer to respond
-const HOST_TIMEOUT_MS: Record<string, number> = { 'www.cac.gov.cn': 25_000 };
-const timeoutFor = (url: string) => HOST_TIMEOUT_MS[new URL(url).host] ?? FETCH_TIMEOUT_MS;
 const RATE_LIMIT_PAUSE_MS = 15 * 60 * 1000;
 const hostQueue = new Map<string, Promise<void>>();
 const hostPausedUntil = new Map<string, number>();
@@ -196,14 +193,9 @@ async function politeFetch(url: string): Promise<globalThis.Response> {
     hostQueue.set(host, previous.then(() => new Promise<void>(resolve => setTimeout(resolve, spacing))));
     await previous;
   }
-  const timeoutMs = timeoutFor(url);
   const res = await fetch(url, {
-    signal: AbortSignal.timeout(timeoutMs),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     headers: { 'User-Agent': userAgentFor(url) }
-  }).catch(err => {
-    // So the error can say how long it waited
-    if (err?.name === 'TimeoutError') err.timeoutMs = timeoutMs;
-    throw err;
   });
   if (res.status === 429) {
     const retryAfter = Number(res.headers.get('retry-after'));
@@ -2049,7 +2041,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
       return { ...ep, status: 'Degraded' as EndpointStatus, statusCode: 429, pingMs: null, detail: err.message };
     }
     const detail = err?.name === 'TimeoutError'
-      ? `Timed out after ${timeoutFor(ep.url) / 1000}s`
+      ? `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`
       : err?.cause?.code || err?.message || 'Request failed';
     return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail };
   }
@@ -2379,7 +2371,7 @@ async function archiveNotices(notices: NormalizedNotice[]) {
 }
 
 function describeError(err: any): string {
-  if (err?.name === 'TimeoutError') return `Timed out after ${(err.timeoutMs ?? FETCH_TIMEOUT_MS) / 1000}s`;
+  if (err?.name === 'TimeoutError') return `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`;
   return err?.message || 'Fetch failed';
 }
 
