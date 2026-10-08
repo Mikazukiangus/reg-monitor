@@ -42,24 +42,32 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
       </div>
 
       <div className="bg-panel border border-line rounded-xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-[12px] font-['Inter'] border-collapse">
+        {/* Scrolls on its own, sized to the screen below the fixed header (and
+            above the bottom bar on phones), so the header row stays at the top
+            and the sector column at the left while the grid scrolls */}
+        <div
+          tabIndex={0}
+          role="region"
+          aria-label="Notices by sector and jurisdiction"
+          className="overflow-auto max-h-[calc(100dvh_-_88px_-_56px_-_env(safe-area-inset-bottom)_-_24px)] md:max-h-[calc(100dvh_-_128px_-_24px)] focus-visible:-outline-offset-2"
+        >
+          <table className="w-full text-left text-[12px] font-['Inter'] border-separate border-spacing-0">
             <thead>
-              <tr className="bg-wash border-b border-line font-['JetBrains_Mono'] text-[11px] text-ink">
-                <th className="p-3.5 pl-5 min-w-[180px] font-bold">SECTOR</th>
+              <tr className="font-['JetBrains_Mono'] text-[11px] text-ink">
+                <th scope="col" className="sticky top-0 left-0 z-30 bg-wash border-b border-r border-line p-3 pl-3 sm:p-3.5 sm:pl-5 min-w-[112px] sm:min-w-[180px] font-bold">SECTOR</th>
                 {JURISDICTIONS.map(j => (
-                  <th key={j.code} className="p-3.5 min-w-[200px] font-bold">{j.label}</th>
+                  <th key={j.code} scope="col" className="sticky top-0 z-20 bg-wash border-b border-line p-3.5 min-w-[200px] font-bold">{j.label}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="[&>tr:last-child>*]:border-b-0">
               {SECTORS.map(sector => (
                 <tr key={sector} className="align-top">
-                  <td className="p-3.5 pl-5 font-bold text-ink">{sector}</td>
+                  <th scope="row" className="sticky left-0 z-10 bg-panel border-b border-r border-line p-3 pl-3 sm:p-3.5 sm:pl-5 font-bold text-ink">{sector}</th>
                   {JURISDICTIONS.map(j => {
                     const cell = sorted.filter(n => (n.sectors ?? [n.sector]).includes(sector) && n.jurisdictionCode === j.code);
                     return (
-                      <td key={j.code} className="p-3.5">
+                      <td key={j.code} className="p-3.5 border-b border-line">
                         {cell.length === 0 ? (
                           <span className="text-line-dim">–</span>
                         ) : (

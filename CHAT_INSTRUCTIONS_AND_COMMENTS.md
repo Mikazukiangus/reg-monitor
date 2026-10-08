@@ -348,6 +348,13 @@ This document records the full chronological instructions, technical requirement
 * **Verified:** 359 tests pass; type check and build pass. Locally the China filter shows the four newest (CAC Order No. 21, MIIT ethics review measures, NHC healthcare AI, CMA Order No. 45) with Chinese key points marked `lang="zh"` and no console errors. **Preview deployment (hkg1):** 37 of 37 source feeds OK, 241 notices, 25 tagged "AI rules"; the gov.cn source read 4, each with key points from its gov.cn page.
 * **Merged (2026-10-08):** the user said "merge to main". On production: 37 of 37 source feeds OK, 241 notices, 25 tagged "AI rules" (UK & EU 8, US 8, Japan 4, China 4, South Korea 1), including "Commission starts enforcing AI Act rules and new transparency requirements on 2 August" and CAC Order No. 21 (人工智能拟人化互动服务管理暂行办法, scored 7.5 as rules made), each with key points. The scheduled poll will add up to 50 earlier items per new source to the history.
 
+### Request 28: Frozen Header Row and Sector Column on the Radar (Claude Code, 2026-10-08)
+
+**User:** on the "APAC Regulatory Radar" tab, freeze the header row and the sector column, so the header row stays visible when scrolling down and the sector column when scrolling right, on mobile and desktop.
+
+* **Change** (`src/components/screens/RadarScreen.tsx`): the grid scrolls in its own box, sized to the screen below the fixed header (and above the bottom bar on phones: 100dvh less 128px on desktop, less 88px, 56px and the safe area on phones, less a 24px margin). The header row sticks to the top of the box and the sector column to its left; the corner cell stays above both. Cell borders replace row dividers, because sticky cells don't carry borders in collapsed tables. The sector column is narrower on phones (112px). The box takes keyboard focus for scrolling, and the sector names are row headers for screen readers. When the grid reaches its end, a swipe carries on to the page.
+* **Verified locally:** desktop (1024px, light and dark) and phone (375×812): scrolled 900 to 1,400px down and 650 to 900px right, the column headers stay at the top of the box and the sector names at its left edge; on a phone the box fits between the header and the bottom bar (100 to 744px). No console errors; type check, build and 359 tests pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary
