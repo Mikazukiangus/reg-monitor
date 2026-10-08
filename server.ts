@@ -1595,39 +1595,108 @@ async function fetchMsitPressReleases(limit = 4): Promise<NormalizedNotice[]> {
     }));
 }
 
-// China's Cyberspace Administration (CAC) makes China's AI rules (generative
-// AI services, deep synthesis, labelling of AI-generated content, humanlike
-// AI interaction services). Its lists of department rules, normative and
-// policy documents, and its notices (which carry drafts for comment and the
-// register of generative AI services), in Chinese; titles stay in Chinese.
-const CAC_LISTS = [
-  { url: 'https://www.cac.gov.cn/wxzw/zcfg/bmgz/A09370303index_1.htm', type: 'DEPARTMENT RULES' },
-  { url: 'https://www.cac.gov.cn/wxzw/zcfg/gfxwj/A09370305index_1.htm', type: 'NORMATIVE DOCUMENT' },
-  { url: 'https://www.cac.gov.cn/wxzw/zcfg/zcwj/A09370306index_1.htm', type: 'POLICY DOCUMENT' },
-  { url: 'https://www.cac.gov.cn/wxzw/A0937index_1.htm', type: 'NOTICE' }
+// China's AI rules are made by the Cyberspace Administration (CAC) and other
+// State Council departments. The CAC's own site doesn't accept connections
+// from the hosting region, so they come from the State Council's policy
+// library on gov.cn, through the search service its page uses: State Council
+// documents, departments' documents, and the State Council Gazette, which
+// prints department rules (orders) some weeks after they are issued. Titles
+// stay in Chinese.
+const GOV_CN_POLICY_SEARCH = (n: number) => `https://sousuo.www.gov.cn/search-gov/data?${new URLSearchParams({
+  t: 'zhengcelibrary', q: '人工智能', searchfield: 'title', sort: 'pubtime', sortType: '1', type: 'gwyzcwjk', p: '1', n: String(n)
+})}`;
+// The library's other list (news and explainers) is left out
+const GOV_CN_LISTS: Record<string, string> = {
+  gongwen: 'STATE COUNCIL DOCUMENT',
+  bumenfile: 'DEPARTMENT DOCUMENT',
+  gongbao: 'STATE COUNCIL GAZETTE'
+};
+// Lead issuers, by the names the library uses
+const GOV_CN_ISSUERS: [RegExp, string][] = [
+  [/网信|互联网信息办公室/, 'CAC'],
+  [/工业和信息化部/, 'MIIT'],
+  [/发展和?改革委/, 'NDRC'],
+  [/^科学?技术?部$/, 'MOST'],
+  [/^教育部$/, 'MOE'],
+  [/^公安部$/, 'MPS'],
+  [/市场监(督)?管(理)?总局/, 'SAMR'],
+  [/^国家数据局$/, 'NDA'],
+  [/卫生健康委/, 'NHC'],
+  [/药监局|药品监督管理局/, 'NMPA'],
+  [/知识产权局/, 'CNIPA'],
+  [/气象局/, 'CMA'],
+  [/广电总局|广播电视总局/, 'NRTA'],
+  [/标准化管理委员会|标准委/, 'SAC'],
+  [/人力资源社会保障部/, 'MOHRSS'],
+  [/^商务部$/, 'MOFCOM'],
+  [/民航局|民用航空局/, 'CAAC'],
+  [/^国务院$/, 'State Council']
 ];
-const CAC_ROW = /<a href=(\/\/www\.cac\.gov\.cn\/[^ >]+\.htm) target=_blank title="([^"]+)">[\s\S]*?<div class="times">(\d{4}-\d{2}-\d{2})<\/div>/g;
+// "...总局令（第21号）\n人工智能拟人化互动服务管理暂行办法": an order and the rules it makes
+const GOV_CN_ORDER = /^(.+?)令（第(\d+)号）\n(.+)$/;
+const GOV_CN_SPEECH = /讲话|致辞|致信|贺信/;
 
-export function parseCacList(html: string): { url: string; title: string; date: string }[] {
-  return [...html.matchAll(CAC_ROW)].map(m => ({ url: `https:${m[1]}`, title: plainText(m[2]), date: m[3] }));
+// Search hits mark the query in <em>. Gazette titles wrap with <br/> and one
+// ideographic space, and start a new line (the rules an order makes, or the
+// plan a notice issues) with two.
+const govCnTitle = (title: string) => title
+  .replace(/<br\s*\/?>　　/g, '\n')
+  .replace(/<br\s*\/?>[ 　]*/g, '')
+  .replace(/<[^>]*>?/g, '')
+  .replace(/…{2,}[\s\S]*$/, '')
+  .trim();
+
+function govCnIssuer(issuers: string): string {
+  const lead = issuers.split(/[\s 　]+/)[0].replace(/^中华人民共和国/, '').replace(/等$/, '').replace(/办公厅$/, '');
+  return GOV_CN_ISSUERS.find(([pattern]) => pattern.test(lead))?.[1] ?? lead;
 }
 
-async function fetchCacAiRules(limit = 4): Promise<NormalizedNotice[]> {
-  const lists = await Promise.all(CAC_LISTS.map(async list =>
-    parseCacList(await (await fetchOrThrow(list.url)).text()).map(row => ({ ...row, type: list.type }))
-  ));
-  return newestFirst(uniqueBy(lists.flat(), r => r.url))
-    .filter(r => mentionsAi(r.title))
+export function parseGovCnPolicies(json: any): { id: string; title: string; url: string; published: string; type: string; regulator: string; order?: string }[] {
+  const catMap = json?.searchVO?.catMap ?? {};
+  const rows = Object.entries(GOV_CN_LISTS).flatMap(([list, type]) =>
+    ((catMap[list]?.listVO ?? []) as any[]).flatMap(item => {
+      const lines = govCnTitle(String(item.title ?? ''));
+      const order = lines.match(GOV_CN_ORDER);
+      const title = order ? order[3] : lines.split('\n')[0];
+      const url = String(item.url ?? '');
+      if (!title || !url || !Number.isFinite(item.pubtime) || GOV_CN_SPEECH.test(title)) return [];
+      // Issuers: the order's, the list's, or those before "关于" (concerning) in the title
+      const issuers = order ? order[1] : String(item.puborg || (list === 'gongwen' ? '国务院' : title.split('关于')[0]));
+      return [{
+        id: `govcn-${lastPathPart(url)}`,
+        title,
+        url,
+        published: new Date(item.pubtime).toISOString(),
+        type: order ? 'DEPARTMENT RULES' : type,
+        regulator: govCnIssuer(issuers) || 'State Council Gazette',
+        order: order?.[2]
+      }];
+    })
+  );
+  // The Gazette reprints documents from the other lists, sometimes with the
+  // issuers before the title: keep the first publication
+  const key = (title: string) => title.replace(/\s/g, '');
+  const kept: typeof rows = [];
+  for (const row of rows.sort((a, b) => a.published.localeCompare(b.published))) {
+    if (!kept.some(k => key(row.title).endsWith(key(k.title)) || key(k.title).endsWith(key(row.title)))) kept.push(row);
+  }
+  return kept.reverse();
+}
+
+async function fetchGovCnAiPolicies(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(GOV_CN_POLICY_SEARCH(50));
+  return parseGovCnPolicies(await res.json())
+    .filter(r => isAiRuleNews(r.title))
     .slice(0, limit)
     .map(r => aiNotice({
-      id: `cac-${lastPathPart(r.url)}`,
-      ref: `CAC ${r.date}`,
+      id: r.id,
+      ref: r.order ? `${r.regulator} Order No. ${r.order}` : `${r.regulator} ${r.published.slice(0, 10)}`,
       title: r.title,
-      regulator: 'CAC',
+      regulator: r.regulator,
       jurisdiction: 'CHINA',
       jurisdictionCode: 'CN',
       type: r.type,
-      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Shanghai'),
+      publishedAt: r.published,
       url: r.url,
       language: 'zh'
     }));
@@ -1879,12 +1948,12 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
-    id: 'cac-cn',
-    name: 'CAC Rules & Notices',
-    agency: 'Cyberspace Administration of China',
+    id: 'govcn-ai',
+    name: 'gov.cn Policy Library: AI',
+    agency: 'State Council & its departments (China)',
     jurisdiction: 'China',
-    url: CAC_LISTS[0].url,
-    protocol: 'HTML (lists in Chinese; AI items only)',
+    url: GOV_CN_POLICY_SEARCH(1),
+    protocol: 'JSON (policy library search, in Chinese; items on AI rules only)',
     auth: 'Public / None',
     ingests: true
   },
@@ -2180,7 +2249,7 @@ const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'calprivacy', name: 'CalPrivacy on AI', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY_AI, limit), narrowed: true },
   { endpointId: 'co-ag', name: 'Colorado AG on AI', fetch: (limit = 4) => fetchAiFeed(COLORADO_AG_AI, limit), narrowed: true },
   { endpointId: 'msit-kr', name: 'Korea MSIT on AI', fetch: fetchMsitPressReleases, narrowed: true },
-  { endpointId: 'cac-cn', name: 'China CAC AI Rules', fetch: fetchCacAiRules, narrowed: true },
+  { endpointId: 'govcn-ai', name: 'China State Council Policy Library: AI', fetch: fetchGovCnAiPolicies, narrowed: true },
   { endpointId: 'cao-ai', name: 'Japan Cabinet Office AI Strategy', fetch: fetchCaoAiTopics }
 ];
 

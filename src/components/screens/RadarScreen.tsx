@@ -13,7 +13,7 @@ const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'AU', label: 'AUSTRALIA (ASIC, ASX)' },
   { code: 'JP', label: 'JAPAN (JFSA, JPX; AI STRATEGY)' },
   { code: 'KR', label: 'SOUTH KOREA (MSIT, AI RULES)' },
-  { code: 'CN', label: 'CHINA (CAC, AI RULES)' },
+  { code: 'CN', label: 'CHINA (STATE COUNCIL POLICY LIBRARY, AI RULES)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS, FSB)' }
 ];
 

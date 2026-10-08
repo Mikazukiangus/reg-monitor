@@ -236,7 +236,7 @@ test('FINRA: election notices are left out and "transaction" is not enforcement'
 test('AI rules: each source is tagged and placed in its jurisdiction', async () => {
   const expected: Record<string, string> = {
     'European Commission AI News': 'UK_EU', 'UK DSIT & AI Security Institute': 'UK_EU', 'US Federal Register: AI': 'US',
-    'California Governor on AI': 'US', 'Colorado AG on AI': 'US', 'Korea MSIT on AI': 'KR', 'China CAC AI Rules': 'CN',
+    'California Governor on AI': 'US', 'Colorado AG on AI': 'US', 'Korea MSIT on AI': 'KR', 'China State Council Policy Library: AI': 'CN',
     'Japan Cabinet Office AI Strategy': 'JP'
   };
   for (const [name, code] of Object.entries(expected)) {
@@ -278,14 +278,25 @@ test('Korea MSIT press releases: titles and dates from the list script, linked t
   assert.equal(notices[0].dossierUrl, 'https://www.msit.go.kr/eng/bbs/view.do?sCode=eng&mId=4&mPid=2&bbsSeqNo=42&nttSeqNo=1311');
 });
 
-test('China CAC: AI rules in Chinese, binding department rules scored as rules made', async () => {
-  const notices = await byName('China CAC AI Rules').fetch(20);
+test('China policy library: AI rules in Chinese, gazette orders as department rules, plans left out', async () => {
+  const notices = await byName('China State Council Policy Library: AI').fetch(20);
+  // The order's issuers are taken off the title; the CAC issued it with four others
   const humanlike = notices.find(n => n.title === '人工智能拟人化互动服务管理暂行办法');
   assert.equal(humanlike?.type, 'DEPARTMENT RULES');
+  assert.equal(humanlike?.regulator, 'CAC');
+  assert.equal(humanlike?.ref, 'CAC Order No. 21');
   assert.equal(humanlike?.impactScore, 7.5);
-  assert.equal(humanlike?.publishedAt, '2026-04-09T16:00:00.000Z');
+  assert.equal(humanlike?.publishedAt, '2026-06-20T03:00:00.000Z');
+  assert.equal(humanlike?.dossierUrl, 'https://www.gov.cn/gongbao/2026/issue_12806/202606/content_7072472.html');
+  // Measures issued by a department's notice count as rules made too
+  const labelling = notices.find(n => n.title === '关于印发《人工智能生成合成内容标识办法》的通知');
+  assert.equal(labelling?.regulator, 'CAC');
+  assert.equal(labelling?.impactScore, 7.5);
   assert.ok(notices.every(n => n.language === 'zh' && n.sectors?.includes('AI, Cyber & Tech Risk')));
-  assert.ok(!notices.some(n => /数字乡村|未成年人/.test(n.title)), 'items not about AI are left out');
+  // Plans to promote AI in an industry, pilot zones and speeches are left out
+  assert.ok(!notices.some(n => /人工智能\+软件|试验区|讲话/.test(n.title)), notices.map(n => n.title).join(' | '));
+  // The Gazette's reprint of a document already listed is dropped
+  assert.equal(notices.filter(n => n.title.includes('生成式人工智能服务管理暂行办法')).length, 1);
 });
 
 test('Japan Cabinet Office AI topics: meetings are routine, calls for comments are consultations', async () => {

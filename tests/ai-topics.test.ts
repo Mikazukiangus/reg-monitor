@@ -11,7 +11,11 @@ const RULE_NEWS = [
   'Commission publishes guidelines on transparency obligations for providers and deployers of certain AI systems',
   'Attorney General Phil Weiser letter to Congress RE: AI Moratorium Comment',
   'Copyright and Artificial Intelligence',
-  'UK-Germany joint statement on advanced AI safety and security'
+  'UK-Germany joint statement on advanced AI safety and security',
+  // China's policy library
+  '人工智能拟人化互动服务管理暂行办法',
+  '关于印发《人工智能生成合成内容标识办法》的通知',
+  '四部门关于印发国家人工智能产业综合标准化体系建设指南（2024版）的通知'
 ];
 const NOT_RULE_NEWS: [string, string?][] = [
   // AI programmes and funding
@@ -22,6 +26,9 @@ const NOT_RULE_NEWS: [string, string?][] = [
   // Safety that isn't AI safety; a signing that isn't a law
   ['January Safe2Tell data reflects emerging student safety challenges, including AI misuse'],
   ['New partnership set to see the UK and Ukraine develop battle winning technology as Britain secures access to Ukrainian AI', 'The agreement was signed in London.'],
+  // Chinese plans to promote AI in an industry, and pilot zones
+  ['工业和信息化部关于印发《“人工智能+软件”专项行动实施方案》的通知'],
+  ['科技部关于印发《国家新一代人工智能创新发展试验区建设工作指引》的通知'],
   // Not about AI: "AI" only in capitals
   ['Thai authorities said retail sales rose'],
   ['FTC and USDA Seek Public Comment on Agricultural Equipment Manufacturing and Distribution Market Practices']

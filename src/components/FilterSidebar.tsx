@@ -14,7 +14,7 @@ const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: stri
   { code: 'AU', label: 'Australia (ASIC, ASX)' },
   { code: 'JP', label: 'Japan (JFSA, JPX; AI: Cabinet Office)' },
   { code: 'KR', label: 'South Korea (AI: MSIT)' },
-  { code: 'CN', label: 'China (AI: CAC)' }
+  { code: 'CN', label: 'China (AI: State Council policy library)' }
 ];
 
 interface FilterSidebarProps {

@@ -1,9 +1,8 @@
 // Which items of a government's general news are about rules for artificial
-// intelligence. Lists of rules (the CAC's) and regulators' own news use
-// mentionsAi; general feeds (a ministry's or an attorney general's news) need
-// AI in the title and a word for rules or their enforcement in the title or
-// summary, so funding rounds, industry programmes and passing mentions are
-// left out.
+// intelligence. Regulators' own news uses mentionsAi; general feeds (a
+// ministry's or an attorney general's news, China's policy library) need AI in
+// the title and a word for rules or their enforcement in the title or summary,
+// so funding rounds, industry programmes and passing mentions are left out.
 
 const AI_WORDS = /\bartificial intelligence\b|\bmachine learning\b|\bgenerative\b|\bchatbots?\b|\bdeepfakes?\b|\bautomated decision[- ]?making\b|\bfrontier models?\b|\bfoundation models?\b|\blarge language models?\b|\bgeneral[- ]purpose AI\b|\balgorithmic\b|\bsuper ?intelligen\w*/i;
 // Only in capitals, so "said" and "Thai" don't count
@@ -18,10 +17,18 @@ export function mentionsAi(text: string): boolean {
 
 const RULE_WORDS = /\b(?:acts?|laws?|legislation|bills?|decrees?|regulat\w*|rules?|rulemaking|guidelines?|guidance|codes? of (?:practice|conduct)|frameworks?|(?:AI|model) safety|trust(?:worthy)?|ethic\w*|governance|oversight|enforc\w*|complian\w*|obligations?|standards?|consult\w*|comments?|transparen\w*|label\w*|watermark\w*|risks?|accountab\w*|liabilit\w*|prohibit\w*|bans?|investigat\w*|inquiry|settle\w*|lawsuit|sues?|penalt\w*|fines?|executive orders?|protections?|safeguards?|copyright)\b/i;
 
+// Chinese: measures, provisions, regulations, laws, norms, labelling, safety,
+// ethics, governance, guidelines, standards, filing, calls for comment.
+// Plans to promote AI in an industry ("人工智能+") don't use these words.
+const RULE_WORDS_ZH = /办法|规定|条例|法律|法规|规范|标识|安全|伦理|治理|指引|指南|标准|备案|征求意见/;
+// Pilot zones, demonstration projects, innovation platforms, challenge lists
+const PROGRAMME_ZH = /试验区|示范|创新平台|揭榜/;
+
 // A law or order being signed, only in the title: summaries also say a
 // partnership or an agreement was signed
 const SIGNED = /\b(?:signs?|signed)\b/i;
 
 export function isAiRuleNews(title: string, text = ''): boolean {
-  return mentionsAi(title) && (RULE_WORDS.test(`${title} ${text}`) || SIGNED.test(title));
+  const both = `${title} ${text}`;
+  return mentionsAi(title) && !PROGRAMME_ZH.test(title) && (RULE_WORDS.test(both) || RULE_WORDS_ZH.test(both) || SIGNED.test(title));
 }

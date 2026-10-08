@@ -74,6 +74,11 @@ export function extractArticleText(html: string, url: string): string {
     const main = document.querySelector('.page-content');
     if (main) return htmlToText(main.innerHTML);
   }
+  // gov.cn documents: Readability fails on the policy library's page layout
+  if (url.includes('www.gov.cn')) {
+    const main = document.querySelector('#UCAP-CONTENT');
+    if (main) return htmlToText(main.innerHTML);
+  }
   const article = new Readability(document as unknown as Document).parse();
   return article?.content ? htmlToText(article.content) : '';
 }

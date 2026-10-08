@@ -12,7 +12,7 @@
 //   Enforcement action                                        7
 //   Rules made (final rules, amendments, policy statements,
 //     consultation conclusions, requirements taking effect,
-//     China's department rules)                              7.5
+//     China's department rules, measures and provisions)     7.5
 //   Guidance                                                 6.5
 //   Technical standards                                       6
 //   Other circulars and announcements                         5
@@ -58,7 +58,7 @@ const ROUTINE: [RegExp, string, boolean?][] = [
   [/\bannual (financial )?report\b|\bregulatory digest\b|\bnewsletter\b|\bcomplaints watch\b|\bhalf-yearly\b/i, 'a periodic report']
 ];
 
-const RULES_MADE = /\bfinal rules?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|\bconsultation conclusions?\b|\bresponse to (the )?consultation\b|\bfeedback statement\b|\bresponse paper\b|\btakes? effect\b|\bto take effect\b|\bcomes? into (force|effect)\b|\b(has |have )?amended\b|\bamendments? to\b|\brevisions? to\b|\brevised\b|\bupdate to notice\b|\bfinalis(ed|es|ation)\b|\bnew (rules|requirements|listing rules|framework)\b|\bimplement(s|ing)? new\b|\bto implement\b|\brule changes to\b|\bissues? (new |revised )?(notice|rules|regulations)\b|\bdepartment rules\b/i;
+const RULES_MADE = /\bfinal rules?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|\bconsultation conclusions?\b|\bresponse to (the )?consultation\b|\bfeedback statement\b|\bresponse paper\b|\btakes? effect\b|\bto take effect\b|\bcomes? into (force|effect)\b|\b(has |have )?amended\b|\bamendments? to\b|\brevisions? to\b|\brevised\b|\bupdate to notice\b|\bfinalis(ed|es|ation)\b|\bnew (rules|requirements|listing rules|framework)\b|\bimplement(s|ing)? new\b|\bto implement\b|\brule changes to\b|\bissues? (new |revised )?(notice|rules|regulations)\b|\bdepartment rules\b|办法|规定|条例/i;
 
 // Base scores by what the document does, for each format
 const BASE: Record<InstrumentFormat, [number, string]> = {

@@ -143,28 +143,16 @@
     "file": "b130fa13b806.txt",
     "contentType": "text/html;charset=UTF-8"
   },
-  "https://www.cac.gov.cn/wxzw/zcfg/zcwj/A09370306index_1.htm": {
-    "file": "23c43b9cb01f.txt",
-    "contentType": "text/html; charset=utf-8"
-  },
-  "https://www.cac.gov.cn/wxzw/zcfg/bmgz/A09370303index_1.htm": {
-    "file": "d7af9d228b1b.txt",
-    "contentType": "text/html; charset=utf-8"
-  },
-  "https://www.cac.gov.cn/wxzw/A0937index_1.htm": {
-    "file": "4aeeeace586e.txt",
-    "contentType": "text/html; charset=utf-8"
-  },
-  "https://www.cac.gov.cn/wxzw/zcfg/gfxwj/A09370305index_1.htm": {
-    "file": "685b91d73935.txt",
-    "contentType": "text/html; charset=utf-8"
-  },
   "https://www8.cao.go.jp/cstp/ai/ai_topics/ai_topics.html": {
     "file": "46cd976f8fb2.txt",
     "contentType": "text/html"
   },
   "https://www.gov.uk/api/search.json?filter_organisations=department-for-science-innovation-and-technology&filter_organisations=ai-security-institute&filter_content_purpose_supergroup=news_and_communications&filter_content_purpose_supergroup=guidance_and_regulation&filter_content_purpose_supergroup=policy_and_engagement&order=-public_timestamp&fields=title&fields=description&fields=link&fields=public_timestamp&fields=format&fields=primary_publishing_organisation&count=100": {
     "file": "32a6a619b4b9.txt",
+    "contentType": "application/json"
+  },
+  "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary&q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD&searchfield=title&sort=pubtime&sortType=1&type=gwyzcwjk&p=1&n=50": {
+    "file": "e52f1e2f55c1.txt",
     "contentType": "application/json"
   }
 }
