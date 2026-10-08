@@ -1,50 +1,77 @@
 @import "tailwindcss";
 
-/* Wada Sanzo "Porcelain & Prussian": Prussian blue on porcelain green, with
-   Venetian red, ochre and cobalt green for status. Each colour is a variable,
-   so the dark theme below only has to redefine the variables. */
+/* Wada Sanzo "Pale Burnt Lake & Pinkish Cinnamon": burnt lake for the
+   header band, accents and critical items, pinkish cinnamon for buttons on
+   the band and for high items. Olive and Antwarp blue, from the same
+   combination (no. 258), mark sources that are up and informational items.
+   Each colour is a variable, so the dark theme below only has to redefine the
+   variables. In the dark theme the accent turns cinnamon, so it stays light
+   enough to read on the dark panels. */
 @theme {
-  --color-page: #EEF3EF;
-  --color-panel: #FBFCFA;
-  --color-panel-raised: #F4F7F4;
-  --color-wash: #E3EBE6;
-  --color-wash-mid: #D9E3DD;
-  --color-wash-strong: #DCE4DF;
-  --color-line: #D3DDD7;
-  --color-line-strong: #C5D2CA;
-  --color-line-dim: #A9B6AE;
+  --color-page: #F8EFE6;
+  --color-panel: #FFFAF5;
+  --color-panel-raised: #FBF3EB;
+  --color-wash: #F5E5D6;
+  --color-wash-mid: #F0DCCB;
+  --color-wash-strong: #EED8C6;
+  --color-line: #EAD5C3;
+  --color-line-strong: #DDC2AC;
+  --color-line-dim: #C4A795;
 
-  --color-ink: #1D2630;
-  --color-ink-soft: #3C4852;
-  --color-muted: #56636B;
+  --color-ink: #2B1715;
+  --color-ink-soft: #4B302C;
+  --color-muted: #6E5751;
   --color-on-accent: #FFFFFF;
 
-  --color-prussian: #1F4E79;
-  --color-prussian-deep: #163A5C;
-  --color-prussian-tint: #D9E5EE;
-  --color-prussian-line: #B3C8D9;
+  /* Links, buttons, the active tab and focus rings */
+  --color-accent: #802626;
+  --color-accent-deep: #6A1F1F;
+  --color-accent-tint: #F7DCD2;
+  --color-accent-line: #E3B4A6;
+  --color-on-tab: #EEB480;
 
-  --color-venetian: #A8432F;
-  --color-venetian-deep: #8A3524;
-  --color-venetian-wash: #F8E8E2;
-  --color-venetian-tint: #F4DCD3;
-  --color-venetian-line: #E2B5A6;
-  --color-venetian-line-soft: #ECC6B9;
+  /* The header band: burnt lake in both themes */
+  --color-band: #802626;
+  --color-band-deep: #6A1F1F;
+  --color-band-line: #A0504A;
+  --color-on-band: #FFFFFF;
+  --color-band-sub: #EEB480;
+  --color-band-field-text: #F3D3C0;
+  --color-band-ok: #CFC97A;
 
-  --color-ochre: #6E5410;
-  --color-ochre-mid: #A8862A;
-  --color-ochre-line: #DCC68A;
-  --color-ochre-tint: #F3E8C6;
-  --color-ochre-wash: #F8F1DC;
+  /* Pale Burnt Lake: critical items and errors */
+  --color-lake: #802626;
+  --color-lake-deep: #6A1F1F;
+  --color-lake-fill: #802626;
+  --color-on-lake: #FFFFFF;
+  --color-lake-wash: #FBEAE3;
+  --color-lake-tint: #F7DCD2;
+  --color-lake-line: #E3B4A6;
+  --color-lake-line-soft: #EDC8BC;
 
-  --color-cobalt: #2F6249;
-  --color-cobalt-tint: #D7E9DD;
-  --color-cobalt-line: #ABCDB7;
-  --color-cobalt-line-soft: #C3DECB;
-  --color-cobalt-wash: #EAF3ED;
+  /* Pinkish Cinnamon: high items, dates, warnings and search highlights */
+  --color-cinnamon: #8A4E1E;
+  --color-cinnamon-fill: #EEB480;
+  --color-cinnamon-fill-hover: #F4C69A;
+  --color-on-cinnamon: #5F1B1B;
+  --color-cinnamon-line: #EBC39E;
+  --color-cinnamon-tint: #F9DFC6;
+  --color-cinnamon-wash: #FDF2E6;
 
-  --color-scroll: #CFDAD3;
-  --color-scroll-hover: #B8C6BD;
+  /* Olive: sources up and live items */
+  --color-olive: #5E5A1E;
+  --color-olive-tint: #ECEBCF;
+  --color-olive-line: #D3D0A0;
+  --color-olive-line-soft: #DFDDB8;
+  --color-olive-wash: #F4F3E2;
+
+  /* Antwarp blue (the dictionary's spelling): informational items */
+  --color-antwarp: #007190;
+  --color-antwarp-tint: #D6ECF2;
+  --color-antwarp-line: #A9D3E0;
+
+  --color-scroll: #E3CDB9;
+  --color-scroll-hover: #D3B8A2;
 
   --font-headline-xl: "Hanken Grotesk", sans-serif;
   --font-headline-lg: "Hanken Grotesk", sans-serif;
@@ -62,47 +89,55 @@
    device setting unless the visitor picked one) */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-page: #121A1F;
-  --color-panel: #18222A;
-  --color-panel-raised: #1D2831;
-  --color-wash: #22303A;
-  --color-wash-mid: #273642;
-  --color-wash-strong: #2A3944;
-  --color-line: #2E3D48;
-  --color-line-strong: #3A4B57;
-  --color-line-dim: #536571;
+  --color-page: #170F10;
+  --color-panel: #201516;
+  --color-panel-raised: #281B1C;
+  --color-wash: #2E1F1F;
+  --color-wash-mid: #33231F;
+  --color-wash-strong: #3A2827;
+  --color-line: #3E2B2A;
+  --color-line-strong: #503836;
+  --color-line-dim: #6E5450;
 
-  --color-ink: #E4ECE7;
-  --color-ink-soft: #C3CFC9;
-  --color-muted: #9AA9A3;
-  --color-on-accent: #0F1620;
+  --color-ink: #F7EADF;
+  --color-ink-soft: #E3CEBF;
+  --color-muted: #BCA192;
+  --color-on-accent: #1E1213;
 
-  --color-prussian: #8DB7E2;
-  --color-prussian-deep: #B4D0EC;
-  --color-prussian-tint: #1E3448;
-  --color-prussian-line: #34506A;
+  --color-accent: #EEB480;
+  --color-accent-deep: #F4C69A;
+  --color-accent-tint: #3D2620;
+  --color-accent-line: #6B4632;
+  --color-on-tab: #1E1213;
 
-  --color-venetian: #E8937D;
-  --color-venetian-deep: #F0AA96;
-  --color-venetian-wash: #2C1F1B;
-  --color-venetian-tint: #3A2520;
-  --color-venetian-line: #6A3A2E;
-  --color-venetian-line-soft: #553028;
+  --color-on-band: #F7EADF;
 
-  --color-ochre: #E0C46E;
-  --color-ochre-mid: #D9B65A;
-  --color-ochre-line: #6A5622;
-  --color-ochre-tint: #4A3D16;
-  --color-ochre-wash: #28230F;
+  --color-lake: #F2958A;
+  --color-lake-deep: #F7B5AB;
+  --color-on-lake: #F7EADF;
+  --color-lake-wash: #2C1819;
+  --color-lake-tint: #3A1E1F;
+  --color-lake-line: #6B2E2C;
+  --color-lake-line-soft: #552626;
 
-  --color-cobalt: #86C9A2;
-  --color-cobalt-tint: #1C3328;
-  --color-cobalt-line: #2F5A43;
-  --color-cobalt-line-soft: #284A38;
-  --color-cobalt-wash: #1A2B23;
+  --color-cinnamon: #EEB480;
+  --color-on-cinnamon: #1E1213;
+  --color-cinnamon-line: #6B4A2E;
+  --color-cinnamon-tint: #4A3220;
+  --color-cinnamon-wash: #2A1E15;
 
-  --color-scroll: #3A4B57;
-  --color-scroll-hover: #536571;
+  --color-olive: #CFC97A;
+  --color-olive-tint: #2B2A14;
+  --color-olive-line: #4D4A22;
+  --color-olive-line-soft: #3D3B1C;
+  --color-olive-wash: #222114;
+
+  --color-antwarp: #6CBFD8;
+  --color-antwarp-tint: #13303A;
+  --color-antwarp-line: #24505E;
+
+  --color-scroll: #503836;
+  --color-scroll-hover: #6E5450;
 }
 
 @layer base {
@@ -113,7 +148,7 @@
   }
 }
 
-/* Custom scrollbar matching warm beige tone */
+/* Scrollbars in the page colours */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -147,9 +182,18 @@
 /* A visible outline for keyboard focus (mouse clicks don't show it) */
 @layer base {
   :focus-visible {
-    outline: 2px solid var(--color-prussian);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
+}
+
+/* On the burnt lake header band the accent would vanish, so focus rings there
+   are cinnamon; its dropdowns sit on panels and keep the accent */
+.band :focus-visible {
+  outline-color: var(--color-band-sub);
+}
+.band .band-popover :focus-visible {
+  outline-color: var(--color-accent);
 }
 
 

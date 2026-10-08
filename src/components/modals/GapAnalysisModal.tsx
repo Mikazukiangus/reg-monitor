@@ -75,7 +75,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
         {/* Modal Header */}
         <div className="p-4 bg-wash border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">assignment</span>
+            <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">assignment</span>
             <div>
               <h2 id="gap-title" className="font-['Hanken_Grotesk'] text-[18px] text-ink font-bold">
                 Institutional Gap Analysis &amp; Action Matrix
@@ -98,7 +98,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
         <div tabIndex={0} aria-label="Checklist" className="p-5 overflow-y-auto flex-1 space-y-4">
           {/* Summary Banner */}
           <div className="p-3.5 bg-page border border-wash-strong rounded-lg">
-            <span className="font-['JetBrains_Mono'] text-[10px] text-prussian uppercase font-bold tracking-wider block mb-1">
+            <span className="font-['JetBrains_Mono'] text-[10px] text-accent uppercase font-bold tracking-wider block mb-1">
               Active Regulatory Matter
             </span>
             <h3 className="font-['Hanken_Grotesk'] text-[15px] font-bold text-ink mb-1">
@@ -111,7 +111,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               <span className="px-2 py-0.5 bg-panel rounded border border-line">
                 Jurisdiction: {notice.jurisdiction}
               </span>
-              <span className="px-2 py-0.5 bg-venetian-tint text-venetian-deep rounded border border-venetian-line font-semibold">
+              <span className="px-2 py-0.5 bg-lake-tint text-lake-deep rounded border border-lake-line font-semibold">
                 SEAR CISO Liability: Active
               </span>
             </div>
@@ -123,7 +123,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               <span className="font-['Hanken_Grotesk'] text-[14px] font-bold text-ink">
                 Statutory Obligations &amp; Readiness Checklist
               </span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-cobalt font-bold">
+              <span className="font-['JetBrains_Mono'] text-[11px] text-olive font-bold">
                 {checklist.filter(c => c.status === 'Compliant').length} of {checklist.length} Controls Verified
               </span>
             </div>
@@ -140,7 +140,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                     </p>
                     <div className="flex flex-wrap items-center gap-3 mt-1.5 font-['JetBrains_Mono'] text-[11px] text-muted">
                       <span>Owner: <strong className="text-ink">{item.owner}</strong></span>
-                      <span>Target: <strong className="text-prussian">{item.deadline || "Not set"}</strong></span>
+                      <span>Target: <strong className="text-accent">{item.deadline || "Not set"}</strong></span>
                       <span className="text-ink-soft italic">{item.notes}</span>
                     </div>
                   </div>
@@ -152,10 +152,10 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                       aria-label={`Status: ${item.requirement}`}
                       className={`text-[11px] font-['JetBrains_Mono'] font-bold px-2.5 py-1 rounded border cursor-pointer focus:outline-none ${
                         item.status === 'Compliant'
-                          ? 'bg-cobalt-tint text-cobalt border-cobalt-line'
+                          ? 'bg-olive-tint text-olive border-olive-line'
                           : item.status === 'In-Progress'
-                          ? 'bg-prussian-tint text-prussian border-prussian-line'
-                          : 'bg-venetian-tint text-venetian border-venetian-line'
+                          ? 'bg-accent-tint text-accent border-accent-line'
+                          : 'bg-lake-tint text-lake border-lake-line'
                       }`}
                     >
                       <option value="Compliant">✓ Compliant</option>
@@ -180,7 +180,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                 onChange={(e) => setNewRequirement(e.target.value)}
                 placeholder="e.g. Schedule emergency external key custodian drill..."
                 aria-label="New action item"
-                className="flex-1 bg-panel border border-line px-3 py-1.5 rounded text-[12px] text-ink focus:outline-none focus:border-prussian"
+                className="flex-1 bg-panel border border-line px-3 py-1.5 rounded text-[12px] text-ink focus:outline-none focus:border-accent"
               />
               <select
                 value={newOwner}
@@ -195,7 +195,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               </select>
               <button
                 type="submit"
-                className="px-3.5 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep transition-colors shadow-xs"
+                className="px-3.5 py-1.5 bg-accent text-on-accent text-[12px] font-semibold rounded hover:bg-accent-deep transition-colors shadow-xs"
               >
                 Add Action
               </button>
@@ -217,7 +217,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
             </button>
             <button
               onClick={handleExportGapReport}
-              className="px-4 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent font-['Inter'] text-[12px] font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
+              className="px-4 py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[12px] font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm" aria-hidden="true">
                 download

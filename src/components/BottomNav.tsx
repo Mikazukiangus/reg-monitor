@@ -29,10 +29,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
             onClick={() => onTabChange(tab.id)}
             aria-current={active ? 'page' : undefined}
             className={`h-14 flex flex-col items-center justify-center gap-0.5 font-['Inter'] text-[10px] font-semibold transition-colors ${
-              active ? 'text-prussian' : 'text-muted hover:text-ink'
+              active ? 'text-accent' : 'text-muted hover:text-ink'
             }`}
           >
-            <span className={`material-symbols-outlined text-[22px] ${active ? 'bg-prussian-tint rounded-full px-3' : 'px-3'}`} aria-hidden="true">
+            <span className={`material-symbols-outlined text-[22px] ${active ? 'bg-accent-tint rounded-full px-3' : 'px-3'}`} aria-hidden="true">
               {tab.icon}
             </span>
             {tab.label}

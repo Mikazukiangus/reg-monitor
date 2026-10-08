@@ -31,7 +31,7 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
     <div className="w-full px-4 sm:px-6 py-6 space-y-6">
       <div className="bg-panel border border-line rounded-xl p-5 shadow-xs">
         <div className="flex items-center gap-2 mb-1">
-          <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">radar</span>
+          <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">radar</span>
           <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
             Regulatory Radar
           </h1>
@@ -72,14 +72,14 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
                           <span className="text-line-dim">–</span>
                         ) : (
                           <div className="space-y-1.5">
-                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border bg-prussian-tint text-prussian border-prussian-line">
+                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border bg-accent-tint text-accent border-accent-line">
                               {cell.length} {cell.length === 1 ? 'notice' : 'notices'}
                             </span>
                             {cell.slice(0, 2).map(n => (
                               <button
                                 key={n.id}
                                 onClick={() => onSelectNotice(n.id)}
-                                className="block text-left text-ink-soft hover:text-prussian leading-snug line-clamp-2"
+                                className="block text-left text-ink-soft hover:text-accent leading-snug line-clamp-2"
                               >
                                 {n.title}
                               </button>

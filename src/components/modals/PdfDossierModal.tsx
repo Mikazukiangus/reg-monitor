@@ -59,7 +59,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
         {/* Header */}
         <div className="p-4 bg-wash border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">description</span>
+            <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">description</span>
             <div>
               <h2 id="dossier-title" className="font-['Hanken_Grotesk'] text-[17px] text-ink font-bold">
                 Notice Dossier
@@ -72,7 +72,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownload}
-              className="px-3 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent text-[12px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
+              className="px-3 py-1.5 bg-accent hover:bg-accent-deep text-on-accent text-[12px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm" aria-hidden="true">download</span>
               <span>Download .txt</span>
@@ -101,7 +101,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
               <span className="font-['JetBrains_Mono'] text-[10px] text-muted uppercase block">
                 Impact (rubric)
               </span>
-              <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-prussian">
+              <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-accent">
                 {notice.impactScore.toFixed(1)}/10
               </span>
             </div>
@@ -119,7 +119,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
           <div className="space-y-4 text-[13px] text-ink-soft leading-relaxed">
             {notice.summary && (
               <section>
-                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-prussian">
+                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-accent">
                   Source Summary
                 </h2>
                 <p>{notice.summary}</p>
@@ -128,17 +128,17 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
 
             {keyPoints && keyPoints.points.length > 0 && (
               <section>
-                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-prussian">
+                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-accent">
                   Key Points, Quoted from Source
                 </h2>
                 {keyPoints.ocr && (
-                  <p className="text-[12px] text-ochre mb-2">
+                  <p className="text-[12px] text-cinnamon mb-2">
                     This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors; check them against the document.
                   </p>
                 )}
                 <ul className="space-y-2">
                   {keyPoints.points.map((pt, i) => (
-                    <li key={i} className="border-l-2 border-prussian-line pl-3 italic">{pt}</li>
+                    <li key={i} className="border-l-2 border-accent-line pl-3 italic">{pt}</li>
                   ))}
                 </ul>
               </section>
@@ -146,12 +146,12 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
 
             {keyPoints && keyPoints.facts.length > 0 && (
               <section>
-                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-prussian">
+                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-accent">
                   Dated Statements
                 </h2>
                 <ul className="space-y-2">
                   {keyPoints.facts.map((f, i) => (
-                    <li key={i} className="border-l-2 border-ochre-line pl-3 italic">{f.text}</li>
+                    <li key={i} className="border-l-2 border-cinnamon-line pl-3 italic">{f.text}</li>
                   ))}
                 </ul>
               </section>
@@ -159,7 +159,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
 
             {keyPoints && keyPoints.refs.length > 0 && (
               <section>
-                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-prussian">
+                <h2 className="font-['Hanken_Grotesk'] text-[14px] font-bold uppercase tracking-wider mb-2 text-accent">
                   References Mentioned
                 </h2>
                 <p className="font-['JetBrains_Mono'] text-[12px]">{keyPoints.refs.join(', ')}</p>
@@ -175,7 +175,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
         <div className="p-3 bg-wash border-t border-line flex items-center justify-between font-['JetBrains_Mono'] text-[10px] text-muted">
           <span>Key points are extractive: sentences quoted from the document{keyPoints?.ocr ? ', read by OCR' : ''}.</span>
           {notice.dossierUrl && (
-            <a href={notice.dossierUrl} target="_blank" rel="noopener noreferrer" className="text-prussian font-bold hover:underline shrink-0 ml-3">
+            <a href={notice.dossierUrl} target="_blank" rel="noopener noreferrer" className="text-accent font-bold hover:underline shrink-0 ml-3">
               Open source document ↗
             </a>
           )}

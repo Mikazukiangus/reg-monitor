@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
   const allOperational = !checking && operationalCount === endpoints.length;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-page/95 backdrop-blur-md border-b border-line shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+    <header className="band fixed top-0 left-0 right-0 z-50 bg-band text-on-band border-b border-band-deep shadow-[0_1px_3px_rgba(0,0,0,0.12)]">
       <div className="h-14 w-full px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3 shrink-0">
@@ -68,10 +68,10 @@ export const Header: React.FC<HeaderProps> = ({
               <img alt="" className="h-8 w-auto object-contain" src="/icon-192.png" />
             </button>
             <div className="flex flex-col">
-              <h1 className="font-['Hanken_Grotesk'] text-[19px] text-ink tracking-tight font-bold leading-none">
+              <h1 className="font-['Hanken_Grotesk'] text-[19px] text-on-band tracking-tight font-bold leading-none">
                 RegSonar
               </h1>
-              <span className="hidden sm:block font-['JetBrains_Mono'] text-[10px] text-muted tracking-wider uppercase mt-0.5 font-medium">
+              <span className="hidden sm:block font-['JetBrains_Mono'] text-[10px] text-band-sub tracking-wider uppercase mt-0.5 font-medium">
                 Intelligence APAC &amp; Global
               </span>
             </div>
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
               value={selectedJurisdictionFilter}
               onChange={(e) => onJurisdictionFilterChange(e.target.value)}
               aria-label="Jurisdiction"
-              className="bg-panel border border-line text-ink-soft font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-prussian focus:text-ink cursor-pointer transition-colors shadow-xs"
+              className="bg-band-deep border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-band-sub cursor-pointer transition-colors"
             >
               <option value="All">All jurisdictions</option>
               <option value="Singapore MAS">Singapore (MAS, SGX RegCo)</option>
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Global Search Bar */}
         <div className="flex-1 max-w-2xl mx-3 hidden md:block">
           <div className="relative flex items-center w-full">
-            <span className="material-symbols-outlined absolute left-3 text-muted text-lg pointer-events-none" aria-hidden="true">
+            <span className="material-symbols-outlined absolute left-3 text-band-field-text text-lg pointer-events-none" aria-hidden="true">
               search
             </span>
             <input
@@ -107,12 +107,12 @@ export const Header: React.FC<HeaderProps> = ({
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search loaded notices by title, regulator, reference or key point..."
               aria-label="Search notices"
-              className="w-full h-9 pl-10 pr-10 bg-panel border border-line text-ink placeholder:text-muted font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:bg-panel-raised focus:border-prussian transition-all shadow-xs"
+              className="w-full h-9 pl-10 pr-10 bg-band-deep border border-band-line text-on-band placeholder:text-band-field-text font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:border-band-sub transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-3 text-muted hover:text-ink"
+                className="absolute right-3 text-band-field-text hover:text-on-band"
                 title="Clear search"
               >
                 <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setShowMobileSearch(v => !v)}
             aria-label={showMobileSearch ? 'Close search' : 'Search notices'}
             aria-expanded={showMobileSearch}
-            className="md:hidden w-9 h-9 flex items-center justify-center text-ink-soft bg-panel hover:bg-wash rounded-lg border border-line shadow-xs"
+            className="md:hidden w-9 h-9 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line"
           >
             <span className="material-symbols-outlined text-xl" aria-hidden="true">{showMobileSearch ? 'close' : 'search'}</span>
           </button>
@@ -136,14 +136,10 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Live Ingestion Indicator & Gateway Trigger */}
           <button
             onClick={onOpenEndpointsModal}
-            className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 border rounded-lg cursor-pointer transition-colors shadow-2xs ${
-              allOperational
-                ? 'bg-cobalt-wash hover:bg-cobalt-tint border-cobalt-line-soft text-cobalt'
-                : 'bg-ochre-wash hover:bg-ochre-tint border-ochre-line text-ochre'
-            }`}
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 border border-band-line rounded-lg cursor-pointer transition-colors bg-band-deep hover:border-band-sub text-band-field-text"
             title="View monitored government endpoints and their current status"
           >
-            <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-cobalt' : 'bg-ochre'}`}></span>
+            <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-band-ok' : 'bg-band-sub'}`}></span>
             <span className="font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-wide">
               {checking ? 'Checking Sources' : `${operationalCount}/${endpoints.length} Sources Up`}
             </span>
@@ -157,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex items-center justify-center gap-1.5 min-w-9 px-2.5 h-9 sm:h-8 bg-prussian hover:bg-prussian-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
+              className="flex items-center justify-center gap-1.5 min-w-9 px-2.5 h-9 sm:h-8 bg-cinnamon-fill hover:bg-cinnamon-fill-hover text-on-cinnamon font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
               title="Fetch the latest notices from every source now"
               aria-label="Sync feeds now"
             >
@@ -178,21 +174,21 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => setShowNotifications(!showNotifications)}
               aria-label="Notifications"
               aria-expanded={showNotifications}
-              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-ink-soft hover:text-ink bg-panel hover:bg-wash rounded-lg border border-line transition-colors shadow-xs"
+              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line transition-colors"
             >
               <span className="material-symbols-outlined text-xl" aria-hidden="true">notifications</span>
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-venetian text-on-accent font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-cinnamon-fill text-on-cinnamon font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
                   {unreadCount}
                 </span>
               )}
             </button>
 
             {showNotifications && (
-              <div className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-14 sm:top-auto mt-2 sm:w-96 bg-panel border border-line-strong rounded-lg shadow-xl p-3 z-50">
+              <div className="band-popover fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-14 sm:top-auto mt-2 sm:w-96 bg-panel text-ink border border-line-strong rounded-lg shadow-xl p-3 z-50">
                 <div className="flex items-center justify-between pb-2 border-b border-line">
                   <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-ink flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-venetian"></span>
+                    <span className="w-2 h-2 rounded-full bg-lake"></span>
                     Latest Notices
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-muted">From live sources</span>
@@ -209,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
                       className="block w-full text-left py-2 px-1.5 hover:bg-panel-raised rounded cursor-pointer transition-colors"
                     >
                       <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-['JetBrains_Mono'] font-bold text-prussian">
+                        <span className="font-['JetBrains_Mono'] font-bold text-accent">
                           {n.regulator}
                         </span>
                         <span className="font-['JetBrains_Mono'] text-muted">{n.time}</span>
@@ -227,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Export Button */}
           <button
             onClick={onOpenExport}
-            className="hidden sm:flex items-center gap-1.5 px-3 h-8 bg-panel hover:bg-wash border border-line text-ink-soft hover:text-ink font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs"
+            className="hidden sm:flex items-center gap-1.5 px-3 h-8 hover:bg-band-deep border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors"
           >
             <span className="material-symbols-outlined text-base" aria-hidden="true">download</span>
             <span>Export</span>
@@ -242,13 +238,13 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="Session details"
               aria-expanded={showProfileMenu}
             >
-              <span className="w-9 h-9 sm:w-8 sm:h-8 rounded-full shrink-0 ring-1 ring-line group-hover:ring-prussian transition-all bg-wash flex items-center justify-center">
-                <span className="material-symbols-outlined text-ink-soft text-lg" aria-hidden="true">person</span>
+              <span className="w-9 h-9 sm:w-8 sm:h-8 rounded-full shrink-0 ring-1 ring-band-line group-hover:ring-band-sub transition-all bg-band-deep flex items-center justify-center">
+                <span className="material-symbols-outlined text-on-band text-lg" aria-hidden="true">person</span>
               </span>
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-64 bg-panel border border-line-strong rounded-lg shadow-xl p-3 z-50 text-[12px]">
+              <div className="band-popover absolute right-0 mt-2 w-64 bg-panel text-ink border border-line-strong rounded-lg shadow-xl p-3 z-50 text-[12px]">
                 <p className="font-semibold text-ink">Local session</p>
                 <p className="text-[11px] text-ink-soft mt-1 leading-relaxed">
                   RegSonar has no accounts or sign-in. Watch rules are saved in this browser only; the notices you have seen are remembered in this browser to mark new ones.
@@ -260,7 +256,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {showMobileSearch && (
-        <div className="md:hidden absolute left-0 right-0 top-14 px-3 py-2 bg-page border-b border-line shadow-md">
+        <div className="band-popover md:hidden absolute left-0 right-0 top-14 px-3 py-2 bg-page border-b border-line shadow-md">
           <label className="relative flex items-center w-full">
             <span className="sr-only">Search notices</span>
             <span className="material-symbols-outlined absolute left-3 text-muted text-lg pointer-events-none" aria-hidden="true">search</span>
@@ -271,7 +267,7 @@ export const Header: React.FC<HeaderProps> = ({
               onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && setShowMobileSearch(false)}
               placeholder="Search title, regulator, reference, key point"
-              className="w-full h-11 pl-10 pr-3 bg-panel border border-line text-ink placeholder:text-muted font-['Inter'] text-[16px] rounded-lg focus:outline-none focus:border-prussian"
+              className="w-full h-11 pl-10 pr-3 bg-panel border border-line text-ink placeholder:text-muted font-['Inter'] text-[16px] rounded-lg focus:outline-none focus:border-accent"
             />
           </label>
         </div>

@@ -63,7 +63,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-3 pb-2 border-b border-line">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-prussian text-base" aria-hidden="true">filter_alt</span>
+            <span className="material-symbols-outlined text-accent text-base" aria-hidden="true">filter_alt</span>
             <span className="font-['Hanken_Grotesk'] text-[16px] text-ink font-bold">
               Filters &amp; Facets
             </span>
@@ -89,11 +89,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('critical')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('critical')
-                    ? 'bg-venetian-tint border-venetian-line text-venetian shadow-2xs'
+                    ? 'bg-lake-fill border-lake-fill text-on-lake shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-venetian"></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('critical') ? 'bg-on-lake' : 'bg-lake'}`}></span>
                 Critical ({severityCounts.critical})
               </button>
 
@@ -102,11 +102,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('high')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('high')
-                    ? 'bg-prussian-tint border-prussian-line text-prussian shadow-2xs'
+                    ? 'bg-cinnamon-fill border-cinnamon-fill text-on-cinnamon shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-prussian"></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('high') ? 'bg-on-cinnamon' : 'bg-cinnamon'}`}></span>
                 High ({severityCounts.high})
               </button>
 
@@ -115,11 +115,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('info')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('info')
-                    ? 'bg-wash-strong border-line-strong text-ink shadow-2xs'
+                    ? 'bg-antwarp-tint border-antwarp-line text-antwarp shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-muted"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-antwarp"></span>
                 Info ({severityCounts.info})
               </button>
             </div>
@@ -141,7 +141,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       type="checkbox"
                       checked={selectedJurisdictions[code]}
                       onChange={() => onToggleJurisdiction(code)}
-                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
+                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-accent focus:ring-0 cursor-pointer accent-accent"
                     />
                     <span className="flex flex-col min-w-0">
                       <span className={`font-['Inter'] text-[12px] ${selectedJurisdictions[code] ? 'text-ink font-medium' : 'text-ink-soft'}`}>
@@ -174,7 +174,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       type="checkbox"
                       checked={selectedSectors[sector]}
                       onChange={() => onToggleSector(sector)}
-                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
+                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-accent focus:ring-0 cursor-pointer accent-accent"
                     />
                     <span
                       className={`font-['Inter'] text-[12px] min-w-0 ${
@@ -206,7 +206,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Circulars' ? null : 'Circulars')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Circulars'
-                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    ? 'bg-accent text-on-accent border-accent shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink'
                 }`}
               >
@@ -218,7 +218,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Consultations' ? null : 'Consultations')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Consultations'
-                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    ? 'bg-accent text-on-accent border-accent shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink'
                 }`}
               >
@@ -230,8 +230,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Enforcement' ? null : 'Enforcement')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Enforcement'
-                    ? 'bg-venetian text-on-accent border-venetian shadow-2xs'
-                    : 'bg-panel-raised border-line hover:bg-wash text-venetian'
+                    ? 'bg-lake-fill text-on-lake border-lake-fill shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-lake'
                 }`}
               >
                 Enforcement ({formatCounts.Enforcement || 0})
@@ -242,7 +242,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Guidelines' ? null : 'Guidelines')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Guidelines'
-                    ? 'bg-prussian text-on-accent border-prussian shadow-2xs'
+                    ? 'bg-accent text-on-accent border-accent shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
@@ -262,10 +262,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <button
             onClick={onPingEndpoints}
             disabled={isPinging}
-            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-prussian hover:underline font-semibold disabled:opacity-60"
+            className="flex items-center gap-1 font-['JetBrains_Mono'] text-[11px] text-accent hover:underline font-semibold disabled:opacity-60"
             title="Re-check the monitored endpoints"
           >
-            <span className={`w-1.5 h-1.5 rounded-full bg-prussian ${isPinging ? 'animate-ping' : ''}`}></span>
+            <span className={`w-1.5 h-1.5 rounded-full bg-accent ${isPinging ? 'animate-ping' : ''}`}></span>
             {isPinging ? 'Checking...' : 'Check Now'}
           </button>
         </div>

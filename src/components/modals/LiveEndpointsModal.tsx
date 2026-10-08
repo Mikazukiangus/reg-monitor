@@ -22,9 +22,9 @@ export interface EndpointMetric {
 export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';
 
 export const STATUS_STYLES: Record<EndpointStatus, { badge: string; text: string; dot: string }> = {
-  Operational: { badge: 'bg-cobalt-tint text-cobalt border-cobalt-line', text: 'text-cobalt', dot: 'bg-cobalt' },
-  Degraded: { badge: 'bg-ochre-tint text-ochre border-ochre-line', text: 'text-ochre', dot: 'bg-ochre' },
-  Down: { badge: 'bg-venetian-wash text-venetian border-venetian-line', text: 'text-venetian', dot: 'bg-venetian' },
+  Operational: { badge: 'bg-olive-tint text-olive border-olive-line', text: 'text-olive', dot: 'bg-olive' },
+  Degraded: { badge: 'bg-cinnamon-tint text-cinnamon border-cinnamon-line', text: 'text-cinnamon', dot: 'bg-cinnamon' },
+  Down: { badge: 'bg-lake-wash text-lake border-lake-line', text: 'text-lake', dot: 'bg-lake' },
   Checking: { badge: 'bg-wash text-muted border-line', text: 'text-muted', dot: 'bg-muted' }
 };
 
@@ -78,7 +78,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
         {/* Header */}
         <div className="p-4 bg-wash border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-prussian-tint border border-prussian-line text-prussian flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-accent-tint border border-accent-line text-accent flex items-center justify-center">
               <span className="material-symbols-outlined text-lg" aria-hidden="true">cloud_sync</span>
             </div>
             <div>
@@ -120,7 +120,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             <div className="h-3 w-px bg-line-strong"></div>
             <div>
               <span className="text-muted font-medium mr-1.5">Average Latency:</span>
-              <span className="font-['JetBrains_Mono'] font-bold text-prussian">
+              <span className="font-['JetBrains_Mono'] font-bold text-accent">
                 {avgPing !== null ? `${avgPing}ms` : 'n/a'}
               </span>
             </div>
@@ -131,7 +131,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                 value={autoSyncInterval}
                 onChange={(e) => onChangeAutoSyncInterval(Number(e.target.value))}
                 aria-label="Auto-sync interval"
-                className="bg-panel border border-line text-ink font-['JetBrains_Mono'] text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-prussian"
+                className="bg-panel border border-line text-ink font-['JetBrains_Mono'] text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-accent"
               >
                 <option value={60}>Every 1 min</option>
                 <option value={180}>Every 3 mins</option>
@@ -148,7 +148,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
               disabled={isPinging}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-panel hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-2xs disabled:opacity-50"
             >
-              <span className={`material-symbols-outlined text-sm text-prussian ${isPinging ? 'animate-spin' : ''}`} aria-hidden="true">
+              <span className={`material-symbols-outlined text-sm text-accent ${isPinging ? 'animate-spin' : ''}`} aria-hidden="true">
                 network_check
               </span>
               <span>{isPinging ? 'Pinging...' : 'Ping Endpoints'}</span>
@@ -157,7 +157,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             <button
               onClick={onSyncAll}
               disabled={isSyncing}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-50"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`} aria-hidden="true">
                 sync
@@ -173,7 +173,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             onClick={() => setActiveTab('endpoints')}
             className={`pb-2 text-[12px] font-semibold border-b-2 transition-colors ${
               activeTab === 'endpoints'
-                ? 'border-prussian text-prussian'
+                ? 'border-accent text-accent'
                 : 'border-transparent text-muted hover:text-ink'
             }`}
           >
@@ -183,7 +183,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             onClick={() => setActiveTab('architecture')}
             className={`pb-2 text-[12px] font-semibold border-b-2 transition-colors ${
               activeTab === 'architecture'
-                ? 'border-prussian text-prussian'
+                ? 'border-accent text-accent'
                 : 'border-transparent text-muted hover:text-ink'
             }`}
           >
@@ -238,7 +238,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-muted">Round-Trip Ping:</span>
-                        <span className="font-['JetBrains_Mono'] font-bold text-prussian">
+                        <span className="font-['JetBrains_Mono'] font-bold text-accent">
                           {ep.status === 'Checking' ? 'Testing...' : ep.pingMs !== null ? `${ep.pingMs} ms` : 'No response'}
                         </span>
                       </div>
@@ -271,7 +271,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                     </span>
                     <button
                       onClick={() => handleCopy(ep.url)}
-                      className="text-muted hover:text-prussian transition-colors p-1 rounded"
+                      className="text-muted hover:text-accent transition-colors p-1 rounded"
                       title="Copy URL endpoint"
                     >
                       <span className="material-symbols-outlined text-sm" aria-hidden="true">
@@ -288,7 +288,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
             <div className="space-y-4">
               <div className="bg-panel-raised border border-wash-strong rounded-lg p-4">
                 <h4 className="font-['Hanken_Grotesk'] text-[14px] font-bold text-ink mb-2 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-prussian text-lg" aria-hidden="true">schema</span>
+                  <span className="material-symbols-outlined text-accent text-lg" aria-hidden="true">schema</span>
                   <span>Automated Continuous Ingestion Loop</span>
                 </h4>
                 <p className="font-['Inter'] text-[12px] text-ink-soft leading-relaxed mb-3">
@@ -297,7 +297,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
                   <div className="p-3 bg-panel border border-line rounded-lg">
-                    <span className="font-['JetBrains_Mono'] font-bold text-prussian block mb-1">
+                    <span className="font-['JetBrains_Mono'] font-bold text-accent block mb-1">
                       1. Ingestion Layer
                     </span>
                     <span className="text-ink-soft">
@@ -306,7 +306,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   </div>
 
                   <div className="p-3 bg-panel border border-line rounded-lg">
-                    <span className="font-['JetBrains_Mono'] font-bold text-prussian block mb-1">
+                    <span className="font-['JetBrains_Mono'] font-bold text-accent block mb-1">
                       2. Classification
                     </span>
                     <span className="text-ink-soft">
@@ -315,7 +315,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   </div>
 
                   <div className="p-3 bg-panel border border-line rounded-lg">
-                    <span className="font-['JetBrains_Mono'] font-bold text-prussian block mb-1">
+                    <span className="font-['JetBrains_Mono'] font-bold text-accent block mb-1">
                       3. Live Client Push
                     </span>
                     <span className="text-ink-soft">
@@ -330,7 +330,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   <span className="font-['Hanken_Grotesk'] text-[13px] font-bold text-ink">
                     Key Points (extractive)
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-prussian-tint text-prussian border border-prussian-line px-2 py-0.5 rounded">
+                  <span className="font-['JetBrains_Mono'] text-[10px] font-bold bg-accent-tint text-accent border border-accent-line px-2 py-0.5 rounded">
                     TextRank • OCR for scanned PDFs • No external API
                   </span>
                 </div>

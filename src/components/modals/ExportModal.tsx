@@ -84,7 +84,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         {/* Header */}
         <div className="p-4 bg-wash border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">download</span>
+            <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">download</span>
             <div>
               <h2 id="export-title" className="font-['Hanken_Grotesk'] text-[17px] text-ink font-bold">
                 Export Statutory Compliance Data
@@ -115,11 +115,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 onClick={() => setExportFormat('csv')}
                 className={`p-3 rounded-lg border flex flex-col items-center gap-1.5 transition-all ${
                   exportFormat === 'csv'
-                    ? 'bg-prussian-tint border-prussian text-prussian shadow-xs'
+                    ? 'bg-accent-tint border-accent text-accent shadow-xs'
                     : 'bg-panel border-line text-ink-soft hover:bg-panel-raised'
                 }`}
               >
-                <span className="material-symbols-outlined text-2xl text-prussian" aria-hidden="true">table_view</span>
+                <span className="material-symbols-outlined text-2xl text-accent" aria-hidden="true">table_view</span>
                 <span className="font-bold text-[13px]">Excel / CSV</span>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-muted">Standard tabular format</span>
               </button>
@@ -129,11 +129,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 onClick={() => setExportFormat('json')}
                 className={`p-3 rounded-lg border flex flex-col items-center gap-1.5 transition-all ${
                   exportFormat === 'json'
-                    ? 'bg-prussian-tint border-prussian text-prussian shadow-xs'
+                    ? 'bg-accent-tint border-accent text-accent shadow-xs'
                     : 'bg-panel border-line text-ink-soft hover:bg-panel-raised'
                 }`}
               >
-                <span className="material-symbols-outlined text-2xl text-prussian" aria-hidden="true">code</span>
+                <span className="material-symbols-outlined text-2xl text-accent" aria-hidden="true">code</span>
                 <span className="font-bold text-[13px]">JSON Feed</span>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-muted">Structured API payload</span>
               </button>
@@ -146,7 +146,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 type="checkbox"
                 checked={includeAI}
                 onChange={(e) => setIncludeAI(e.target.checked)}
-                className="w-4 h-4 rounded text-prussian bg-panel border-line-strong accent-prussian"
+                className="w-4 h-4 rounded text-accent bg-panel border-line-strong accent-accent"
               />
               <span className="text-ink text-[12px] font-medium">
                 Include key points quoted from source documents
@@ -165,7 +165,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
           </button>
           <button
             onClick={handleDownload}
-            className="px-4 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-4 py-1.5 bg-accent text-on-accent text-[12px] font-semibold rounded hover:bg-accent-deep flex items-center gap-1.5 transition-colors shadow-xs"
           >
             <span className="material-symbols-outlined text-base" aria-hidden="true">download</span>
             <span>Download {exportFormat.toUpperCase()}</span>

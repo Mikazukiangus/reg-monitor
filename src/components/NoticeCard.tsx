@@ -1,5 +1,5 @@
 import React from 'react';
-import { RegulatoryNotice } from '../types/regulatory';
+import { InstrumentFormat, RegulatoryNotice } from '../types/regulatory';
 import { daysUntil } from '../lib/derived';
 import { Highlight } from './Highlight';
 
@@ -20,8 +20,18 @@ interface NoticeCardProps {
   onOpenRelated?: (id: string, url?: string) => void;
 }
 
+// Type badge colours by format, from the theme so they follow light and dark.
+// Notices still carry the server's fixed typeColorClass, which this replaces.
+const FORMAT_BADGE: Partial<Record<InstrumentFormat, string>> = {
+  Consultations: 'bg-antwarp-tint border-antwarp-line text-antwarp',
+  Enforcement: 'bg-lake-wash border-lake-line text-lake',
+  Guidelines: 'bg-olive-wash border-olive-line text-olive',
+  'Technical Standards': 'bg-wash border-line text-ink-soft'
+};
+const DEFAULT_BADGE = 'bg-panel border-accent-line text-accent';
+
 const NewBadge = () => (
-  <span className="px-1.5 py-0.5 rounded bg-prussian text-on-accent font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider" title="Not seen in this browser before">
+  <span className="px-1.5 py-0.5 rounded bg-accent text-on-accent font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider" title="Not seen in this browser before">
     New
   </span>
 );
@@ -50,17 +60,17 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
     if (score >= 9.0) {
       return {
         icon: 'shield',
-        color: 'text-venetian',
-        border: 'border-venetian-line-soft',
-        bg: 'bg-venetian-wash'
+        color: 'text-on-lake',
+        border: 'border-lake-fill',
+        bg: 'bg-lake-fill'
       };
     }
     if (score >= 8.0) {
       return {
         icon: 'insights',
-        color: 'text-prussian',
-        border: 'border-prussian-line',
-        bg: 'bg-prussian-tint'
+        color: 'text-accent',
+        border: 'border-accent-line',
+        bg: 'bg-accent-tint'
       };
     }
     return {
@@ -79,7 +89,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             {isNew && <NewBadge />}
-            <span className="px-1.5 py-0.5 rounded bg-wash border border-line text-prussian font-['JetBrains_Mono'] text-[10px] font-bold">
+            <span className="px-1.5 py-0.5 rounded bg-wash border border-line text-accent font-['JetBrains_Mono'] text-[10px] font-bold">
               {notice.regulator}
             </span>
             <span className="font-['JetBrains_Mono'] text-[10px] text-muted">
@@ -90,7 +100,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </span>
           </div>
           <h4 className="font-['Hanken_Grotesk'] text-[14px] text-ink font-bold truncate">
-            <button onClick={() => onOpenPdfDossier(notice)} className="max-w-full truncate text-left hover:text-prussian cursor-pointer">
+            <button onClick={() => onOpenPdfDossier(notice)} className="max-w-full truncate text-left hover:text-accent cursor-pointer">
               <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
             </button>
           </h4>
@@ -101,7 +111,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           </span>
           <button
             onClick={() => onOpenGapAnalysis(notice)}
-            className="px-2.5 py-1 bg-prussian text-on-accent text-[11px] font-semibold rounded hover:bg-prussian-deep transition-colors shadow-2xs"
+            className="px-2.5 py-1 bg-accent text-on-accent text-[11px] font-semibold rounded hover:bg-accent-deep transition-colors shadow-2xs"
           >
             Action
           </button>
@@ -116,12 +126,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex flex-wrap items-center gap-1.5">
           {isNew && <NewBadge />}
-          <span className="px-2 py-0.5 rounded bg-wash border border-line text-prussian font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded bg-wash border border-line text-accent font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider">
             {notice.regulator} • {notice.jurisdiction}
           </span>
 
           <span
-            className={`px-2 py-0.5 rounded border font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider ${notice.typeColorClass.bg} ${notice.typeColorClass.text}`}
+            className={`px-2 py-0.5 rounded border font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider ${FORMAT_BADGE[notice.format] ?? DEFAULT_BADGE}`}
           >
             {notice.type}
           </span>
@@ -140,8 +150,8 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
 
           {notice.isLiveFeed && (
-            <span className="px-1.5 py-0.5 rounded bg-cobalt-tint text-cobalt border border-cobalt-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-cobalt animate-pulse"></span>
+            <span className="px-1.5 py-0.5 rounded bg-olive-tint text-olive border border-olive-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-olive animate-pulse"></span>
               Live Feed
             </span>
           )}
@@ -165,7 +175,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
 
       {/* Main Title */}
       <h3 className="font-['Hanken_Grotesk'] text-[18px] text-ink font-bold mb-1 leading-snug">
-        <button onClick={() => onOpenPdfDossier(notice)} className="text-left hover:text-prussian transition-colors cursor-pointer">
+        <button onClick={() => onOpenPdfDossier(notice)} className="text-left hover:text-accent transition-colors cursor-pointer">
           <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
         </button>
       </h3>
@@ -184,11 +194,11 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             title={notice.deadlineQuote ? `From the document: “${notice.deadlineQuote}”` : undefined}
             className={`flex items-center gap-1 font-semibold ${
               notice.statusBadge?.type === 'deadline'
-                ? 'text-prussian'
+                ? 'text-accent'
                 : notice.statusBadge?.type === 'immediate'
-                ? 'text-cobalt'
+                ? 'text-olive'
                 : notice.statusBadge?.type === 'action'
-                ? 'text-venetian'
+                ? 'text-lake'
                 : 'text-ink-soft'
             }`}
           >
@@ -208,12 +218,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       {notice.keyPoints && notice.keyPoints.points.length > 0 ? (
         <div className="p-3.5 bg-page border border-wash-strong rounded-lg mb-3">
           <div className="flex items-center justify-between gap-2 mb-2">
-            <div className="flex items-center gap-1.5 text-prussian font-['Inter'] text-[12px] font-bold">
-              <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">format_quote</span>
+            <div className="flex items-center gap-1.5 text-accent font-['Inter'] text-[12px] font-bold">
+              <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">format_quote</span>
               <span>Key points, quoted from source</span>
               {notice.keyPoints.ocr && (
                 <span
-                  className="px-1.5 py-0.5 rounded bg-ochre-tint border border-ochre-line text-ochre font-['JetBrains_Mono'] text-[9px] font-bold"
+                  className="px-1.5 py-0.5 rounded bg-cinnamon-tint border border-cinnamon-line text-cinnamon font-['JetBrains_Mono'] text-[9px] font-bold"
                   title="This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors."
                 >
                   OCR · check wording
@@ -225,7 +235,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
                 href={notice.keyPoints.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-['JetBrains_Mono'] text-[10px] text-muted hover:text-prussian hover:underline shrink-0"
+                className="font-['JetBrains_Mono'] text-[10px] text-muted hover:text-accent hover:underline shrink-0"
               >
                 Verify in document ↗
               </a>
@@ -234,7 +244,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           <ul lang={notice.language} className="space-y-1.5 font-['Inter'] text-[12px] text-ink">
             {notice.keyPoints.points.map((point, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-prussian mt-0.5 text-xs font-bold shrink-0">“</span>
+                <span className="text-accent mt-0.5 text-xs font-bold shrink-0">“</span>
                 <span className="leading-relaxed"><Highlight text={point} terms={highlight} /></span>
               </li>
             ))}
@@ -243,10 +253,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             <div className="mt-2.5 pt-2 border-t border-wash-strong space-y-1">
               {datedSentences.map((text, idx) => (
                 <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-ink-soft">
-                  <span className="material-symbols-outlined text-sm text-ochre shrink-0" aria-hidden="true">event</span>
+                  <span className="material-symbols-outlined text-sm text-cinnamon shrink-0" aria-hidden="true">event</span>
                   <span className="leading-relaxed">
                     {text === notice.deadlineQuote && dateLabel && (
-                      <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-prussian mr-1.5">{dateLabel}:</span>
+                      <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-accent mr-1.5">{dateLabel}:</span>
                     )}
                     {text}
                   </span>
@@ -280,14 +290,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         <div className="mb-3 space-y-1">
           {notice.related.map(link => (
             <div key={link.id} className="flex items-start gap-1.5 font-['Inter'] text-[12px] text-ink-soft">
-              <span className="material-symbols-outlined text-sm text-prussian shrink-0" aria-hidden="true">
+              <span className="material-symbols-outlined text-sm text-accent shrink-0" aria-hidden="true">
                 {link.relation === 'consultation' ? 'undo' : 'redo'}
               </span>
               <span>
                 {link.relation === 'consultation' ? 'Follows the consultation: ' : 'Conclusions published: '}
                 <button
                   onClick={() => onOpenRelated?.(link.id, link.dossierUrl)}
-                  className="text-left font-semibold text-prussian hover:underline"
+                  className="text-left font-semibold text-accent hover:underline"
                 >
                   {link.title}
                 </button>
@@ -367,7 +377,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
             className={`w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded transition-colors ${
               isBookmarked
-                ? 'text-prussian bg-prussian-tint'
+                ? 'text-accent bg-accent-tint'
                 : 'text-muted hover:text-ink hover:bg-panel-raised'
             }`}
             title={isBookmarked ? 'Bookmarked' : 'Bookmark Alert'}
@@ -396,7 +406,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               href={notice.dossierUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
+              className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm" aria-hidden="true">open_in_new</span>
               Source

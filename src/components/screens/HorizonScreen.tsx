@@ -45,7 +45,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
       <div className="bg-panel border border-line rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">timeline</span>
+            <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">timeline</span>
             <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
               Regulatory Horizon
             </h1>
@@ -62,7 +62,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
               onClick={() => setFilterQuarter(q)}
               className={`px-3 py-1 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors ${
                 filterQuarter === q
-                  ? 'bg-prussian text-on-accent border-prussian'
+                  ? 'bg-accent text-on-accent border-accent'
                   : 'bg-panel text-ink-soft border-line hover:bg-wash'
               }`}
             >
@@ -85,25 +85,25 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
             >
               <div className="md:w-40 shrink-0">
                 <span className="font-['Hanken_Grotesk'] text-[18px] font-bold text-ink block">{formatDate(e.date)}</span>
-                <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${e.days <= 14 ? 'text-venetian' : e.days <= 60 ? 'text-ochre' : 'text-prussian'}`}>
+                <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${e.days <= 14 ? 'text-lake' : e.days <= 60 ? 'text-cinnamon' : 'text-accent'}`}>
                   {e.days === 0 ? 'Today' : `in ${e.days} days`} • {e.quarter}
                 </span>
               </div>
               <div className="flex-1 min-w-0 space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-wash border border-line text-prussian font-['JetBrains_Mono'] text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-wash border border-line text-accent font-['JetBrains_Mono'] text-[10px] font-bold">
                     {e.notice.regulator}
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[11px] text-muted">{e.notice.statutoryDeadline}</span>
                 </div>
                 <button
                   onClick={() => onSelectNotice(e.notice.id)}
-                  className="font-['Hanken_Grotesk'] text-[15px] font-bold text-ink hover:text-prussian text-left"
+                  className="font-['Hanken_Grotesk'] text-[15px] font-bold text-ink hover:text-accent text-left"
                 >
                   {e.notice.title}
                 </button>
                 {e.quote && (
-                  <p className="font-['Inter'] text-[12px] text-ink-soft italic border-l-2 border-ochre-line pl-2.5">
+                  <p className="font-['Inter'] text-[12px] text-ink-soft italic border-l-2 border-cinnamon-line pl-2.5">
                     “{e.quote}”
                   </p>
                 )}
@@ -113,7 +113,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
                   href={e.notice.dossierUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 font-['JetBrains_Mono'] text-[11px] font-bold text-prussian hover:underline"
+                  className="shrink-0 font-['JetBrains_Mono'] text-[11px] font-bold text-accent hover:underline"
                 >
                   Source ↗
                 </a>

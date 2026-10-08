@@ -16,7 +16,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
     <div className="w-full px-4 sm:px-6 py-6 space-y-6">
       <div className="bg-panel border border-line rounded-xl p-5 shadow-xs">
         <div className="flex items-center gap-2 mb-1">
-          <span className="material-symbols-outlined text-prussian text-2xl" aria-hidden="true">gavel</span>
+          <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">gavel</span>
           <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
             Enforcement &amp; Sanctions
           </h1>
@@ -36,7 +36,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
             <article key={n.id} className="p-5 bg-panel border border-line rounded-xl shadow-xs space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-venetian-wash border border-venetian-line text-venetian font-['JetBrains_Mono'] text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-lake-wash border border-lake-line text-lake font-['JetBrains_Mono'] text-[10px] font-bold">
                     {n.regulator}
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[11px] text-muted">{n.ref}</span>
@@ -45,7 +45,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
               </div>
               <button
                 onClick={() => onSelectNotice(n.id)}
-                className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink hover:text-prussian text-left"
+                className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink hover:text-accent text-left"
               >
                 {n.title}
               </button>
@@ -63,7 +63,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
                   href={n.dossierUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block font-['JetBrains_Mono'] text-[11px] font-bold text-prussian hover:underline"
+                  className="inline-block font-['JetBrains_Mono'] text-[11px] font-bold text-accent hover:underline"
                 >
                   Read the full release ↗
                 </a>

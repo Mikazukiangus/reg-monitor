@@ -46,7 +46,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
           aria-pressed={activeFilter === 'all'}
           onClick={() => onFilterBySeverity && onFilterBySeverity('all')}
           className={`flex flex-col text-left w-full p-3.5 bg-panel border rounded-lg shadow-xs hover:bg-panel-raised transition-all cursor-pointer ${
-            activeFilter === 'all' ? 'border-prussian ring-1 ring-prussian/30' : 'border-line'
+            activeFilter === 'all' ? 'border-accent ring-1 ring-accent/30' : 'border-line'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -63,7 +63,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             </span>
           </div>
           <div className="w-full bg-wash-mid h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-prussian h-full rounded-full" style={{ width: pct(recentCount) }}></div>
+            <div className="bg-accent h-full rounded-full" style={{ width: pct(recentCount) }}></div>
           </div>
         </button>
 
@@ -73,12 +73,12 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
           aria-pressed={activeFilter === 'critical'}
           onClick={() => onFilterBySeverity && onFilterBySeverity('critical')}
           className={`flex flex-col text-left w-full p-3.5 bg-panel border rounded-lg shadow-xs hover:bg-panel-raised transition-all cursor-pointer relative overflow-hidden ${
-            activeFilter === 'critical' ? 'border-venetian ring-1 ring-venetian/30' : 'border-line'
+            activeFilter === 'critical' ? 'border-lake ring-1 ring-lake/30' : 'border-line'
           }`}
         >
-          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-venetian/5 rounded-full blur-xl pointer-events-none"></div>
+          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-lake/5 rounded-full blur-xl pointer-events-none"></div>
           <div className="flex items-center justify-between">
-            <span className="font-['JetBrains_Mono'] text-[11px] text-venetian uppercase tracking-wider font-semibold">
+            <span className="font-['JetBrains_Mono'] text-[11px] text-lake uppercase tracking-wider font-semibold">
               Critical Impact
             </span>
             <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted" title="Critical means a date close at hand: a consultation closing within 14 days, or rules taking effect within 30 days">
@@ -92,7 +92,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             <span className="font-['Inter'] text-[12px] text-muted">notices</span>
           </div>
           <div className="w-full bg-wash-mid h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-venetian h-full rounded-full" style={{ width: pct(criticalCount) }}></div>
+            <div className="bg-lake h-full rounded-full" style={{ width: pct(criticalCount) }}></div>
           </div>
         </button>
 
@@ -102,14 +102,14 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
           aria-pressed={activeFilter === 'consultations'}
           onClick={() => onFilterByFormat && onFilterByFormat('Consultations')}
           className={`flex flex-col text-left w-full p-3.5 bg-panel border rounded-lg shadow-xs hover:bg-panel-raised transition-all cursor-pointer ${
-            activeFilter === 'consultations' ? 'border-prussian ring-1 ring-prussian/30' : 'border-line'
+            activeFilter === 'consultations' ? 'border-antwarp ring-1 ring-antwarp/30' : 'border-line'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="font-['JetBrains_Mono'] text-[11px] text-prussian uppercase tracking-wider font-semibold">
+            <span className="font-['JetBrains_Mono'] text-[11px] text-antwarp uppercase tracking-wider font-semibold">
               Consultations
             </span>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-prussian bg-prussian-tint border border-prussian-line px-1.5 py-0.5 rounded">
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-antwarp bg-antwarp-tint border border-antwarp-line px-1.5 py-0.5 rounded">
               {closingSoonCount} closing ≤ 14d
             </span>
           </div>
@@ -122,7 +122,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             </span>
           </div>
           <div className="w-full bg-wash-mid h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div className="bg-prussian h-full rounded-full" style={{ width: pct(consultationsCount) }}></div>
+            <div className="bg-antwarp h-full rounded-full" style={{ width: pct(consultationsCount) }}></div>
           </div>
         </button>
 

@@ -571,7 +571,7 @@ export default function App() {
       {/* Fixed Top Header */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:rounded focus:bg-prussian focus:text-on-accent font-['Inter'] text-[13px] font-semibold"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:rounded focus:bg-accent focus:text-on-accent font-['Inter'] text-[13px] font-semibold"
       >
         Skip to the notices
       </a>
@@ -648,7 +648,7 @@ export default function App() {
                   {/* Live Feeds Connected Status Strip */}
                   <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-2 h-2 rounded-full bg-cobalt animate-pulse"></span>
+                      <span className="w-2 h-2 rounded-full bg-olive animate-pulse"></span>
                       <span className="font-['JetBrains_Mono'] font-bold text-ink">
                         Automated Feed Ingestion
                       </span>
@@ -668,7 +668,7 @@ export default function App() {
                       </span>
                       <button
                         onClick={() => setIsEndpointsModalOpen(true)}
-                        className="text-prussian hover:text-prussian-deep font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
+                        className="text-accent hover:text-accent-deep font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
                       >
                         <span>Endpoints Gateway</span>
                         <span className="material-symbols-outlined text-[13px]" aria-hidden="true">open_in_new</span>
@@ -678,7 +678,7 @@ export default function App() {
 
                   {/* Offline: the notices are the copy saved on this device */}
                   {hasSynced && (isOffline || savedCopyAt) && (
-                    <div role="status" className="bg-ochre-wash border border-ochre-line px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-ochre">
+                    <div role="status" className="bg-cinnamon-wash border border-cinnamon-line px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-cinnamon">
                       <span className="material-symbols-outlined text-[16px]" aria-hidden="true">cloud_off</span>
                       <span>
                         {isOffline ? "You're offline. " : 'The feed server could not be reached. '}
@@ -693,7 +693,7 @@ export default function App() {
                       <span className="text-ink-soft">
                         {newCount > 0 ? (
                           <>
-                            <strong className="text-prussian">{newCount} new</strong> since your last visit
+                            <strong className="text-accent">{newCount} new</strong> since your last visit
                           </>
                         ) : (
                           'Nothing new since your last visit'
@@ -712,7 +712,7 @@ export default function App() {
                           }}
                           aria-pressed={onlyNew}
                           className={`min-h-[32px] px-3 rounded font-['Inter'] text-[11px] font-semibold border transition-colors ${
-                            onlyNew ? 'bg-prussian text-on-accent border-prussian' : 'bg-panel-raised text-ink border-line hover:bg-wash'
+                            onlyNew ? 'bg-accent text-on-accent border-accent' : 'bg-panel-raised text-ink border-line hover:bg-wash'
                           }`}
                         >
                           {onlyNew ? 'Show all' : 'Show only new'}
@@ -736,7 +736,7 @@ export default function App() {
                         }}
                         placeholder="Filter alerts by legal keyword, citation, act..."
                         aria-label="Filter the feed"
-                        className="w-full h-8 pl-9 pr-3 bg-panel-raised border border-line rounded text-ink placeholder:text-muted font-['Inter'] text-[12px] focus:outline-none focus:bg-panel focus:border-prussian transition-all"
+                        className="w-full h-8 pl-9 pr-3 bg-panel-raised border border-line rounded text-ink placeholder:text-muted font-['Inter'] text-[12px] focus:outline-none focus:bg-panel focus:border-accent transition-all"
                       />
                     </div>
 
@@ -745,7 +745,7 @@ export default function App() {
                         onClick={() => setIsFilterDrawerOpen(true)}
                         className="lg:hidden h-9 px-3 flex items-center gap-1 bg-panel-raised border border-line text-ink font-['Inter'] text-[12px] font-semibold rounded"
                       >
-                        <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">filter_alt</span>
+                        <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">filter_alt</span>
                         Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                       </button>
                       <span className="font-['JetBrains_Mono'] text-[11px] text-muted hidden md:inline font-medium">
@@ -755,7 +755,7 @@ export default function App() {
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
                         aria-label="Sort notices"
-                        className="h-9 lg:h-8 min-w-0 flex-1 sm:flex-none px-2 bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-prussian cursor-pointer"
+                        className="h-9 lg:h-8 min-w-0 flex-1 sm:flex-none px-2 bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-accent cursor-pointer"
                       >
                         <option value="Highest Impact Score">Highest Impact Score</option>
                         <option value="Most Recent First">Most Recent First</option>
@@ -766,7 +766,7 @@ export default function App() {
                         onClick={() => setDensity(density === 'comfortable' ? 'compact' : 'comfortable')}
                         className={`h-8 w-8 flex items-center justify-center border rounded transition-colors ${
                           density === 'compact'
-                            ? 'bg-prussian text-on-accent border-prussian'
+                            ? 'bg-accent text-on-accent border-accent'
                             : 'bg-panel-raised border-line text-ink-soft hover:text-ink'
                         }`}
                         title="Feed Density Toggle"
@@ -806,8 +806,8 @@ export default function App() {
                         />
                       ))
                     ) : !hasSynced && syncError ? (
-                      <div className="bg-panel border border-ochre-line rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-ochre" aria-hidden="true">cloud_off</span>
+                      <div className="bg-panel border border-cinnamon-line rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-cinnamon" aria-hidden="true">cloud_off</span>
                         <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           Live notices could not be loaded
                         </h4>
@@ -817,14 +817,14 @@ export default function App() {
                         <button
                           onClick={syncNow}
                           disabled={isSyncing}
-                          className="mt-1 px-3 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent text-[12px] font-semibold rounded disabled:opacity-60"
+                          className="mt-1 px-3 py-1.5 bg-accent hover:bg-accent-deep text-on-accent text-[12px] font-semibold rounded disabled:opacity-60"
                         >
                           {isSyncing ? 'Retrying...' : 'Retry sync'}
                         </button>
                       </div>
                     ) : !hasSynced ? (
                       <div className="bg-panel border border-line rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-prussian animate-spin" aria-hidden="true">sync</span>
+                        <span className="material-symbols-outlined text-3xl text-accent animate-spin" aria-hidden="true">sync</span>
                         <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           Loading live notices from regulators...
                         </h4>
@@ -843,7 +843,7 @@ export default function App() {
                         </p>
                         <button
                           onClick={handleResetFilters}
-                          className="px-3.5 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep transition-colors mt-2 shadow-xs"
+                          className="px-3.5 py-1.5 bg-accent text-on-accent text-[12px] font-semibold rounded hover:bg-accent-deep transition-colors mt-2 shadow-xs"
                         >
                           Reset Filters
                         </button>
@@ -880,7 +880,7 @@ export default function App() {
                           onClick={() => setCurrentPage(idx + 1)}
                           className={`hidden sm:inline-block px-3 py-1 rounded font-['Inter'] text-[11px] font-semibold transition-colors ${
                             currentPage === idx + 1
-                              ? 'bg-prussian text-on-accent shadow-2xs'
+                              ? 'bg-accent text-on-accent shadow-2xs'
                               : 'bg-panel-raised border border-line text-ink hover:bg-wash'
                           }`}
                         >
@@ -976,7 +976,7 @@ export default function App() {
               <span className="font-['Hanken_Grotesk'] text-[17px] font-bold">Filters</span>
               <button
                 onClick={() => setIsFilterDrawerOpen(false)}
-                className="h-9 px-3 bg-prussian text-on-accent rounded font-['Inter'] text-[12px] font-semibold"
+                className="h-9 px-3 bg-accent text-on-accent rounded font-['Inter'] text-[12px] font-semibold"
               >
                 Show {filteredNotices.length} {filteredNotices.length === 1 ? 'notice' : 'notices'}
               </button>
@@ -1051,7 +1051,7 @@ export default function App() {
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setInfoModal(null)}
-                className="px-4 py-1.5 bg-prussian text-on-accent text-[12px] font-semibold rounded hover:bg-prussian-deep shadow-xs"
+                className="px-4 py-1.5 bg-accent text-on-accent text-[12px] font-semibold rounded hover:bg-accent-deep shadow-xs"
               >
                 Close
               </button>

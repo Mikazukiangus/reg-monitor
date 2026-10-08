@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 // Light, dark, or follow the device. The choice is kept in this browser; the
 // script in index.html applies it before the page draws, so there is no flash.
+// The browser bar colour (theme-color) is the header band's in both themes.
 type ThemeChoice = 'system' | 'light' | 'dark';
 const KEY = 'regsonar.theme';
 const NEXT: Record<ThemeChoice, ThemeChoice> = { system: 'light', light: 'dark', dark: 'system' };
@@ -21,7 +22,6 @@ const darkQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 function apply(choice: ThemeChoice) {
   const dark = choice === 'dark' || (choice === 'system' && darkQuery().matches);
   const root = document.documentElement;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#121A1F' : '#EEF3EF');
   if (root.dataset.theme === (dark ? 'dark' : 'light')) return;
   // Switch every colour at once rather than letting each one fade across
   root.classList.add('theme-switching');
@@ -51,7 +51,7 @@ export const ThemeToggle: React.FC = () => {
       onClick={() => setChoice(NEXT[choice])}
       aria-label={`${LABEL[choice]}. Change theme`}
       title={LABEL[choice]}
-      className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-ink-soft hover:text-ink bg-panel hover:bg-wash rounded-lg border border-line transition-colors shadow-xs"
+      className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line transition-colors"
     >
       <span className="material-symbols-outlined text-xl" aria-hidden="true">{ICON[choice]}</span>
     </button>

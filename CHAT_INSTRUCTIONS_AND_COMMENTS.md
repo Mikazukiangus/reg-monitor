@@ -356,6 +356,17 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** desktop (1024px, light and dark) and phone (375×812): scrolled 900 to 1,400px down and 650 to 900px right, the column headers stay at the top of the box and the sector names at its left edge; on a phone the box fits between the header and the bottom bar (100 to 744px). No console errors; type check, build and 359 tests pass.
 * **Merged (2026-10-08):** the user said "merge to main." On production: desktop (1024px) scrolled 800px down and 600px right, the column headers stay at the top of the box and the sector names at its left edge; phone (375×812) scrolled 1,200px down and 700px right, the same, with the box between the header and the bottom bar (100 to 744px) and no sideways page scroll.
 
+### Request 29: Pale Burnt Lake & Pinkish Cinnamon Colour Scheme (Claude Code, 2026-10-08)
+
+**User:** "update the colour scheme according to the Wada Sanzo directory of colours to 'Pale Burnt Lake & Pinkish Cinnamon'" (drawn first on a design canvas), then "Apply the scheme".
+
+* **Colours** (`src/index.css`): Pale Burnt Lake #802626 and Pinkish Cinnamon #EEB480, with Olive and Antwarp Blue from the same combination (no. 258) for status; hex values from the digitised dictionary (mattdesl/dictionary-of-colour-combinations). The old pigment names were renamed by role across the components: Prussian → `accent`, Venetian → `lake` (critical items and errors), ochre → `cinnamon` (high items, dates, warnings, search highlights), cobalt → `olive` (sources up, live items), plus new `antwarp` (info items, consultations) and `band` colours. Light neutrals are warm cream; dark neutrals are near-black with a red cast. In the dark theme the accent turns cinnamon so links and buttons stay readable.
+* **Header band** (`Header.tsx`, `ThemeToggle.tsx`): burnt lake in both themes, with white text, a cinnamon Sync button and notification badge, and darker lake fields for search and the jurisdiction menu. Focus rings on the band are cinnamon; its dropdowns keep the accent. The browser bar colour (theme-color, manifest) is the band's in both themes, so the inline theme script no longer sets it, and its hash in `vercel.json` changed.
+* **Status colours:** the active tab is burnt lake with cinnamon text (cinnamon with dark text in the dark theme); selected Critical and High filters, and scores of 9 and over, are filled lake and cinnamon; Info is Antwarp blue, as are the Consultations card and the overnight HIBOR line (so it stays distinct from the 1-month fixing line in both themes).
+* **Type badges** (`NoticeCard.tsx`): colours now come from the theme by format. The fixed hex colours the server attaches to each notice (`typeColorClass`, from the AI Studio version) ignored the dark theme, and the Enforcement red was 4.41:1, below AA.
+* **Icons** (`public/*.png`): the logo was recoloured pixel by pixel to the new palette (lake background, cinnamon arcs, Antwarp node, olive dot), keeping its shape and anti-aliased edges.
+* **Verified locally:** axe (WCAG 2 A/AA) finds no issues on all five tabs, the notifications list and the endpoints, export, gap checklist and dossier windows, in both themes; desktop (1440px) and phone (375×812) checked by eye; type check, build and 359 tests pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary

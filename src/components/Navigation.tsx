@@ -16,9 +16,9 @@ interface NavigationProps {
 }
 
 const SEVERITY_DOT: Record<RegulatoryNotice['severity'], string> = {
-  critical: 'bg-venetian',
-  high: 'bg-ochre',
-  info: 'bg-prussian'
+  critical: 'bg-lake',
+  high: 'bg-cinnamon',
+  info: 'bg-antwarp'
 };
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -37,7 +37,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-current={activeTab === 'feed' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'feed'
-                ? 'bg-prussian text-on-accent shadow-xs'
+                ? 'bg-accent text-on-tab shadow-xs'
                 : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
@@ -49,7 +49,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-current={activeTab === 'radar' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'radar'
-                ? 'bg-prussian text-on-accent shadow-xs'
+                ? 'bg-accent text-on-tab shadow-xs'
                 : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
@@ -61,7 +61,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-current={activeTab === 'horizon' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'horizon'
-                ? 'bg-prussian text-on-accent shadow-xs'
+                ? 'bg-accent text-on-tab shadow-xs'
                 : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
@@ -73,7 +73,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-current={activeTab === 'enforcement' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'enforcement'
-                ? 'bg-prussian text-on-accent shadow-xs'
+                ? 'bg-accent text-on-tab shadow-xs'
                 : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
@@ -85,7 +85,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-current={activeTab === 'alert-rules' ? 'page' : undefined}
             className={`px-3.5 py-1.5 transition-colors shrink-0 text-[11px] font-semibold rounded-lg shadow-2xs ${
               activeTab === 'alert-rules'
-                ? 'bg-prussian text-on-accent shadow-xs'
+                ? 'bg-accent text-on-tab shadow-xs'
                 : 'text-ink-soft hover:text-ink hover:bg-wash-strong'
             }`}
           >
@@ -98,7 +98,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       {/* Real-Time Wire Banner */}
       <section aria-label="Latest notices" className="h-8 w-full px-4 sm:px-6 bg-wash-mid border-b border-line flex items-center overflow-hidden">
         <div className="flex items-center gap-1 shrink-0 pr-4 border-r border-line-strong mr-4">
-          <span className="material-symbols-outlined text-prussian text-sm animate-pulse" aria-hidden="true">
+          <span className="material-symbols-outlined text-accent text-sm animate-pulse" aria-hidden="true">
             bolt
           </span>
           <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted uppercase tracking-wider">

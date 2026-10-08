@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#EEF3EF" />
+    <meta name="theme-color" content="#802626" />
     <script>
       // Apply the saved or device theme before the page draws
       (function () {
@@ -11,7 +11,6 @@
         try { choice = localStorage.getItem('regsonar.theme'); } catch (e) {}
         var dark = choice === 'dark' || (choice !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        if (dark) document.querySelector('meta[name="theme-color"]').setAttribute('content', '#121A1F');
       })();
     </script>
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -33,7 +32,7 @@
          text shown while they load, so icon names never flash up as words -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&icon_names=add,alarm,assignment,bolt,bookmark,bookmark_added,calendar_add_on,check,check_circle,close,cloud_off,cloud_sync,code,content_copy,contrast,dark_mode,delete,description,download,dynamic_feed,event,event_upcoming,filter_alt,find_in_page,format_quote,gavel,hub,insights,light_mode,link,mail,network_check,notifications,notifications_active,open_in_new,person,query_stats,radar,redo,schedule,schema,search,sensors,share,shield,show_chart,sync,table_view,timeline,tune,undo,view_agenda&display=block" rel="stylesheet" />
   </head>
-  <body class="bg-page text-ink antialiased selection:bg-prussian selection:text-on-accent">
+  <body class="bg-page text-ink antialiased selection:bg-accent selection:text-on-accent">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

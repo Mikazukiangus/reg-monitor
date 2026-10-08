@@ -135,7 +135,7 @@ export const LiquidityChart: React.FC = () => {
     <div id="liquidity-card" className="bg-panel border border-line rounded-lg p-3.5 shadow-xs scroll-mt-28">
       <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-line">
         <div className="flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-prussian text-lg" aria-hidden="true">show_chart</span>
+          <span className="material-symbols-outlined text-accent text-lg" aria-hidden="true">show_chart</span>
           <span className="font-['Hanken_Grotesk'] text-[15px] text-ink font-bold">HKMA Interbank Liquidity</span>
         </div>
         <div role="group" aria-label="Chart range" className="flex rounded border border-line overflow-hidden">
@@ -148,7 +148,7 @@ export const LiquidityChart: React.FC = () => {
               }}
               aria-pressed={range === r}
               className={`px-2.5 min-h-[28px] font-['JetBrains_Mono'] text-[11px] font-semibold transition-colors ${
-                range === r ? 'bg-prussian text-on-accent' : 'bg-panel-raised text-ink-soft hover:bg-wash'
+                range === r ? 'bg-accent text-on-accent' : 'bg-panel-raised text-ink-soft hover:bg-wash'
               }`}
             >
               {RANGE_LABELS[r]}
@@ -192,11 +192,11 @@ export const LiquidityChart: React.FC = () => {
             <>
               <path
                 d={`${linePath(balancePoints)} L${x(days.length - 1)},${HEIGHT} L${x(0)},${HEIGHT} Z`}
-                fill="var(--color-prussian)"
+                fill="var(--color-accent)"
                 fillOpacity={0.08}
               />
-              <path d={linePath(balancePoints)} fill="none" stroke="var(--color-prussian)" strokeWidth={1.5} />
-              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="var(--color-prussian)" />}
+              <path d={linePath(balancePoints)} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} />
+              {hover !== null && <circle cx={balancePoints[hover][0]} cy={balancePoints[hover][1]} r={2.5} fill="var(--color-accent)" />}
             </>
           )}
 
@@ -205,19 +205,19 @@ export const LiquidityChart: React.FC = () => {
               'HIBOR (%)',
               `${Math.min(...rates).toFixed(2)} – ${Math.max(...rates).toFixed(2)}`,
               <>
-                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="var(--color-ochre-mid)" strokeWidth={1.5} />
-                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="var(--color-prussian)" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="var(--color-antwarp)" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} />
               </>
             )}
 
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 font-['JetBrains_Mono'] text-[10px]">
-            <span className="text-ochre">
+            <span className="text-antwarp">
               ● Overnight {shown.overnightHibor !== null ? `${shown.overnightHibor.toFixed(2)}%` : 'n/a'}
               {previous && bp(shown.overnightHibor, previous.overnightHibor) !== null && (
                 <span className="text-muted"> ({signed(bp(shown.overnightHibor, previous.overnightHibor)!, ' bp')})</span>
               )}
             </span>
-            <span className="text-prussian">
+            <span className="text-accent">
               ● 1-month fixing {shown.hiborFixing1m !== null ? `${shown.hiborFixing1m.toFixed(5)}%` : 'n/a'}
               {previous && bp(shown.hiborFixing1m, previous.hiborFixing1m) !== null && (
                 <span className="text-muted"> ({signed(bp(shown.hiborFixing1m, previous.hiborFixing1m)!, ' bp')})</span>
@@ -236,7 +236,7 @@ export const LiquidityChart: React.FC = () => {
 
           <p className="font-['Inter'] text-[11px] text-muted leading-snug">
             {days.length} business days, {shortDate(days[0].date)} to {shortDate(days[days.length - 1].date)}, as stated on the{' '}
-            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-prussian underline underline-offset-2">
+            <a href={history.source} target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
               HKMA Daily Monetary Statistics
             </a>{' '}
             pages (figures as at {shown.time} Hong Kong time). Changes are against the previous business day shown.

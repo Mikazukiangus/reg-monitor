@@ -38,7 +38,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-2.5 pb-1 border-b border-line">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-prussian text-lg" aria-hidden="true">alarm</span>
+            <span className="material-symbols-outlined text-accent text-lg" aria-hidden="true">alarm</span>
             <h2 className="font-['Hanken_Grotesk'] text-[16px] text-ink font-bold">
               Deadlines Radar
             </h2>
@@ -87,7 +87,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             className="mt-2.5 w-full min-h-[40px] py-1.5 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[12px] font-semibold rounded flex items-center justify-center gap-1.5 transition-colors"
             title="Download an .ics file for Outlook, Google Calendar or Apple Calendar"
           >
-            <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">calendar_add_on</span>
+            <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">calendar_add_on</span>
             Add {calendarCount} {calendarCount === 1 ? 'date' : 'dates'} to calendar (.ics)
           </button>
         )}
@@ -99,7 +99,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
         <div className="flex items-center justify-between mb-2 pb-1 border-b border-line">
           <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-prussian text-lg" aria-hidden="true">sensors</span>
+            <span className="material-symbols-outlined text-accent text-lg" aria-hidden="true">sensors</span>
             <span className="font-['Hanken_Grotesk'] text-[15px] text-ink font-bold">
               Live Feeds Gateway
             </span>
@@ -117,7 +117,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               <span className="flex flex-col min-w-0">
                 <span className="font-['JetBrains_Mono'] text-ink-soft">{ep.name}</span>
                 {ep.ingests && ep.sync && (
-                  <span className={`font-['Inter'] text-[11px] ${ep.sync.ok ? 'text-muted' : 'text-venetian'}`}>
+                  <span className={`font-['Inter'] text-[11px] ${ep.sync.ok ? 'text-muted' : 'text-lake'}`}>
                     {ep.sync.ok
                       ? ep.sync.lastSuccessAt ? `Data fetched ${timeAgo(ep.sync.lastSuccessAt)}` : 'Fetched'
                       : ep.sync.lastSuccessAt ? `Failed; last good fetch ${timeAgo(ep.sync.lastSuccessAt)}` : 'Failed; no data yet'}
@@ -139,7 +139,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               onClick={onOpenLiveEndpointsModal}
               className="flex-1 py-1.5 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
             >
-              <span className="material-symbols-outlined text-sm text-prussian" aria-hidden="true">hub</span>
+              <span className="material-symbols-outlined text-sm text-accent" aria-hidden="true">hub</span>
               <span>Manage APIs</span>
             </button>
           )}
@@ -148,7 +148,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex-1 py-1.5 bg-prussian hover:bg-prussian-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
+              className="flex-1 py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`} aria-hidden="true">
                 sync
@@ -173,7 +173,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             onClick={onOpenExportCsv}
             className="flex items-center justify-center gap-1.5 py-2 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">table_view</span>
+            <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">table_view</span>
             <span>Excel / CSV</span>
           </button>
 
@@ -181,7 +181,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             onClick={onOpenExportJson}
             className="flex items-center justify-center gap-1.5 py-2 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-base text-prussian" aria-hidden="true">code</span>
+            <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">code</span>
             <span>JSON Feed</span>
           </button>
         </div>
