@@ -309,6 +309,8 @@ This document records the full chronological instructions, technical requirement
 * **Malaysia:** new jurisdiction with Bank Negara Malaysia press releases (read from the table on each year's press release page, because BNM's RSS feed is behind a Cloudflare check) and Securities Commission Malaysia media releases (from the list in its media release page). Bursa Malaysia is left out: its site is behind a Cloudflare check, which is not bypassed.
 * **Not changed, flagged to the user:** the impact score is still fixed by format, so "Critical" means enforcement rather than a judgement of the notice; consultation conclusions still count as consultations in "responses pending".
 * **Verified locally:** 217 tests pass, type check and build pass; in the browser both Malaysian sources load (8 notices), filter labels wrap without clipping at desktop and phone widths, unticking a sector hides only notices with no other ticked sector (88 → 50), and "Why these tags?" lists the matched words.
+* **Fix after the preview check:** BNM's "Monetary Policy Statement" had matched the new rule for PRA policy statements and was shown as Guidelines; monetary policy statements are now excluded (218 tests).
+* **Merged (2026-10-08):** the user said "Merge to main." On production: 27 of 27 source feeds OK, 199 notices, 8 from Malaysia; 7 notices tagged AI, Cyber & Tech Risk; every notice carries its tag reasons except the HKMA liquidity figures, which are not tagged.
 
 ---
 
