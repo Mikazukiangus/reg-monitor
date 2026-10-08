@@ -290,6 +290,15 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** all six new sources load against the live sites with key points (FINRA after its rate limit cleared); 72 tests pass with recorded responses; `tsc` and `vite build` pass.
 * **Merged (2026-10-08):** the user said "merge to main". On production: 25 of 25 source feeds OK, 180 notices, no repeated document links; history holds 554 notices back to 2024-04-01.
 
+### Request 23: Keeping Every Source Up to Date (Claude Code, 2026-10-08)
+* **Instruction:** "The latest from SGX are not in though. See how you can improve on getting all sources are updated consistently." Built on the branch `consistent-updates`.
+* **Cause:** each refresh read only a source's newest 3 or 4 items, and refreshes happened only when someone visited (plus the daily digest, whose wider read of 50 items ran only while the whole history held under 300 notices). SGX was added after that, so only 9 SGX items were ever stored; its 2026 announcements, Regulator's Column and RegCo CEO speeches were missing. The fetch itself was correct: SGX RegCo's own "What's New" matched what was stored.
+* **Scheduled check** (`/api/feeds/poll`, needs `CRON_SECRET`): seven daily Vercel cron jobs (03:00 to 21:00 UTC, every three hours; the 00:00 digest runs the same check). Reads 20 items per source into the history, reads back 50 when none of the 20 is stored yet, adds key points to up to 5 documents per source per run, then requests the public feed so the CDN copy is refreshed.
+* **Key points reused from the history,** so new server instances don't read every document again.
+* **Rate limits:** FINRA requests are spaced 4s apart; after an HTTP 429 from any site the server waits for its Retry-After, or 15 minutes, before asking again. The health probe follows the same rule.
+* **SGX:** speeches given for SGX RegCo are now included (type "SPEECH"), and the media list read grows with the number of items asked for.
+* **Verified locally** (in-memory history, live sources): the first check stored 256 notices in 12s; the second added none and filled in more key points; SGX history now holds its 2026 items with key points. 75 tests pass (3 new, for the check and the 429 back-off).
+
 ---
 
 ## 3. Key Files & Modifications Summary

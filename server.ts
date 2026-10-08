@@ -6,7 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { summarize, extractArticleText, extractPdfText, earliestDeadline, extractClosingDate, htmlToText, KeyPoints } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
-import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl } from './db.js';
+import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
 
@@ -166,11 +166,41 @@ function stripHtml(text: string): string {
   return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-async function fetchOrThrow(url: string): Promise<globalThis.Response> {
+// Some sites limit how often they may be asked, so requests to them are spaced
+// out. After an HTTP 429 a site is left alone for as long as its Retry-After
+// header says, or 15 minutes when it doesn't say (FINRA doesn't).
+const HOST_SPACING_MS: Record<string, number> = { 'www.finra.org': 4000 };
+const RATE_LIMIT_PAUSE_MS = 15 * 60 * 1000;
+const hostQueue = new Map<string, Promise<void>>();
+const hostPausedUntil = new Map<string, number>();
+
+class RateLimitedError extends Error {}
+
+async function politeFetch(url: string): Promise<globalThis.Response> {
+  const host = new URL(url).host;
+  const pausedUntil = hostPausedUntil.get(host) ?? 0;
+  if (Date.now() < pausedUntil) {
+    throw new RateLimitedError(`HTTP 429: rate limited by the site, not asking again until ${new Date(pausedUntil).toISOString().slice(11, 16)} UTC`);
+  }
+  const spacing = HOST_SPACING_MS[host];
+  if (spacing) {
+    const previous = hostQueue.get(host) ?? Promise.resolve();
+    hostQueue.set(host, previous.then(() => new Promise<void>(resolve => setTimeout(resolve, spacing))));
+    await previous;
+  }
   const res = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     headers: { 'User-Agent': userAgentFor(url) }
   });
+  if (res.status === 429) {
+    const retryAfter = Number(res.headers.get('retry-after'));
+    hostPausedUntil.set(host, Date.now() + (retryAfter > 0 ? retryAfter * 1000 : RATE_LIMIT_PAUSE_MS));
+  }
+  return res;
+}
+
+async function fetchOrThrow(url: string): Promise<globalThis.Response> {
+  const res = await politeFetch(url);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
   }
@@ -987,18 +1017,28 @@ async function fetchSgxDisciplinaryActions(limit = 3): Promise<NormalizedNotice[
 const sgxNames = (field: any[] | null | undefined): string[] =>
   (field || []).map(t => t?.data?.data?.name).filter(Boolean);
 
+// Speeches are SGX Group's as a whole; those given for SGX RegCo say so in the title
+const SGX_REGCO_SPEAKER = /SGX RegCo|Singapore Exchange Regulation/i;
+
 async function fetchSgxRegulatoryNews(limit = 3): Promise<NormalizedNotice[]> {
-  // Most of the media list is listings, awards and speeches; regulatory items
+  // Most of the media list is listings, awards and results; regulatory items
   // are a few a month, so a wider page is read and filtered
-  const items = await sgxList('media_centre_list', 100);
+  const items = await sgxList('media_centre_list', Math.min(400, Math.max(100, limit * 12)));
   return items
-    .filter(item => sgxNames(item.mediaCentreType).some(t => SGX_REGULATORY_MEDIA.has(t)) || sgxNames(item.newsTopic).includes('Regulation'))
+    .filter(item => {
+      const types = sgxNames(item.mediaCentreType);
+      return types.some(t => SGX_REGULATORY_MEDIA.has(t))
+        || sgxNames(item.newsTopic).includes('Regulation')
+        || (types.includes('Speeches') && SGX_REGCO_SPEAKER.test(String(item.title)));
+    })
     .slice(0, limit)
     .map(item => {
       const title = stripHtml(String(item.title));
       const types = sgxNames(item.mediaCentreType);
       const format = classifyFormat('', title);
-      const type = types.includes("Regulator's Column") ? "REGULATOR'S COLUMN" : 'REGULATORY ANNOUNCEMENT';
+      const type = types.includes("Regulator's Column") ? "REGULATOR'S COLUMN"
+        : types.includes('Speeches') ? 'SPEECH'
+        : 'REGULATORY ANNOUNCEMENT';
       return sgxNotice(item, { idPrefix: 'sgx-news', type, format, unixDate: item.articleDate });
     });
 }
@@ -1390,10 +1430,7 @@ const FIREWALL_BLOCK_BODY = /your request has been blocked/i;
 async function probeEndpoint(ep: EndpointDefinition) {
   const start = Date.now();
   try {
-    const res = await fetch(ep.url, {
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      headers: { 'User-Agent': userAgentFor(ep.url) }
-    });
+    const res = await politeFetch(ep.url);
     const body = await res.text();
     const pingMs = Date.now() - start;
     const pageTitle = body.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim();
@@ -1422,6 +1459,9 @@ async function probeEndpoint(ep: EndpointDefinition) {
 
     return { ...ep, status, statusCode: res.status, pingMs, detail };
   } catch (err: any) {
+    if (err instanceof RateLimitedError) {
+      return { ...ep, status: 'Degraded' as EndpointStatus, statusCode: 429, pingMs: null, detail: err.message };
+    }
     const detail = err?.name === 'TimeoutError'
       ? `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`
       : err?.cause?.code || err?.message || 'Request failed';
@@ -1612,36 +1652,61 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
   }
 }
 
+// A notice with its key points, and the closing date or earliest date they give
+function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): NormalizedNotice {
+  // A stated closing date for comments wins over other dates in the document
+  const closing = keyPoints.closingDate?.date && keyPoints.closingDate.date >= hongKongDate() ? keyPoints.closingDate : undefined;
+  const deadline = closing || earliestDeadline(keyPoints);
+  const label = closing ? 'Comments close' : 'Date in source';
+  return {
+    ...notice,
+    keyPoints,
+    // Dates the source itself gives (Federal Register, MAS consultations) are kept
+    ...(deadline && !notice.deadlineDate && !notice.statutoryDeadline
+      ? {
+          deadlineDate: deadline.date,
+          statutoryDeadline: `${label}: ${deadline.date}`,
+          statusBadge: { text: `${label}: ${deadline.date}`, type: 'deadline' as const }
+        }
+      : {})
+  };
+}
+
+// Key points already in the history, so documents are read once rather than
+// again by every new server instance
+async function storedKeyPoints(notices: NormalizedNotice[]): Promise<Map<string, KeyPoints>> {
+  try {
+    const db = await getDb();
+    if (!db) return new Map();
+    const stored = await storedNotices(db, notices.map(n => n.id));
+    return new Map([...stored].filter(([, n]) => n.keyPoints).map(([id, n]) => [id, n.keyPoints as KeyPoints]));
+  } catch (err: any) {
+    console.log(`[RegSonar History] Could not read stored key points: ${err?.message}`);
+    return new Map();
+  }
+}
+
 // Attach key points to notices that link to a document page. Fetches run one
-// at a time per source to stay polite to regulator sites.
-async function enrichWithKeyPoints(notices: NormalizedNotice[]): Promise<NormalizedNotice[]> {
+// at a time per source to stay polite to regulator sites. A scheduled check
+// limits how many documents it reads (and until when); later checks do the rest.
+async function enrichWithKeyPoints(
+  notices: NormalizedNotice[],
+  budget: { maxFetches: number; until: number } = { maxFetches: Infinity, until: Infinity }
+): Promise<NormalizedNotice[]> {
+  const stored = await storedKeyPoints(notices);
   const enriched: NormalizedNotice[] = [];
+  let fetches = 0;
   for (const notice of notices) {
     if (notice.keyPoints || !notice.dossierUrl || notice.id.startsWith('hkma-liquidity')) {
       enriched.push(notice);
       continue;
     }
-    const keyPoints = await keyPointsFor(notice);
-    if (!keyPoints) {
-      enriched.push(notice);
-      continue;
+    let keyPoints = stored.get(notice.id) ?? null;
+    if (!keyPoints && (keyPointsCache.has(notice.id) || (fetches < budget.maxFetches && Date.now() < budget.until))) {
+      if (!keyPointsCache.has(notice.id)) fetches++;
+      keyPoints = await keyPointsFor(notice);
     }
-    // A stated closing date for comments wins over other dates in the document
-    const closing = keyPoints.closingDate?.date && keyPoints.closingDate.date >= hongKongDate() ? keyPoints.closingDate : undefined;
-    const deadline = closing || earliestDeadline(keyPoints);
-    const label = closing ? 'Comments close' : 'Date in source';
-    enriched.push({
-      ...notice,
-      keyPoints,
-      // Dates the source itself gives (Federal Register, MAS consultations) are kept
-      ...(deadline && !notice.deadlineDate && !notice.statutoryDeadline
-        ? {
-            deadlineDate: deadline.date,
-            statutoryDeadline: `${label}: ${deadline.date}`,
-            statusBadge: { text: `${label}: ${deadline.date}`, type: 'deadline' as const }
-          }
-        : {})
-    });
+    enriched.push(keyPoints ? withKeyPoints(notice, keyPoints) : notice);
   }
   return enriched;
 }
@@ -1707,32 +1772,72 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
   return state;
 }
 
-// The email digest reads up to this many items per source, so a source that
-// publishes more in a day than the feed shows is still covered
-const DIGEST_FETCH_LIMIT = 20;
-
-// While the history is new, the daily run reads further back to fill it
+// A scheduled check reads this many items from each source's list, so a
+// source that publishes more between checks than the feed shows is still
+// covered. When none of them is in the history yet (a new source, or a gap
+// longer than the list), it reads further back.
+const POLL_LIMIT = 20;
 const BACKFILL_LIMIT = 50;
 
-async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
-  const sources = SOURCES.filter(s => s.inDigest !== false);
+// Documents read for key points per source on each check, and for how long a
+// check starts new reads (the function may run for 120s); later checks do the rest
+const POLL_KEY_POINT_FETCHES = 5;
+const POLL_FETCH_WINDOW_MS = 60_000;
+
+interface PollResult {
+  name: string;
+  read: number;
+  added: number;
+  backfilled: boolean;
+  withoutKeyPoints: number;
+  notices: NormalizedNotice[];
+}
+
+async function pollSource(source: (typeof SOURCES)[number], until: number): Promise<PollResult> {
   const db = await getDb();
-  const limit = db && (await archiveStats(db)).count < 300 ? BACKFILL_LIMIT : DIGEST_FETCH_LIMIT;
-  const [states, wide] = await Promise.all([
-    Promise.all(sources.map(refreshSource)),
-    Promise.allSettled(sources.map(s => s.fetch(limit)))
-  ]);
-  // The wider read goes into the history too (without key points)
-  await archiveNotices(wide.flatMap(r => (r.status === 'fulfilled' ? r.value : [])));
-  const byId = new Map<string, NormalizedNotice>();
-  const failed: string[] = [];
-  wide.forEach((result, i) => {
-    if (result.status === 'fulfilled') result.value.forEach(n => byId.set(n.id, n));
-    else failed.push(sources[i].name);
+  let notices = await source.fetch(POLL_LIMIT);
+  let stored = db ? await storedNotices(db, notices.map(n => n.id)) : new Map();
+  let backfilled = false;
+  if (db && notices.length >= POLL_LIMIT && stored.size === 0) {
+    notices = await source.fetch(BACKFILL_LIMIT);
+    stored = await storedNotices(db, notices.map(n => n.id));
+    backfilled = true;
+  }
+  const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until });
+  await archiveNotices(enriched);
+  return {
+    name: source.name,
+    read: notices.length,
+    added: notices.filter(n => !stored.has(n.id)).length,
+    backfilled,
+    withoutKeyPoints: enriched.filter(n => n.dossierUrl && !n.keyPoints).length,
+    notices: enriched
+  };
+}
+
+// Check every source and store what it lists in the history
+export async function pollSources(): Promise<{ results: PollResult[]; failed: { name: string; error: string }[] }> {
+  const sources = SOURCES.filter(s => s.inDigest !== false);
+  const until = Date.now() + POLL_FETCH_WINDOW_MS;
+  const settled = await Promise.allSettled(sources.map(s => pollSource(s, until)));
+  const results: PollResult[] = [];
+  const failed: { name: string; error: string }[] = [];
+  settled.forEach((r, i) => {
+    if (r.status === 'fulfilled') results.push(r.value);
+    else failed.push({ name: sources[i].name, error: describeError(r.reason) });
   });
-  // Notices already in the feed carry key points, so they replace the wider read's copies
-  states.forEach(st => st.notices.forEach(n => byId.set(n.id, n)));
-  return { notices: dedupeByDocument([...byId.values()]), failed };
+  return { results, failed };
+}
+
+async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
+  // The feed's own refresh first, so the check reuses its key points instead
+  // of reading the same documents again
+  const states = await Promise.all(SOURCES.filter(s => s.inDigest !== false).map(refreshSource));
+  const { results, failed } = await pollSources();
+  const byId = new Map<string, NormalizedNotice>();
+  results.forEach(r => r.notices.forEach(n => byId.set(n.id, n)));
+  states.forEach(st => st.notices.forEach(n => { if (n.keyPoints || !byId.has(n.id)) byId.set(n.id, n); }));
+  return { notices: dedupeByDocument([...byId.values()]), failed: failed.map(f => f.name) };
 }
 
 // How far back the feed reaches into the history, and how many notices at most
@@ -1776,6 +1881,21 @@ async function withHistory(live: NormalizedNotice[]) {
     return related.length ? { ...n, related } : n;
   });
   return { notices, archive };
+}
+
+// Scheduled jobs are called by Vercel with "Authorization: Bearer <CRON_SECRET>";
+// without that secret they are turned off, so nobody else can run them
+function cronAuthorized(req: Request, res: Response, what: string): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) {
+    res.status(503).json({ success: false, error: `CRON_SECRET is not set, so ${what} turned off` });
+    return false;
+  }
+  if (req.get('authorization') !== `Bearer ${secret}`) {
+    res.status(401).json({ success: false, error: 'Unauthorized' });
+    return false;
+  }
+  return true;
 }
 
 function siteUrl(): string {
@@ -1857,21 +1977,41 @@ export function createApp() {
     }
   });
 
+  // Scheduled check of every source, run by the cron jobs in vercel.json
+  // several times a day (needs CRON_SECRET, like the digest). It stores up to
+  // 20 items per source in the history, reading further back when there is a
+  // gap, and adds key points a few documents at a time. Then it asks for the
+  // public feed so the cached copy visitors get is refreshed too.
+  app.get('/api/feeds/poll', async (req: Request, res: Response) => {
+    res.set('Cache-Control', 'no-store');
+    if (!cronAuthorized(req, res, 'scheduled checks are')) return;
+    try {
+      const { results, failed } = await pollSources();
+      const added = results.reduce((sum, r) => sum + r.added, 0);
+      console.log(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
+      const warmed = await fetch(`${siteUrl()}/api/feeds/sync`, { signal: AbortSignal.timeout(30_000) })
+        .then(r => r.ok)
+        .catch(() => false);
+      res.json({
+        success: true,
+        added,
+        feedRefreshed: warmed,
+        sources: results.map(({ notices, ...r }) => r),
+        failed
+      });
+    } catch (error: any) {
+      console.log('[RegSonar Poll] Failed:', error?.message);
+      res.status(500).json({ success: false, error: error?.message || 'Poll failed' });
+    }
+  });
+
   // Daily email digest, run by the cron job in vercel.json. Vercel sends
   // "Authorization: Bearer <CRON_SECRET>"; without that secret nothing runs, so
   // nobody else can trigger emails. ?dryRun=1 returns the email instead of
   // sending it, and ?date=YYYY-MM-DD picks the Singapore day (default yesterday).
   app.get('/api/digest', async (req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
-    const secret = process.env.CRON_SECRET;
-    if (!secret) {
-      res.status(503).json({ success: false, error: 'CRON_SECRET is not set, so the digest is turned off' });
-      return;
-    }
-    if (req.get('authorization') !== `Bearer ${secret}`) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
-      return;
-    }
+    if (!cronAuthorized(req, res, 'the digest is')) return;
     try {
       const date = typeof req.query.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date) ? req.query.date : null;
       const day = date || singaporeDate(new Date(), 1);

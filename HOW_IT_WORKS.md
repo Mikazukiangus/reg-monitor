@@ -4,9 +4,9 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 
 ## The flow of a sync
 
-1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes; the HKMA liquidity page every 30.
+1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes when someone visits; the HKMA liquidity page every 30. Separately, a scheduled check reads every source every three hours (see "Keeping every source up to date" below).
 2. **Each item is put into a common format:** title, regulator, date, link, type and so on.
-3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR".
+3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR".
 4. **Each notice is saved to the history database** (`db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
 5. **Vercel's CDN keeps a copy** of the combined result for up to 5 minutes. Visitors get it instantly, and "Data as of" shows when it was built.
 6. **The visitor's device keeps its own copy** (`public/sw.js`) for offline use.
@@ -25,7 +25,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **JFSA** | Official English news RSS feed | Press conference transcripts, overseas-visitor programmes and the weekly newsletter are left out. "JST" dates are converted |
 | **Bank of England PRA** | Official RSS feed | |
 | **FCA** | Official RSS feed | Cloudflare sometimes blocks it. It works from Vercel but is often blocked when run locally |
-| **SGX RegCo** (Singapore Exchange Regulation) | The content API that SGX RegCo's own web pages load (JSON): public consultations, public disciplinary actions, and the SGX media list filtered to regulatory announcements, public regulatory statements, Regulator's Column and items tagged Regulation | SGX publishes no RSS feed and its pages are filled in by JavaScript. Consultation closing dates come from SGX's own field. Key points are read from the same API |
+| **SGX RegCo** (Singapore Exchange Regulation) | The content API that SGX RegCo's own web pages load (JSON): public consultations, public disciplinary actions, and the SGX media list filtered to regulatory announcements, public regulatory statements, Regulator's Column, items tagged Regulation and speeches given for SGX RegCo | SGX publishes no RSS feed and its pages are filled in by JavaScript. Consultation closing dates come from SGX's own field. Key points are read from the same API |
 | **ASX** | The public consultations table on ASX's consultations page (HTML) | Recordings and event notices are left out. The title is the entry's first sentence; the closing date comes from the entry's text; key points come from the linked consultation paper (PDF) |
 | **JPX** (Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange, Japan Exchange Regulation) | The English rule-revision tables on jpx.co.jp (HTML), one per exchange | Key points come from the English outline of each revision (PDF). Dates are Japan time |
 | **FINRA** | Official notices RSS feed | Board election notices are left out. Feed titles are only the notice number, so the title adds the opening sentence of FINRA's own summary. FINRA's Cloudflare challenges clients that pose as a browser, so the server identifies itself plainly as "RegSonar-Feed-Gateway/2.0" there. FINRA rate-limits quickly, so notice pages are fetched only once each, for key points |
@@ -45,14 +45,24 @@ These come from rules in the code, not from the regulators:
 - **Comments close:** for consultations without a date field, the server looks for a sentence in the document that says when comments, responses or submissions are due (for example "Comments should be submitted by 30 November 2026") and shows the date from it. A closing date already past is shown as "Comments closed".
 - **Consultation links:** a consultation is linked to the conclusions or response published later by the same regulator, and back, when their titles share most of their topic words. Regulators don't publish this link in a form a program can read, so it is labelled "matched by title".
 
+## Keeping every source up to date
+
+A visit refreshes each source's newest 3 or 4 items, so a regulator that publishes more than that between visits, or a source added later, would otherwise have gaps. To close them:
+
+- **Scheduled check** (`/api/feeds/poll`): Vercel cron jobs call it every three hours (03:00, 06:00 … 21:00 UTC; the 00:00 digest does the same check). The Hobby plan allows each cron job to run once a day, so there are seven daily jobs at different hours, and Vercel may start each one up to an hour late. It needs `CRON_SECRET`, like the digest.
+- It reads the newest 20 items of every source and saves them to the history. If none of those 20 is in the history yet (a new source, or more than 20 items published since the last check), it reads back 50.
+- It adds key points to up to 5 documents per source per run, newest first, so a backlog is worked through over the next few runs without hammering any site.
+- When it finishes it requests the public feed, so the copy Vercel's CDN serves visitors includes what it found.
+- **Rate limits:** requests to FINRA are spaced 4 seconds apart. After an HTTP 429 (too many requests) from any site, the server doesn't ask that site again for as long as its Retry-After header says, or 15 minutes.
+
 ## Notice history
 
-Most feeds only list their latest 10 to 50 items, so without a store older notices drop out of view. When the Vercel project has a Postgres database (Neon, added in the project's Storage tab, which sets `DATABASE_URL`), the server saves every notice it reads, with its key points, after each successful refresh. The feed then also shows notices from the last 30 days that are no longer in the live feeds, marked "From history", and the search box searches the whole history by title, summary and key points. The first few digest runs read 50 items per source to fill the history back. Without a database the site works from the live feeds alone.
+Most feeds only list their latest 10 to 50 items, so without a store older notices drop out of view. When the Vercel project has a Postgres database (Neon, added in the project's Storage tab, which sets `DATABASE_URL`), the server saves every notice it reads, with its key points, after each successful refresh. The feed then also shows notices from the last 30 days that are no longer in the live feeds, marked "From history", and the search box searches the whole history by title, summary and key points. Without a database the site works from the live feeds alone.
 
 ## Other things that use the same data
 
 - **Status checks:** every 5 minutes, each source gets a single request to see whether it is up, slow, or blocked by a firewall or maintenance page. This feeds the "sources up" count.
-- **Email digest** (`digest.ts`, rules in `digest-rules.ts`): a Vercel cron job runs each morning at about 08:00 Singapore time. It re-reads each source with a larger limit (20 items, or 50 while the history is still filling) and emails the site owner, through Resend, the previous day's notices that match the rules. No email is sent on days with no matches. It needs `CRON_SECRET`, `RESEND_API_KEY` and `DIGEST_TO` in the Vercel project settings (see `.env.example`).
+- **Email digest** (`digest.ts`, rules in `digest-rules.ts`): a Vercel cron job runs each morning at about 08:00 Singapore time. It runs the scheduled check below and emails the site owner, through Resend, the previous day's notices that match the rules. No email is sent on days with no matches. It needs `CRON_SECRET`, `RESEND_API_KEY` and `DIGEST_TO` in the Vercel project settings (see `.env.example`).
 
 ## Checks
 

@@ -146,3 +146,11 @@ export async function archiveStats(db: Db): Promise<{ count: number; since: stri
   const [row] = await db.query<{ count: string; since: Date | string | null }>(`SELECT count(*) AS count, min(published_at) AS since FROM notices`);
   return { count: Number(row?.count || 0), since: row?.since ? new Date(row.since).toISOString() : null };
 }
+
+// The stored copies of these notices, by id (for reusing key points and
+// spotting where a source's list joins up with what is already stored)
+export async function storedNotices(db: Db, ids: string[]): Promise<Map<string, StoredNotice>> {
+  if (ids.length === 0) return new Map();
+  const rows = await db.query(`SELECT data FROM notices WHERE id = ANY($1::text[])`, [ids]);
+  return new Map(rows.map(rowToNotice).map((n: StoredNotice) => [n.id, n]));
+}
