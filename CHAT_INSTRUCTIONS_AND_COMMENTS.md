@@ -354,6 +354,7 @@ This document records the full chronological instructions, technical requirement
 
 * **Change** (`src/components/screens/RadarScreen.tsx`): the grid scrolls in its own box, sized to the screen below the fixed header (and above the bottom bar on phones: 100dvh less 128px on desktop, less 88px, 56px and the safe area on phones, less a 24px margin). The header row sticks to the top of the box and the sector column to its left; the corner cell stays above both. Cell borders replace row dividers, because sticky cells don't carry borders in collapsed tables. The sector column is narrower on phones (112px). The box takes keyboard focus for scrolling, and the sector names are row headers for screen readers. When the grid reaches its end, a swipe carries on to the page.
 * **Verified locally:** desktop (1024px, light and dark) and phone (375×812): scrolled 900 to 1,400px down and 650 to 900px right, the column headers stay at the top of the box and the sector names at its left edge; on a phone the box fits between the header and the bottom bar (100 to 744px). No console errors; type check, build and 359 tests pass.
+* **Merged (2026-10-08):** the user said "merge to main." On production: desktop (1024px) scrolled 800px down and 600px right, the column headers stay at the top of the box and the sector names at its left edge; phone (375×812) scrolled 1,200px down and 700px right, the same, with the box between the header and the bottom bar (100 to 744px) and no sideways page scroll.
 
 ---
 
