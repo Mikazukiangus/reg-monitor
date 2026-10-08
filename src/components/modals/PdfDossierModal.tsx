@@ -26,7 +26,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
       `Type: ${notice.type}`,
       `Published: ${published}`,
       `Date in source: ${notice.statutoryDeadline || 'None found'}`,
-      `Impact score (heuristic by document type): ${notice.impactScore}/10`,
+      `Impact score (rubric by document kind and dates): ${notice.impactScore.toFixed(1)}/10${notice.tagging?.impact ? ` (${notice.tagging.impact.join('; ')})` : ''}`,
       `Source: ${notice.dossierUrl || 'n/a'}`,
       ``,
       ...(notice.summary ? [`SOURCE SUMMARY`, notice.summary, ``] : []),
@@ -97,12 +97,12 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
                 {notice.regulator} • {notice.jurisdiction}
               </p>
             </div>
-            <div className="text-right shrink-0 bg-panel border border-line p-2.5 rounded shadow-2xs" title="Heuristic by document type, not a legal assessment">
+            <div className="text-right shrink-0 bg-panel border border-line p-2.5 rounded shadow-2xs" title={notice.tagging?.impact ? `${notice.tagging.impact.join("; ")}. A rubric, not a legal assessment.` : "A rubric by document kind and dates, not a legal assessment"}>
               <span className="font-['JetBrains_Mono'] text-[10px] text-muted uppercase block">
-                Impact (heuristic)
+                Impact (rubric)
               </span>
               <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-prussian">
-                {notice.impactScore}/10
+                {notice.impactScore.toFixed(1)}/10
               </span>
             </div>
           </div>

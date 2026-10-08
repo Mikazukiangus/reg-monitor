@@ -1,12 +1,15 @@
 import React from 'react';
 import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
+import { CRITICAL_SCORE } from '../lib/impact';
 
 interface KpiRibbonProps {
   onFilterBySeverity?: (severity: string) => void;
   onFilterByFormat?: (format: string) => void;
   totalNoticesCount: number;
   criticalCount: number;
+  // Consultations still open for comment, and those whose closing date has passed
   consultationsCount: number;
+  closedConsultationsCount: number;
   // Notices published in the last 7 days
   recentCount: number;
   // Consultations with a date in the next 14 days
@@ -21,6 +24,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
   totalNoticesCount,
   criticalCount,
   consultationsCount,
+  closedConsultationsCount,
   recentCount,
   closingSoonCount,
   activeFilter,
@@ -77,8 +81,8 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             <span className="font-['JetBrains_Mono'] text-[11px] text-venetian uppercase tracking-wider font-semibold">
               Critical Impact
             </span>
-            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted" title="Impact score is a heuristic by document type">
-              Score ≥ 8.5
+            <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted" title="Critical means a date close at hand: a consultation closing within 14 days, or rules taking effect within 30 days">
+              Score ≥ {CRITICAL_SCORE}
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
@@ -113,7 +117,9 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             <span className="font-['Hanken_Grotesk'] text-[24px] text-ink font-bold">
               {consultationsCount}
             </span>
-            <span className="font-['Inter'] text-[12px] text-muted">responses pending</span>
+            <span className="font-['Inter'] text-[12px] text-muted">
+              open for comment{closedConsultationsCount > 0 ? ` · ${closedConsultationsCount} closed` : ''}
+            </span>
           </div>
           <div className="w-full bg-wash-mid h-1.5 rounded-full mt-2.5 overflow-hidden">
             <div className="bg-prussian h-full rounded-full" style={{ width: pct(consultationsCount) }}></div>

@@ -41,7 +41,7 @@ Sources considered and left out: SGX Group news releases about listings, awards,
 
 These come from rules in the code, not from the regulators:
 
-- **Impact score and severity:** based on the type of document. Enforcement actions and proposed rules score higher. This is not a legal assessment.
+- **Impact score and severity:** one rubric for every source, described below.
 - **Sector and format:** assigned by keyword rules in `src/lib/tagging.ts`, described below.
 - **Deadlines:** taken from the source's own date fields where there are any (the Federal Register's comment and effective dates, MAS's consultation closing date), or from dated sentences found in the document.
 - **Comments close:** for consultations without a date field, the server looks for a sentence in the document that says when comments, responses or submissions are due (for example "Comments should be submitted by 30 November 2026") and shows the date from it. A closing date already past is shown as "Comments closed".
@@ -83,9 +83,32 @@ Quality checks:
 - `tests/tagging.test.ts` holds hand-labelled notices taken from the live sources, with the sector and format a reader would give them. A rule change that breaks one fails the tests.
 - `npm run tags:review` reads the live sources and lists the notices whose tags rest on the weakest evidence: defaults because no topic words matched, sectors that came from the summary only, and circulars by default. Reading that list now and then shows rules that are missing. When a tag is wrong, add the notice to the test file with the right answer, then change the rules until every test passes.
 
+## Impact score
+
+Every notice gets its score from one function, `src/lib/impact.ts`, the same way for every source and for notices read back from the history. Before this, each source set a fixed number per format and the Federal Register used its own scale, so a routine SEC paperwork notice scored "High" while a final MAS circular scored "Info", and notices kept whatever score they were stored with.
+
+What the document does (the first that applies):
+
+| Kind | Score |
+| :--- | :--- |
+| Routine: data releases, events, appointments, speeches, cooperation agreements, periodic reports, paperwork notices | 3 |
+| An exchange's or SRO's rule filing published by the SEC | 4 |
+| Other circulars and announcements | 5 |
+| Technical standards | 6 |
+| Guidance | 6.5 |
+| Enforcement action | 7 |
+| Consultation open for comment | 7 |
+| Rules made: final rules, amendments, policy statements, consultation conclusions, requirements taking effect | 7.5 |
+
+Dates move it: +1.5 when comments close within 14 days or rules take effect within 30 days; a consultation whose closing date has passed scores 4. Severity follows the score: Critical from 8.5 (so only something with a date close at hand), High from 6.5, Info below. The steps are shown on each notice under "Why these tags and score?". Because dates move scores, they are worked out each time notices are served, not stored.
+
+The format also comes from the source's own category and the title alone, every time. Consultation conclusions and responses are not counted as open consultations, nor are SEC rule filings by exchanges. The Consultations card counts only consultations still open for comment and shows how many have closed.
+
+The score does not know how much a notice matters to a particular firm, and is not a legal assessment.
+
 ## Checks
 
-- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
+- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). The impact rubric is tested the same way (`tests/impact.test.ts`), and every source's notices are checked to carry the rubric's reasons. GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
 
 ## Ground rules
 

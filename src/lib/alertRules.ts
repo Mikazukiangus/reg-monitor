@@ -6,7 +6,8 @@ export const DEFAULT_RULES: CustomAlertRule[] = [
     id: 'rule-1',
     name: 'Consultations & Deadlines',
     jurisdictions: ['MAS', 'HKMA', 'SFC', 'PRA', 'SEC', 'SGX', 'ASX', 'FINRA', 'SC Malaysia'],
-    minImpact: 7.5,
+    // Open consultations score 7; closed ones 4 (src/lib/impact.ts)
+    minImpact: 7,
     keywords: ['consult', 'comments', 'deadline', 'feedback'],
     enabled: true
   },

@@ -51,7 +51,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   const [showCreateModal, setShowCreateModal] = useState(false);
   const createDialogRef = useDialog<HTMLDivElement>(showCreateModal, () => setShowCreateModal(false));
   const [ruleName, setRuleName] = useState('');
-  const [minImpact, setMinImpact] = useState(8.0);
+  const [minImpact, setMinImpact] = useState(7);
   const [keywords, setKeywords] = useState('');
   const [digest, setDigest] = useState<DigestInfo | null>(null);
   const [digestError, setDigestError] = useState(false);
@@ -325,11 +325,15 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                   type="range"
                   min="0"
                   max="10.0"
-                  step="0.1"
+                  step="0.5"
                   value={minImpact}
+                  aria-describedby="rule-impact-help"
                   onChange={(e) => setMinImpact(parseFloat(e.target.value))}
                   className="w-full accent-prussian"
                 />
+                <p id="rule-impact-help" className="font-['Inter'] text-[11px] text-muted mt-1">
+                  3 routine releases · 4 SEC filings by exchanges · 5 announcements · 6.5 guidance · 7 enforcement and open consultations · 7.5 rules made · +1.5 when a closing or effective date is near
+                </p>
               </div>
 
               <div>

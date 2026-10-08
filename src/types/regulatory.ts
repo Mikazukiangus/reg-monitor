@@ -34,6 +34,8 @@ export interface TagReasons {
   sectors: Partial<Record<SectorDomain, string[]>>;
   sectorFallback?: string;
   format: string;
+  // How the impact score was reached, one line per step
+  impact?: string[];
 }
 
 export interface KeyFact {

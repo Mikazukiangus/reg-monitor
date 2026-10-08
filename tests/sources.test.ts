@@ -29,7 +29,8 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle } = await import('../server.ts');
+const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle, tagNotice } = await import('../server.ts');
+const { severityOf } = await import('../src/lib/impact.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
@@ -57,6 +58,12 @@ for (const source of SOURCES) {
       assert.ok(n.publishedAt, `no date for ${n.id}`);
       const t = Date.parse(n.publishedAt!);
       assert.ok(t > Date.UTC(2020, 0, 1) && t < Date.now() + 2 * 86_400_000, `date ${n.publishedAt}`);
+      // Every source is scored by the same rubric, with its steps recorded
+      if (!n.id.startsWith('hkma-liquidity')) {
+        assert.ok(n.tagging?.impact?.length, `no score reasons for ${n.id}`);
+        assert.match(n.tagging!.impact!.at(-1)!, /: [+]?[\d.]+$/);
+        assert.equal(n.severity, severityOf(n.impactScore));
+      }
     }
   });
 
@@ -125,6 +132,21 @@ test('SC Malaysia court results are classed as enforcement', async () => {
   assert.equal(suit?.publishedAt, '2026-08-19T16:00:00.000Z');
   assert.ok(suit?.summary, 'summary from the page');
   assert.equal(notices.find(n => /^SC Charges Brothers/.test(n.title))?.format, 'Enforcement');
+});
+
+test('a stored notice is re-classified and re-scored when read back', () => {
+  // Stored under older rules as enforcement, scored 8.5
+  const stored = {
+    id: 'hkma-20260930-3', ref: 'HKMA Press Release', title: 'Hong Kong Monetary Authority and Bank Indonesia Strengthen Cooperation in Cross-Border Payments',
+    regulator: 'HKMA', jurisdiction: 'HONG KONG', jurisdictionCode: 'HK' as const, type: 'PRESS RELEASE',
+    typeColorClass: { bg: '', text: '' }, impactScore: 8.5, issuedTimeAgo: '', tags: ['HKMA', 'Enforcement'],
+    sector: 'General & Institutional' as const, format: 'Enforcement' as const, severity: 'critical' as const, isLiveFeed: false
+  };
+  const n = tagNotice(stored);
+  assert.equal(n.format, 'Circulars');
+  assert.equal(n.impactScore, 3);
+  assert.equal(n.severity, 'info');
+  assert.ok(!n.tags.includes('Enforcement') && n.tags.includes('Circulars'));
 });
 
 test('ESMA dates come from the description', async () => {

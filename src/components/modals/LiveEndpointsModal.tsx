@@ -310,7 +310,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       2. Classification
                     </span>
                     <span className="text-ink-soft">
-                      Keyword rules assign sector and instrument format. Impact scores are a heuristic by document type, not an AI assessment.
+                      Keyword rules assign sector and instrument format. Impact scores follow a fixed rubric of what the document does and the dates it states, not an AI assessment.
                     </span>
                   </div>
 

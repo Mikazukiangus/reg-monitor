@@ -51,7 +51,7 @@ export function renderDigest(matches: DigestMatch[], day: string, siteUrl: strin
   const subject = `RegSonar: ${count} new notice${count === 1 ? '' : 's'} matching your rules (${longDate(day)})`;
   const footer = [
     `Notices published on ${longDate(day)}, Singapore time, that match the rules in digest-rules.ts.`,
-    'Rules match the regulator, impact score and keywords in the title, summary and any key points already loaded; impact scores are a heuristic by document type.',
+    'Rules match the regulator, impact score and keywords in the title, summary and any key points already loaded; impact scores follow a fixed rubric of what the document does and the dates it states (see How It Works).',
     'Quotes are taken word for word from the source document. Check the document before relying on a date.',
     ...(failedSources.length ? [`Could not be read for this email: ${failedSources.join(', ')}.`] : [])
   ];

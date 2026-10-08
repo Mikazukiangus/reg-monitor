@@ -7,6 +7,7 @@ import { summarize, extractArticleText, extractPdfText, earliestDeadline, extrac
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
+import { assessImpact, severityOf } from './src/lib/impact.js';
 import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
@@ -92,27 +93,38 @@ const LEGACY_SECTORS = new Set(['FinTech & Digital Assets', 'Banking & Capital M
 // Set a notice's sectors from its title, summary and key points, and record
 // why. Run on every notice, including stored ones, so a rule change applies
 // to the whole history.
-function tagNotice<T extends NormalizedNotice>(notice: T): T {
+// Format and impact score too: both come from the source's own category (the
+// notice's type) and the title, the same way for every source and for notices
+// read back from the history, so a rule change applies to all of them.
+export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   if (notice.id.startsWith('hkma-liquidity')) return notice;
   const text = [notice.summary, ...(notice.keyPoints?.points || [])].filter(Boolean).join(' ');
   const tagged = classifySectors({ title: notice.title, text, regulator: notice.regulator });
-  const byTitle = classifyFormat(notice.type, notice.title);
-  const bySummary = classifyFormat(notice.type, `${notice.title} ${notice.summary || ''}`);
-  const formatReason = byTitle.format === notice.format ? byTitle.reason
-    : bySummary.format === notice.format ? bySummary.reason
-    : `set from the source's own category (${notice.type.toLowerCase()})`;
+  const { format, reason: formatReason } = classifyFormat(notice.type, notice.title);
+  const impact = assessImpact({ format, type: notice.type, title: notice.title, statutoryDeadline: notice.statutoryDeadline });
   return {
     ...notice,
+    format,
+    typeColorClass: getTypeColor(format),
+    impactScore: impact.score,
+    severity: impact.severity,
     sector: tagged.sectors[0],
     sectors: tagged.sectors,
-    tags: [...notice.tags.filter(t => !(SECTORS as string[]).includes(t) && !LEGACY_SECTORS.has(t)), ...tagged.sectors],
+    tags: [
+      ...notice.tags.filter(t => !(SECTORS as string[]).includes(t) && !LEGACY_SECTORS.has(t) && !(FORMATS as string[]).includes(t)),
+      format,
+      ...tagged.sectors
+    ],
     tagging: {
       sectors: tagged.reasons,
       ...(tagged.fallback ? { sectorFallback: tagged.fallback } : {}),
-      format: formatReason
+      format: formatReason,
+      impact: impact.reasons
     }
   };
 }
+
+const FORMATS: InstrumentFormat[] = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 // Helper for type color styles
 function getTypeColor(format: string) {
@@ -138,25 +150,10 @@ const PLAIN_AGENT_HOSTS = new Set(['www.finra.org']);
 const userAgentFor = (url: string) => (PLAIN_AGENT_HOSTS.has(new URL(url).host) ? PLAIN_USER_AGENT : REG_USER_AGENT);
 const FETCH_TIMEOUT_MS = 8000;
 
-// Rough impact heuristic by instrument format. Not an AI assessment.
-function estimateImpact(format: string): number {
-  switch (format) {
-    case 'Enforcement':
-      return 8.5;
-    case 'Consultations':
-      return 7.8;
-    case 'Technical Standards':
-      return 7.2;
-    case 'Guidelines':
-      return 7.0;
-    default:
-      return 6.5;
-  }
-}
-
-function severityFor(score: number): 'critical' | 'high' | 'info' {
-  return score >= 8.5 ? 'critical' : score >= 7.5 ? 'high' : 'info';
-}
+// A first score while a source is read; tagNotice then sets the final score
+// for every notice with the full rubric (src/lib/impact.ts)
+const estimateImpact = (format: InstrumentFormat): number => assessImpact({ format, type: '', title: '' }).score;
+const severityFor = severityOf;
 
 function toIso(dateString: string | undefined): string | undefined {
   if (!dateString) return undefined;
@@ -229,9 +226,7 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
     const commentsClose: string | undefined = doc.comments_close_on || undefined;
     const effectiveOn: string | undefined = doc.effective_on || undefined;
 
-    let score = 7.5;
-    if (doc.type === 'Rule') score = 8.7;
-    if (doc.type === 'Proposed Rule') score = 8.1;
+    const score = estimateImpact(format);
 
     let statutoryDeadline = 'No date published';
     let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
@@ -498,7 +493,8 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
       jurisdictionCode: 'HK',
       type: 'MARKET DATA',
       typeColorClass: getTypeColor('Circulars'),
-      impactScore: 5.0,
+      // A data release, scored as the rubric scores one (src/lib/impact.ts)
+      impactScore: 3,
       issuedTimeAgo: getRelativeTime(publishedAt ?? date),
       publishedAt,
       statusBadge: {

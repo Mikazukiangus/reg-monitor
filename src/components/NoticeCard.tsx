@@ -93,7 +93,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${scoreMeta.color}`}>
-            {notice.impactScore}/10
+            {notice.impactScore.toFixed(1)}/10
           </span>
           <button
             onClick={() => onOpenGapAnalysis(notice)}
@@ -303,7 +303,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           ))}
           {notice.tagging && (
             <details className="w-full font-['Inter'] text-[11px] text-muted">
-              <summary className="cursor-pointer hover:text-ink w-fit">Why these tags?</summary>
+              <summary className="cursor-pointer hover:text-ink w-fit">Why these tags and score?</summary>
               <ul className="mt-1 space-y-0.5 pl-1">
                 {(notice.sectors ?? [notice.sector]).map(sector => (
                   <li key={sector}>
@@ -316,7 +316,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
                 <li>
                   <span className="text-ink-soft font-medium">{notice.format}</span>: {notice.tagging.format}
                 </li>
-                <li>Keyword rules, title words first; not an assessment of the document.</li>
+                {notice.tagging.impact && (
+                  <li>
+                    <span className="text-ink-soft font-medium">Impact {notice.impactScore.toFixed(1)}</span>: {notice.tagging.impact.join('; ')}
+                  </li>
+                )}
+                <li>Keyword rules, title words first, and the dates the source states; not an assessment of the document.</li>
               </ul>
             </details>
           )}

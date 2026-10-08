@@ -106,7 +106,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
             </h3>
             <div className="flex flex-wrap gap-2 text-[11px] text-ink-soft font-['JetBrains_Mono'] mt-2">
               <span className="px-2 py-0.5 bg-panel rounded border border-line">
-                Impact Score: {notice.impactScore}/10
+                Impact Score: {notice.impactScore.toFixed(1)}/10
               </span>
               <span className="px-2 py-0.5 bg-panel rounded border border-line">
                 Jurisdiction: {notice.jurisdiction}

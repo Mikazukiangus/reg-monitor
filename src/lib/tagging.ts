@@ -206,6 +206,14 @@ export function classifySectors(input: { title: string; text?: string; regulator
 // Formats. Checked in this order; the first that matches wins.
 const SPEECH = /^(new )?(keynote|opening|welcome|closing|speech|remarks|address)\b|\b(keynote|speech|remarks|address) by\b/i;
 const APPROVAL = /\border granting approval\b|\bnotice of (effectiveness|approval)\b/i;
+// A regulator's answer to a consultation sets its final position; it is not
+// open for comment (checked before the source's own "consultation" category)
+export const CONCLUSION = /\bconsultation conclusions?\b|\bconclude[sd]? (\w+ )?consultation\b|\bto proceed with\b|\bconclusions? (on|to|of) (the )?(consultation|proposals?)\b|\b(response|responses|feedback) to (the )?(consultation|public consultation|consultation paper|feedback received)\b|\bfeedback statement\b|\bresponse paper\b|\bconsultation response\b/i;
+// Exchanges' and other self-regulatory organisations' rule filings, which the
+// SEC publishes in the Federal Register in large numbers
+export const SRO_FILING = /^self-regulatory organizations[;:]/i;
+// FINRA information notices are reminders and notices of operational changes
+const INFORMATION_NOTICE = /\binformation notice\b/i;
 const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b/i;
 const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary committee|takes? action|reprimand(s|ed)?|censure[sd]?|fine[sd]?|fines|penalt(y|ies)|infringement notices?|charged|charges against|sues|sued|sentenced|convicted|jailed|imprisonment|prosecut\w*|banned|bans?|disqualified|suspends|revok(es|ed)|cancels|cancelled|stop orders?|halts offers|prohibition orders?|cease[- ]and[- ]desist|compound(s|ed)|falls? short of|wins suit|suit against|injunction|committal|judgment against|appeal against|cancellation of listing|court of appeal|high court|federal court|in (its|the \w+['’]s|\w+['’]s) favour)\b/i;
 // "SC Charges Brothers…": an agency charging someone, at the start of a title
@@ -221,13 +229,23 @@ export interface FormatTagging {
 
 export function classifyFormat(type: string, title: string): FormatTagging {
   const text = `${type} ${title}`;
-  const hit = (re: RegExp) => text.match(re)?.[0];
+  // Whether the last match was in the source's own category rather than the title
+  let fromType = false;
+  const hit = (re: RegExp) => {
+    const r = text.match(re);
+    fromType = !!r && r.index! < type.length;
+    return r?.[0];
+  };
+  const said = (m: string) => (fromType ? `the source's category ("${m}")` : `"${m}"`);
   let m: string | undefined;
   if ((m = hit(SPEECH))) return { format: 'Circulars', reason: `speech or remarks ("${m.trim()}")` };
   if ((m = hit(APPROVAL))) return { format: 'Circulars', reason: `approval of a proposal ("${m}")` };
-  if ((m = hit(CONSULTATION))) return { format: 'Consultations', reason: `"${m}"` };
-  if ((m = hit(ENFORCEMENT) ?? title.trim().match(CHARGES)?.[0])) return { format: 'Enforcement', reason: `"${m}"` };
-  if ((m = hit(TECHNICAL))) return { format: 'Technical Standards', reason: `"${m}"` };
-  if ((m = hit(GUIDELINES))) return { format: 'Guidelines', reason: `"${m}"` };
+  if ((m = hit(CONCLUSION))) return { format: 'Circulars', reason: `consultation conclusions, not open for comment ("${m}")` };
+  if (SRO_FILING.test(title)) return { format: 'Circulars', reason: 'an exchange\'s or SRO\'s rule filing, published by the SEC' };
+  if ((m = hit(INFORMATION_NOTICE))) return { format: 'Circulars', reason: `"${m}"` };
+  if ((m = hit(CONSULTATION))) return { format: 'Consultations', reason: said(m) };
+  if ((m = hit(ENFORCEMENT) ?? title.trim().match(CHARGES)?.[0])) return { format: 'Enforcement', reason: said(m) };
+  if ((m = hit(TECHNICAL))) return { format: 'Technical Standards', reason: said(m) };
+  if ((m = hit(GUIDELINES))) return { format: 'Guidelines', reason: said(m) };
   return { format: 'Circulars', reason: 'no format words matched' };
 }
