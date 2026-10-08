@@ -70,5 +70,41 @@
   "https://www.bis.org/doclist/all_pressrels.rss": {
     "file": "1796947970a6.txt",
     "contentType": "application/rss+xml; charset=utf-8"
+  },
+  "https://api2.sgx.com/regco/content-api?queryId=e4da21521b39e5324f96273260acfd8e1a9d1e5e%3Apublic_consultations_list&variables=%7B%22limit%22%3A3%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D": {
+    "file": "8894382af5f7.txt",
+    "contentType": "application/json"
+  },
+  "https://api2.sgx.com/regco/content-api?queryId=e4da21521b39e5324f96273260acfd8e1a9d1e5e%3Apublic_disciplinary_actions_list&variables=%7B%22limit%22%3A3%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D": {
+    "file": "dd2fd9c3a595.txt",
+    "contentType": "application/json"
+  },
+  "https://api2.sgx.com/regco/content-api?queryId=e4da21521b39e5324f96273260acfd8e1a9d1e5e%3Amedia_centre_list&variables=%7B%22limit%22%3A100%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D": {
+    "file": "96752f123f20.txt",
+    "contentType": "application/json"
+  },
+  "https://www.asx.com.au/about/regulation/consultations-and-submissions": {
+    "file": "6d82d0f6dd32.txt",
+    "contentType": "text/html;charset=utf-8"
+  },
+  "https://www.jpx.co.jp/english/rules-participants/rules/revise/02.html": {
+    "file": "c627288923e2.txt",
+    "contentType": "text/html"
+  },
+  "https://www.jpx.co.jp/english/rules-participants/rules/revise/03.html": {
+    "file": "1cdd4cc235af.txt",
+    "contentType": "text/html"
+  },
+  "https://www.jpx.co.jp/english/rules-participants/rules/revise/index.html": {
+    "file": "6a444b93f437.txt",
+    "contentType": "text/html"
+  },
+  "https://www.jpx.co.jp/english/rules-participants/rules/revise/01.html": {
+    "file": "f20463176e6f.txt",
+    "contentType": "text/html"
+  },
+  "https://www.finra.org/rules-guidance/notices/rss": {
+    "file": "f1bad373278c.txt",
+    "contentType": "application/rss+xml; charset=utf-8"
   }
 }

@@ -25,11 +25,15 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **JFSA** | Official English news RSS feed | Press conference transcripts, overseas-visitor programmes and the weekly newsletter are left out. "JST" dates are converted |
 | **Bank of England PRA** | Official RSS feed | |
 | **FCA** | Official RSS feed | Cloudflare sometimes blocks it. It works from Vercel but is often blocked when run locally |
+| **SGX RegCo** (Singapore Exchange Regulation) | The content API that SGX RegCo's own web pages load (JSON): public consultations, public disciplinary actions, and the SGX media list filtered to regulatory announcements, public regulatory statements, Regulator's Column and items tagged Regulation | SGX publishes no RSS feed and its pages are filled in by JavaScript. Consultation closing dates come from SGX's own field. Key points are read from the same API |
+| **ASX** | The public consultations table on ASX's consultations page (HTML) | Recordings and event notices are left out. The title is the entry's first sentence; the closing date comes from the entry's text; key points come from the linked consultation paper (PDF) |
+| **JPX** (Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange, Japan Exchange Regulation) | The English rule-revision tables on jpx.co.jp (HTML), one per exchange | Key points come from the English outline of each revision (PDF). Dates are Japan time |
+| **FINRA** | Official notices RSS feed | Board election notices are left out. Feed titles are only the notice number, so the title adds the opening sentence of FINRA's own summary. FINRA's Cloudflare challenges clients that pose as a browser, so the server identifies itself plainly as "RegSonar-Feed-Gateway/2.0" there. FINRA rate-limits quickly, so notice pages are fetched only once each, for key points |
 | **ESMA** | Official news RSS feed | The publication date is read from the item's description |
 | **BIS & Basel Committee** | Official BIS media-release feed (RSS, older RDF format) | Basel Committee items are tagged BCBS |
 | **FSB** | Official publications RSS feed | Regional consultative group meetings and auditor reports are left out |
 
-Sources considered and left out: IOSCO (its site refuses automated requests), EBA (its feed only carries daily e-mail alert bulletins) and APRA (its feed only carries statistics releases).
+Sources considered and left out: SGX Group news releases about listings, awards, indices and results (only regulatory items are kept), JPX market news (mostly listings and index changes), IOSCO (its site refuses automated requests), EBA (its feed only carries daily e-mail alert bulletins) and APRA (its feed only carries statistics releases).
 
 ## What the site works out itself
 

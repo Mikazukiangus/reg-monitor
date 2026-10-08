@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.finra.org/">
+  <channel>
+    <title>Notices</title>
+    <link>https://www.finra.org/</link>
+    <description>FINRA Notices RSS Feed</description>
+    <language>en</language>
+    
+    <item>
+  <title>Election Notice - 10/5/2026</title>
+  <link>https://www.finra.org/rules-guidance/notices/election-notice-100526</link>
+  <description>The purpose of this Election Notice is to notify members of an upcoming election to fill one small firm seat on the National Adjudicatory Council (NAC) and to announce the start of a 45-day petition period for those interested in becoming candidates. </description>
+  <pubDate>Oct 05, 2026</pubDate>
+    <dc:creator>Election Notice - 10/5/2026</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/election-notice-100526</guid>
+    </item>
+<item>
+  <title>Regulatory Notice 26-16</title>
+  <link>https://www.finra.org/rules-guidance/notices/26-16</link>
+  <description>&lt;h2&gt;Summary&amp;nbsp;&lt;/h2&gt;&lt;p&gt;FINRA has amended its TRACE rules to expand the scope of the principal transaction indicator (previously applicable only to transactions with non-member affiliates) to also include transactions with member affiliates. This change will improve transparency in TRACE-eligible securities by streamlining dissemination of same-priced prints reflecting related transactions between a member and its member affiliate. The effective date of the amendments by which compliance is mandatory is August 2, 2027.&lt;/p&gt;</description>
+  <pubDate>Aug 26, 2026</pubDate>
+    <dc:creator>Regulatory Notice 26-16</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/26-16</guid>
+    </item>
+<item>
+  <title>Information Notice 8/3/26</title>
+  <link>https://www.finra.org/rules-guidance/notices/information-notice-20260803</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;FINRA is providing information in this &lt;em&gt;Notice &lt;/em&gt;to remind registered persons and firms of the continuing education (CE) requirements, including:&lt;/p&gt;</description>
+  <pubDate>Aug 03, 2026</pubDate>
+    <dc:creator>Information Notice 8/3/26</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/information-notice-20260803</guid>
+    </item>
+<item>
+  <title>Regulatory Notice 26-15</title>
+  <link>https://www.finra.org/rules-guidance/notices/26-15</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;A broker-dealer’s duty of best execution is a key investor protection and safeguard of market integrity. FINRA Rule 5310, together with its related body of interpretive guidance, provides principles-based standards for member firms in connection with their duty to ascertain the best market for their customers’ orders.&lt;/p&gt;</description>
+  <pubDate>Jul 24, 2026</pubDate>
+    <dc:creator>Regulatory Notice 26-15</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/26-15</guid>
+    </item>
+<item>
+  <title>Regulatory Notice 26-14</title>
+  <link>https://www.finra.org/rules-guidance/notices/26-14</link>
+  <description>&lt;h2&gt;Summary&amp;nbsp;&lt;/h2&gt;&lt;p&gt;FINRA seeks comment on a proposal to modernize Rule 2210 (Communications with the Public).&lt;/p&gt;</description>
+  <pubDate>Jul 09, 2026</pubDate>
+    <dc:creator>Regulatory Notice 26-14</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/26-14</guid>
+    </item>
+<item>
+  <title>Regulatory Notice 26-13</title>
+  <link>https://www.finra.org/rules-guidance/notices/26-13</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;FINRA has amended Rule 3210 (Accounts At Other Broker-Dealers and Financial Institutions) to add an exception from the rule’s requirements for accounts pursuant to Section 530A of the Internal Revenue Code (Trump Accounts). The rule change became effective on June 17, 2026.&lt;/p&gt;&lt;p&gt;The text of the amendment is included as Attachment A.&lt;/p&gt;&lt;p&gt;Questions concerning this &lt;em&gt;Notice &lt;/em&gt;should be directed to:&lt;/p&gt;</description>
+  <pubDate>Jul 07, 2026</pubDate>
+    <dc:creator>Regulatory Notice 26-13</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/26-13</guid>
+    </item>
+<item>
+  <title>Information Notice 6/29/26</title>
+  <link>https://www.finra.org/rules-guidance/notices/information-notice-20260629</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;FINRA is issuing this &lt;em&gt;Notice &lt;/em&gt;to remind carrying members of the SEC’s compliance date for the required daily customer and PAB reserve computations, which will apply to members with average total credits equal to or greater than $500 million. This &lt;em&gt;Notice &lt;/em&gt;also highlights guidance provided by the SEC Division of Trading and Markets staff (Division staff) regarding the reserve deposit adjustment related to sweep program credits and provides information on how carrying members may report such adjustments.&lt;/p&gt;</description>
+  <pubDate>Jun 29, 2026</pubDate>
+    <dc:creator>Information Notice 6/29/26</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/information-notice-20260629</guid>
+    </item>
+<item>
+  <title>Information Notice 6/17/26</title>
+  <link>https://www.finra.org/rules-guidance/notices/information-notice-20260617</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;FINRA is introducing a new electronic Rule 605 Designated Participant Authorization Form for members to obtain unique reporter identification codes and provide hyperlinks to their Rule 605 execution quality reports. The new form is available beginning June 17, 2026, through the FINRA Gateway, in advance of upcoming amendments to Rule 605 of SEC Regulation NMS and the Rule 605 NMS Plan effective August 1, 2026. All members selecting FINRA as their Designated Participant are required to submit the new form.&amp;nbsp;&lt;/p&gt;</description>
+  <pubDate>Jun 17, 2026</pubDate>
+    <dc:creator>Information Notice 6/17/26</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/information-notice-20260617</guid>
+    </item>
+<item>
+  <title>Regulatory Notice 26-12</title>
+  <link>https://www.finra.org/rules-guidance/notices/26-12</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;In November 2025, Securities and Exchange Commission (SEC) staff issued a no-action letter permitting registered representative-owned personal services&amp;nbsp;entities to receive transaction-based compensation without broker-dealer registration, subject to conditions. This &lt;em&gt;Notice &lt;/em&gt;provides guidance regarding the manner in which FINRA rules apply in relation to the&amp;nbsp;no-action letter.&amp;nbsp;This &lt;em&gt;Notice&amp;nbsp;&lt;/em&gt;does not apply new requirements beyond the no-action letter requirements.&lt;/p&gt;</description>
+  <pubDate>Jun 09, 2026</pubDate>
+    <dc:creator>Regulatory Notice 26-12</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/26-12</guid>
+    </item>
+<item>
+  <title>Election Notice - 6/8/2026</title>
+  <link>https://www.finra.org/rules-guidance/notices/election-notice-060826</link>
+  <description>&lt;h2&gt;Summary&lt;/h2&gt;&lt;p&gt;FINRA will conduct its Annual Meeting of firms on Monday, July 13, 2026, at 9:00 a.m. Eastern Time at FINRA’s Washington, D.C., office (1700 K Street, NW, Washington, D.C.) for the purpose of electing one Large Firm Governor and one Small Firm Governor to the &lt;a href="https://www.finra.org/about/governance/finra-board-governors"&gt;FINRA Board of Governors&lt;/a&gt; (FINRA Board or Board).&lt;sup&gt;1&lt;/sup&gt;&lt;/p&gt;</description>
+  <pubDate>Jun 08, 2026</pubDate>
+    <dc:creator>Election Notice - 6/8/2026</dc:creator>
+    <guid isPermaLink="true">https://www.finra.org/rules-guidance/notices/election-notice-060826</guid>
+    </item>
+
+  </channel>
+</rss>

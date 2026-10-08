@@ -279,6 +279,16 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** a live sync has no repeated document links; the SFC notice appears once as a consultation and the HKMA taxonomy consultation shows "Comments close: 2026-10-07". 52 tests pass.
 * **Merged (2026-10-07):** the user said "merge into main". On production: 19 sources, 63 notices, no repeated document links; SFC 26PR161 appears once and the HKMA taxonomy consultation shows "Comments close: 2026-10-07".
 
+### Request 22: Exchange Regulators as Sources (Claude Code, 2026-10-08)
+* **Instruction:** "also add SGX and other related regulator for exchanges as sources." Built on the branch `exchange-sources`.
+* **SGX RegCo:** SGX has no RSS feed and its pages are filled in by JavaScript, so the server reads the content API those pages load (`api2.sgx.com/regco/content-api`): public consultations (with SGX's own closing date), public disciplinary actions, and the SGX media list filtered to regulatory items (Regulatory Announcement, Public Regulatory Statements, Regulator's Column, topic Regulation). Key points come from the same API's page text. The newest public disciplinary action SGX lists is from 26 March 2025.
+* **ASX:** the public consultations table on asx.com.au (HTML). Title from the entry's first sentence, closing date from its text, key points from the linked paper (PDF). Recordings and event entries are left out.
+* **JPX:** English rule-revision tables for the Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange and Japan Exchange Regulation, with key points from each revision's outline PDF.
+* **FINRA:** notices RSS feed (election notices left out). Feed titles are only the notice number, so the title adds the first sentence of FINRA's summary. FINRA's Cloudflare challenges the browser-style user agent the server normally sends but serves a plain "RegSonar-Feed-Gateway/2.0" user agent, so that is used for www.finra.org (identifying honestly, not working around the check). FINRA rate-limits after a few quick requests (HTTP 429), so pages are fetched only for key points.
+* **Fix found while testing:** the format classifier matched "action" and "order" inside other words, so "transaction" counted as enforcement. It now matches whole words.
+* **Also:** filter labels, the Radar, the page description, the sources window and the methodology name the new regulators; the starting alert rules (and the email digest) include SGX, ASX and FINRA consultations and SGX enforcement. Rules already saved in a browser are not changed.
+* **Verified locally:** all six new sources load against the live sites with key points (FINRA after its rate limit cleared); 72 tests pass with recorded responses; `tsc` and `vite build` pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary

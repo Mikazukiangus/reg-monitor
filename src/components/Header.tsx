@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="bg-panel border border-line text-ink-soft font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-prussian focus:text-ink cursor-pointer transition-colors shadow-xs"
             >
               <option value="All">All jurisdictions</option>
-              <option value="Singapore MAS">Singapore (MAS)</option>
+              <option value="Singapore MAS">Singapore (MAS, SGX RegCo)</option>
               <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC, HKEX)</option>
               <option value="Australia Japan">Australia &amp; Japan</option>
               <option value="UK US Global">UK, EU, US &amp; Global</option>

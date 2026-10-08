@@ -9,9 +9,10 @@ delete process.env.DATABASE_URL;
 
 const fixtures: Record<string, { file: string; contentType: string }> = JSON.parse(readFileSync('tests/fixtures/index.json', 'utf8'));
 
-// The Federal Register and MAS put the item limit in the URL; the recorded
+// The Federal Register, MAS and SGX put the item limit in the URL; the recorded
 // response holds more items than any test asks for, so the limit is ignored
-const withoutLimit = (url: string) => url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N');
+const withoutLimit = (url: string) =>
+  url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN');
 const byUrl = new Map(Object.entries(fixtures).map(([url, f]) => [withoutLimit(url), f]));
 
 const requested: string[] = [];
@@ -26,7 +27,7 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, zonedToIso, parseHkmaDailyStats } = await import('../server.ts');
+const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle } = await import('../server.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
@@ -61,7 +62,7 @@ for (const source of SOURCES) {
     requested.length = 0;
     const few = await source.fetch(1);
     // APIs that apply the limit themselves are asked for one item
-    const askedForOne = requested.some(url => /[?&](per_page|rows)=1(&|$)/.test(url));
+    const askedForOne = requested.some(url => /[?&](per_page|rows)=1(&|$)|%22limit%22%3A1%2C/.test(url));
     assert.ok(few.length === 1 || askedForOne, `${few.length} items`);
   });
 }
@@ -126,4 +127,65 @@ test('HKMA liquidity figures are read from a dated page', () => {
 
 test('HKMA weekend pages have no figures', () => {
   assert.equal(parseHkmaDailyStats(readFileSync('tests/fixtures/hkma-dms-20261003-weekend.html', 'utf8')), null);
+});
+
+test('SGX RegCo consultations carry the closing date SGX publishes, as a Singapore date', async () => {
+  const notices = await byName('SGX RegCo Consultations').fetch();
+  const value = notices.find(n => /Value Creation and Investor Engagement/.test(n.title));
+  assert.equal(value?.statutoryDeadline, 'Comments closed: 2026-05-22');
+  assert.equal(value?.publishedAt, '2026-04-21T16:00:00.000Z');
+  assert.match(String(value?.dossierUrl), /^https:\/\/regco\.sgx\.com\/public-consultations\//);
+});
+
+test('SGX content paths map to the public site', () => {
+  assert.equal(sgxPublicUrl('/regco/public-disciplinary-actions/x'), 'https://regco.sgx.com/public-disciplinary-actions/x');
+  assert.equal(sgxPublicUrl('/sgxgroup/media-centre/y'), 'https://www.sgxgroup.com/media-centre/y');
+});
+
+test('SGX announcements are only the regulatory items of the media list', async () => {
+  const notices = await byName('SGX RegCo Announcements').fetch(10);
+  assert.ok(notices.length > 0);
+  assert.ok(notices.every(n => !/welcomes|award|quarterly review|net profit/i.test(n.title)), notices.map(n => n.title).join(' | '));
+});
+
+test('SGX disciplinary actions are enforcement', async () => {
+  const notices = await byName('SGX RegCo Disciplinary Actions').fetch();
+  assert.ok(notices.every(n => n.format === 'Enforcement'));
+});
+
+test('ASX consultations: title from the entry, closing date from its text', async () => {
+  const notices = await byName('ASX Public Consultations').fetch();
+  const clearing = notices.find(n => /ASX Clear \(Futures\) Operating Rules/.test(n.title));
+  assert.ok(clearing, notices.map(n => n.title).join(' | '));
+  assert.match(clearing!.title, /^ASX published a consultation paper/);
+  assert.equal(clearing!.deadlineDate, '2026-10-30');
+  assert.equal(clearing!.publishedAt, '2026-09-29T14:00:00.000Z');
+  assert.match(String(clearing!.dossierUrl), /\.pdf$/);
+  assert.ok(notices.every(n => !/recording/i.test(n.title)));
+});
+
+test('JPX rule revisions are dated in Japan time and are not enforcement', async () => {
+  const notices = await byName('JPX Rule Revisions').fetch(10);
+  const jgb = notices.find(n => /JGB Futures/.test(n.title));
+  assert.equal(jgb?.regulator, 'OSE');
+  assert.equal(jgb?.publishedAt, '2026-10-06T15:00:00.000Z');
+  const enforcementRules = notices.find(n => /^Revisions to Enforcement Rules/.test(n.title));
+  assert.equal(enforcementRules?.format, 'Circulars');
+});
+
+test('FINRA titles add the opening of FINRA\'s summary to the notice number', () => {
+  assert.equal(
+    finraTitle('Regulatory Notice 26-16', 'FINRA has amended its TRACE rules to expand the scope. The effective date is August 2, 2027.'),
+    'Regulatory Notice 26-16: FINRA has amended its TRACE rules to expand the scope'
+  );
+  assert.equal(finraTitle('Information Notice 8/3/26', undefined), 'Information Notice 8/3/26');
+});
+
+test('FINRA: election notices are left out and "transaction" is not enforcement', async () => {
+  const notices = await byName('FINRA Notices').fetch(10);
+  assert.ok(notices.every(n => !/^Election Notice/i.test(n.ref.replace(/^FINRA /, ''))));
+  const trace = notices.find(n => /TRACE/.test(n.title));
+  assert.ok(trace, notices.map(n => n.title).join(' | '));
+  assert.notEqual(trace!.format, 'Enforcement');
+  assert.match(trace!.title, /^Regulatory Notice 26-16: FINRA has amended its TRACE rules/);
 });

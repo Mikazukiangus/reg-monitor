@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, extractPdfText, earliestDeadline, htmlToText, KeyPoints } from './summarize.js';
+import { summarize, extractArticleText, extractPdfText, earliestDeadline, extractClosingDate, htmlToText, KeyPoints } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl } from './db.js';
@@ -99,8 +99,8 @@ function classifyFormat(type: string, title: string): 'Circulars' | 'Consultatio
   if (lower.includes('proposed') || lower.includes('consult') || lower.includes('comment') || lower.includes('draft')) {
     return 'Consultations';
   }
-  if (lower.includes('enforcement') || lower.includes('penalty') || lower.includes('proceeding') || lower.includes('action') || lower.includes('order') ||
-      /\b(reprimand(s|ed)?|fine[sd]|ban(s|ned)|sentenced|convicted|prosecut\w*|disciplinary)\b/.test(lower)) {
+  // Whole words only: "transaction" and "border" are not enforcement
+  if (/\b(enforcement|penalt(y|ies)|proceedings?|actions?|orders?|reprimand(s|ed)?|fine[sd]|ban(s|ned)|sentenced|convicted|prosecut\w*|disciplinary)\b/.test(lower)) {
     return 'Enforcement';
   }
   if (lower.includes('standard') || lower.includes('technical') || lower.includes('interoperability')) {
@@ -129,6 +129,11 @@ function getTypeColor(format: string) {
 }
 
 const REG_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 (RegSonar-Feed-Gateway/2.0)';
+// FINRA's Cloudflare setup challenges clients that look like a browser but
+// aren't one, and serves the feed to a client that names itself plainly
+const PLAIN_USER_AGENT = 'RegSonar-Feed-Gateway/2.0';
+const PLAIN_AGENT_HOSTS = new Set(['www.finra.org']);
+const userAgentFor = (url: string) => (PLAIN_AGENT_HOSTS.has(new URL(url).host) ? PLAIN_USER_AGENT : REG_USER_AGENT);
 const FETCH_TIMEOUT_MS = 8000;
 
 // Rough impact heuristic by instrument format. Not an AI assessment.
@@ -164,7 +169,7 @@ function stripHtml(text: string): string {
 async function fetchOrThrow(url: string): Promise<globalThis.Response> {
   const res = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { 'User-Agent': REG_USER_AGENT }
+    headers: { 'User-Agent': userAgentFor(url) }
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
@@ -547,15 +552,7 @@ async function fetchMasConsultations(limit = 3): Promise<NormalizedNotice[]> {
     const closes = masDate(doc.masconsultation_closingdate_tdt);
     if (!closes) return notice;
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date(closes));
-    if (Date.parse(closes) < Date.now()) {
-      return { ...notice, statutoryDeadline: `Comments closed: ${date}`, statusBadge: { text: `Comments closed: ${date}`, type: 'standard' as const } };
-    }
-    return {
-      ...notice,
-      deadlineDate: date,
-      statutoryDeadline: `Comments close: ${date}`,
-      statusBadge: { text: `Comments close: ${date}`, type: 'deadline' as const }
-    };
+    return { ...notice, ...closingDateFields(date) };
   });
 }
 
@@ -902,6 +899,303 @@ async function fetchEsmaNews(limit = 4): Promise<NormalizedNotice[]> {
   });
 }
 
+// "Comments close" or "Comments closed" fields for a closing date (YYYY-MM-DD)
+// that the source publishes
+function closingDateFields(date: string): Partial<NormalizedNotice> {
+  if (date < hongKongDate()) {
+    return { statutoryDeadline: `Comments closed: ${date}`, statusBadge: { text: `Comments closed: ${date}`, type: 'standard' } };
+  }
+  return {
+    deadlineDate: date,
+    statutoryDeadline: `Comments close: ${date}`,
+    statusBadge: { text: `Comments close: ${date}`, type: 'deadline' }
+  };
+}
+
+const singaporeDay = (unixSeconds: number) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date(unixSeconds * 1000));
+
+// Singapore Exchange Regulation (SGX RegCo). Its pages are filled in from SGX's
+// own content API, which the server reads directly: the lists of public
+// consultations (with issue and closing dates) and public disciplinary
+// actions, and the SGX Group media list filtered to regulatory items.
+const SGX_CONTENT_API = 'https://api2.sgx.com/regco/content-api';
+const SGX_QUERY_ID = 'e4da21521b39e5324f96273260acfd8e1a9d1e5e';
+const SGX_REGULATORY_MEDIA = new Set(['Regulatory Announcement', 'Public Regulatory Statements', "Regulator's Column"]);
+
+async function sgxQuery(name: string, variables: Record<string, unknown>): Promise<any> {
+  const params = new URLSearchParams({ queryId: `${SGX_QUERY_ID}:${name}`, variables: JSON.stringify({ ...variables, lang: 'EN' }) });
+  const res = await fetchOrThrow(`${SGX_CONTENT_API}?${params}`);
+  const body = await res.json();
+  if (body.errors?.length) throw new Error(`SGX content API: ${String(body.errors[0].message).slice(0, 80)}`);
+  return body.data;
+}
+
+async function sgxList(name: string, limit: number): Promise<any[]> {
+  const data = await sgxQuery(name, { limit, offset: 0 });
+  return (data?.list?.results || []).map((r: any) => r.data);
+}
+
+// Content API paths start with the site name: /regco/... is on regco.sgx.com,
+// /sgxgroup/... on www.sgxgroup.com
+export function sgxPublicUrl(apiPath: string): string {
+  if (apiPath.startsWith('/regco/')) return `https://regco.sgx.com${apiPath.slice('/regco'.length)}`;
+  if (apiPath.startsWith('/sgxgroup/')) return `https://www.sgxgroup.com${apiPath.slice('/sgxgroup'.length)}`;
+  return `https://www.sgx.com${apiPath}`;
+}
+
+function sgxNotice(item: any, opts: { idPrefix: string; type: string; format: NormalizedNotice['format']; unixDate: number }): NormalizedNotice {
+  const title = stripHtml(String(item.title));
+  const sector = classifySector(title);
+  const score = estimateImpact(opts.format);
+  const path = String(item.link?.url || '');
+  const publishedAt = opts.unixDate ? new Date(opts.unixDate * 1000).toISOString() : undefined;
+  return {
+    id: `${opts.idPrefix}-${path.split('/').filter(Boolean).pop()}`.slice(0, 120),
+    ref: `SGX RegCo ${opts.type.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}`,
+    title,
+    regulator: 'SGX RegCo',
+    jurisdiction: 'SINGAPORE',
+    jurisdictionCode: 'SG',
+    type: opts.type,
+    typeColorClass: getTypeColor(opts.format),
+    impactScore: score,
+    issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+    publishedAt,
+    tags: ['SGX RegCo', opts.format, sector],
+    sector,
+    format: opts.format,
+    severity: severityFor(score),
+    dossierUrl: sgxPublicUrl(path),
+    isLiveFeed: true
+  };
+}
+
+async function fetchSgxConsultations(limit = 3): Promise<NormalizedNotice[]> {
+  const items = await sgxList('public_consultations_list', limit);
+  return items.map(item => {
+    const notice = sgxNotice(item, { idPrefix: 'sgx-con', type: 'CONSULTATION', format: 'Consultations', unixDate: item.dateIssue });
+    return item.dateClosed ? { ...notice, ...closingDateFields(singaporeDay(item.dateClosed)) } : notice;
+  });
+}
+
+async function fetchSgxDisciplinaryActions(limit = 3): Promise<NormalizedNotice[]> {
+  const items = await sgxList('public_disciplinary_actions_list', limit);
+  return items.map(item => sgxNotice(item, { idPrefix: 'sgx-disc', type: 'DISCIPLINARY ACTION', format: 'Enforcement', unixDate: item.dateAnnounced }));
+}
+
+const sgxNames = (field: any[] | null | undefined): string[] =>
+  (field || []).map(t => t?.data?.data?.name).filter(Boolean);
+
+async function fetchSgxRegulatoryNews(limit = 3): Promise<NormalizedNotice[]> {
+  // Most of the media list is listings, awards and speeches; regulatory items
+  // are a few a month, so a wider page is read and filtered
+  const items = await sgxList('media_centre_list', 100);
+  return items
+    .filter(item => sgxNames(item.mediaCentreType).some(t => SGX_REGULATORY_MEDIA.has(t)) || sgxNames(item.newsTopic).includes('Regulation'))
+    .slice(0, limit)
+    .map(item => {
+      const title = stripHtml(String(item.title));
+      const types = sgxNames(item.mediaCentreType);
+      const format = classifyFormat('', title);
+      const type = types.includes("Regulator's Column") ? "REGULATOR'S COLUMN" : 'REGULATORY ANNOUNCEMENT';
+      return sgxNotice(item, { idPrefix: 'sgx-news', type, format, unixDate: item.articleDate });
+    });
+}
+
+// The text of an SGX page, from the rich-text blocks the content API returns
+async function fetchSgxDocText(pageUrl: string): Promise<string | null> {
+  const url = new URL(pageUrl);
+  const site = url.host === 'regco.sgx.com' ? 'regco' : url.host === 'www.sgxgroup.com' ? 'sgxgroup' : null;
+  if (!site) return null;
+  const data = await sgxQuery('page', { path: `/${site}${url.pathname}` });
+  const blocks: string[] = [];
+  JSON.stringify(data, (key, value) => {
+    if (key === 'processed' && typeof value === 'string') blocks.push(value);
+    return value;
+  });
+  return htmlToText(blocks.join('\n'));
+}
+
+// ASX public consultations: a dated table on ASX's consultations page. Each
+// entry says what ASX published and, for consultations, when submissions close.
+const ASX_CONSULTATIONS_PAGE = 'https://www.asx.com.au/about/regulation/consultations-and-submissions';
+
+export function parseAsxConsultations(html: string): { date: string; text: string; links: string[] }[] {
+  const start = html.search(/ASX public consultations<\/h\d>/i);
+  const table = html.slice(start).match(/<table[\s\S]*?<\/table>/i)?.[0];
+  if (start < 0 || !table) return [];
+  const rows: { date: string; text: string; links: string[] }[] = [];
+  for (const row of table.match(/<tr[\s\S]*?<\/tr>/gi) || []) {
+    const cells = row.match(/<td[\s\S]*?<\/td>/gi) || [];
+    const day = cells[0] && stripHtml(cells[0]).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!day || cells.length < 2) continue;
+    const links = [...cells[1].matchAll(/href="([^"]+\.pdf)"/gi)].map(m => new URL(m[1], ASX_CONSULTATIONS_PAGE).toString());
+    rows.push({
+      date: `${day[3]}-${day[2].padStart(2, '0')}-${day[1].padStart(2, '0')}`,
+      text: htmlToText(cells[1]),
+      links
+    });
+  }
+  return rows;
+}
+
+async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice[]> {
+  const rows = parseAsxConsultations(await (await fetchOrThrow(ASX_CONSULTATIONS_PAGE)).text());
+  if (rows.length === 0) throw new Error('No consultation table found on the ASX page');
+  return rows
+    .filter(row => !/^On \w+day[^,]*,[^.]*\b(recording|webinar|briefing|forum)\b|^ASX has made available a recording/i.test(row.text))
+    .slice(0, limit)
+    .map((row, i) => {
+    // "On Wednesday 30 September 2026, ASX published a consultation paper on ..."
+    const first = row.text.split(/(?<=\.)\s+(?=[A-Z])/)[0].replace(/^On \w+day,? \d{1,2} \w+ \d{4},\s*/i, '');
+    const title = first.charAt(0).toUpperCase() + first.slice(1);
+    const format = classifyFormat('', title);
+    const sector = classifySector(row.text);
+    const score = estimateImpact(format);
+    const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Australia/Sydney');
+    const closing = /response|feedback received/i.test(title) ? undefined : extractClosingDate(row.text.split(/(?<=[.;])\s+/));
+    return {
+      id: `asx-con-${row.date}-${row.links[0] ? lastPathPart(row.links[0]).slice(0, 60) : i}`,
+      ref: `ASX Consultation ${row.date}`,
+      title: title.length > 220 ? `${title.slice(0, 217)}...` : title,
+      regulator: 'ASX',
+      jurisdiction: 'AUSTRALIA',
+      jurisdictionCode: 'AU' as const,
+      type: 'CONSULTATION',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+      publishedAt,
+      summary: row.text.length > 600 ? `${row.text.slice(0, 597)}...` : row.text,
+      tags: ['ASX', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      // The paper itself where linked, so key points come from it
+      dossierUrl: row.links[0] || ASX_CONSULTATIONS_PAGE,
+      isLiveFeed: true,
+      ...(closing?.date ? closingDateFields(closing.date) : {})
+    };
+  });
+}
+
+// FINRA (the US self-regulatory organisation for broker-dealers): regulatory
+// and information notices from its official RSS feed. Board election notices
+// are left out. Feed titles are only the notice number ("Regulatory Notice
+// 26-16"), so the title adds the opening of FINRA's own summary from the feed.
+// FINRA rate-limits quickly, so notice pages are only fetched for key points.
+const FINRA_NOTICES_RSS = 'https://www.finra.org/rules-guidance/notices/rss';
+
+export function finraTitle(number: string, summary: string | undefined): string {
+  const first = summary?.split(/(?<=\.)\s+(?=[A-Z])/)[0]?.replace(/\.$/, '');
+  if (!first) return number;
+  return `${number}: ${first.length > 150 ? `${first.slice(0, 147).replace(/\s+\S*$/, '')}...` : first}`;
+}
+
+async function fetchFinraNotices(limit = 4): Promise<NormalizedNotice[]> {
+  const items = (await rssItems(FINRA_NOTICES_RSS)).filter((item: any) => !/^election notice/i.test(String(item.title)));
+  return items.slice(0, limit).map((item: any) => {
+    const number = stripHtml(String(item.title));
+    const link = String(item.link);
+    const summary = item.description ? htmlToText(String(item.description)).replace(/^Summary\s*/i, '').trim() || undefined : undefined;
+    const title = finraTitle(number, summary);
+    const format = /^information notice/i.test(number) ? 'Circulars' : classifyFormat('', `${title} ${summary || ''}`);
+    const sector = classifySector(`${title} ${summary || ''}`);
+    const score = estimateImpact(format);
+    return {
+      id: `finra-${lastPathPart(link)}`,
+      ref: `FINRA ${number}`,
+      title,
+      regulator: 'FINRA',
+      jurisdiction: 'UNITED STATES',
+      jurisdictionCode: 'US' as const,
+      type: /^regulatory notice/i.test(number) ? 'REGULATORY NOTICE' : 'NOTICE',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: getRelativeTime(item.pubDate),
+      publishedAt: toIso(item.pubDate),
+      summary,
+      tags: ['FINRA', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: link,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Japan Exchange Group rule revisions: one dated table per exchange, each
+// row linking to an English outline of the change (PDF)
+const JPX_REVISIONS = [
+  { page: 'index.html', regulator: 'TSE', name: 'Tokyo Stock Exchange' },
+  { page: '01.html', regulator: 'OSE', name: 'Osaka Exchange' },
+  { page: '02.html', regulator: 'JPX-R', name: 'Japan Exchange Regulation' },
+  { page: '03.html', regulator: 'TOCOM', name: 'Tokyo Commodity Exchange' }
+];
+const JPX_REVISIONS_BASE = 'https://www.jpx.co.jp/english/rules-participants/rules/revise/';
+
+export function parseJpxRevisions(html: string, pageUrl: string): { date: string; title: string; outline?: string }[] {
+  const table = html.match(/<table[\s\S]*?<\/table>/i)?.[0];
+  if (!table) return [];
+  const rows: { date: string; title: string; outline?: string }[] = [];
+  for (const row of table.match(/<tr[\s\S]*?<\/tr>/gi) || []) {
+    const cells = row.match(/<td[\s\S]*?<\/td>/gi) || [];
+    if (cells.length < 2) continue;
+    const parsed = Date.parse(`${stripHtml(cells[0]!).replace(/\./g, '')} UTC`);
+    if (isNaN(parsed)) continue;
+    const outline = row.match(/href="([^"]+\.pdf)"/i)?.[1];
+    rows.push({
+      date: new Date(parsed).toISOString().slice(0, 10),
+      title: stripHtml(htmlToText(cells[1])),
+      outline: outline ? new URL(outline, pageUrl).toString() : undefined
+    });
+  }
+  return rows;
+}
+
+async function fetchJpxRuleRevisions(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = await Promise.allSettled(
+    JPX_REVISIONS.map(async ex => {
+      const url = JPX_REVISIONS_BASE + ex.page;
+      return parseJpxRevisions(await (await fetchOrThrow(url)).text(), url).map(row => ({ ...row, ex, url }));
+    })
+  );
+  const rows = pages.flatMap(p => (p.status === 'fulfilled' ? p.value : []));
+  if (rows.length === 0) throw new Error('No rule revisions could be read from JPX');
+  return rows
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, limit)
+    .map(row => {
+      // "Enforcement Rules" is a kind of rulebook, so the title isn't used to pick the format
+      const format = 'Circulars' as const;
+      const sector = classifySector(row.title);
+      const score = estimateImpact(format);
+      const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Asia/Tokyo');
+      const slug = row.outline ? row.outline.split('/').slice(-2, -1)[0] : row.title.slice(0, 40).replace(/\W+/g, '-');
+      return {
+        id: `jpx-${row.ex.regulator.toLowerCase()}-${slug}`,
+        ref: `${row.ex.name} rule revision ${row.date}`,
+        title: row.title,
+        regulator: row.ex.regulator,
+        jurisdiction: 'JAPAN',
+        jurisdictionCode: 'JP' as const,
+        type: 'RULE REVISION',
+        typeColorClass: getTypeColor(format),
+        impactScore: score,
+        issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+        publishedAt,
+        tags: ['JPX', row.ex.regulator, format, sector],
+        sector,
+        format,
+        severity: severityFor(score),
+        dossierUrl: row.outline || row.url,
+        isLiveFeed: true
+      };
+    });
+}
+
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
 
 interface EndpointDefinition {
@@ -1037,6 +1331,46 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
+    id: 'sgx-regco',
+    name: 'SGX RegCo Content API',
+    agency: 'SGX RegCo (Singapore)',
+    jurisdiction: 'Singapore',
+    url: `${SGX_CONTENT_API}?queryId=${SGX_QUERY_ID}%3Apublic_consultations_list&variables=%7B%22limit%22%3A1%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D`,
+    protocol: 'JSON (behind SGX RegCo pages)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'asx-consult',
+    name: 'ASX Public Consultations',
+    agency: 'ASX (Australia)',
+    jurisdiction: 'Australia',
+    url: ASX_CONSULTATIONS_PAGE,
+    protocol: 'HTML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'jpx-rules',
+    name: 'JPX Rule Revisions',
+    agency: 'TSE, OSE, TOCOM, JPX-R (Japan)',
+    jurisdiction: 'Japan',
+    url: JPX_REVISIONS_BASE + 'index.html',
+    protocol: 'HTML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'finra-rss',
+    name: 'FINRA Notices RSS',
+    agency: 'FINRA (United States)',
+    jurisdiction: 'US',
+    url: FINRA_NOTICES_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
     id: 'bis-portal',
     name: 'BIS Media Releases RSS',
     agency: 'BIS & Basel Committee',
@@ -1058,7 +1392,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
   try {
     const res = await fetch(ep.url, {
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      headers: { 'User-Agent': REG_USER_AGENT }
+      headers: { 'User-Agent': userAgentFor(ep.url) }
     });
     const body = await res.text();
     const pingMs = Date.now() - start;
@@ -1207,6 +1541,12 @@ export const SOURCES: { endpointId: string; name: string; fetch: (limit?: number
   { endpointId: 'jfsa-rss', name: 'JFSA News', fetch: fetchJfsaNews },
   { endpointId: 'esma-rss', name: 'ESMA News', fetch: fetchEsmaNews },
   { endpointId: 'fsb-rss', name: 'FSB Publications', fetch: fetchFsbPublications },
+  { endpointId: 'sgx-regco', name: 'SGX RegCo Consultations', fetch: fetchSgxConsultations },
+  { endpointId: 'sgx-regco', name: 'SGX RegCo Disciplinary Actions', fetch: fetchSgxDisciplinaryActions },
+  { endpointId: 'sgx-regco', name: 'SGX RegCo Announcements', fetch: fetchSgxRegulatoryNews },
+  { endpointId: 'asx-consult', name: 'ASX Public Consultations', fetch: fetchAsxConsultations },
+  { endpointId: 'jpx-rules', name: 'JPX Rule Revisions', fetch: fetchJpxRuleRevisions },
+  { endpointId: 'finra-rss', name: 'FINRA Notices', fetch: fetchFinraNotices },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];
 
@@ -1250,9 +1590,9 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
     let text: string;
     let ocr = false;
     let sourceUrl = notice.dossierUrl!;
-    const sfcText = await fetchSfcDocText(sourceUrl);
-    if (sfcText !== null) {
-      text = sfcText;
+    const docText = (await fetchSfcDocText(sourceUrl)) ?? (await fetchSgxDocText(sourceUrl));
+    if (docText !== null) {
+      text = docText;
     } else if (BRDR_PAGE.test(sourceUrl)) {
       ({ text, ocr, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
     } else if (/\.pdf$/i.test(new URL(sourceUrl).pathname)) {

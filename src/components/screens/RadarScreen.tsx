@@ -11,12 +11,12 @@ const SECTORS: SectorDomain[] = [
 ];
 
 const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
-  { code: 'SG', label: 'SINGAPORE (MAS)' },
+  { code: 'SG', label: 'SINGAPORE (MAS, SGX REGCO)' },
   { code: 'HK', label: 'HONG KONG (HKMA, SFC, HKEX)' },
-  { code: 'US', label: 'UNITED STATES (SEC/CFTC)' },
+  { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA)' },
   { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
-  { code: 'AU', label: 'AUSTRALIA (ASIC)' },
-  { code: 'JP', label: 'JAPAN (JFSA)' },
+  { code: 'AU', label: 'AUSTRALIA (ASIC, ASX)' },
+  { code: 'JP', label: 'JAPAN (JFSA, JPX)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS, FSB)' }
 ];
 
