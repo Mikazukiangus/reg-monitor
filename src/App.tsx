@@ -27,6 +27,7 @@ import { daysUntil, deriveDeadlines, deriveNotifications, sgtTime, sortNewestFir
 import { calendarNotices, downloadIcs } from './lib/ics';
 import { copyText, defaultViewState, noticeLink, parseViewState, serializeViewState, SortOption } from './lib/urlState';
 import { readPreviousVisit, recordVisit } from './lib/visits';
+import { SECTORS } from './lib/tagging';
 import {
   RegulatoryNotice,
   JurisdictionCode,
@@ -51,6 +52,8 @@ const DEFAULT_ENDPOINTS: EndpointMetric[] = [
   { id: 'sgx-regco', name: 'SGX RegCo Content API', agency: 'SGX RegCo (Singapore)', jurisdiction: 'Singapore', url: 'https://api2.sgx.com/regco/content-api', protocol: 'JSON (behind SGX RegCo pages)', auth: 'Public / None', ingests: true },
   { id: 'asx-consult', name: 'ASX Public Consultations', agency: 'ASX (Australia)', jurisdiction: 'Australia', url: 'https://www.asx.com.au/about/regulation/consultations-and-submissions', protocol: 'HTML', auth: 'Public / None', ingests: true },
   { id: 'jpx-rules', name: 'JPX Rule Revisions', agency: 'TSE, OSE, TOCOM, JPX-R (Japan)', jurisdiction: 'Japan', url: 'https://www.jpx.co.jp/english/rules-participants/rules/revise/index.html', protocol: 'HTML', auth: 'Public / None', ingests: true },
+  { id: 'bnm-rss', name: 'BNM Press Releases', agency: 'BNM (Malaysia)', jurisdiction: 'Malaysia', url: 'https://www.bnm.gov.my/press-release-2026', protocol: 'HTML', auth: 'Public / None', ingests: true },
+  { id: 'sc-my', name: 'SC Malaysia Media Releases', agency: 'SC Malaysia', jurisdiction: 'Malaysia', url: 'https://www.sc.com.my/resources/media/media-release', protocol: 'HTML (list data in page)', auth: 'Public / None', ingests: true },
   { id: 'finra-rss', name: 'FINRA Notices RSS', agency: 'FINRA (United States)', jurisdiction: 'US', url: 'https://www.finra.org/rules-guidance/notices/rss', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', url: 'https://www.bis.org/doclist/all_pressrels.rss', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
 ].map(ep => ({ ...ep, status: 'Checking' as const, pingMs: null }));
@@ -301,9 +304,20 @@ export default function App() {
   }, [autoSyncInterval]);
 
   const jurisdictionCounts = useMemo(() => {
-    const counts: Record<JurisdictionCode, number> = { SG: 0, HK: 0, AU: 0, JP: 0, UK_EU: 0, US: 0, GLOBAL: 0 };
+    const counts: Record<JurisdictionCode, number> = { SG: 0, MY: 0, HK: 0, AU: 0, JP: 0, UK_EU: 0, US: 0, GLOBAL: 0 };
     notices.forEach(n => {
       counts[n.jurisdictionCode] += 1;
+    });
+    return counts;
+  }, [notices]);
+
+  // Notices in each sector, counting every sector a notice has
+  const sectorCounts = useMemo(() => {
+    const counts = Object.fromEntries(SECTORS.map(s => [s, 0])) as Record<SectorDomain, number>;
+    notices.forEach(n => {
+      (n.sectors ?? [n.sector]).forEach(s => {
+        if (s in counts) counts[s] += 1;
+      });
     });
     return counts;
   }, [notices]);
@@ -382,6 +396,7 @@ export default function App() {
     return searchableNotices.filter(notice => {
       // Header dropdown filter
       if (headerJurisdiction === 'Singapore MAS' && notice.jurisdictionCode !== 'SG') return false;
+      if (headerJurisdiction === 'Malaysia' && notice.jurisdictionCode !== 'MY') return false;
       if (headerJurisdiction === 'Hong Kong HKMA' && notice.jurisdictionCode !== 'HK') return false;
       if (headerJurisdiction === 'Australia Japan' && !['AU', 'JP'].includes(notice.jurisdictionCode)) return false;
       if (headerJurisdiction === 'UK US Global' && !['UK_EU', 'US', 'GLOBAL'].includes(notice.jurisdictionCode)) return false;
@@ -396,8 +411,8 @@ export default function App() {
         return false;
       }
 
-      // Sector check
-      if (!selectedSectors[notice.sector]) {
+      // Sector check: shown if any of its sectors is selected
+      if (!(notice.sectors ?? [notice.sector]).some(s => selectedSectors[s])) {
         return false;
       }
 
@@ -523,6 +538,7 @@ export default function App() {
     },
     onResetFilters: handleResetFilters,
     jurisdictionCounts,
+    sectorCounts,
     severityCounts,
     formatCounts,
     endpoints,
@@ -909,7 +925,7 @@ export default function App() {
         onOpenMethodology={() =>
           setInfoModal({
             title: 'Statutory Ingestion Methodology',
-            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the SFC press release, circular and consultation RSS feeds, the HKEX regulatory announcements RSS feed, the MAS website search API (media releases, consultations with the closing date MAS publishes, circulars and guidelines), ASIC media releases (from the JSON file behind the ASIC newsroom page, as ASIC publishes no RSS feed), the JFSA English news RSS feed (press conference transcripts and the weekly newsletter are left out), exchange regulators (SGX RegCo consultations with the closing date SGX publishes, disciplinary actions and regulatory announcements, read from the content API behind the SGX RegCo website; ASX public consultations from the ASX consultations page; rule revisions of the Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange and Japan Exchange Regulation from the JPX rule revision pages; FINRA regulatory and information notices from its RSS feed), the BIS media releases RSS feed, and the FSB publications RSS feed. EU coverage comes from the ESMA news RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents. "Comments close" dates come from the data the source itself publishes where there is any (Federal Register, MAS) and otherwise from a sentence in the document that states when comments or responses are due. When the server has a history database, every notice read is stored there: the feed also shows the last 30 days from it (marked "From history"), and search covers the whole history. A consultation and its conclusions are linked by regulator and title words ("matched by title"), because regulators do not publish that link in a form that can be read automatically.'
+            body: 'Live notices are pulled from public sources: the US Federal Register API (SEC, CFTC), the HKMA press release, circular and consultation RSS feeds, the SFC press release, circular and consultation RSS feeds, the HKEX regulatory announcements RSS feed, the MAS website search API (media releases, consultations with the closing date MAS publishes, circulars and guidelines), ASIC media releases (from the JSON file behind the ASIC newsroom page, as ASIC publishes no RSS feed), the JFSA English news RSS feed (press conference transcripts and the weekly newsletter are left out), exchange regulators (SGX RegCo consultations with the closing date SGX publishes, disciplinary actions and regulatory announcements, read from the content API behind the SGX RegCo website; ASX public consultations from the ASX consultations page; rule revisions of the Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange and Japan Exchange Regulation from the JPX rule revision pages; FINRA regulatory and information notices from its RSS feed), Bank Negara Malaysia press releases (from the table on its press release page for each year; its RSS feed is behind a Cloudflare check that automated requests cannot pass), Securities Commission Malaysia media releases (from the list in its media release page; Bursa Malaysia is not included because its site sits behind the same kind of check), the BIS media releases RSS feed, and the FSB publications RSS feed. EU coverage comes from the ESMA news RSS feed. UK coverage comes from the Bank of England PRA publications RSS feed and the UK FCA RSS feed (the FCA feed is sometimes blocked by a Cloudflare bot check). HKMA daily liquidity figures are read from the HKMA Daily Monetary Statistics page, because the firewall on the HKMA Open API blocks cloud servers. Each source is fetched at most once every 10 minutes (the HKMA liquidity page every 30 minutes). To load quickly, the page may first show a copy of the last sync kept by the hosting CDN; the time it was built is shown as "Data as of", and a copy older than 10 minutes is refreshed straight away. For HKMA circulars and consultations, key points are quoted from the PDF document. Scanned PDFs are read on the server with Tesseract OCR (first 4 pages, bundled English data); OCR uses a neural text recogniser and can misread characters, so those key points are labelled "OCR". Key points are extractive: the server fetches each official document once and quotes its most central sentences verbatim, ranked with TextRank, alongside dated sentences and reference numbers found by rules. Sentences are selected by TextRank, not an AI model, and no external API is used, so nothing is paraphrased. Impact scores are a heuristic by document type (for example, enforcement and proposed rules score higher), not a legal assessment. Sectors and formats come from keyword rules, not an AI model: whole words only, with a word in the title counting more than one in the summary, and up to three sectors per notice. Each notice’s "Why these tags?" shows the words that gave each tag, or says the tag is a default because no topic words matched. The rules are tested against a set of hand-labelled notices. Every notice shown comes from a live source; there is no sample data. "New" markers compare against the notices this browser saw before, stored only in this browser. Calendar files (.ics) contain the dates as stated in the source documents. "Comments close" dates come from the data the source itself publishes where there is any (Federal Register, MAS) and otherwise from a sentence in the document that states when comments or responses are due. When the server has a history database, every notice read is stored there: the feed also shows the last 30 days from it (marked "From history"), and search covers the whole history. A consultation and its conclusions are linked by regulator and title words ("matched by title"), because regulators do not publish that link in a form that can be read automatically.'
           })
         }
         onOpenAuditLog={() =>

@@ -7,13 +7,19 @@ export type SortOption = 'Highest Impact Score' | 'Most Recent First' | 'Consult
 export type TabId = 'feed' | 'radar' | 'horizon' | 'enforcement' | 'alert-rules';
 
 export const ALL_SEVERITIES: UrgencySeverity[] = ['critical', 'high', 'info'];
-export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'HK', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
+export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
 export const SECTOR_KEYS: Record<SectorDomain, string> = {
-  'FinTech & Digital Assets': 'fintech',
-  'Banking & Capital Markets': 'banking',
+  'Banking & Prudential': 'banking',
+  'Capital Markets & Listings': 'markets',
+  'Funds & Asset Management': 'funds',
+  'Insurance & Pensions': 'insurance',
+  'FinTech, Payments & Digital Assets': 'fintech',
+  'AI, Cyber & Tech Risk': 'tech',
   'ESG & Sustainability': 'esg',
-  'AI Governance & Ethics': 'ai',
-  'AML/CFT & Sanctions': 'aml'
+  'AML/CFT & Financial Crime': 'aml',
+  'Conduct & Consumer Protection': 'conduct',
+  'Monetary & Financial Stability': 'monetary',
+  'General & Institutional': 'general'
 };
 const ALL_SECTORS = Object.keys(SECTOR_KEYS) as SectorDomain[];
 const SORT_KEYS: Record<SortOption, string> = {

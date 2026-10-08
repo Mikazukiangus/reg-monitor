@@ -5,7 +5,7 @@ export const DEFAULT_RULES: CustomAlertRule[] = [
   {
     id: 'rule-1',
     name: 'Consultations & Deadlines',
-    jurisdictions: ['MAS', 'HKMA', 'SFC', 'PRA', 'SEC', 'SGX', 'ASX', 'FINRA'],
+    jurisdictions: ['MAS', 'HKMA', 'SFC', 'PRA', 'SEC', 'SGX', 'ASX', 'FINRA', 'SC Malaysia'],
     minImpact: 7.5,
     keywords: ['consult', 'comments', 'deadline', 'feedback'],
     enabled: true
@@ -21,7 +21,7 @@ export const DEFAULT_RULES: CustomAlertRule[] = [
   {
     id: 'rule-3',
     name: 'Enforcement Actions',
-    jurisdictions: ['MAS', 'SEC', 'PRA', 'HKMA', 'SFC', 'ASIC', 'SGX'],
+    jurisdictions: ['MAS', 'SEC', 'PRA', 'HKMA', 'SFC', 'ASIC', 'SGX', 'SC Malaysia'],
     minImpact: 0,
     keywords: ['enforcement', 'penalty', 'fine', 'prohibition', 'reprimand', 'sentenced'],
     enabled: true

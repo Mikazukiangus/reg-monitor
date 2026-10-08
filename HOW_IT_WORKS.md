@@ -26,6 +26,8 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **Bank of England PRA** | Official RSS feed | |
 | **FCA** | Official RSS feed | Cloudflare sometimes blocks it. It works from Vercel but is often blocked when run locally |
 | **SGX RegCo** (Singapore Exchange Regulation) | The content API that SGX RegCo's own web pages load (JSON): public consultations, public disciplinary actions, and the SGX media list filtered to regulatory announcements, public regulatory statements, Regulator's Column, items tagged Regulation and speeches given for SGX RegCo | SGX publishes no RSS feed and its pages are filled in by JavaScript. Consultation closing dates come from SGX's own field. Key points are read from the same API |
+| **Bank Negara Malaysia** | The press release table on BNM's page for each year (HTML), with last year's page added early in the year | BNM's RSS feed is behind a Cloudflare check that automated requests cannot pass, so it isn't used. Dates are Malaysian days. Key points come from the press release page |
+| **Securities Commission Malaysia** | The media release list built into SC's media release page (HTML) | The page carries the whole archive with each release's own short description, which is kept as the summary. Dates are Malaysian days |
 | **ASX** | The public consultations table on ASX's consultations page (HTML) | Recordings and event notices are left out. The title is the entry's first sentence; the closing date comes from the entry's text; key points come from the linked consultation paper (PDF) |
 | **JPX** (Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange, Japan Exchange Regulation) | The English rule-revision tables on jpx.co.jp (HTML), one per exchange | Key points come from the English outline of each revision (PDF). Dates are Japan time |
 | **FINRA** | Official notices RSS feed | Board election notices are left out. Feed titles are only the notice number, so the title adds the opening sentence of FINRA's own summary. FINRA's Cloudflare challenges clients that pose as a browser, so the server identifies itself plainly as "RegSonar-Feed-Gateway/2.0" there. FINRA rate-limits quickly, so notice pages are fetched only once each, for key points |
@@ -33,14 +35,14 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **BIS & Basel Committee** | Official BIS media-release feed (RSS, older RDF format) | Basel Committee items are tagged BCBS |
 | **FSB** | Official publications RSS feed | Regional consultative group meetings and auditor reports are left out |
 
-Sources considered and left out: SGX Group news releases about listings, awards, indices and results (only regulatory items are kept), JPX market news (mostly listings and index changes), IOSCO (its site refuses automated requests), EBA (its feed only carries daily e-mail alert bulletins) and APRA (its feed only carries statistics releases).
+Sources considered and left out: SGX Group news releases about listings, awards, indices and results (only regulatory items are kept), JPX market news (mostly listings and index changes), IOSCO (its site refuses automated requests), Bursa Malaysia (its site is behind a Cloudflare check), EBA (its feed only carries daily e-mail alert bulletins) and APRA (its feed only carries statistics releases).
 
 ## What the site works out itself
 
 These come from rules in the code, not from the regulators:
 
 - **Impact score and severity:** based on the type of document. Enforcement actions and proposed rules score higher. This is not a legal assessment.
-- **Sector:** assigned by keywords, such as "crypto" for digital assets or "climate" for ESG.
+- **Sector and format:** assigned by keyword rules in `src/lib/tagging.ts`, described below.
 - **Deadlines:** taken from the source's own date fields where there are any (the Federal Register's comment and effective dates, MAS's consultation closing date), or from dated sentences found in the document.
 - **Comments close:** for consultations without a date field, the server looks for a sentence in the document that says when comments, responses or submissions are due (for example "Comments should be submitted by 30 November 2026") and shows the date from it. A closing date already past is shown as "Comments closed".
 - **Consultation links:** a consultation is linked to the conclusions or response published later by the same regulator, and back, when their titles share most of their topic words. Regulators don't publish this link in a form a program can read, so it is labelled "matched by title".
@@ -64,9 +66,26 @@ Most feeds only list their latest 10 to 50 items, so without a store older notic
 - **Status checks:** every 5 minutes, each source gets a single request to see whether it is up, slow, or blocked by a firewall or maintenance page. This feeds the "sources up" count.
 - **Email digest** (`digest.ts`, rules in `digest-rules.ts`): a Vercel cron job runs each morning at about 08:00 Singapore time. It runs the scheduled check below and emails the site owner, through Resend, the previous day's notices that match the rules. No email is sent on days with no matches. It needs `CRON_SECRET`, `RESEND_API_KEY` and `DIGEST_TO` in the Vercel project settings (see `.env.example`).
 
+## Sectors and formats
+
+Each notice gets up to three of eleven sectors: Banking & Prudential; Capital Markets & Listings; Funds & Asset Management; Insurance & Pensions; FinTech, Payments & Digital Assets; AI, Cyber & Tech Risk; ESG & Sustainability; AML/CFT & Financial Crime; Conduct & Consumer Protection; Monetary & Financial Stability; General & Institutional.
+
+- **Whole words only.** "AI" no longer matches inside "maintain", and "fund" doesn't match "own funds" or "guarantee fund". Regulator names are removed before matching, so "Monetary Authority" doesn't make a notice about monetary policy, and "Bank of England" doesn't make it about banks.
+- **The title counts most.** A word in the title scores 3; a word in the summary or key points scores 1. A sector needs 3, so the summary alone can add a sector only when several of its words appear.
+- **Ties** go to the more specific topic (for example AML before Banking). For market regulators and exchanges, Capital Markets goes first.
+- **No topic words:** market regulators and exchanges default to Capital Markets & Listings, the PRA and Basel Committee to Banking & Prudential, everyone else to General & Institutional. The notice says that the tag is a default.
+- **Format** (Consultation, Enforcement, Guidelines, Technical Standards, else Circular) also comes from phrases in the title, checked in a fixed order: speeches and approval orders are never enforcement or consultations; "orders", "no-action letter" or "suspended companies" alone don't make a notice enforcement.
+- **Reasons are kept.** Every notice records the words that gave each tag, and the card shows them under "Why these tags?".
+- **Old notices are re-tagged** when read back from the history, so a rule change applies to everything shown.
+
+Quality checks:
+
+- `tests/tagging.test.ts` holds hand-labelled notices taken from the live sources, with the sector and format a reader would give them. A rule change that breaks one fails the tests.
+- `npm run tags:review` reads the live sources and lists the notices whose tags rest on the weakest evidence: defaults because no topic words matched, sectors that came from the summary only, and circulars by default. Reading that list now and then shows rules that are missing. When a tag is wrong, add the notice to the test file with the right answer, then change the rules until every test passes.
+
 ## Checks
 
-- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
+- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
 
 ## Ground rules
 

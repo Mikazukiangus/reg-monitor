@@ -1,0 +1,1295 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	Media Releases - Media Releases and Announcements  | Securities Commission Malaysia
+</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" /><base href="https://www.sc.com.my/" /><link rel="icon" href="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/favicon.ico" type="image/x-icon" /><link rel="shortcut icon" href="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/favicon.ico" type="image/x-icon" /><meta name="description" content="Media Releases and Announcements" /><meta name="keywords" content="media release, announcements, media, press release" /><link rel=" canonical" href="https://www.sc.com.my/resources/media/media-release"/>
+    <!--START - custom font-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:300,400,700" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700,300italic,400italic,700italic" />
+    <!--END - custom font-->
+    <link href="https://www.sc.com.my/api/css-page.ashx?page_type=website&t=1750140662" rel="stylesheet" /><link href="https://www.sc.com.my/api/css-page.ashx?page_type=content&website_page_template_menu_id=D429DE99-4804-4913-80DB-BC6EDAA2AF8D&t=1750140662" rel="stylesheet" eqcss="true" /><link href="https://www.sc.com.my/api/css-page.ashx?page_type=master&website_page_template_menu_id=75225212-8B76-46B8-9787-581C914A865C&t=1770262782" rel="stylesheet" eqcss="true" />
+     <!--START - Dynamic Molecule CSS for SMART/CUSTOM/DATA-->
+    <style>
+    #row-search input{padding: 0}
+    #row-search .cursor-pointer, #row-search .cursor-pointer a {cursor: pointer}
+    #row-search .search .mol .col:first-child {
+        border-radius: 25px 0 0 0;
+    }
+    
+    #row-search .search .mol .col:nth-child(2) {
+        border-radius: 0 25px 0 0;
+    }
+</style><style>
+    .bg-color{background-color: rgb(33 49 64);}
+     @media screen and (max-width:1500px){
+    .main-top-menu  .root-menu > li{display:table-cell; vertical-align:middle; width: 1%;}
+    .main-top-menu .lvl-1 > .menu-link a{text-align:center}
+    }
+    .search-0001-0530ee39b0c44226b6a97a0184c9a5c9 .search-box {font-size:larger; !important}
+    .basic-result .search-result-info-col {padding-bottom:16px; !important}
+	.search-0001-0530ee39b0c44226b6a97a0184c9a5c9 .result-list, .result-list a {font-family:Roboto; font-size:larger; padding:8px 0px;}
+    #btn-language, #btn-language a {cursor: pointer;}
+    .content-empty{
+        color: rgba(73,73,73,1);
+        text-shadow: none;
+        font-weight: 400;
+        font-style: normal;
+        text-transform: none;
+        letter-spacing: normal;
+        word-spacing: normal;
+        text-align: left;
+        min-height: 0;
+        padding: 0;
+        background-color: transparent;
+    }
+     #btn-language, #btn-language a {cursor: pointer;}
+    
+
+* {box-sizing: border-box;}
+
+.panel-wrapper {
+  position: relative;
+}
+    
+.show, .hide {
+  position: absolute;
+  bottom: 10px;
+  z-index: 100;
+  text-align: center;
+}
+
+.hide {display: none;}
+.show:target {display: none;}
+.show:target ~ .hide {display: block;}
+.show:target ~ .panel {
+   max-height: 2000px; 
+}
+.show:target ~ .fade {
+  margin-top: 0;
+    height:20px;
+}
+
+.panel {
+  position: relative;
+  margin: 0px;
+  width: 100%;
+  max-height: 150px;
+  overflow: hidden;
+  transition: max-height .5s ease;
+}
+.fade {
+  background: linear-gradient(to bottom, rgba(100, 100, 100, 0) 0%, #ffffff 75%);
+  height: 100px;
+  margin-top: -100px;
+  position: relative;
+}
+
+    .at-share-dock.atss{z-index:49!important}
+    @media screen and (max-width:1340px){
+    .com-afad0524-de35-416a-8067-c30304868dfd{display:none!important}
+    }
+
+
+    @media screen and (min-width:1341px){
+    .com-28d1e8f9-d905-44ed-b54b-35dc001858a6{display:none!important}
+    }
+
+    .navi-0001-wrapper li .sub-collapser{width:32px}
+    .navi-0001-wrapper li .sub-collapser+a{padding-right:32px}
+    
+.ol-upper-alpha > li::marker {
+  font-weight: bold;
+}
+</style>
+
+<style>
+    .txt-search-pnl{background:transparent; color:#fff;}</style>
+    <!--END - Dynamic Molecule CSS for SMART/CUSTOM/DATA-->
+    <link rel="stylesheet" type="text/css" href="WebResources.ashx?q=8b0fc5e5133db284f84c38e86474998a&amp;t=0404055959" />
+<meta name="twitter:card" content="summary" /><meta name="twitter:title" property="og:title" content="Media Releases - Media Releases and Announcements " /><meta name="twitter:description" property="og:description" content="Media Releases and Announcements" /><meta name="twitter:image" content="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/social/thumb-sc-social-media-04.png" /><meta property="og:url" content="https://www.sc.com.my/resources/media/media-release" /><meta property="og:type" content="website" /><meta property="og:image" content="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/social/thumb-sc-social-media-01.png" /><meta property="og:image" content="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/social/thumb-sc-social-media-02.png" /><meta property="og:image" content="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentMS/img/social/thumb-sc-social-media-03.png" /><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G225TDF89R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-G225TDF89R');
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PKG7QKK');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Hotjar Tracking Code for https://www.sc.com.my/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1129359,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script></head>
+<body>
+       
+      
+        <!--START - JS for dynamic molecule (SMART/DATA/CUSTOM)-->
+        <!--END - JS for dynamic molecule (SMART/DATA/CUSTOM)-->
+        
+        
+        
+        
+        
+        
+       
+   
+    <input type="hidden" name="hf_website_id" id="hf_website_id" value="FFFF0951-2947-47E1-93FE-FFDB029E57D9" /><input type="hidden" name="hf_website_page_template_menu_id" id="hf_website_page_template_menu_id" value="D429DE99-4804-4913-80DB-BC6EDAA2AF8D" /><input type="hidden" name="hf_website_URL" id="hf_website_URL" value="https://www.sc.com.my/" /><input type="hidden" name="hf_root_id" id="hf_root_id" value="A10D0B58-6DC9-4EC5-92EC-AB4F200B33E7" /><input type="hidden" name="hf_root_title" id="hf_root_title" value="RESOURCES" /><input type="hidden" name="hf_page_draft_id" id="hf_page_draft_id" value="" /><input type="hidden" name="hf_website_page_template_menu_URL" id="hf_website_page_template_menu_URL" value="resources/media/media-release" /><input type="hidden" name="hf_str_page_template_type_id" id="hf_str_page_template_type_id" value="AC1B83B2-528F-4F0C-8684-ED24EEB24D77" />
+    <div class="row row-5c9ef6b2-8a51-4ce5-8d88-b7ca279b7ccb"><div class="mol mol-067ea36a-4607-4b59-b663-7b8275afb83b"><div class="col col-c0f482b3-a25a-48ea-939f-0da69b533bd1"><div class="com com-0553b093-be4c-4370-9a73-588882ed9289"><div class="mol mol-6cef56f1-87ca-4417-ab25-a1b0b1abb6e7"><div class="col col-da5a0f47-bce0-4934-b3ab-8c8b5338606d"><div class="com com-a21fa19b-5cb7-496f-8de6-12f40c5566fd"><div class="mol mol-c69bcca9-b797-442f-89bd-f1051ebbfc37"><div class="col col-8270f325-0963-45ec-b230-f79f28b89a51"><div class="com com-50df3bd9-e08a-4fd4-84ec-2963d62a26e2"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n  font-icon-textless aps-0030-so-wrapper-2928d7d9-482f-491b-aae0-9e5976c96169" data-so-popup="" href="about/alumni" target="_self"><div class="a-inner-text">SC ALUMNI</div></a></div></div><div class="col col-73f16807-e6b1-4538-8fbc-43740396eebe"><div class="com com-09d851d9-ad62-4dcb-823e-79ccbb29377a"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n  font-icon-textless aps-0030-so-wrapper-5b677d87-6331-427d-909c-cf79fc63f81f" data-so-popup="" href="about/contact-us" target="_self"><div class="a-inner-text">CONTACT</div></a></div></div><div class="col col-72766adc-9e8e-4c9c-a546-43c692ccf855"><div class="com com-e7494b7d-6073-4667-a505-19fb4c07b72e"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n  font-icon-textless aps-0030-so-wrapper-2f7f34b4-afd3-444c-96ad-ba4de354967d" data-so-popup="" href="https://www.sc.com.my/about/careers" target="_self"><div class="a-inner-text">Careers@SC</div></a></div></div><div class="col col-c0158bc5-063b-465f-af4b-f940c508ebbb"><div class="com com-6ae753a8-b80f-41b8-a9ff-d429ccfee14b"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n  font-icon-textless aps-0030-so-wrapper-28333254-4dca-40e9-856d-355d52a83cf1" data-so-popup="" href="about/" target="_self"><div class="a-inner-text">About</div></a></div></div><div class="col col-83f5b2f4-eb55-4001-a15e-a414cac3973f"><div class="com com-f9e24db9-198f-4a3f-81c3-dcb191d799f3"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n  font-icon-textless aps-0030-so-wrapper-6d75f2b3-1750-4b45-94e4-9da612b4ff58" data-so-popup="" href="https://www.sc.com.my/bm/sumber/siaran-akhbar-dan-pengumuman/siaran-akhbar" target="_self"><div class="a-inner-text">BM version</div></a></div></div></div></div></div></div></div></div></div></div><div class="row row-836435b5-9bca-4221-b94e-5e35168b5868 bg-color"><div class="mol mol-6f47caf4-5c9f-45d0-8ac7-bc3cc43715a9"><div class="col col-53cad488-dff4-4af7-8911-6b8983677541"><div class="com com-482a6d14-04bc-4a35-b4ff-d904a997ace4"><div class="mol mol-24fc8adb-7eb1-4267-bed6-74fe6f6f59f7"><div class="col col-37d459a4-cbb1-4b5a-a549-d7be72e9fafa"><div class="com com-ed9f989e-31e4-4d8d-be39-3584b61c4e18"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-5d1ab429-cb0a-4487-ab47-d9b222416fac" data-so-popup="" href="https://www.sc.com.my/" target="_self"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/img/logo_sc.png"></a></div><div class="com com-e29eb096-2928-404a-8297-a400fd4dceb6"></div></div></div></div></div><div class="col col-db6ee075-ea4b-4665-ac4d-59487774e934"><div class="com com-17908c35-87fd-4db5-bb29-dd03e2edcd85"><div class="mol mol-4c76f297-75c8-4591-ad6e-8769c040917d"><div class="col col-92a9ed0f-2cd8-4db3-a370-898977ef367e"><div class="com com-71bcdb95-4c3d-49d1-bde1-45563863ec50 main-top-menu"><div class="co-menu-01 co-menu-01-IID292387baebe94fd5a0a7d1378326cc79 dd-icon-on dd-border-off"></div></div><div class="com com-2981747c-51ad-4fc5-a3b4-2dc1fef4a6e8"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A btn-padding-custom  font-icon-textless aps-0030-so-wrapper-0c78fb31-691b-4f98-9637-c5b1023f4dad" data-so-popup="" href="https://www.sc.com.my/bm/sumber/siaran-akhbar-dan-pengumuman/siaran-akhbar" target="_self"><div class="a-inner-text">Bm</div></a></div><div class="com com-23d964d7-6a78-4f4c-99ce-47c24c4330f8"><div class="co-menu-02 co-menu-02-IID27160f5ab66c407d936628cd62466a5e">
+    <div class="burger-menu font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A">
+        <div class="hamburger-box">
+            <div class="hamburger-inner"></div>
+        </div>
+    </div>
+</div></div></div><div class="col col-9f7670c1-0b3c-4e06-8573-6223086e2f34"><div class="com com-8b20cc6c-841e-43a0-ac4b-fdaaa631eeab" id="row-search"><div class="mol mol-2d550b99-b8be-4d3a-8895-2bf8baa9ea0d"><div class="col col-c0ebc9ec-9cb9-43c5-8249-7ae9e018ac55"><div class="com com-fa259ec2-1e0c-4e6f-bfdc-e221ffaffca0"></div><div class="com com-b17b6c07-67bb-43de-a38d-24bdd35f2aa0" id="row-keyword-input"><div class="mol mol-35eecbd0-30c3-49bd-9356-52db264f33f5"><div class="col col-1a01680a-868e-43bb-943f-3c6884cb8040"><div class="com com-d05f9d21-87ee-436f-bcfd-93b44b16307a"><div class="aps-0200-so-wrapper design-metro font-844CA48E-8825-412E-9881-0CBB0011A17F so-wrapper so-input aps-0200-so-wrapper-19a56342-a672-4199-8270-058fbfd378a9"><div class="aps-0200-so-field-wrap"><input type="text" name="19a56342-a672-4199-8270-058fbfd378a9" data-tid="wfm-txt-keyword" data-type="AB6BB471-C1D5-7B11-4D4F-677565EEC428" data-so-type="tb;1" placeholder="Ask ALISS"><span class="aps-0200-so-line"></span></div><div class="so-err-msg"></div></div></div></div><div class="col col-8905cff4-18b2-4d01-8bad-339e319be4e6"><div class="com com-f106ed7c-42e5-4063-8ba1-de128e90ca44 cursor-pointer" id="btn-keyword-search"><a class="aps-0045-so-wrapper font-icon-gap-n  hvr-normal  font-822FA4B9-B520-451A-81C4-72392A0A53E2 btn-padding-n aps-0045-so-wrapper-0d8638f9-c985-4dd2-99b1-7a770ae4d729" href="javascript:void(0)" target="_self" data-so-popup=""><span class="so-icon-btn-right"><span class="icon-prev so-icon so-icon-search"></span><span class="icon-text"><div class="a-inner-text"><p><br></p></div></span><span class="icon-next so-icon so-icon-search"></span></span></a></div></div></div></div><div class="com com-327687c8-8a52-493a-9fa7-3bb8e8984a60 mfp-hide" id="row-keyword-wrapper"><div class="mol mol-7ecb4e6b-559d-48d8-a58c-c77e5cb7f4c9"><div class="col col-2cc4c5d0-e3fa-4249-b030-6e82071d667a"><div class="com com-85dec63f-ae73-486f-b037-b02d94d90551 cursor-pointer btn-search-result"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-822FA4B9-B520-451A-81C4-72392A0A53E2  aps-0036-so-wrapper-4cbe4322-8c6a-4fc1-b7c6-d412e59e9eb7"><div class="a-inner-text">Suggested Searches</div></div></div><div class="com com-49553c63-2d3a-4c83-8a87-cd797859b438" id="row-keyword-result"><div class="mol mol-376a2749-2152-4cb2-8cf1-46327cb14895"><div class="col col-7e9a7097-04d3-4c6f-932b-ac5dacce754c"><div class="com com-5a952131-9ec3-491b-a526-3aefd699f775 btn-keyword-item cursor-pointer"><a data-so-type="btn;1" class="aps-0030-so-wrapper  hvr-normal font-844CA48E-8825-412E-9881-0CBB0011A17F btn-padding-n  font-icon-textless aps-0030-so-wrapper-f7851230-8815-4283-8945-087f492b3862" data-so-popup="" href="javascript:void(0)" target="_self"><div class="a-inner-text">annual report 2022</div></a></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="row row-1056789e-f437-4667-ae83-333da68bb2a2"><div class="mol mol-c2edad45-2df4-496b-878a-125f50941044"><div class="col col-044b0596-9e53-4077-ba6e-5f6a33ae459c"><div class="com com-f62ad08a-bda7-45e2-99f4-c72bb5bf0c5a"> <div class="navi-0003-wrapper navi-0003-wrapper-36347202-487d-487a-a0b9-485942635a20">
+	<ul class="bread-crumb-list font-822FA4B9-B520-451A-81C4-72392A0A53E2">
+		<li><a class="bc-home" href="default.aspx"></a></li><li><a href="resources" >RESOURCES</a></li><li><a href="resources/media" >Media Releases and Announcements </a></li>	</ul>
+</div></div></div></div></div><div class="row row-1dfc78fb-dc97-43a4-9d74-0081644d640f"><div class="mol mol-47c39ad4-0a83-4d99-b842-2488430d389e"><div class="col col-1bc63e9c-ed18-473c-b739-1da6f2cdc755"><div class="com com-46ec5438-adb3-40ca-ab23-c44940383e0b"><div class="atom-235e66ed-8b22-4a94-a258-017e3fc3abad"><!--START-INDEX--><div class="row row-8ad9d50c-5486-4c2b-96e8-fb3d14b3747a"><div class="mol mol-592b49fe-2eb8-4c47-8964-4858accc2c81"><div class="col col-9c2fd0f5-c95c-4f50-ad56-a065f1b5a63a"><div class="com com-3f354fe1-b7a6-4a39-a65d-14ccb9106520"><div data-so-type="txt;1" class="aps-0056-so-wrapper  font-05706989-9F7A-4E48-923A-DE57BA854F28 aps-0056-so-wrapper-87bab2df-d2f1-45d6-af01-eb0130989653">Media Releases
+</div></div><div class="com com-9256726a-a097-429e-8f97-0dace55b7a9b"><div class="mol mol-b1b05518-b0cd-4b46-b173-cc6415ce375e"><div class="col col-5f1623ed-ea01-4ffd-870d-ac7ab157c4f8"><div class="com com-ed6fe163-cfd9-4497-b88b-727ca1309163"><div class="mol mol-92840269-6130-4cef-b2e1-0c6dcac39433"><div class="col col-4b61eff2-34af-4953-89ea-ab59110e06eb"><div class="com com-13845982-3557-4eda-87ed-de64ed9eddcc"><div class="mol mol-ade4e6ee-fa38-4f41-a435-5ff6916deef2"><div class="col col-34c2352c-bf36-467e-8dec-34bc9e1a27dc"><div class="com com-fc523fa8-8386-4d08-b82e-f4c8d9130711"><div class="mol mol-d329e9b5-7222-4eb7-8c34-0aea7a59beb4"><div class="col col-c10c1b5a-f16b-4c43-a5e8-c8a0922b2083"><div class="com com-d3674f9a-181c-42be-a088-781ef777f3cc"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-aa2164f4-ce4d-4bef-a592-0a8ec857ec9c" href="javascript:void(0)" data-so-popup="" target="_self"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/icons/icon_filter.png"></a></div></div><div class="col col-d64f2477-0c6d-4cac-99b2-12dbdec49731"><div class="com com-fe973b4a-661b-4f52-a9a2-8725cbf1a6e7"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-D6715655-7F24-45EF-8463-ADB1866B5F1D  aps-0036-so-wrapper-571959fb-62a0-4750-a58d-a5e154974b68"><div class="a-inner-text"><b>Please select year</b></div></div></div></div></div></div><div class="com com-f5e21b17-dbaa-4db1-a8d1-7d4d28dea28b"><div class="aps-0202-so-wrapper design-metro font-D6715655-7F24-45EF-8463-ADB1866B5F1D so-wrapper so-input aps-0202-so-wrapper-b8163f60-6ac4-45fa-bd7c-37034672b58f"><div class="aps-0202-so-field-wrap"><select name="b8163f60-6ac4-45fa-bd7c-37034672b58f" data-tid="wfp-ddl_year" data-type="B1B3C367-AC2B-5F6F-32B0-309E5B002D49" data-so-type="ddl;1"><option value="Please select one">Please select one</option></select><span class="aps-0202-so-line"></span></div><div class="so-err-msg">Error Message</div></div></div></div></div></div></div></div></div><div class="com com-f3883a8e-7c9e-4192-8caf-5d1c404699d3 pag-list-01"><div class="x-pgn-list page-container-plugin-f3883a8e-7c9e-4192-8caf-5d1c404699d3" data-id="f3883a8e-7c9e-4192-8caf-5d1c404699d3">
+    <div class="content list-container list-d-gap-small list-t-gap-medium list-m-gap-small list-d-col-1 list-t-col-1 list-m-col-1 [8A5434B1-D794-E793-0608-C4036AA42F39]">
+        <div class="item_html"></div>
+    </div>
+    <div class="page_navigation icon-size-m font-844CA48E-8825-412E-9881-0CBB0011A17F"></div>
+</div></div></div><div class="col col-abc0d21c-2170-444c-b1c7-60920bfd1bda"><div class="com com-ae5a8bb8-0096-488e-b1ca-3d61bdfb51d7"><div class="mol mol-065347df-b21d-4bce-9890-2e7fabaf1840"><div class="col col-bf854229-f530-4696-bb5d-6f75566956bf"><div class="com com-05815723-4516-4add-aa17-c3f7a23429dd"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-B315D38A-594D-4EF4-B33F-057B253DC327  aps-0036-so-wrapper-50eac574-1eb7-43b0-8952-29fbc16abce7"><div class="a-inner-text">POPULAR IN MEDIA RELEASES AND ANNOUNCEMENT</div></div></div><div class="com com-6ccafc50-f1ea-4e42-ae52-3a0e8709a2e9"><div class="x-pgn-list page-container-plugin-6ccafc50-f1ea-4e42-ae52-3a0e8709a2e9" data-id="6ccafc50-f1ea-4e42-ae52-3a0e8709a2e9">
+    <div class="content list-container list-d-gap-none list-t-gap-none list-m-gap-none list-d-col-1 list-t-col-1 list-m-col-1 [8A5434B1-D794-E793-0608-C4036AA42F39]">
+        <div class="item_html"></div>
+    </div>
+    <div class="page_navigation icon-size-m font-844CA48E-8825-412E-9881-0CBB0011A17F"></div>
+</div></div></div></div></div></div></div></div></div></div></div><div class="row row-70eb3c2f-e2b5-47dd-9722-b6773cdfbcc6"><div class="mol mol-d9358ce8-8869-4d62-b66a-b3d0d9e29d92"><div class="col col-c626a470-7e1e-4ed5-8b8a-1868799bbdb5"><div class="com com-723e86f4-3fa7-4bb5-805c-a00c87df56e3"><div class="mol mol-82962720-190b-4240-a8c5-91716cec1818"><div class="col col-91300812-e206-45c3-97ac-22d61b4e6bce"><div class="com com-43c79f43-1258-4796-9087-7406e5686db8"><div class="mol mol-0fcf0e0e-9c51-47b6-8ac8-43881f54b906"><div class="col col-610d3576-36c7-4426-bb62-0f36022875e0" dataremoved="1"><div class="com com-282351d4-5508-46b2-b8b7-d1a84f7597d0"><a class="aps-0045-so-wrapper font-icon-gap-s anchor-btn hvr-normal  font-D6715655-7F24-45EF-8463-ADB1866B5F1D btn-padding-custom  aps-0045-so-wrapper-85ad361e-d18d-41c1-8296-0ec8416da3a0" href="javascript:void(0)" target="_self"><span class="so-icon-btn-right"><span class="icon-prev so-icon so-icon-arrow-down"></span><span class="icon-text"><div class="a-inner-text">Acts &amp; Regulations&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div></span><span class="icon-next so-icon so-icon-arrow-down"></span></span></a></div></div><div class="col col-afb83947-40c8-4223-b742-f06c2d61ff9c"><div class="com com-9b4f6e2d-645d-47e0-a8da-ed741548b4c1"><a class="aps-0045-so-wrapper font-icon-gap-s anchor-btn hvr-normal  font-D6715655-7F24-45EF-8463-ADB1866B5F1D btn-padding-custom  aps-0045-so-wrapper-900a8c33-f9ae-462a-9a28-d31787c8e6c0" href="javascript:void(0)" target="_self"><span class="so-icon-btn-right"><span class="icon-prev so-icon so-icon-arrow-down"></span><span class="icon-text"><div class="a-inner-text">Trending Topics&nbsp; &nbsp; &nbsp;</div></span><span class="icon-next so-icon so-icon-arrow-down"></span></span></a></div></div></div></div></div><div class="col col-1c147a43-7c24-4b5e-b3e6-daac9d590abb"><div class="com com-fb35c0e4-6bb8-4cb3-bcf4-56f9d79ef722"><div class="mol mol-4b021655-8f9d-4abb-8cea-a576ce29762b"><div class="col col-f4df47cf-048b-49a0-8d35-89ecdb458575"><div class="com com-0010cb0f-30de-4b04-be80-3b9f523d0940 btn-search" id="btn-search1"><a class="aps-0045-so-wrapper font-icon-gap-s  hvr-normal  font-D6715655-7F24-45EF-8463-ADB1866B5F1D btn-padding-m  aps-0045-so-wrapper-25a7d358-1683-4f92-8a5f-188e22823048" href="javascript:void(0)" target="_self"><span class="so-icon-btn-right"><span class="icon-prev so-icon so-icon-submit"></span><span class="icon-text"><div class="a-inner-text">SEARCH</div></span><span class="icon-next so-icon so-icon-submit"></span></span></a></div></div></div></div></div></div></div></div></div></div><div class="row row-f0de0ced-bf00-411b-bbe7-7366a8f2e4f4"><div class="mol mol-826ac1da-17dd-43f6-9c19-0f70ec7f85a9"><div class="col col-7bb6bcda-48a8-4c23-9c5f-3d18b46dd9a0"><div class="com com-2f14541b-0f16-45e2-8ae0-68d443406933"></div></div></div></div><!--End-INDEX--></div></div><div class="com com-64e6bc5e-252b-487d-9f59-7d5548ec0424"><!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595b4d4829f9e388"></script> </div></div></div></div><div class="row row-9e2694b6-e7de-4dbe-b533-85fe15a67187"><div class="mol mol-f82129b3-ddd9-47bd-a882-e871b8335131"><div class="col col-5c8e9732-39be-4aa8-81c1-8e7cc4f31d9e"><div class="com com-959b0aeb-e474-4ae1-ae4f-db404308dae7"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-844CA48E-8825-412E-9881-0CBB0011A17F  aps-0036-so-wrapper-0865799e-3b95-46be-98a9-8e8ecc11b639"><div class="a-inner-text">SC AFFILIATES</div></div></div><div class="com com-daca904b-2a20-4dea-81c4-b445430b4d3f"><div class="owl-carousel owl-carousel-plugin-daca904b-2a20-4dea-81c4-b445430b4d3f od-design-circle on-full on-design-01 normal-design" data-id="daca904b-2a20-4dea-81c4-b445430b4d3f">
+    <div class="" data-id="e455cb98-36f4-4abc-96e7-c176b9d75104"><div class="com com-e455cb98-36f4-4abc-96e7-c176b9d75104"><div class="mol mol-b40c795c-a0ec-469f-939c-e0d6be02d64d"><div class="col col-a2e34b71-0bf1-4cd8-ad63-2431544ba531"><div class="com com-11cc4211-5619-4342-8e6e-04e553ef8b63"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-247dde22-30ac-4a4b-bc42-e97c91de0879" data-so-popup="" href="http://www.sidc.com.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_sidc.jpg"></a></div></div></div></div></div><div class="" data-id="28314729-10bf-4c72-bda1-f9c86c9b5555"><div class="com com-28314729-10bf-4c72-bda1-f9c86c9b5555"><div class="mol mol-a8a40b8a-bca9-4d24-be4b-cf4128ab8d76"><div class="col col-8a2c1dd7-d04f-4a55-be1b-329d3156d21f"><div class="com com-f4c78f80-a42a-4451-bc91-999e33f678cd"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-7cace828-2a8a-426d-a8a1-2bac34b2750e" data-so-popup="" href="https://www.capitalmarketsmalaysia.com/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_cm2.jpg"></a></div></div></div></div></div><div class="" data-id="f4d15c96-b7a0-4ebb-a0b5-696c96aaa41c"><div class="com com-f4d15c96-b7a0-4ebb-a0b5-696c96aaa41c"><div class="mol mol-d5235c4c-419b-42f9-a05b-47c730cb0677"><div class="col col-b1535445-d386-4734-9065-a273b6409d06"><div class="com com-50532ddd-a6c9-4592-b9b5-caa168222aa6"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-38e037e2-a434-489b-ac84-9154bf14affe" data-so-popup="" href="http://www.cmcfund.com.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_cmc.jpg"></a></div></div></div></div></div><div class="" data-id="a1662ff9-298c-4359-981e-f4f06635d37d"><div class="com com-a1662ff9-298c-4359-981e-f4f06635d37d"><div class="mol mol-46155379-3b0d-4cb8-8f9a-68a4ffc4de15"><div class="col col-cbf7ce12-1969-4a8e-9551-c348a254c568"><div class="com com-14a2ceb1-8261-4549-abf9-fb32986c097c"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-ef75761c-3801-441a-b899-ffb359e31c9d" data-so-popup="" href="https://www.bixmalaysia.com/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_bix.jpg"></a></div></div></div></div></div><div class="" data-id="793d98bf-e59d-4c46-8fa7-60fea952a5d8"><div class="com com-793d98bf-e59d-4c46-8fa7-60fea952a5d8"><div class="mol mol-11f116d6-2a43-4a3c-8ac4-74c51463e5af"><div class="col col-bc0d1c9e-1bef-4054-8fad-6842e306647b"><div class="com com-60946074-1e2c-469d-8a15-4f12d1574d5e"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-57f873d5-3d57-442b-b972-b19e425a42bb" data-so-popup="" href="https://www.fmos.org.my/en/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/fmos-logo-white-bg.jpg"></a></div></div></div></div></div><div class="" data-id="c10eb6c7-b0ec-4124-a6a1-f13a5fc7f9aa"><div class="com com-c10eb6c7-b0ec-4124-a6a1-f13a5fc7f9aa"><div class="mol mol-055439c2-97a7-48d8-80d5-58b42ca98058"><div class="col col-c90329ca-b492-402b-a094-e86780082c5d"><div class="com com-a2808132-3360-433b-839b-1ee7cfdaf2f9"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-9a860dbf-5297-4a04-97b3-fb627feae280" data-so-popup="" href="https://www.ppa.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_ppa.jpg"></a></div></div></div></div></div><div class="" data-id="140a7d9d-7ca7-4180-8db9-c62ebf5cf26b"><div class="com com-140a7d9d-7ca7-4180-8db9-c62ebf5cf26b"><div class="mol mol-1c8849d8-3ec1-4894-ba4a-e4704d092a8d"><div class="col col-e53df573-5acc-46fc-84b3-b2f5816c75fd"><div class="com com-c24c634b-43a5-41a2-8a0d-d5e5cd026005"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-af38010b-b63d-44ef-99b2-15f76b24f64a" data-so-popup="" href="https://www.icmr.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/icmr.png"></a></div></div></div></div></div>
+</div></div></div><div class="col col-46863d84-7ea4-495c-83bc-2098078f1961"><div class="com com-8ba1ec35-f39e-4ffa-aa33-bae49b79d14b"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-844CA48E-8825-412E-9881-0CBB0011A17F  aps-0036-so-wrapper-cbe4388d-9a40-40e4-b43b-52d70f5ac47a"><div class="a-inner-text">RELATED SITES</div></div></div><div class="com com-0084a14b-8e52-47bc-9d68-021e5f59c753"><div class="owl-carousel owl-carousel-plugin-0084a14b-8e52-47bc-9d68-021e5f59c753 od-design-circle on-full on-design-01 normal-design" data-id="0084a14b-8e52-47bc-9d68-021e5f59c753">
+    <div class="" data-id="261d8c10-b8cb-4a15-bfb3-796532e40de6"><div class="com com-261d8c10-b8cb-4a15-bfb3-796532e40de6"><div class="mol mol-7c5fc9d5-fbe6-4cd6-8e6e-7f7bd1fa8ca4"><div class="col col-b109d2c7-2d3d-4067-b659-f473a83b3ec6"><div class="com com-bdf9ba2f-a370-4987-97d9-bb7ad54d83c0"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-55e83f37-75e7-469d-ab15-6c5e08272004" data-so-popup="" href="http://www.treasury.gov.my/?lang=en" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/mof-logo-whiteBg.png"></a></div></div></div></div></div><div class="" data-id="df0f318c-4e99-457d-bf36-9a512b970b59"><div class="com com-df0f318c-4e99-457d-bf36-9a512b970b59"><div class="mol mol-303b8ae5-3301-414e-8346-4f60b588d7c8"><div class="col col-4771c750-111f-4b40-983b-9fad7d465972"><div class="com com-05e7a289-22bf-4308-8c76-99d9e03e147b"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-5e1eb134-051b-458d-9252-3f7e8420a354" data-so-popup="" href="https://www.iosco.org.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/iosco-hub-2025.jpg"></a></div></div></div></div></div><div class="" data-id="9c1a77fb-e121-4c66-aa95-2e0d8a17058d"><div class="com com-9c1a77fb-e121-4c66-aa95-2e0d8a17058d"><div class="mol mol-f039b9d8-12c7-470b-8d3c-209eec0b5213"><div class="col col-0a35c70b-a193-433b-ba5a-c4f111311720"><div class="com com-de9a181a-f206-49a6-bfe7-7db2452b42ca"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-25072fa5-120f-4afe-a6c3-386650d28c05" data-so-popup="" href="http://www.bnm.gov.my/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/logo_bnm.jpg"></a></div></div></div></div></div><div class="" data-id="c2914d96-bc7b-41e2-8f4a-58d27ed1f18b"><div class="com com-c2914d96-bc7b-41e2-8f4a-58d27ed1f18b"><div class="mol mol-46079a4b-a1a6-43e8-a5b6-0ef54f773fb6"><div class="col col-fd48a855-8302-4bc3-aebf-e25314c88b6a"><div class="com com-3ec3e303-c616-4256-af1c-adb1e5c90d1e"><a data-so-type="btn;1" class="aps-0031-so-wrapper  so-thumbnail-frame sot-no-effect anchor-btn aps-0031-so-wrapper-d11fa89e-7c6f-4b47-827a-95c4ef72add4" data-so-popup="" href="https://www.bursamalaysia.com/" target="_blank"><img data-so-type="img;1" class="so-thumbnail" title="" alt="" src="https://www.sc.com.my/clients/Security_Commission_FFFF0951-2947-47E1-93FE-FFDB029E57D9/contentms/img/logo/bursaLogo-2024.png"></a></div></div></div></div></div><div class="" data-id="8fbc2f01-2cf0-4ae7-94a0-76692d07a22f"><div class="com com-8fbc2f01-2cf0-4ae7-94a0-76692d07a22f"><div class="mol mol-f956c177-116e-4a50-8463-93cfba5f9a58"><div class="col col-bbf79b03-6b27-4e1b-8cb6-32b2229d0e33"></div></div></div></div>
+</div></div></div></div></div><div class="row row-ed4ddcc4-5978-4579-a563-0cccdb0a9ae4 bg-color"><div class="mol mol-f5bc937e-d46b-47d2-af35-24480f20a84a"><div class="col col-44539923-5835-44e2-9399-f02338e0a4b5"><div class="com com-0523edca-5406-44fc-bbf8-10978eea2d5d"><ul class="navi-0002-wrapper navi-0002-wrapper-14dfbf9b-84cc-4c59-b94f-2a16cfb599a8 font-844CA48E-8825-412E-9881-0CBB0011A17F"><li><a href="regulation" target="_self">REGULATION</a><ul><li><a href="regulation/acts" target="_self">Acts</a></li><li><a href="amla" target="_blank">AML/CFT/CPF</a></li><li><a href="regulation/guidelines" target="_self">Guidelines</a></li><li><a href="regulation/practice-notes" target="_self">Practice Notes</a></li><li><a href="regulation/guidance-notes-and-guiding-principles" target="_self">Guidance Notes and Guiding Principles </a></li><li><a href="regulation/technical-notes-and-circulars" target="_self">Technical Notes and Circulars</a></li><li><a href="regulation/regulatory-faqs" target="_self">Regulatory FAQs</a></li><li><a href="regulation/consultation-papers" target="_self">Consultation Papers</a></li><li><a href="regulation/licensing" target="_self">Licensing</a></li><li><a href="regulation/corporate-governance" target="_self">Corporate Governance</a></li><li><a href="regulation/enforcement" target="_self">Enforcement</a></li></ul></li><li><a href="development" target="_self">DEVELOPMENT</a><ul><li><a href="development/icm" target="_self">Islamic Capital Market</a></li><li><a href="development/digital" target="_self">Digital</a></li><li><a href="development/international" target="_self">International</a></li><li><a href="development/social-exchange" target="_self">Social Exchange</a></li><li><a href="development/sri" target="_self">Sustainable and Responsible Investment</a></li><li><a href="development/single-family-office" target="_self">Single Family Office (SFO) Incentive Scheme</a></li><li><a href="https://www.sc.com.my/nsrf" target="_blank">National Sustainability Reporting Framework</a></li><li><a href="https://www.sc.com.my/trac" target="_blank">Transition, Resilience &amp; Adaptation Capital Markets (TRAC)</a></li><li><a href="https://www.sc.com.my/msme-mtc-roadmap" target="_blank">MSME and MTC Roadmap</a></li><li><a href="https://www.sc.com.my/asp" target="_blank">Association of Sustainability Professionals </a></li></ul></li><li><a href="investor-empowerment" target="_self">INVESTOR EMPOWERMENT</a><ul><li><a href="http://www.investsmartsc.my/" target="_blank">InvestSmart</a></li><li><a href="investor-empowerment/lodge-a-complaint-whistleblowing" target="_self">Lodge a Complaint / Whistleblowing</a></li><li><a href="https://www.sc.com.my/investor-alert-list" target="_self">Investor Alert List</a></li><li><a href="https://www.sc.com.my/investment-checker" target="_blank">Investment Checker</a></li><li><a href="investor-empowerment/scam" target="_self">Beware of Scams</a></li><li><a href="investor-empowerment/info-on-finfluencer" target="_self">Info on Finfluencer</a></li></ul></li><li><a href="analytics" target="_self">ANALYTICS</a><ul><li><a href="analytics/bonds-sukuk-market" target="_self">Bonds &amp; Sukuk Market</a></li><li><a href="https://www.sc.com.my/api/documentms/download.ashx?id=985D39B2-D548-4E57-AE55-B141159FD20A" target="_blank">Derivatives</a></li><li><a href="analytics/digital" target="_self">Digital</a></li><li><a href="analytics/enforcement" target="_self">Enforcement</a></li><li><a href="analytics/equities" target="_self">Equities</a></li><li><a href="analytics/islamic-capital-market" target="_self">Islamic Capital Market</a></li><li><a href="analytics/structured-products" target="_self">Structured Products</a></li><li><a href="analytics/common-reporting-platform-xbrl" target="_self">Common Reporting Platform (XBRL)</a></li></ul></li><li><a href="resources" target="_self">RESOURCES</a><ul><li><a href="resources/media" target="_self">Media Releases and Announcements </a></li><li><a href="resources/speeches" target="_self">Speeches</a></li><li><a href="resources/funds-expedited-authorisation" target="_self">Funds (Expedited Authorisation)</a></li><li><a href="resources/prospectus-exposure" target="_self">Prospectus Exposure</a></li><li><a href="resources/cmsr" target="_self">Capital Market Stability Review</a></li><li><a href="resources/publications-and-research" target="_self">Publications and Research</a></li><li><a href="resources/quarterly-report" target="_self">Quarterly Report</a></li><li><a href="resources/take-overs-related-publications-announcements" target="_self">Take-overs Related Publications &amp; Announcements</a></li><li><a href="https://www.sc.com.my/permalink.aspx?id=B83C89B7-5833-4FA6-9A55-685BDEBEBE41" target="_self">Licensed and Registered Persons</a></li></ul></li><li><a href="about" target="_self">ABOUT</a><ul><li><a href="about/about-the-sc" target="_self">About the SC</a></li><li><a href="about/board-members" target="_self">Board Members</a></li><li><a href="about/senior-management" target="_self">Senior Management</a></li><li><a href="about/management-directory" target="_self">Management Directory</a></li><li><a href="https://www.sc.com.my/api/documentms/download.ashx?id=4731ea3e-5caf-42cc-a08f-049dad5d9f8a" target="_blank">Organisation Structure</a></li><li><a href="about/client-charter" target="_self">Client Charter</a></li><li><a href="about/statement-of-scs-principles-and-standards" target="_self">Statement of SC’s Principles and Standards</a></li><li><a href="about/careers" target="_self">Careers</a></li><li><a href="about/contact-us" target="_self">Contact Us</a></li><li><a href="about/alumni" target="_self">Alumni</a></li></ul></li></ul></div></div></div></div><div class="row row-c355cadd-92c4-434e-8492-942f329fe4a0 bg-color"><div class="mol mol-d3f9aa5a-1831-4e1f-b237-40b82a30a5ec"><div class="col col-13b6f559-6769-4ad6-869d-bf6b0d2e6d07"><div class="com com-91363266-1f93-40c1-8677-4e1d5aea3998"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-844CA48E-8825-412E-9881-0CBB0011A17F  aps-0036-so-wrapper-3b59d9ec-2dcf-47db-a0ee-cf495ee3d1a8"><div class="a-inner-text">about the SC</div></div></div><div class="com com-eb9feaf6-0187-499f-88b3-f6f7b4186235 match-height"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-822FA4B9-B520-451A-81C4-72392A0A53E2  aps-0036-so-wrapper-d90192e1-4ad9-4421-bae8-37647485e5e5"><div class="a-inner-text">The Securities Commission Malaysia (SC) was established on 1 March 1993 under the Securities Commission Act 1993 (SCA). We are a self-funded statutory body entrusted with the responsibility to regulate and develop the Malaysian capital market.<br><br><div>General Line: +603-6204 8000<br>General Email:&nbsp;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c2a1a3b782b1a7a1a1adafeca1adafecafbb">[email&#160;protected]</a></div></div></div></div><div class="com com-472cab4b-115f-4ffd-b3e9-d23bc256a086"><ul class="social-list-532d7b82-1cc4-4cee-b7d2-7dee67931877 social-list design-default-light icon-size-s gap-size-s "><li class="social-item-fb"><a href="https://www.facebook.com/seccommalaysia/" target="_blank"><svg viewBox="0 0 192 192"><use  xlink:href="img/svg/social-icon.svg?v=1#fill-facebook" /></svg></a></li><li class="social-item-tt"><a href="https://twitter.com/SecComMalaysia" target="_blank"><svg viewBox="0 0 192 192"><use  xlink:href="img/svg/social-icon.svg?v=1#fill-twitter" /></svg></a></li><li class="social-item-in"><a href="https://www.instagram.com/seccommalaysia/" target="_blank"><svg viewBox="0 0 192 192"><use  xlink:href="img/svg/social-icon.svg?v=1#fill-instagram" /></svg></a></li><li class="social-item-li"><a href="https://www.linkedin.com/company/scmalaysia" target="_blank"><svg viewBox="0 0 192 192"><use  xlink:href="img/svg/social-icon.svg?v=1#fill-linkedin" /></svg></a></li></ul></div></div></div></div><div class="row row-b7e87adf-5205-4010-8237-d260a866397d bg-color"><div class="mol mol-6946069e-ca3f-4cc6-93c5-1ccfd780803b"><div class="col col-35abd7e8-fb3a-4ac6-9ec7-817c7935321d"><div class="com com-cb5773a0-3a75-4885-b987-978722343146"><div data-so-type="txt;1" class="aps-0036-so-wrapper  list-gap-s font-822FA4B9-B520-451A-81C4-72392A0A53E2  aps-0036-so-wrapper-c46e5542-c3d7-4873-9830-702393d16f19"><div class="a-inner-text"><div>© Copyright Securities Commission Malaysia.&nbsp; <a href="https://www.sc.com.my/permalink.aspx?id=EAF653BF-AEF0-447A-A9BF-2E4C19A800CE">Contact Us</a>&nbsp; &nbsp;|&nbsp; &nbsp; <a href="https://www.sc.com.my/permalink.aspx?id=A61448FB-715A-48DD-9AB3-34AB53F404CF">Disclaimer</a>&nbsp; &nbsp;|&nbsp; &nbsp;The site is best viewed using Microsoft Edge and Google Chrome with minimum resolution of 1280x1024</div></div></div></div></div></div></div>
+    <div class="actionMS_generic_popup generic_popup">
+        <div class="generic_popup_title">Ooops!</div>
+        <div class="generic_popup_msg">Generic Popup</div>
+    </div>
+    
+    
+    
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript" src="WebResources.ashx?q=26ea0169e693235a38a68daf225aa616&amp;t=0404055959"></script>
+
+    
+    <script>
+        var nonce = "35264fa2-3733-4dbf-8b2e-770b521a51c1",
+            xVar = {
+                id: {
+                    pid: "#hf_website_page_template_menu_id",
+                    pdid: "#hf_page_draft_id"
+                }
+            };
+    </script>
+    
+<script>
+var formVal = {"2CC78DB0-2762-4140-9CBF-B007F5C14049":{}};
+var mFormVal = {"2CC78DB0-2762-4140-9CBF-B007F5C14049":{}};
+var trgs = {"act":{}, "trg":[]};
+var mTrgs = {"act":{}, "trg":[]};
+var xtopiaPa = [];
+</script>
+    <script type="text/javascript" src="WebResources.ashx?q=37021fd2fa1e43e13484241baf7a6a99&amp;t=0404055959"></script>
+
+    
+    
+    <script src="api/jssdk.ashx"></script>
+    
+    <script>$X.PMD = {"0084a14b-8e52-47bc-9d68-021e5f59c753":{},"f3883a8e-7c9e-4192-8caf-5d1c404699d3":{},"6ccafc50-f1ea-4e42-ae52-3a0e8709a2e9":{},"daca904b-2a20-4dea-81c4-b445430b4d3f":{}};$X.PPG = {"0084a14b-8e52-47bc-9d68-021e5f59c753":{},"f3883a8e-7c9e-4192-8caf-5d1c404699d3":{"items":["\u003cdiv class=\"[xCssCls]\"\u003e\u003cdiv class=\"com com-2bb2be8c-a8cd-4400-a2f3-f8a6b754cc86\"\u003e\u003cdiv class=\"mol mol-2e2a7d64-b660-4341-94e7-f9a142b21749\"\u003e\u003cdiv class=\"col col-a41b08c2-2946-4fbe-bcf9-0d35b26cfcb5\"\u003e\u003cdiv class=\"com com-5eda6c42-a592-42ec-88ad-bf98353ae36a\"\u003e\u003cdiv data-so-type=\"txt;1\" class=\"aps-0036-so-wrapper  list-gap-s font-844CA48E-8825-412E-9881-0CBB0011A17F  aps-0036-so-wrapper-da4e7fbb-0a42-4088-8287-caa5a9e50a92\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Display Date 2]\u003c/div\u003e\n\u003c/div\u003e\u003c/div\u003e\u003cdiv class=\"com com-c69a3fab-c3ea-4c5e-8b75-4275ef4960aa\"\u003e\u003ca data-so-type=\"btn;1\" class=\"aps-0030-so-wrapper  hvr-normal font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF btn-padding-n  font-icon-textless aps-0030-so-wrapper-873be4c0-b5ea-4beb-8e46-2925ef9a2898\" data-so-popup=\"\" href=\"[Page Address]\" target=\"_blank\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Page Name]\u003c/div\u003e\u003c/a\u003e\u003c/div\u003e\u003cdiv class=\"com com-4f7ed01b-c111-4642-8bf2-a633b289b93a\"\u003e\u003cdiv data-so-type=\"txt;1\" class=\"aps-0036-so-wrapper  list-gap-s font-D6715655-7F24-45EF-8463-ADB1866B5F1D  aps-0036-so-wrapper-81ed19b9-7ef3-43d5-8b77-9f84c7543b64\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Page Description]\u003c/div\u003e\n\u003c/div\u003e\u003c/div\u003e\u003cdiv class=\"com com-c9855e06-83c9-4bb5-a465-20a270662906\"\u003e\u003cdiv class=\"aps-0037-so-wrapper line-placement-center aps-0037-so-wrapper-5dc1a7de-5685-4823-857e-102c094049c7\"\u003e\u003chr\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e","\u003cdiv class=\"[xCssCls]\"\u003e\u003cdiv class=\"com com-2bb2be8c-a8cd-4400-a2f3-f8a6b754cc86\"\u003e\u003cdiv class=\"mol mol-2e2a7d64-b660-4341-94e7-f9a142b21749\"\u003e\u003cdiv class=\"col col-a41b08c2-2946-4fbe-bcf9-0d35b26cfcb5\"\u003e\u003cdiv class=\"com com-5eda6c42-a592-42ec-88ad-bf98353ae36a\"\u003e\u003cdiv data-so-type=\"txt;1\" class=\"aps-0036-so-wrapper  list-gap-s font-844CA48E-8825-412E-9881-0CBB0011A17F  aps-0036-so-wrapper-da4e7fbb-0a42-4088-8287-caa5a9e50a92\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Display Date 2]\u003c/div\u003e\n\u003c/div\u003e\u003c/div\u003e\u003cdiv class=\"com com-c69a3fab-c3ea-4c5e-8b75-4275ef4960aa\"\u003e\u003ca data-so-type=\"btn;1\" class=\"aps-0030-so-wrapper  hvr-normal font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF btn-padding-n  font-icon-textless aps-0030-so-wrapper-873be4c0-b5ea-4beb-8e46-2925ef9a2898\" data-so-popup=\"\" href=\"[Page Address]\" target=\"_blank\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Page Name]\u003c/div\u003e\u003c/a\u003e\u003c/div\u003e\u003cdiv class=\"com com-4f7ed01b-c111-4642-8bf2-a633b289b93a\"\u003e\u003cdiv data-so-type=\"txt;1\" class=\"aps-0036-so-wrapper  list-gap-s font-D6715655-7F24-45EF-8463-ADB1866B5F1D  aps-0036-so-wrapper-81ed19b9-7ef3-43d5-8b77-9f84c7543b64\"\u003e\u003cdiv class=\"a-inner-text\"\u003e[Page Description]\u003c/div\u003e\n\u003c/div\u003e\u003c/div\u003e\u003cdiv class=\"com com-c9855e06-83c9-4bb5-a465-20a270662906\"\u003e\u003cdiv class=\"aps-0037-so-wrapper line-placement-center aps-0037-so-wrapper-5dc1a7de-5685-4823-857e-102c094049c7\"\u003e\u003chr\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e"],"pages": {"0":[{"Page Name":"SC, Hong Kong SFC Announce Single Submission Arrangement to Streamline Simultaneous Listings in Malaysia and Hong Kong","Page Description":"The Securities Commission Malaysia (SC) and the Securities and Futures Commission of Hong Kong (SFC) today unveiled simplified regulatory procedures and submission arrangements to facilitate simultaneous listings in Malaysia and Hong Kong. ","Page Address":"resources/media/media-release/sc-hong-kong-sfc-announce-single-submission-arrangement-to-streamline-simultaneous-listings-in-malaysia-and-hong-kong","Display Date 2":"30 September 2026","xDataId":"85107fdf-8760-46b3-852c-0d9c56113024","xDataVal":"","xCssCls":""},{"Page Name":"JC3 Journey to Zero Conference 2026 Concludes with Shared Commitment to Translate Climate and Nature Ambition into Greater Impact","Page Description":"The Joint Committee on Climate Change (JC3) concluded the JC3 Journey to Zero Conference 2026 on 29 September, bringing together more than 800 participants across the financial sector, government, businesses, investors and academia. The conference reaffirmed the critical role of the financial industry in advancing Malaysia’s sustainable and resilient growth agenda.","Page Address":"resources/media/media-release/jc3-journey-to-zero-conference-2026-concludes-with-shared-commitment-to-translate-climate-and-nature-ambition-into-greater-impact","Display Date 2":"30 September 2026","xDataId":"4d1d3e19-ac32-407e-9fd4-5e1b06964b8a","xDataVal":"","xCssCls":""},{"Page Name":"ACSR's Mandatory Sustainability Assurance Requirement to Take Effect in 2028","Page Description":"The Advisory Committee on Sustainability Reporting (ACSR) has deferred the commencement of mandatory reasonable assurance requirements on Scope 1 and Scope 2 GHG emissions disclosures for Group 1 applicable entities under the National Sustainability Reporting Framework (NSRF).","Page Address":"resources/media/media-release/acsrs-mandatory-sustainability-assurance-requirement-to-take-effect-in-2028","Display Date 2":"17 September 2026","xDataId":"9b1099ec-06a6-4d5a-9070-fc914f1b8291","xDataVal":"","xCssCls":""},{"Page Name":"SC Champions ASEAN as an ASSET Class at the inaugural ASEAN Investment Roadshow (AIR) in London","Page Description":"The Securities Commission Malaysia (SC) convened the inaugural ASEAN Investment Roadshow in London earlier this week. Co-hosted with FTSE Russell, the event brought together around 100 key stakeholders and market participants including institutional investors, asset managers, regulators, index companies and media to highlight ASEAN’s potential as a long-term investment destination.","Page Address":"resources/media/media-release/sc-champions-asean-as-an-asset-class-at-the-inaugural-asean-investment-roadshow-air-in-london","Display Date 2":"17 September 2026","xDataId":"a438ce7b-ad4e-49d2-8e6c-a9bdfadf44d0","xDataVal":"","xCssCls":""},{"Page Name":"SC Hosts Inaugural ASEAN Regulatory Sustainability Summit in Collaboration with Durham University","Page Description":"The Securities Commission Malaysia (SC) held the inaugural ASEAN Regulatory Sustainability Summit in collaboration with the Centre for Sustainable Development Law and Policy, Durham University on 9 September 2026. ","Page Address":"resources/media/media-release/sc-hosts-inaugural-asean-regulatory-sustainability-summit-in-collaboration-with-durham-university","Display Date 2":"11 September 2026","xDataId":"a0498ff6-e9d7-4e42-9338-4d02bd9bd78b","xDataVal":"","xCssCls":""},{"Page Name":"SC and Bursa Malaysia Collaborate to Advance Informed Investing Among Retail Investors","Page Description":"The Securities Commission Malaysia (SC) and Bursa Malaysia Berhad (Bursa Malaysia) today launched the inaugural InvestSmart® x Bursa Marketplace Fair 2026, a joint initiative to help Malaysians make informed investment decisions and better protect themselves against scams. ","Page Address":"resources/media/media-release/sc-and-bursa-malaysia-collaborate-to-advance-informed-investing-among-retail-investors","Display Date 2":"05 September 2026","xDataId":"2d2c9e20-5b5e-43e3-95ef-64bfc7141e75","xDataVal":"","xCssCls":""},{"Page Name":"SC Wins Suit Against Tey Por Yee and Four other Defendants for Scheme to Defraud and Causing Wrongful Loss to Four Public Listed Companies","Page Description":"The Kuala Lumpur High Court yesterday has ruled that the Securities Commission Malaysia (SC) successfully proved its case against five individuals for perpetrating a scheme to defraud and causing wrongful losses to four public listed companies, contraventions under sections 179 and 317A of the Capital Markets and Services Act 2007 (CMSA).","Page Address":"resources/media/media-release/sc-wins-suit-against-tey-por-yee-and-four-other-defendants-for-scheme-to-defraud-and-causing-wrongful-loss-to-four-public-listed-companies","Display Date 2":"20 August 2026","xDataId":"4818fb5b-5aea-48de-8301-99834243a712","xDataVal":"","xCssCls":""},{"Page Name":"SC Bridges Semiconductor Funding Gap through Capital Market Financing Solutions","Page Description":"The Securities Commission Malaysia (SC) today launched the first of a series of roadshows aimed at connecting micro, small and medium enterprises (MSMEs) and mid-tier companies (MTCs) in Malaysia's strategic industries with capital market financing solutions.","Page Address":"resources/media/media-release/sc-bridges-semiconductor-funding-gap-through-capital-market-financing-solutions","Display Date 2":"19 August 2026","xDataId":"5bfe354f-aabe-4123-8967-d2e1c29d4e56","xDataVal":"","xCssCls":""},{"Page Name":"Joint Statement by Bank Negara Malaysia and Securities Commission Malaysia - Updates from the 17th Joint Committee on Climate Change (JC3) Meeting","Page Description":"The Joint Committee on Climate Change (JC3) held its 17th meeting on 6 August 2026. The meeting reaffirmed the need to move faster from commitment to mobilising practical solutions.  Priorities include supporting energy transition, strengthening climate resilience especially against floods, and strengthening mechanisms to measure and report outcomes. ","Page Address":"resources/media/media-release/joint-statement-by-bank-negara-malaysia-and-securities-commission-malaysia-updates-from-the-17th-joint-committee-on-climate-change-jc3-meeting","Display Date 2":"13 August 2026","xDataId":"18e3b29e-45f9-42bd-bb8c-f20d769616c7","xDataVal":"","xCssCls":""},{"Page Name":"High Court Grants Leave to Commence Committal Proceedings Against Former Group Executive Director of APL Industries Berhad for Breach of Consent Judgment in Insider Trading Case ","Page Description":"The Kuala Lumpur High Court today granted leave to the Securities Commission Malaysia (SC) to commence committal proceedings against Tan Bee Geok (Tan) for breaching the terms of a consent judgment entered with the SC on 17 September 2020.","Page Address":"resources/media/media-release/high-court-grants-leave-to-commence-committal-proceedings-against-former-group-executive-director-of-apl-industries-berhad-for-breach-of-consent-judgment-in-insider-trading-case","Display Date 2":"12 August 2026","xDataId":"b22270f8-c5b5-4cab-9d44-4d0155b8d99a","xDataVal":"","xCssCls":""},{"Page Name":"Court of Appeal Dismisses Ricky Wong’s Appeal against Injunction Order in relation to SC’s Suit ","Page Description":"The Court of Appeal today dismissed appeals by Wong Shee Kai (Ricky Wong), Teh Sew Wan, and Wong SK Holdings Sdn Bhd (the Appellants) against the High Court’s decision to grant the Securities Commission Malaysia (SC) an inter partes Injunction Order.","Page Address":"resources/media/media-release/court-of-appeal-dismisses-ricky-wongs-appeal-against-injunction-order-in-relation-to-scs-suit","Display Date 2":"10 August 2026","xDataId":"72c0bc2c-eae6-4c61-a4b0-1ae8fe0d366d","xDataVal":"","xCssCls":""},{"Page Name":"AOB: Audit Firms Strengthen Governance, Transparency and Commitment to Audit Quality","Page Description":"The Securities Commission Malaysia's Audit Oversight Board (AOB) today released its Annual Inspection Report 2025, highlighting the need for continued improvements in audit quality.  The report also recognised ongoing efforts by audit firms to strengthen governance, transparency and quality management practices.","Page Address":"resources/media/media-release/aob-audit-firms-strengthen-governance-transparency-and-commitment-to-audit-quality","Display Date 2":"06 August 2026","xDataId":"bc8f9a25-f0ba-4578-b0bb-1136fa70ef91","xDataVal":"","xCssCls":""},{"Page Name":"SC’s RIFAR Showcase Awards Youth-Driven Innovative Solutions for Climate Resilience","Page Description":"The Securities Commission Malaysia (SC) today concluded the River Flooding Adaptation & Resilience (RIFAR) University Challenge with a Showcase, awarding outstanding student-led climate adaptation solutions with RM57,000 in cash prizes.","Page Address":"resources/media/media-release/scs-rifar-showcase-awards-youth-driven-innovative-solutions-for-climate-resilience","Display Date 2":"30 July 2026","xDataId":"39b5ab0b-dede-4afb-8551-f9bb8a876137","xDataVal":"","xCssCls":""},{"Page Name":"Former Unit Trust Consultant Jailed 3 Years, Fined RM2 million for Securities Fraud ","Page Description":"The Kuala Lumpur Sessions Court today sentenced former unit trust consultant Amran bin Mohd Amin (Amran) to three years imprisonment and imposed fines of RM2 million for securities fraud offences involving fraudulent unit trust investments.","Page Address":"resources/media/media-release/former-unit-trust-consultant-jailed-3-years-fined-rm2-million-for-securities-fraud","Display Date 2":"28 July 2026","xDataId":"6dbab1d3-518b-41fc-b381-ed7d4d2abad2","xDataVal":"","xCssCls":""},{"Page Name":"Former Bank Analyst Jailed Three Years for Dealing in Securities Without a Licence and Misusing UTC Title","Page Description":"The Kuala Lumpur Sessions Court today sentenced former bank analyst Mohd Arif Fadzlee bin Mohd Arifin (Arif), to three years imprisonment after finding him guilty of unlicensed regulated activities and the unlawful use of the Unit Trust Consultant (UTC) title.","Page Address":"resources/media/media-release/former-bank-analyst-jailed-three-years-for-dealing-in-securities-without-a-licence-and-misusing-utc-title","Display Date 2":"23 July 2026","xDataId":"5d989976-8077-42c7-aedc-af5df2f47c3d","xDataVal":"","xCssCls":""},{"Page Name":"SC and Hong Kong SFC Sign Landmark MoU to Strengthen Collaboration and Capital Market Connectivity","Page Description":"The Securities Commission Malaysia (SC) and the Securities and Futures Commission of Hong Kong (SFC) today signed a Memorandum of Understanding (MoU) on the mutual recognition and cross listing of covered funds, particularly exchange-traded funds (ETFs) and real estate investment trusts (REITs). This landmark MoU will also strengthen regulatory cooperation to facilitate a simplified dual Initial Public Offering (IPO) listing framework between the two jurisdictions. ","Page Address":"resources/media/media-release/sc-and-hong-kong-sfc-sign-landmark-mou-to-strengthen-collaboration-and-capital-market-connectivity","Display Date 2":"23 July 2026","xDataId":"c25b1213-6fb6-499f-9589-db67ff74c4d5","xDataVal":"","xCssCls":""},{"Page Name":"NIMP CoSIF Expands Digitalisation Support with New Smart Manufacturing Scheme","Page Description":"The Ministry of Investment, Trade and Industry (MITI) and the Securities Commission Malaysia (SC) have announced a new strategic scheme to facilitate greater access to capital and support the business growth of small and medium enterprises (SMEs) and mid-tier companies (MTCs) in strategic sectors.","Page Address":"resources/media/media-release/nimp-cosif-expands-digitalisation-support-with-new-smart-manufacturing-scheme","Display Date 2":"21 July 2026","xDataId":"c5d8ea21-6f13-4df8-b12a-d524594906f6","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Brothers for Dealing in Securities without Licence","Page Description":"The Securities Commission Malaysia (SC) today charged brothers Anuar Hassan (Anuar), Mohd Amin Hassan (Amin) and Amir Hassan (Amir) at three separate Kuala Lumpur Sessions Courts for offences relating to unlicensed capital market activities. ","Page Address":"resources/media/media-release/sc-charges-brothers-for-dealing-in-securities-without-licence","Display Date 2":"15 July 2026","xDataId":"4ba84380-b097-4c27-b4a1-e5f4f8038bc1","xDataVal":"","xCssCls":""},{"Page Name":"Former Company Director Jailed Five Years for Unlicensed Fund Management Activities and Money Laundering","Page Description":"The Kuala Lumpur Sessions Court today sentenced Muhamad Fadzli bin Jamaludin (Fadzli), a former director of Kyaputen Sdn Bhd, to five years in jail after convicting him for offences relating to unlicensed fund management activities and money laundering.","Page Address":"resources/media/media-release/former-company-director-jailed-five-years-for-unlicensed-fund-management-activities-and-money-laundering","Display Date 2":"15 July 2026","xDataId":"bf27d3c0-f16d-4cb3-97c8-0f4b37d260eb","xDataVal":"","xCssCls":""},{"Page Name":"Court of Appeal Upholds Insider Trading Civil Judgment against Former WCT Deputy MD and Another Defendant ","Page Description":"The Court of Appeal today unanimously affirmed the High Court’s decision in 2022 which found former deputy managing director of WCT Bhd (WCT) Goh Chin Liong (Goh) and Ara Holdings Sdn Bhd (Ara Holdings) director Leong Ah Chai (Leong) liable for insider trading. ","Page Address":"resources/media/media-release/court-of-appeal-upholds-insider-trading-civil-judgment-against-former-wct-deputy-md-and-another-defendant","Display Date 2":"14 July 2026","xDataId":"c1ace177-fb75-4e36-8f13-caea74a35ec2","xDataVal":"","xCssCls":""},{"Page Name":"SC Seeks Public Feedback on Key Proposals to Strengthen Corporate Governance Ecosystem","Page Description":"The Securities Commission Malaysia (SC) today published a Consultation Paper to seek public feedback on proposals to further strengthen Malaysia’s corporate governance ecosystem. ","Page Address":"resources/media/media-release/sc-seeks-public-feedback-on-key-proposals-to-strengthen-corporate-governance-ecosystem","Display Date 2":"03 July 2026","xDataId":"99c99f4e-10b4-457f-9b00-7b149aa76ae8","xDataVal":"","xCssCls":""},{"Page Name":"Federal Court Rules in SC’s Favour, Leave Application of Former Patimas Executive Director in Insider Trading Civil Appeal Dismissed","Page Description":"The Federal Court today dismissed an application by former Patimas Computers Berhad (Patimas) executive director Dato’ Ng Back Heang for a leave to appeal in an insider trading case.","Page Address":"resources/media/media-release/federal-court-rules-in-scs-favour-leave-application-of-former-patimas-executive-director-in-insider-trading-civil-appeal-dismissed","Display Date 2":"02 July 2026","xDataId":"eafc1b21-7b12-4530-9a64-374ef26bae89","xDataVal":"","xCssCls":""},{"Page Name":"SC Announces New Shariah Advisory Council ","Page Description":"The Securities Commission Malaysia (SC) today announced its new Shariah Advisory Council (SAC) line-up for a three-year term from 1 July 2026 to 30 June 2029.","Page Address":"resources/media/media-release/sc-announces-new-shariah-advisory-council","Display Date 2":"01 July 2026","xDataId":"1534f53f-5a5e-480f-9115-4c55b438d4d9","xDataVal":"","xCssCls":""},{"Page Name":"SC Issues Guidance Note on Sukuk to Strengthen Alignment with Maqasid al-Shariah ","Page Description":"The Securities Commission Malaysia (SC) today issued the Guidance Note on Sukuk: An Alignment with Maqasid Al-Shariah Guidance Islamic Capital Market Malaysia (Guidance Note), to strengthen the alignment of sukuk issuances with Maqasid al-Shariah.","Page Address":"resources/media/media-release/sc-issues-guidance-note-on-sukuk-to-strengthen-alignment-with-maqasid-al-shariah","Display Date 2":"29 June 2026","xDataId":"200343e4-3251-4ace-8642-df07fcd1a99e","xDataVal":"","xCssCls":""},{"Page Name":"BNM, SC Align Strategic Priorities in Advancing Malaysia's Global Islamic Finance Leadership","Page Description":"Bank Negara Malaysia (BNM) and the Securities Commission Malaysia (SC) yesterday convened the inaugural meeting of the Malaysia International Islamic Financial Centre (MIFC) Advisory Panel (MAP).","Page Address":"resources/media/media-release/bnm-sc-align-strategic-priorities-in-advancing-malaysias-global-islamic-finance-leadership","Display Date 2":"23 June 2026","xDataId":"2630f664-4e32-4b35-b478-404355751676","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Former CFO of Karex Berhad with Insider Trading ","Page Description":"The Securities Commission Malaysia (SC) today charged former Chief Financial Officer of Karex Berhad (Karex), Goh Chok Siang (Goh) for an insider trading offence under section 188(2)(a) of the Capital Markets and Services Act 2007. ","Page Address":"resources/media/media-release/sc-charges-former-cfo-of-karex-berhad-with-insider-trading","Display Date 2":"10 June 2026","xDataId":"8be976bf-be50-4f95-b61d-59cb88502765","xDataVal":"","xCssCls":""},{"Page Name":"SC and Bursa Malaysia Launch MY Value Up Guidebook","Page Description":"The Securities Commission Malaysia (“SC”) and Bursa Malaysia Berhad (“Bursa Malaysia”) today launched the MY Value Up Programme Guidebook (“Guidebook”), to help public listed companies (“PLCs”) create their medium-to long-term value and transform them into globally attractive investment propositions.","Page Address":"resources/media/media-release/sc-and-bursa-malaysia-launch-my-value-up-guidebook","Display Date 2":"09 June 2026","xDataId":"a926384e-2c24-403f-a0b6-d8ffe67136a2","xDataVal":"","xCssCls":""},{"Page Name":"SC, Ibn Haldun University Partner to Advance Maqasid al-Shariah aligned Ethical Finance","Page Description":"The Securities Commission Malaysia (SC) and Ibn Haldun University (IHU) of Türkiye have entered into a strategic partnership to promote Maqasid al-Shariah aligned ethical finance globally.","Page Address":"resources/media/media-release/sc-ibn-haldun-university-partner-to-advance-maqasid-al-shariah-aligned-ethical-finance","Display Date 2":"04 June 2026","xDataId":"e5957751-1d58-42fa-b852-41cc26d0dd16","xDataVal":"","xCssCls":""},{"Page Name":"SC’s Market Segmentation Review Strengthens Public Market Framework","Page Description":"The Securities Commission Malaysia (SC) today released its revised Equity Guidelines and Response Paper, introducing targeted enhancements to the primary market framework. ","Page Address":"resources/media/media-release/scs-market-segmentation-review-strengthens-public-market-framework","Display Date 2":"28 May 2026","xDataId":"30b290ba-fbcc-4310-9b6b-caa3f15d7c17","xDataVal":"","xCssCls":""},{"Page Name":"SC Wins Appeal to Reinstate Garnishee Order against Former Deputy MD of WCT and Director of Ara Holdings Found Liable for Insider Trading in 2022","Page Description":"The Kuala Lumpur High Court today allowed an appeal by the Securities Commission Malaysia (SC) and ordered that the garnishee order nisi against Goh Chin Liong (Goh) and Leong Ah Chai (Leong) be made absolute.","Page Address":"resources/media/media-release/sc-wins-appeal-to-reinstate-garnishee-order-against-former-deputy-md-of-wct-and-director-of-ara-holdings-found-liable-for-insider-trading-in-2022","Display Date 2":"26 May 2026","xDataId":"8f3207d6-e95f-4f47-a112-39d9633e9ac0","xDataVal":"","xCssCls":""},{"Page Name":"Malaysia’s First Social Exchange Strengthens Access to Social Impact Financing","Page Description":"The Securities Commission Malaysia (SC) today marked a key milestone in advancing Malaysia’s social impact ecosystem with the official launch of the Social Exchange.","Page Address":"resources/media/media-release/malaysias-first-social-exchange-strengthens-access-to-social-impact-financing","Display Date 2":"25 May 2026","xDataId":"d15f5049-e134-43ed-a46d-2d94300b7827","xDataVal":"","xCssCls":""},{"Page Name":"SC Calls for Applications on Visiting Fellowship Programme at UK’s Oxford Centre for Islamic Studies","Page Description":"The Securities Commission Malaysia (SC) is inviting applications for the 15th Scholar in Residence (SIR) Fellowship Programme in Islamic Finance at the Oxford Centre for Islamic Studies (OCIS), UK, for the 2026/2027 academic year.","Page Address":"resources/media/media-release/sc-calls-for-applications-on-visiting-fellowship-programme-at-uks-oxford-centre-for-islamic-studies","Display Date 2":"21 May 2026","xDataId":"32d0251a-315f-4406-a980-9a7ee1df1f95","xDataVal":"","xCssCls":""},{"Page Name":"SC Issues Revised Guidelines on Recognized Markets for Digital Asset Exchange  ","Page Description":"The Securities Commission Malaysia (SC) has enhanced the Guidelines on Recognized Markets (Guidelines), marking a significant step in the evolution of the regulatory framework for Digital Asset Exchange (DAX).","Page Address":"resources/media/media-release/sc-issues-revised-guidelines-on-recognized-markets-for-digital-asset-exchange","Display Date 2":"20 May 2026","xDataId":"bc1d150b-bee9-4337-afad-0ca4f17bfe31","xDataVal":"","xCssCls":""},{"Page Name":"SC and Bursa Malaysia Propose Leap Market Enhancements","Page Description":"The Securities Commission Malaysia (SC) and Bursa Malaysia Securities Berhad (Bursa Malaysia) today propose enhancements to Bursa Malaysia’s LEAP Market, the main platform for early-stage and emerging companies.","Page Address":"resources/media/media-release/sc-and-bursa-malaysia-propose-leap-market-enhancements","Display Date 2":"18 May 2026","xDataId":"a91725cc-71fa-4802-85b0-445599341c47","xDataVal":"","xCssCls":""},{"Page Name":"SC’s investED Expands Capital Market Talent Pool with 65% of Participants Landing Jobs","Page Description":"The Securities Commission Malaysia’s (SC) flagship graduate programme, investED, continues to play a pivotal role in developing industry-ready talent for Malaysia’s capital market.","Page Address":"resources/media/media-release/scs-invested-expands-capital-market-talent-pool-with-65-of-participants-landing-jobs","Display Date 2":"07 May 2026","xDataId":"6e356c58-1481-47a8-b921-7bc799f665e7","xDataVal":"","xCssCls":""},{"Page Name":"Khazanah Leads Malaysia’s First Tokenised Sukuk Pilot in Collaboration with the SC ","Page Description":"Khazanah Nasional Berhad (“Khazanah”), in collaboration with the Securities Commission Malaysia (“SC”), has successfully priced Malaysia’s first tokenised sukuk with a nominal value of RM100 million, marking an important step in the application of digital technologies to support the future development of Malaysia’s domestic capital market. ","Page Address":"resources/media/media-release/khazanah-leads-malaysias-first-tokenised-sukuk-pilot-in-collaboration-with-the-sc","Display Date 2":"28 April 2026","xDataId":"9cfaf65b-ff6d-4deb-8410-f3e3b7cc406e","xDataVal":"","xCssCls":""},{"Page Name":"SC’s RIFAR Youth-led Challenge to Drive Awareness and Innovation for Malaysia’s Rivers","Page Description":"The Securities Commission Malaysia (SC) today launched the River Flooding Adaptation & Resilience (RIFAR) Challenge to empower youth to contribute ideas and actions that strengthen the resilience of Malaysia’s rivers.","Page Address":"resources/media/media-release/scs-rifar-youth-led-challenge-to-drive-awareness-and-innovation-for-malaysias-rivers","Display Date 2":"28 April 2026","xDataId":"dfe9f6e6-2067-4aed-9b71-ab622243b8a9","xDataVal":"","xCssCls":""},{"Page Name":"Malaysian Capital Market Hits Record RM4.3 trillion in 2025","Page Description":"The Securities Commission Malaysia (SC) today released its Annual Report 2025 (AR2025), the Audit Oversight Board Annual Report 2025 and Capital Market Stability Review 2025 (CMSR). ","Page Address":"resources/media/media-release/malaysian-capital-market-hits-record-rm43-trillion-in-2025","Display Date 2":"22 April 2026","xDataId":"f681d398-4f6d-491d-a284-5899ddabf2e3","xDataVal":"","xCssCls":""},{"Page Name":"SC and Bursa Malaysia Introduce MY Value Up Programme","Page Description":"\nThe Securities Commission Malaysia (SC) and Bursa Malaysia today introduced the MY Value Up Programme a collaborative initiative to support Malaysian public-listed companies (PLCs) in elevating their long‑term value creation and transforming into globally attractive investment propositions.","Page Address":"resources/media/media-release/sc-and-bursa-malaysia-introduce-my-value-up-programme","Display Date 2":"20 April 2026","xDataId":"21127e15-a973-4b04-b535-df488cfc7561","xDataVal":"","xCssCls":""},{"Page Name":"SC Explores Cross Border Opportunities with China","Page Description":"The Securities Commission Malaysia (SC) recently undertook a visit to China, to further the ambitions of the new Capital Market Masterplan 2026-2030 (CMP) with regards to seeking more diverse investors and to create more opportunities for Malaysian investors.","Page Address":"resources/media/media-release/sc-explores-cross-border-opportunities-with-china","Display Date 2":"17 April 2026","xDataId":"1750e8c4-bcc7-4f19-a8b0-29169f65f8e6","xDataVal":"","xCssCls":""},{"Page Name":"SC Names New Executive Director of Enforcement","Page Description":"The Securities Commission Malaysia (SC) today announced the appointment of Datuk Manoj Kurup as Executive Director, Enforcement, effective 8 April 2026. ","Page Address":"resources/media/media-release/sc-names-new-executive-director-of-enforcement","Display Date 2":"08 April 2026","xDataId":"a3cee30b-b5f2-4eff-b7d4-bbdeec2efb51","xDataVal":"","xCssCls":""},{"Page Name":"SC, MCMC To Strengthen Scams Prevention and Enforcement ","Page Description":"The Securities Commission Malaysia (SC) and the Malaysian Communications and Multimedia Commission (MCMC) today agreed to further enhance cooperation in enforcement and strengthen efforts in mitigating and preventing scams. ","Page Address":"resources/media/media-release/sc-mcmc-to-strengthen-scams-prevention-and-enforcement","Display Date 2":"03 April 2026","xDataId":"da11166f-79f9-4774-a280-ca595d1be30f","xDataVal":"","xCssCls":""},{"Page Name":"SC Launches ICM Innovation Lab to Advance Maqasid al-Shariah-Driven Islamic Capital Market Innovation","Page Description":"The Securities Commission Malaysia (SC) today announced the establishment of the ICM Innovation Lab (FIKRALab), a structured co-creation and applied R&D platform to develop new Islamic capital market (ICM) products and instruments. ","Page Address":"resources/media/media-release/sc-launches-icm-innovation-lab-to-advance-maqasid-al-shariah-driven-islamic-capital-market-innovation","Display Date 2":"26 March 2026","xDataId":"25916913-42ac-42a5-a562-1ae028531260","xDataVal":"","xCssCls":""},{"Page Name":"MyCIF Unveils New Silver Economy Scheme and VC-Led Profit-Sharing Incentive to Ease MSME Funding Access","Page Description":"The Malaysia Co-Investment Fund (MyCIF) today announced new initiatives for MSMEs to seek funding in emerging growth areas and make it easier for investors to access high quality investment opportunities.","Page Address":"resources/media/media-release/mycif-unveils-new-silver-economy-scheme-and-vc-led-profit-sharing-incentive-to-ease-msme-funding-access","Display Date 2":"16 March 2026","xDataId":"f142b2c2-3373-4745-89bd-1bdb3b9ddbbc","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Former Group MD & CEO of Sarawak Consolidated Industries Berhad for False Financial Statements","Page Description":"The Securities Commission Malaysia (SC) today charged former Group Managing Director and Chief Executive Officer of Sarawak Consolidated Industries Berhad (SCIB) Rosland bin Othman (Rosland) at the Kuala Lumpur Sessions Court for an offence of causing the furnishing of a false statement by SCIB to Bursa Malaysia.","Page Address":"resources/media/media-release/sc-charges-former-group-md-ceo-of-sarawak-consolidated-industries-berhad-for-false-financial-statements","Display Date 2":"12 March 2026","xDataId":"87db5a03-da27-4b62-82a8-714fdd65a5b9","xDataVal":"","xCssCls":""},{"Page Name":"SC, SSM to Enhance Data-Sharing to Drive MSME Growth and Market Integrity","Page Description":"The Securities Commission Malaysia (SC) and the Companies Commission of Malaysia (SSM) yesterday signed a Memorandum of Understanding (MoU) to facilitate greater access to shared data resources in support of capital market funding initiatives for micro, small and medium enterprises (MSMEs) and mid-tier companies (MTCs) as well as enhanced supervisory functions. ","Page Address":"resources/media/media-release/sc-ssm-to-enhance-data-sharing-to-drive-msme-growth-and-market-integrity","Display Date 2":"11 March 2026","xDataId":"5368555e-dfdc-4b91-9661-02d1f50c859e","xDataVal":"","xCssCls":""},{"Page Name":"SC Unveils Capital Market Masterplan 2026-2030","Page Description":"The Securities Commission Malaysia (SC) today unveiled the Capital Market Masterplan 2026–2030 (CMP), a strategic blueprint to position Malaysia’s capital market as a key driver of national growth and economic prosperity. ","Page Address":"resources/media/media-release/sc-unveils-capital-market-masterplan-2026-2030","Display Date 2":"09 March 2026","xDataId":"4b20bb6a-f08b-4be1-a521-ae0264011848","xDataVal":"","xCssCls":""},{"Page Name":"SC Announces Two New Board Members","Page Description":"The Securities Commission Malaysia (SC) is pleased to announce the appointment of Kamal Azira Hassan and Adnan Zaylani Mohamad Zahid as Board Members for a two-year term, effective 15 February 2026.","Page Address":"resources/media/media-release/sc-announces-two-new-board-members","Display Date 2":"02 March 2026","xDataId":"60dec2b0-5d75-46d4-80be-aef08d742448","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Founder of AUF MBZ with Offences Relating to Unlicensed Capital Market Activities","Page Description":"The Securities Commission Malaysia (SC) today charged AUF MBZ Consortium PLT (AUF MBZ) founder Datuk Wira Mahadi bin Badrul Zaman (Mahadi) at the Kuala Lumpur Sessions Court with two charges relating to unlicensed capital market activities under section 58(1) of the Capital Markets and Services Act 2007 (CMSA).","Page Address":"resources/media/media-release/sc-charges-founder-of-auf-mbz-with-offences-relating-to-unlicensed-capital-market-activities","Display Date 2":"23 February 2026","xDataId":"71b79953-919e-4551-a637-bee365c7d5b0","xDataVal":"","xCssCls":""},{"Page Name":"Former Jalatama Officers Fail in Bid to Overturn Conviction and Sentence for Unlicensed Capital Market Activities","Page Description":"The Kuala Lumpur High Court today dismissed the appeals by Su Eng Kooi and Yap Choong Seong (the Appellants) against their respective conviction and sentence by the Sessions Court in 2022 for offences relating to carrying on a business in regulated capital market activities without a license. ","Page Address":"resources/media/media-release/former-jalatama-officers-fail-in-bid-to-overturn-conviction-and-sentence-for-unlicensed-capital-market-activities","Display Date 2":"20 February 2026","xDataId":"42698f7c-daca-47e3-af25-72cc415d8f39","xDataVal":"","xCssCls":""},{"Page Name":"Inaugural Sultan Nazrin Shah Fellow Appointed to Advance Islamic Finance","Page Description":"The Securities Commission Malaysia (SC) today announced the appointment of Dr. Abdulkader Thomas as the inaugural Sultan Nazrin Shah Fellow to help drive thought leadership and innovation in Islamic finance.","Page Address":"resources/media/media-release/inaugural-sultan-nazrin-shah-fellow-appointed-to-advance-islamic-finance","Display Date 2":"19 February 2026","xDataId":"d135ac31-8bd1-429f-a56f-9d764b759acb","xDataVal":"","xCssCls":""},{"Page Name":"SC Names Malaysia’s First Social Exchange Platform Operator","Page Description":"The Securities Commission Malaysia (SC) today announced the appointment of LC Wakaful Digital Sdn Bhd (LCWD) as the first Social Exchange Platform operator in Malaysia.","Page Address":"resources/media/media-release/sc-names-malaysias-first-social-exchange-platform-operator","Display Date 2":"12 February 2026","xDataId":"718ed179-781e-4bfb-9c39-abeb572e3175","xDataVal":"","xCssCls":""},{"Page Name":"Joint Statement by Bank Negara Malaysia and  Securities Commission Malaysia Updates from the 16th Joint Committee on Climate Change (JC3) Meeting","Page Description":"The Joint Committee on Climate Change (JC3) held its 16th meeting on \n29 January 2026 to review ongoing progress and set strategic priorities for 2026. At the meeting, JC3 also reaffirmed its priority in accelerating climate action in the real economy by mobilising finance for impactful climate and nature-positive projects.","Page Address":"resources/media/media-release/joint-statement-by-bank-negara-malaysia-and-securities-commission-malaysia-updates-from-the-16th-joint-committee-on-climate-change-jc3-meeting","Display Date 2":"06 February 2026","xDataId":"1144fbf2-d9dc-4a7e-be17-600357870ea6","xDataVal":"","xCssCls":""},{"Page Name":"SC Appoints New Audit Oversight Board Chairman","Page Description":"The Securities Commission Malaysia (SC) is pleased to announce the appointment of Dato’ Seri Ahmad Johan Mohammad Raslan as the non-executive Chairman of its Audit Oversight Board (AOB), effective 5 January 2026. Dato’ Seri Johan has served as a non-executive board member of the AOB since December 2020 and was redesignated as the non-executive Chairman. ","Page Address":"resources/media/media-release/sc-appoints-new-audit-oversight-board-chairman","Display Date 2":"06 January 2026","xDataId":"cc30ec51-6f08-4bd2-974c-5a814d5e56ee","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Former CEO for Causing Wrongful Loss to Khee San Berhad's Subsidiary","Page Description":"The Securities Commission Malaysia (SC) today charged Dato’ Sri Liew Yew Chung (Liew), a former CEO and Non-Independent Non-Executive Chairman of Khee San Berhad (KSB), at the Kuala Lumpur Sessions Court for causing wrongful loss amounting to RM7.12 million to KSB’s subsidiary, Khee San Food Industries Sdn Bhd (KSFI).","Page Address":"resources/media/media-release/sc-charges-former-ceo-for-causing-wrongful-loss-to-khee-san-berhads-subsidiary","Display Date 2":"05 January 2026","xDataId":"0293fbe9-7055-4bfa-bc8b-265e8ea50d5e","xDataVal":"","xCssCls":""},{"Page Name":"Kolaborasi Strategik Diperkasa: HASiL dan Suruhanjaya Sekuriti Malaysia Meterai Memorandum Persefahaman","Page Description":"Lembaga Hasil Dalam Negeri Malaysia (HASiL) hari ini memeterai Memorandum Persefahaman (MoU) dengan Suruhanjaya Sekuriti Malaysia (SC) bagi memperkukuh kerjasama strategik antara kedua-dua agensi dalam mempertingkatkan keberkesanan penguatkuasaan, pematuhan serta tadbir urus ekosistem kewangan negara.","Page Address":"https://www.sc.com.my/api/documentms/download.ashx?id=1d24eea9-b7e8-4e20-9c9e-d86eed2906dc","Display Date 2":"19 December 2025","xDataId":"a116217e-79a2-4f01-8983-f739184d39a0","xDataVal":"","xCssCls":""},{"Page Name":"SC Seeks Feedback as part of Malaysia’s Corporate Governance Framework Review","Page Description":"The Securities Commission Malaysia (SC) today published a Discussion Paper seeking public feedback as part of its review of Malaysia’s corporate governance framework.","Page Address":"resources/media/media-release/sc-seeks-feedback-as-part-of-malaysias-corporate-governance-framework-review","Display Date 2":"12 December 2025","xDataId":"2ff5c46a-41f6-4902-bb59-1ac962930f9f","xDataVal":"","xCssCls":""},{"Page Name":"The Financial Action Task Force (FATF) Recognises Malaysia's AML/CFT/CPF Strengths in its Latest Review","Page Description":"Malaysia has attained a significant positive milestone in its efforts to combat money laundering, terrorism financing and proliferation financing (ML/TF/PF). In the joint publication by FATF/APG on Malaysia’s Mutual Evaluation Report (MER), Malaysia achieved Regular Follow-Up status, the highest category under the FATF mutual evaluation (ME) process.","Page Address":"https://www.bnm.gov.my/-/pr-fatf","Display Date 2":"11 December 2025","xDataId":"974d47cb-db5f-4959-93bd-a864a499631a","xDataVal":"","xCssCls":""},{"Page Name":"ACSR Sets Out Approach for Non-compliance to Sustainability Reporting Requirements","Page Description":"The Advisory Committee on Sustainability Reporting (ACSR), chaired by the Securities Commission Malaysia (SC), today announced its approach to addressing non-compliance with regulatory sustainability reporting requirements developed in alignment with the National Sustainability Reporting Framework (NSRF).","Page Address":"resources/media/media-release/acsr-sets-out-approach-for-non-compliance-to-sustainability-reporting-requirements","Display Date 2":"08 December 2025","xDataId":"3595663a-b20e-43b4-8402-70b85731b905","xDataVal":"","xCssCls":""},{"Page Name":"SC Announces First Cohort of Regulatory Sandbox Participants","Page Description":"The Securities Commission Malaysia (SC) has announced the selection of six participants for the inaugural cohort of its Regulatory Sandbox. ","Page Address":"resources/media/media-release/sc-announces-first-cohort-of-regulatory-sandbox-participants","Display Date 2":"26 November 2025","xDataId":"ed4ee660-2a8c-4831-a8c1-4d7d154116ee","xDataVal":"","xCssCls":""},{"Page Name":"SC: Better Corporate Governance Adoption by Malaysian PLCs","Page Description":"The Securities Commission Malaysia (SC) today released the Corporate Governance Monitor 2025 (CG Monitor), highlighting continued progress in the adoption of the Malaysian Code on Corporate Governance (MCCG) by public listed companies (PLCs).","Page Address":"resources/media/media-release/sc-better-corporate-governance-adoption-by-malaysian-plcs","Display Date 2":"14 November 2025","xDataId":"9fca2600-17a1-4c86-9e3b-dadc4c23574d","xDataVal":"","xCssCls":""},{"Page Name":"SC Seeks Feedback on Proposals Under the Market Segmentation Review","Page Description":"The Securities Commission Malaysia (SC) today published a consultation paper, inviting feedback on various proposals to enhance value propositions of the public market. ","Page Address":"resources/media/media-release/sc-seeks-feedback-on-proposals-under-the-market-segmentation-review","Display Date 2":"12 November 2025","xDataId":"272182a6-3107-4e0c-a97a-4ec71554e466","xDataVal":"","xCssCls":""},{"Page Name":"SC Charges Former Chief Financial Officer for Causing Wrongful Loss to AT Systematization Berhad","Page Description":"The Securities Commission Malaysia (SC) today charged a former Chief Financial Officer of AT Systematization Berhad (ATS) (currently known as Erdasan Group Berhad), at the Kuala Lumpur Sessions Court for causing wrongful loss amounting to RM7.821 million to the company.","Page Address":"resources/media/media-release/sc-charges-former-chief-financial-officer-for-causing-wrongful-loss-to-at-systematization-berhad","Display Date 2":"12 November 2025","xDataId":"5b0b7a7d-66ee-48f6-a94d-142f1da71803","xDataVal":"","xCssCls":""}]},"cnt":5},"daca904b-2a20-4dea-81c4-b445430b4d3f":{}};</script>
+    <script defer src="https://www.sc.com.my/js/EQCSS-1.9.1.min.js"></script>
+    <!--START - Dynamic Molecule JS Preload for SMART/DATA/CUSTOM-->
+    <script src="smart_molecule/carousel/owlcarousel00/owl.carousel.min.js"></script>
+<script type="text/javascript" src="smart_molecule/list_pagination/paginate01/js/jquery.matchHeight.min.js"></script>
+<script type="text/javascript" src="smart_molecule/list_pagination/paginate01/js/jquery.xpgn.js"></script><script>
+    (function($) {
+        "use strict";
+
+        $.fn.xtopiaMenu = function(options) {
+            var settings = $.extend({
+                // These are the defaults.
+                source: "https://www.xtopia.io/api/contentms/full_menu_json.ashx",
+                rootType: "rt-type-01",
+                plugin: "dd-type-01",
+                rootFontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                lvl2_FontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+                lvl3_FontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+                lvl4_FontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+            }, options);
+            // Root List
+            var rootList = {
+                designs: {
+                    "rt-type-01": {
+                        rootClass: "rt-type-01",
+                        thumbnail: ""
+                    },
+                    "rt-type-02": {
+                        rootClass: "rt-type-02",
+                        thumbnail: ""
+                    },
+
+                    "rt-type-03": {
+                        rootClass: "rt-type-03",
+                        thumbnail: ""
+                    },
+                    "rt-type-04": {
+                        rootClass: "rt-type-04",
+                        thumbnail: ""
+                    },
+                    "rt-type-05": {
+                        rootClass: "rt-type-05",
+                        thumbnail: ""
+                    }
+
+
+                }
+            };
+            // Drop Down List
+            var pluginList = {
+                plugins: {
+                    "dd-type-01": {
+                        dropDownClass: "dd-type-01",
+
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "dd-type-02": {
+                        dropDownClass: "dd-type-02",
+
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "dd-type-03": {
+                        dropDownClass: "dd-type-03",
+
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "dd-type-04": {
+                        dropDownClass: "dd-type-04",
+
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    }
+                }
+            };
+
+            var objRoot = rootList;
+            var obj = pluginList;
+
+            return this.each(function(ignore, target) {
+                var $target = $(target);
+
+                //Add Root List
+                $target.append("<ul class=\"root-menu\"></ul>");
+
+                //load JSON file
+                $.getJSON(settings.source, function(data) {
+                    //build menu
+                    var builddata = function() {
+                        var source = [];
+                        var items = [];
+
+                        data.forEach(function(item) {
+                            var label = item.name,
+                                parentid = item.parent_id,
+                                id = item.id,
+                                url = item.url,
+                                target = item.target;
+                            if (items[parentid]) {
+                                item = {
+                                    id: id,
+                                    parentid: parentid,
+                                    label: label,
+                                    url: url,
+                                    target: target,
+                                    item: item
+                                };
+                                if (!items[parentid].items) {
+                                    items[parentid].items = [];
+                                }
+                                items[parentid].items[items[parentid].items.length] = item;
+                                items[id] = item;
+                            } else {
+                                items[id] = {
+                                    id: id,
+                                    parentid: parentid,
+                                    label: label,
+                                    url: url,
+                                    target: target,
+                                    item: item
+                                };
+                                source[id] = items[id];
+                            }
+                        });
+
+                        var nodes = [];
+
+                        Object.keys(items).forEach(function(key) {
+                            nodes.push(items[key]);
+                        });
+
+                        return source;
+                    };
+
+                    var startingLevel = 1;
+                    var lvl = 0;
+                    var buildUL;
+
+                    buildUL = function(parent, items, lvl) {
+                        lvl += 1;
+
+                        Object.keys(items).forEach(function(key) {
+                            var item = items[key];
+                            if (lvl == 1 && item.parentid != -1) {} else {
+                                if (item.label) {
+                                    var li = $("<li id=\"" + item.id + "\" data-parent=\"" + item.parentid + "\" class=\"menu-item lvl-" + lvl + "\"><div class=\"menu-link\"><a href=\"" + item.url + "\" target=\"" + item.target + "\">" + item.label + "</a></div></li>");
+                                    li.appendTo(parent);
+                                    //Add Font Family
+                                    //console.log(lvl)
+                                    switch (lvl) {
+                                        case 1:
+                                            //console.log('a')
+                                            $(parent).addClass(settings.rootFontSize);
+                                            break;
+                                        case 2:
+                                            $(parent).addClass(settings.lvl2_FontSize + " " + item.parentid);
+                                            break;
+                                        case 3:
+                                            $(parent).addClass(settings.lvl3_FontSize + " " + item.parentid);
+                                            break;
+                                        case 4:
+                                            $(parent).addClass(settings.lvl4_FontSize + " " + item.parentid);
+                                            break;
+                                    }
+
+
+
+
+                                    //Add Sub Menu List
+                                    if (item.items && item.items.length > 0) {
+                                        li.addClass("drop-down").find(".menu-link").append("<span class=\"menu-icon\"></span>");
+                                        var ul = $("<ul class=\"sub-menu\"></ul>");
+                                        var div = $("<div class=\"sub-menu-container\"></div>");
+                                        var subWrapper = $("<div class=\"drop-down-wrapper\"></div>");
+                                        //if drop down type 3
+                                        if (obj.plugins[settings.plugin].dropDownClass === "dd-type-03") {
+
+                                            if (lvl === 2) {
+                                                //if lvl 2 add Sub Menu Container
+                                                buildUL(ul, item.items, lvl);
+                                                if (parent.next(".sub-menu-container").length) {
+                                                    parent.next(".sub-menu-container").append(ul);
+                                                    parent.addClass('dock-menu');
+                                                } else {
+                                                    parent.after(ul);
+                                                    ul.wrap(div);
+                                                }
+                                            } else {
+                                                ul.appendTo(li);
+                                                buildUL(ul, item.items, lvl);
+                                                ul.add(ul.nextAll()).wrapAll(subWrapper);
+                                            }
+                                        } else {
+                                            ul.appendTo(li);
+                                            buildUL(ul, item.items, lvl);
+                                            ul.add(ul.nextAll()).wrapAll(subWrapper);
+                                        }
+                                        //Add Wrapper Sub Menu List
+
+                                    }
+                                }
+                            }
+                        });
+                    };
+
+                    var source = builddata();
+                    var ul = $target.find(".root-menu");
+                    //Switch Plugin
+                    $target.addClass(obj.plugins[settings.plugin].dropDownClass);
+                    $target.addClass(objRoot.designs[settings.rootType].rootClass);
+                    //Run Rendering
+                    ul.appendTo(ul);
+                    buildUL(ul, source, lvl);
+                    //Hover Function if drop down type 1 or type 4
+                    if (obj.plugins[settings.plugin].dropDownClass == "dd-type-01" || obj.plugins[settings.plugin].dropDownClass == "dd-type-04") {
+                        $('.co-menu-01 .lvl-1.drop-down').mouseenter(function() {
+                            $(this).find('> .drop-down-wrapper').removeClass('attach-right attach-left');
+                            var getOffset = $(this).find('> .drop-down-wrapper').offset();
+                            var getWidth = $(this).find('> .drop-down-wrapper').width();
+                            var getRightEdge = (getWidth + getOffset.left)
+                            var getWindowWidth = $(window).width();
+                            //console.log((getRightEdge - getWindowWidth))
+                            if (getOffset.left < 0) {
+                                $(this).find('> .drop-down-wrapper').addClass('attach-left');
+                            }
+                            if (getRightEdge > getWindowWidth) {
+                                $(this).find('> .drop-down-wrapper').addClass('attach-right');
+                            }
+                        });
+                        $('.co-menu-01 .drop-down:not(.lvl-1)').mouseenter(function() {
+                            $(this).find('> .drop-down-wrapper').removeClass('dd-attach-right');
+                            var getDDOffset = $(this).find('> .drop-down-wrapper').offset();
+                            var getDDWidth = $(this).find('> .drop-down-wrapper').width();
+                            var getDDRightEdge = (getDDWidth + getDDOffset.left)
+                            var getWindowWidth = $(window).width();
+                            if (getDDRightEdge > getWindowWidth) {
+                                $(this).find('> .drop-down-wrapper').addClass('dd-attach-right');
+                            }
+                        });
+                    }
+                    //Hover Function if drop down type 3
+                    if (obj.plugins[settings.plugin].dropDownClass === "dd-type-03") {
+                        $('.dd-type-03 .lvl-1 > .drop-down-wrapper > .sub-menu > li').mouseover(function() {
+
+                            var getCurrent = $(this).attr('id');
+                            $(this).addClass('select').siblings().removeClass('select');
+                            $('.sub-menu-container > .sub-menu').hide();
+                            $(".sub-menu-container > ." + getCurrent + "").show();
+                        });
+                        $('.dd-type-03 .lvl-1').mouseleave(function() {
+                            $('.sub-menu-container > .sub-menu').hide();
+                            $('.dd-type-03 .lvl-2').removeClass('select');
+                        });
+                    }
+
+                });
+            });
+        };
+    }(jQuery));
+</script><script>
+    (function($) {
+        "use strict";
+        $.fn.xtopiaBurgerMenu = function(options) {
+            var settings = $.extend({
+                // These are the defaults.
+                source: "https://www.xtopia.io/api/contentms/full_menu_json.ashx",
+                plugin: "bb-type-04",
+                burgerTitle: "Menu",
+                defaultTitle: "Navigation",
+                rootFontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                lvl2_FontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                lvl3_FontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                lvl4_FontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                header_FontSize: "font-8C65CD72-BB8B-47C5-8E0E-355356B24AFF",
+                borderBetween: "bb-border-on",
+                counter: "bb-counter-on",
+                position: "position-left"
+            }, options);
+
+            // Drop Down List
+            var pluginList = {
+                plugins: {
+                    "bb-type-01": {
+                        dropDownClass: "bb-type-01",
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "bb-type-02": {
+                        dropDownClass: "bb-type-02",
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "bb-type-03": {
+                        dropDownClass: "bb-type-03",
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    },
+                    "bb-type-04": {
+                        dropDownClass: "bb-type-04",
+                        pluginHTML: "<ul class=\"sub-menu\"></ul>",
+                        thumbnail: ""
+                    }
+                }
+            };
+
+            var obj = pluginList,
+                $selector = this;
+
+            return this.each(function(ignore, target) {
+                var $target = $(target);
+                var defaultTopTitle = settings.defaultTitle;
+                var $parent = $("body");
+                var $menu;
+
+                //Add Root List
+                if ($(".sys-wrapper > #xtopia").length) {
+                    $parent = $(".sys-wrapper > #xtopia");
+                }
+
+                $menu = $("<div class=\"" + $selector.attr("class") + " hamburger-wrapper " + obj.plugins[settings.plugin].dropDownClass + " " + settings.borderBetween + " " + settings.counter + " " + settings.position + "\"><div class=\"hamburger-header\"><a href=\"#\" class=\"hamburger-back-btn\"></a><div class=\"section-menu-title " + settings.header_FontSize + "\">" + settings.defaultTitle + "</div><div class=\"hamburger-close-btn\"><div class=\"hamburger-cb-inner\"></div></div></div><ul class=\"hamburger-root-menu\"></ul></div>");
+                $parent.prepend($menu);
+
+                //load JSON file
+                $.getJSON(settings.source, function(data) {
+                    //build menu
+                    var builddata = function() {
+                        var source = [];
+                        var items = [];
+                        data.forEach(function(item) {
+                            var label = item.name,
+                                parentid = item.parent_id,
+                                id = item.id,
+                                url = item.url,
+                                target = item.target;
+                            if (items[parentid]) {
+                                item = {
+                                    id: id,
+                                    parentid: parentid,
+                                    label: label,
+                                    url: url,
+                                    target: target,
+                                    item: item
+                                };
+                                if (!items[parentid].items) {
+                                    items[parentid].items = [];
+                                }
+                                items[parentid].items[items[parentid].items.length] = item;
+                                items[id] = item;
+                            } else {
+                                items[id] = {
+                                    id: id,
+                                    parentid: parentid,
+                                    label: label,
+                                    url: url,
+                                    target: target,
+                                    item: item
+                                };
+                                source[id] = items[id];
+                            }
+                        });
+
+                        var nodes = [];
+                        Object.keys(items).forEach(function(key) {
+                            nodes.push(items[key]);
+                        });
+                        return source;
+                    };
+
+                    var startingLevel = 1;
+                    var lvl = 0;
+                    var buildUL;
+                    buildUL = function(parent, items, lvl) {
+                        lvl += 1;
+                        Object.keys(items).forEach(function(key) {
+                            var item = items[key];
+
+                            if (lvl == 1 && item.parentid != -1) {} else {
+
+                                if (item.label) {
+                                    var li = $("<li id=\"blvl-" + item.id + "\" data-parent=\"blvl-" + item.parentid + "\" class=\"hamburger-menu-item blvl-" + lvl + "\"><div class=\"hamburger-menu-link\"><a class=\"hamburger-link\" href=\"" + item.url + "\"  target=\"" + item.target + "\">" + item.label + "</a></div></li>");
+                                    li.appendTo(parent);
+                                    //Add Font Family
+                                    switch (lvl) {
+                                        case 1:
+                                            //       console.log('a')
+                                            $(parent).addClass(settings.rootFontSize + " blvl-" + item.parentid + " blvl-" + lvl + " menu-list");
+                                            break;
+                                        case 2:
+                                            $(parent).addClass(settings.lvl2_FontSize + " blvl-" + item.parentid + " blvl-" + lvl + " menu-list");
+                                            break;
+                                        case 3:
+                                            $(parent).addClass(settings.lvl3_FontSize + " blvl-" + item.parentid + " blvl-" + lvl + " menu-list");
+                                            break;
+                                        case 4:
+                                            $(parent).addClass(settings.lvl4_FontSize + " blvl-" + item.parentid + " blvl-" + lvl + " menu-list");
+                                            break;
+                                        default:
+                                            $(parent).addClass(settings.lvl4_FontSize + " blvl-" + item.parentid + " blvl-4 menu-list");
+                                    }
+                                    //Add Sub Menu List
+                                    if (item.items && item.items.length > 0) {
+                                        //   console.log(item.items.length)
+                                        li.addClass("drop-down").find(".hamburger-menu-link").append("<a class=\"hamburger-menu-icon\" href=\"#blvl-" + item.id + "\"><span class=\"next-child-count\"><span>" + item.items.length + "</span></span></a>");
+                                        var ul = $("<ul class=\"hamburger-sub-menu\"></ul>");
+                                        var div = $("<div class=\"hamburger-sub-menu-container\"></div>");
+                                        var subWrapper = $("<div class=\"hamburger-drop-down-wrapper\"></div>");
+                                        //if drop down type 3
+                                        if (obj.plugins[settings.plugin].dropDownClass === "bb-type-02") {
+                                            //if lvl 2 add Sub Menu Container
+                                            parent.after(ul);
+                                            buildUL(ul, item.items, lvl);
+                                        } else {
+                                            ul.appendTo(li);
+                                            buildUL(ul, item.items, lvl);
+                                            ul.add(ul.nextAll()).wrapAll(subWrapper);
+                                        }
+                                        //Add Wrapper Sub Menu List
+                                    }
+                                }
+                            }
+
+                        });
+                    };
+
+                    var source = builddata();
+                    var ul = $menu.find(".hamburger-root-menu");
+                    //Switch Plugin
+                    $target.addClass(obj.plugins[settings.plugin].dropDownClass);
+                    if (!settings.burgerTitle == "") {
+                        $target.find('.hamburger-box').append("<span>" + settings.burgerTitle + "</span>");
+                    }
+
+                    //Run Rendering
+                    ul.appendTo(ul);
+                    buildUL(ul, source, lvl);
+
+                    //Hover Function if Burger type 2
+                    if (obj.plugins[settings.plugin].dropDownClass === "bb-type-02") {
+                        $('.hamburger-root-menu').addClass('select');
+                        $target.find(".burger-menu").click(function(e) {
+                            $(e.currentTarget).toggleClass("select");
+                            $(".hamburger-wrapper").toggleClass("select");
+                        });
+                        $(".hamburger-menu-link .hamburger-menu-icon").click(function(e) {
+                            var $this = $(e.currentTarget),
+                                getChild = $this.closest(".hamburger-menu-item").attr("id"),
+                                getparent = $this.closest(".hamburger-menu-item").attr("data-parent"),
+                                getTitle = $this.siblings(".hamburger-link").html()
+                            $('.section-menu-title').html(getTitle)
+                            $(".hamburger-back-btn").attr("href", "#" + getparent).show();
+                            $this.closest(".menu-list").removeClass("select").addClass("hide-behind");
+                            $("." + getChild).addClass("select").attr({
+                                "data-parent": getparent,
+                                "data-title": getTitle
+                            });
+                            e.preventDefault();
+                        });
+
+                        $(".hamburger-back-btn").click(function(e) {
+                            var $this = $(e.currentTarget),
+                                getParent = $this.attr("href").replace(/#/, "");
+                            if ($(".blvl--1").hasClass("select")) {} else {
+                                $(".menu-list").removeClass("select");
+                                $("." + getParent).removeClass("hide-behind").addClass("select");
+                                var getPreviousParent = $("." + getParent).attr("data-parent"),
+                                    getParentTitle = $("." + getParent).attr("data-title");;
+                                if (getPreviousParent) {
+                                    $this.attr("href", "#" + getPreviousParent);
+                                    $('.section-menu-title').html(getParentTitle)
+                                } else {
+                                    $this.hide();
+                                    $('.section-menu-title').html(defaultTopTitle)
+                                }
+                            }
+                            e.preventDefault();
+                        });
+                    } else {
+                        $(".hamburger-menu-link .hamburger-menu-icon").click(function(e) {
+                            //       console.log("a");
+                            $(e.currentTarget).parent().toggleClass('select');
+                            e.preventDefault();
+                        });
+                        $target.find(".burger-menu").click(function(e) {
+                            $(e.currentTarget).toggleClass("select");
+                            $(".hamburger-wrapper").toggleClass("select");
+                        });
+                        $('.hamburger-wrapper').click(function() {
+                            $(this).removeClass('select')
+                        });
+                        $('.hamburger-wrapper .hamburger-root-menu *').click(function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                    $(".hamburger-close-btn").click(function() {
+                        $(".menu-list").removeClass("select hide-behind");
+                        $(".burger-menu").removeClass("select");
+                        $(".hamburger-wrapper").removeClass("select");
+                        $(".blvl--1").addClass("select")
+                        $(".hamburger-back-btn").hide();
+                        $('.section-menu-title').html(defaultTopTitle)
+                    });
+                });
+            });
+        };
+    }(jQuery));
+</script>
+<script>
+</script>
+
+<script>var form = [], recaptchaCallback = function () {!function(a){a.xReCaptcha={},$(".x-recaptcha").each(function(c,e){var t=$(e),r=t.attr("id");t.removeClass("x-recaptcha"),a.xReCaptcha[r.substr(8)]=grecaptcha.render(r,{sitekey:"6Lcv5BUTAAAAAHhwGN6LgeSQvhWDfCz6HLxpBryF",callback:function(a){grecaptchaCallback(r,a)}})})}(window);};</script>
+
+<script>var formValidation = {};</script>
+    <!--END - Dynamic Molecule JS Preload for SMART/DATA/CUSTOM-->
+    <script src="https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit" async defer></script>
+    
+    <script>
+        
+        !function(e,t){if(!$("."+t).length){var n=e.createElement("link"),a=e.getElementsByTagName("link")[0];n.rel="stylesheet",n.href="https://fonts.googleapis.com/icon?family=Material+Icons",n.type="text/css",n.className=t,a.parentNode.insertBefore(n,a)}}(document,"x-material-icons");
+    </script>
+    <script data-xtopia="content">!function(e,t){if(!$("."+t).length){var n=e.createElement("link"),a=e.getElementsByTagName("link")[0];n.rel="stylesheet",n.href="https://www.sc.com.my/font/icon_pack/default/style.css",n.type="text/css",n.className=t,a.parentNode.insertBefore(n,a)}}(document,"x-icon-pack");(function () {
+    var $inst = $(".owl-carousel-plugin-daca904b-2a20-4dea-81c4-b445430b4d3f"),
+        dataId = $inst.attr("data-id"),
+        isMulti = ($inst.find("> [data-id]").length > 1);
+
+    $inst.owlCarousel({
+        navText: ["<span class=\"nav-icon nav-icon-left\"></span>", "<span class=\"nav-icon nav-icon-right\"></span>"],
+        nav: isMulti,
+        dots: isMulti,
+        margin: 10,
+        loop: isMulti && true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: false,
+        responsive: {
+            0: {
+                items: 2,
+                stagePadding:0
+            },
+            768: {
+                items: 2,
+                stagePadding: 0
+            },
+            1024: {
+                items: 5,
+                stagePadding: 0
+            }
+        }
+    }).on("changed.owl.carousel", function (e) {
+        if (dataId) {
+        	$x.rmo[dataId].ave = e.item.index;
+        }
+    });
+
+    if (dataId) {
+        if ($x.rmo[dataId]) {
+            $inst.trigger("to.owl.carousel", [$x.rmo[dataId].ave, 0, true]);
+        } else {
+            $x.rmo[dataId] = {
+                ave: 0
+            };
+        }
+    }
+
+    $inst.data("reload", true).data("destroy", function () {
+        $inst.trigger("destroy.owl.carousel").removeClass("owl-loaded");
+        $inst.find(".owl-stage-outer").children().unwrap();
+    });
+}());
+(function () {
+    var $inst = $(".page-container-plugin-6ccafc50-f1ea-4e42-ae52-3a0e8709a2e9");
+
+    $inst.xpgn({
+        numPageLinksToDisplay : 5,
+        itemsPerPage : 10,
+        showFirstLast: true,
+        matchHeight: ""
+    });
+}());
+(function () {
+    var $inst = $(".page-container-plugin-f3883a8e-7c9e-4192-8caf-5d1c404699d3");
+
+    $inst.xpgn({
+        numPageLinksToDisplay : 3,
+        itemsPerPage : 10,
+        showFirstLast: true,
+        matchHeight: ""
+    });
+}());
+(function () {
+    var $inst = $(".owl-carousel-plugin-0084a14b-8e52-47bc-9d68-021e5f59c753"),
+        dataId = $inst.attr("data-id"),
+        isMulti = ($inst.find("> [data-id]").length > 1);
+
+    $inst.owlCarousel({
+        navText: ["<span class=\"nav-icon nav-icon-left\"></span>", "<span class=\"nav-icon nav-icon-right\"></span>"],
+        nav: isMulti,
+        dots: isMulti,
+        margin: 10,
+        loop: isMulti && true,
+        autoplay: false,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: false,
+        responsive: {
+            0: {
+                items: 2,
+                stagePadding:0
+            },
+            768: {
+                items: 2,
+                stagePadding: 0
+            },
+            1024: {
+                items: 5,
+                stagePadding: 0
+            }
+        }
+    }).on("changed.owl.carousel", function (e) {
+        if (dataId) {
+        	$x.rmo[dataId].ave = e.item.index;
+        }
+    });
+
+    if (dataId) {
+        if ($x.rmo[dataId]) {
+            $inst.trigger("to.owl.carousel", [$x.rmo[dataId].ave, 0, true]);
+        } else {
+            $x.rmo[dataId] = {
+                ave: 0
+            };
+        }
+    }
+
+    $inst.data("reload", true).data("destroy", function () {
+        $inst.trigger("destroy.owl.carousel").removeClass("owl-loaded");
+        $inst.find(".owl-stage-outer").children().unwrap();
+    });
+}());/*global $, window*/
+/*jslint browser, devel, multivar:true*/
+/*jshint maxparams:10, maxdepth:5, maxstatements:40, maxcomplexity:15 */
+(function () {
+    "use strict";
+
+    // HTML Elements
+    var $ddl_year = $("select[data-tid=\"wfp-ddl_year\"]");
+
+    var fnFilterArticles;
+     //show message when filtered article is empty
+    //var pagListHtml = $(".pag-list-01").html();
+   // if(pagListHtml===""){
+    //    $(".pag-list-01").html("<div class=\"content-empty aps-0036-so-wrapper-fb1ca1b5-fb22-4bfd-a4b0-29979718dc93 font-D6715655-7F24-45EF-8463-ADB1866B5F1D\">No record //found.</div>");
+  //  }
+    
+    // Generate dropdowns
+    var yearEnd = 1995,
+        yearCurrent = new Date().getFullYear(),
+        htmlOption = "<option value=\"[[optionValue]]\">[[optionValue]]</option>";
+
+    while (yearCurrent >= yearEnd) {
+        $ddl_year.append(htmlOption.replace(/\[\[optionValue\]\]/g, yearCurrent));
+
+        yearCurrent -= 1;
+    }
+
+    // Remember choices
+    if (fn_get_query_string("yearfilter") !== null) {
+        $ddl_year.val(fn_get_query_string("yearfilter"));
+    } else {
+        $ddl_year.val("Please select one");
+    }
+
+    // Year Dropdown change listener
+    $ddl_year.change(function () {
+        fnFilterArticles();
+    });
+
+    // Filter Articles
+    fnFilterArticles = function () {
+        var strPageName = window.location.href.split("?")[0];
+
+        if ($ddl_year.val() === "Please select one") {
+            location.href = strPageName;
+        } else {
+            location.href = strPageName + "?yearfilter=" + $ddl_year.val();
+        }
+
+
+    };
+}());
+</script>
+<script data-xtopia="master">/*global $, window, google, autoComplete, $X*/
+/*jslint browser, multivar, devel, long*/
+
+(function (window, document) {
+    "use strict";
+    var $body = $("body #row-search"),
+		master,
+		searchPage = "ask-aliss"; //ask-aliss";
+
+	master = {
+		helpers: {
+			highlightKeywords: function (paragraph, keywordString) {
+				// Split the keyword string using any character that is not an alphabet, number, hyphen, or underscore
+				var keywords = keywordString.split(/[^a-zA-Z0-9\-_]+/);
+
+				// Create a case-insensitive regex for all keywords
+				const regex = new RegExp(keywords.join("\\b|"), "gi");
+
+				// Replace keywords with bold tags
+				return paragraph.replace(regex, function (match) {
+					return `<b>${match}</b>`;
+				});
+			}
+		},
+		
+		preloader: {
+			ajaxCnt: 0,
+			//target: $body.find("#loading"),
+
+			init: function () {
+				$.isLoading("hide");
+				// preloader.target.hide();
+			},
+
+			show: function () {
+				preloader.ajaxCnt += 1;
+				$.isLoading("");
+				//preloader.target.show();
+			},
+
+			hide: function () {
+				var ajaxCnt = preloader.ajaxCnt;
+
+				ajaxCnt -= 1;
+
+				if (ajaxCnt < 0) {
+					ajaxCnt = 0;
+				}
+
+				if (ajaxCnt === 0) {
+					$.isLoading("hide");
+					//preloader.target.hide();
+				}
+
+				preloader.ajaxCnt = ajaxCnt;
+			}
+		},
+
+		sdk: {
+			websiteId: $("#hf_website_id").val(),
+
+			htmlEsc: function (str) {
+				return str
+					.replace(/&/g, "&amp;")
+					.replace(/"/g, "&quot;")
+					.replace(/'/g, "&#39;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/\//g, "&#x2F;");
+			},
+
+			ajax: function (action, reqBody, complete, q) {
+				var isEmptyObj = $.isEmptyObject(reqBody),
+					opts,
+					retVal,
+					query = q ? q : "";
+
+				opts = {
+					type: (isEmptyObj)
+						? "GET"
+						: "POST",
+					url: "https://www.sc.com.my/api/search-v2.ashx?action=" + action + query,
+					dataType: "json",
+					success: function (data) {
+						retVal = data;
+					},
+
+					error: function (ignore, textStatus) {
+						if (textStatus === "parsererror") {
+							//window.location.reload();
+						} else {
+							retVal = {
+								status: "error"
+							};
+						}
+					},
+
+					complete: function () {
+						complete(retVal);
+
+					}
+				};
+
+				if (isEmptyObj) {
+					$.ajax(opts);
+				} else {
+					opts.data = JSON.stringify(reqBody);
+					$.ajax(opts);
+				}
+			},
+
+			autoComplete: {
+				get: function (query, done) {
+					master.sdk.ajax("autocomplete", "", done, query);
+				}
+			}
+		},
+
+		autoComplete: {
+			wrapper: null,
+			pnl: null,
+			item: null,
+			input: null,
+			inputWrapper: null,
+			cache: [],
+
+			addCache: function(key, data) {		
+				var now = new Date();
+				now.setMinutes(now.getMinutes() - 2);
+				
+				var exist = master.autoComplete.cache.filter(function (i) {
+					return i.key == key && i.datetime > now;
+				});
+
+				if (exist.length == 0) {
+					const toDelete = new Set([key]);
+					const newArray = master.autoComplete.cache.filter(obj => !toDelete.has(obj.key));
+					
+					newArray.push({key: key, data: data, datetime: new Date()});
+					
+					master.autoComplete.cache = newArray;
+				}
+			},
+
+			getCache: function(key) {
+				var now = new Date();
+				now.setMinutes(now.getMinutes() - 2);
+				
+				var exist = master.autoComplete.cache.filter(function (i) {
+					return i.key == key && i.datetime > now;
+				});
+
+				if (exist.length > 0) {
+					return exist[0].data;
+				}
+				
+				return false;
+			},
+			
+			render: function(data, k) {
+				var autoComplete = master.autoComplete,
+					$tempList = $("<ul>"),
+					len = data.length;
+
+				autoComplete.wrapper.toggle(len > 0);
+				
+				data.forEach(function (itm) {
+					var $tempItem = autoComplete.item.clone(),
+						$desc = $tempItem.find(".a-inner-text");;
+
+					$tempItem.find(".a-inner-text").text(itm);
+					$desc.html(master.helpers.highlightKeywords($desc.text(), k));
+					
+					$tempList.append($tempItem);
+				});
+
+				autoComplete.pnl.empty().append($tempList.children());
+				autoComplete.inputWrapper.removeClass("search");
+				
+				if(len > 0) {
+					autoComplete.inputWrapper.addClass("search");
+				}
+				
+			},
+			
+			load: function(data, done) {
+				var autoComplete = master.autoComplete,
+					k = autoComplete.input.val(),
+					query = "&q=" + k;
+				
+				if (k !== "") {
+					var d = autoComplete.getCache(k);
+					
+					if (d) {
+						autoComplete.render(d, k);
+						
+						if (done) {
+							done();
+						}
+					} else {	
+						master.sdk.autoComplete.get(query, function (data) {
+							if (data.status && data.status === "error") {
+								autoComplete.hide();
+								return;
+							}
+
+							autoComplete.render(data.data, k);
+							autoComplete.addCache(k, data.data);
+							
+							if (done) {
+								done();
+							}
+						});
+					}
+				} else {
+					autoComplete.hide();
+				}
+			},
+
+			hide: function() {
+				master.autoComplete.inputWrapper.removeClass("search");
+				master.autoComplete.wrapper.hide();
+			},
+			
+			redirect: function() {
+				var searchTerm = master.autoComplete.input.val();
+					window.open(searchPage + "#search/" + window.encodeURIComponent(searchTerm), "_self");
+			},
+			
+			init: function () {
+				var autoComplete = master.autoComplete;
+				autoComplete.wrapper = $body.find("#row-keyword-wrapper");
+				autoComplete.pnl = $body.find("#row-keyword-result .col");
+				autoComplete.item = autoComplete.pnl.find("> .btn-keyword-item").detach();
+				autoComplete.input = $body.find("input[data-tid='wfm-txt-keyword']");
+				autoComplete.inputWrapper =  $body.find("#row-keyword-input");
+				
+				autoComplete.wrapper.removeClass("mfp-hide").hide();
+			}
+		},
+
+		init: function () {
+			$body.on("click", "#btn-keyword-search > a", function (e) {
+				e.preventDefault();
+				
+				master.autoComplete.redirect();
+				master.autoComplete.hide();
+			});
+
+			$body.on("keyup", "input[data-tid='wfm-txt-keyword']", function (e) {
+				if (e.keyCode === 13) {
+					master.autoComplete.redirect();
+					master.autoComplete.hide();
+				} else {
+					master.autoComplete.load();
+				}
+			});
+
+			$body.on("click", ".btn-keyword-item > a", function (e) {
+				var keyword = $(e.currentTarget).find(".a-inner-text").text();
+
+				master.autoComplete.input.val(keyword);
+				master.autoComplete.redirect();
+				master.autoComplete.hide();
+			});
+				
+			master.autoComplete.init();
+		}
+	};
+    
+    master.init();
+
+}(window, document));
+/*global $, window, $X, lang*/
+/*jslint browser, devel, multivar, long*/
+/*jshint maxparams:10, maxdepth:5, maxstatements:40, maxcomplexity:15 */
+(function () {
+    "use strict";
+
+    $("a").each(function (ignore, target) {
+        var $this = $(target),
+            href = $this.attr("href"),
+            trgt = $this.attr("target");
+
+        if (href.indexOf("download.ashx") !== -1 || href.indexOf(".pdf") !== -1) {
+            // files
+            $this.attr("target", "_blank");
+        } else if (!trgt) {
+            if (location.hostname === target.hostname || !target.hostname.length) {
+                // local
+                $this.attr("target", "_self");
+            } else {
+                // external
+                $this.attr("target", "_blank");
+            }
+        }
+    });
+
+   
+}());
+
+(function () {
+    "use strict";
+    var placeholder,
+        htmlEsc,
+        $search,
+        $btn,
+        $btnTrigger,
+        $text,
+        txtSearchId = "txt-search",
+        btnSearchId = "btn-search",
+        btnTriggerId = "btn-search-trigger",
+        searchPage = "ask-aliss";
+    htmlEsc = function (str) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\//g, "&#x2F;");
+    };
+    $text = $("." + txtSearchId).find(":first-child");
+    $text.replaceWith(function() {
+        return $("<div/>", {
+            html: this.innerHTML,
+            "class": $(this).attr("class")
+        });
+    });
+    $text = $("." + txtSearchId).find(":first-child");
+    placeholder = $text.find(".a-inner-text").first().text();
+    placeholder = htmlEsc(placeholder);
+    $text.find(".a-inner-text").empty()
+        .append("<input type=\"text\" placeholder=\"" + placeholder + "\" />")
+        .find("input").css({
+            width: "100%",
+            border: "0 none",
+            outline: "0 none",            
+        }).addClass("txt-search-pnl");
+    $search = $(".txt-search-pnl");
+    $btn = $("." + btnSearchId).find(":first-child");
+    $btnTrigger = $("." + btnTriggerId).find(":first-child");
+    $search.keyup(function (e) {
+        if (e.keyCode === 13) {
+            var searchTerm = $(e.currentTarget).val();
+            window.open(searchPage + "#search/" + window.encodeURIComponent(searchTerm), "_self");
+        }
+        e.preventDefault();
+    });
+    $btnTrigger.click(function () {
+        var searchTerm = $search.val();
+        window.open(searchPage + "#search/" + window.encodeURIComponent(searchTerm), "_self");
+    });
+    $btn.attr("target", "_selft").attr("href", "#").click(function (e) {
+        var $this = $(e.currentTarget),
+            searchTerm = $this.closest(".row").find(".txt-search-pnl").val();
+        searchTerm = window.encodeURIComponent(searchTerm );
+        $this.attr("href", searchPage + "#search/" + searchTerm);
+        //e.preventDefault();
+    });
+    var $lstPgn = $(".pag-list-01");
+    if ($lstPgn.length) {
+        if($lstPgn.html()===""){
+            $(".pag-list-01").html("<div class=\"content-empty font-D6715655-7F24-45EF-8463-ADB1866B5F1D\">No record found.</div>");
+        }
+    }
+    
+    window.setTimeout(function () {
+        $("#btn-inner-search").find(".search-btn-col").off("click");
+    }, 250);
+}());$(".co-menu-01-IID292387baebe94fd5a0a7d1378326cc79").xtopiaMenu({
+	source: "https://www.sc.com.my/api/contentms/menu_data_json.ashx?menu_data_source_id=b64c56ac-e4b7-43b5-9275-9bc16828a54f",
+    rootType: "rt-type-01",
+    plugin: "dd-type-01",
+    rootFontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+    lvl2_FontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+    lvl3_FontSize: "font-844CA48E-8825-412E-9881-0CBB0011A17F",
+    lvl4_FontSize: "font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A"
+});$(".co-menu-02-IID27160f5ab66c407d936628cd62466a5e").xtopiaBurgerMenu({
+	source: "https://www.sc.com.my/api/contentms/menu_data_json.ashx?menu_data_source_id=069c73dd-5e70-4ff9-8843-2643cf1ca201",            
+    plugin: "bb-type-02",
+    rootFontSize: "font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A",
+    lvl2_FontSize: "font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A",
+    lvl3_FontSize: "font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A",
+    lvl4_FontSize: "font-0475C8D2-46DA-4BDE-965C-F7E6CB6CBB9A",
+    header_FontSize: "font-D6715655-7F24-45EF-8463-ADB1866B5F1D",
+	defaultTitle: "Navigation",
+    burgerTitle: "",
+    borderBetween: "dd-border-off",
+    counter: "bb-counter-off",
+    position: "position-right"
+});</script>
+    <script src="js/form-validation.min.js?1631608792"></script>
+</body>
+</html>

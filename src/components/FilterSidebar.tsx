@@ -1,10 +1,12 @@
 import React from 'react';
 import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
+import { SECTORS } from '../lib/tagging';
 import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
 // Labels name only the regulators RegSonar actually reads
 const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: string }[] = [
   { code: 'SG', label: 'Singapore (MAS, SGX RegCo)' },
+  { code: 'MY', label: 'Malaysia (BNM, SC)' },
   { code: 'HK', label: 'Hong Kong (HKMA, SFC, HKEX)' },
   { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
   { code: 'US', label: 'United States (SEC, CFTC, FINRA)' },
@@ -19,6 +21,7 @@ interface FilterSidebarProps {
   selectedJurisdictions: Record<JurisdictionCode, boolean>;
   onToggleJurisdiction: (code: JurisdictionCode) => void;
   selectedSectors: Record<SectorDomain, boolean>;
+  sectorCounts: Record<SectorDomain, number>;
   onToggleSector: (sec: SectorDomain) => void;
   selectedFormat: string | null;
   onSelectFormat: (format: string | null) => void;
@@ -39,6 +42,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   selectedJurisdictions,
   onToggleJurisdiction,
   selectedSectors,
+  sectorCounts,
   onToggleSector,
   selectedFormat,
   onSelectFormat,
@@ -158,34 +162,34 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               Sector / Domain
             </span>
             <div className="space-y-1">
-              {(
-                [
-                  'FinTech & Digital Assets',
-                  'Banking & Capital Markets',
-                  'ESG & Sustainability',
-                  'AI Governance & Ethics',
-                  'AML/CFT & Sanctions'
-                ] as SectorDomain[]
-              ).map((sector) => (
+              {SECTORS.map((sector) => (
                 <label
                   key={sector}
-                  className="flex items-center gap-2 p-1.5 rounded hover:bg-panel-raised cursor-pointer transition-colors"
+                  className="flex items-center justify-between gap-2 p-1.5 min-h-[40px] lg:min-h-0 rounded hover:bg-panel-raised cursor-pointer transition-colors"
                 >
-                  <input
-                    type="checkbox"
-                    checked={selectedSectors[sector]}
-                    onChange={() => onToggleSector(sector)}
-                    className="w-3.5 h-3.5 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
-                  />
-                  <span
-                    className={`font-['Inter'] text-[12px] ${
-                      selectedSectors[sector] ? 'text-ink font-medium' : 'text-ink-soft'
-                    }`}
-                  >
-                    {sector}
+                  <span className="flex items-center gap-2 min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={selectedSectors[sector]}
+                      onChange={() => onToggleSector(sector)}
+                      className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0 rounded bg-panel border-line-strong text-prussian focus:ring-0 cursor-pointer accent-prussian"
+                    />
+                    <span
+                      className={`font-['Inter'] text-[12px] min-w-0 ${
+                        selectedSectors[sector] ? 'text-ink font-medium' : 'text-ink-soft'
+                      }`}
+                    >
+                      {sector}
+                    </span>
+                  </span>
+                  <span className="font-['JetBrains_Mono'] text-[11px] text-muted bg-wash px-1.5 py-0.5 rounded border border-line shrink-0">
+                    {sectorCounts[sector]}
                   </span>
                 </label>
               ))}
+              <p className="font-['Inter'] text-[11px] text-muted pt-1">
+                A notice can have up to three sectors and is shown if any of them is ticked. Tags come from keyword rules; each notice says which words gave them.
+              </p>
             </div>
           </div>
 

@@ -2,6 +2,7 @@ export type UrgencySeverity = 'critical' | 'high' | 'info';
 
 export type JurisdictionCode =
   | 'SG'
+  | 'MY'
   | 'HK'
   | 'AU'
   | 'JP'
@@ -10,11 +11,17 @@ export type JurisdictionCode =
   | 'GLOBAL';
 
 export type SectorDomain =
-  | 'FinTech & Digital Assets'
-  | 'Banking & Capital Markets'
+  | 'Banking & Prudential'
+  | 'Capital Markets & Listings'
+  | 'Funds & Asset Management'
+  | 'Insurance & Pensions'
+  | 'FinTech, Payments & Digital Assets'
+  | 'AI, Cyber & Tech Risk'
   | 'ESG & Sustainability'
-  | 'AI Governance & Ethics'
-  | 'AML/CFT & Sanctions';
+  | 'AML/CFT & Financial Crime'
+  | 'Conduct & Consumer Protection'
+  | 'Monetary & Financial Stability'
+  | 'General & Institutional';
 
 export type InstrumentFormat =
   | 'Circulars'
@@ -22,6 +29,12 @@ export type InstrumentFormat =
   | 'Enforcement'
   | 'Guidelines'
   | 'Technical Standards';
+
+export interface TagReasons {
+  sectors: Partial<Record<SectorDomain, string[]>>;
+  sectorFallback?: string;
+  format: string;
+}
 
 export interface KeyFact {
   text: string;
@@ -74,8 +87,12 @@ export interface RegulatoryNotice {
   // Sentences quoted from the source document (extractive, selected by TextRank)
   keyPoints?: KeyPoints;
   tags: string[];
+  // Main sector, and all sectors given (main first, up to three)
   sector: SectorDomain;
+  sectors?: SectorDomain[];
   format: InstrumentFormat;
+  // Why the tags were given: the words that matched each sector, and the format rule
+  tagging?: TagReasons;
   severity: UrgencySeverity;
   bookmarked?: boolean;
   dossierUrl?: string;

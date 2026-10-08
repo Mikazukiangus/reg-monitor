@@ -106,5 +106,13 @@
   "https://www.finra.org/rules-guidance/notices/rss": {
     "file": "f1bad373278c.txt",
     "contentType": "application/rss+xml; charset=utf-8"
+  },
+  "https://www.bnm.gov.my/press-release-2026": {
+    "file": "a18f1bf39759.txt",
+    "contentType": "text/html;charset=UTF-8"
+  },
+  "https://www.sc.com.my/resources/media/media-release": {
+    "file": "0c247742a8a0.txt",
+    "contentType": "text/html; charset=utf-8"
   }
 }

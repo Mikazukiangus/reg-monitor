@@ -10,9 +10,11 @@ delete process.env.DATABASE_URL;
 const fixtures: Record<string, { file: string; contentType: string }> = JSON.parse(readFileSync('tests/fixtures/index.json', 'utf8'));
 
 // The Federal Register, MAS and SGX put the item limit in the URL; the recorded
-// response holds more items than any test asks for, so the limit is ignored
+// response holds more items than any test asks for, so the limit is ignored.
+// BNM's page is per year, so any year gets the recorded one.
 const withoutLimit = (url: string) =>
-  url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN');
+  url.replace(/([?&])(per_page|rows)=\d+/g, '$1$2=N').replace(/%22limit%22%3A\d+/g, '%22limit%22%3AN')
+    .replace(/bnm\.gov\.my\/press-release-\d{4}/, 'bnm.gov.my/press-release-YEAR');
 const byUrl = new Map(Object.entries(fixtures).map(([url, f]) => [withoutLimit(url), f]));
 
 const requested: string[] = [];
@@ -29,7 +31,7 @@ globalThis.fetch = (async (input: any) => {
 
 const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle } = await import('../server.ts');
 
-const JURISDICTIONS = ['SG', 'HK', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
+const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 for (const source of SOURCES) {
@@ -105,6 +107,24 @@ test('HKEX disciplinary actions are classed as enforcement', async () => {
 test('SFC circular titles drop the audience line', async () => {
   const notices = await byName('SFC Circulars').fetch();
   assert.ok(notices.every(n => !/^Circular to /.test(n.title)));
+});
+
+test('BNM press releases come from the year page, dated as Malaysian days', async () => {
+  const notices = await byName('BNM Press Releases').fetch(30);
+  const mps = notices.find(n => n.id === 'bnm-monetary-policy-statement-03092026');
+  assert.equal(mps?.publishedAt, '2026-09-02T16:00:00.000Z');
+  assert.equal(mps?.jurisdictionCode, 'MY');
+  assert.deepEqual(mps?.sectors, ['Monetary & Financial Stability']);
+  assert.ok(notices.every(n => n.dossierUrl?.startsWith('https://www.bnm.gov.my/')));
+});
+
+test('SC Malaysia court results are classed as enforcement', async () => {
+  const notices = await byName('SC Malaysia Media Releases').fetch(30);
+  const suit = notices.find(n => /^SC Wins Suit Against/.test(n.title));
+  assert.equal(suit?.format, 'Enforcement');
+  assert.equal(suit?.publishedAt, '2026-08-19T16:00:00.000Z');
+  assert.ok(suit?.summary, 'summary from the page');
+  assert.equal(notices.find(n => /^SC Charges Brothers/.test(n.title))?.format, 'Enforcement');
 });
 
 test('ESMA dates come from the description', async () => {

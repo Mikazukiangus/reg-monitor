@@ -301,6 +301,25 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               {tag}
             </span>
           ))}
+          {notice.tagging && (
+            <details className="w-full font-['Inter'] text-[11px] text-muted">
+              <summary className="cursor-pointer hover:text-ink w-fit">Why these tags?</summary>
+              <ul className="mt-1 space-y-0.5 pl-1">
+                {(notice.sectors ?? [notice.sector]).map(sector => (
+                  <li key={sector}>
+                    <span className="text-ink-soft font-medium">{sector}</span>
+                    {notice.tagging!.sectors[sector]?.length
+                      ? <>: matched {notice.tagging!.sectors[sector]!.map(w => `“${w}”`).join(', ')}</>
+                      : notice.tagging!.sectorFallback ? <>: {notice.tagging!.sectorFallback}</> : null}
+                  </li>
+                ))}
+                <li>
+                  <span className="text-ink-soft font-medium">{notice.format}</span>: {notice.tagging.format}
+                </li>
+                <li>Keyword rules, title words first; not an assessment of the document.</li>
+              </ul>
+            </details>
+          )}
         </div>
 
         {/* Right: Actions */}

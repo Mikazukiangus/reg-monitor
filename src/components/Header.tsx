@@ -86,6 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <option value="All">All jurisdictions</option>
               <option value="Singapore MAS">Singapore (MAS, SGX RegCo)</option>
+              <option value="Malaysia">Malaysia (BNM, SC)</option>
               <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC, HKEX)</option>
               <option value="Australia Japan">Australia &amp; Japan</option>
               <option value="UK US Global">UK, EU, US &amp; Global</option>

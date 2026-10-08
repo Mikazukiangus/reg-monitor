@@ -6,6 +6,8 @@ import { XMLParser } from 'fast-xml-parser';
 import { summarize, extractArticleText, extractPdfText, earliestDeadline, extractClosingDate, htmlToText, KeyPoints } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
+import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
+import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
@@ -26,7 +28,7 @@ interface NormalizedNotice {
   title: string;
   regulator: string;
   jurisdiction: string;
-  jurisdictionCode: 'SG' | 'HK' | 'AU' | 'JP' | 'UK_EU' | 'US' | 'GLOBAL';
+  jurisdictionCode: 'SG' | 'MY' | 'HK' | 'AU' | 'JP' | 'UK_EU' | 'US' | 'GLOBAL';
   type: string;
   typeColorClass: {
     bg: string;
@@ -43,8 +45,10 @@ interface NormalizedNotice {
   summary?: string;
   keyPoints?: KeyPoints;
   tags: string[];
-  sector: 'FinTech & Digital Assets' | 'Banking & Capital Markets' | 'ESG & Sustainability' | 'AI Governance & Ethics' | 'AML/CFT & Sanctions';
-  format: 'Circulars' | 'Consultations' | 'Enforcement' | 'Guidelines' | 'Technical Standards';
+  sector: SectorDomain;
+  sectors?: SectorDomain[];
+  format: InstrumentFormat;
+  tagging?: TagReasons;
   severity: 'critical' | 'high' | 'info';
   dossierUrl?: string;
   isLiveFeed?: boolean;
@@ -76,40 +80,38 @@ function getRelativeTime(dateString: string): string {
 }
 
 // Helper to determine sector from text
-function classifySector(text: string): 'FinTech & Digital Assets' | 'Banking & Capital Markets' | 'ESG & Sustainability' | 'AI Governance & Ethics' | 'AML/CFT & Sanctions' {
-  const lower = text.toLowerCase();
-  if (lower.includes('crypto') || lower.includes('token') || lower.includes('digital asset') || lower.includes('blockchain') || lower.includes('dpt') || lower.includes('custod')) {
-    return 'FinTech & Digital Assets';
-  }
-  if (lower.includes('esg') || lower.includes('climate') || lower.includes('sustainability') || lower.includes('green') || lower.includes('emission')) {
-    return 'ESG & Sustainability';
-  }
-  if (lower.includes('artificial intelligence') || lower.includes('ai') || lower.includes('algorithmic') || lower.includes('machine learning') || lower.includes('model risk')) {
-    return 'AI Governance & Ethics';
-  }
-  if (lower.includes('aml') || lower.includes('sanction') || lower.includes('money laundering') || lower.includes('cft') || lower.includes('terrorist')) {
-    return 'AML/CFT & Sanctions';
-  }
-  return 'Banking & Capital Markets';
-}
+// Sector and format by keyword rules (src/lib/tagging.ts). Sources call these
+// while parsing; tagNotice then sets every sector with its reasons, using the
+// summary and, once read, the key points.
+const sectorOf = (text: string): SectorDomain => classifySectors({ title: text }).sectors[0];
+const formatOf = (type: string, title: string): InstrumentFormat => classifyFormat(type, title).format;
 
-// Helper to determine format
-function classifyFormat(type: string, title: string): 'Circulars' | 'Consultations' | 'Enforcement' | 'Guidelines' | 'Technical Standards' {
-  const lower = (type + ' ' + title).toLowerCase();
-  if (lower.includes('proposed') || lower.includes('consult') || lower.includes('comment') || lower.includes('draft')) {
-    return 'Consultations';
-  }
-  // Whole words only: "transaction" and "border" are not enforcement
-  if (/\b(enforcement|penalt(y|ies)|proceedings?|actions?|orders?|reprimand(s|ed)?|fine[sd]|ban(s|ned)|sentenced|convicted|prosecut\w*|disciplinary)\b/.test(lower)) {
-    return 'Enforcement';
-  }
-  if (lower.includes('standard') || lower.includes('technical') || lower.includes('interoperability')) {
-    return 'Technical Standards';
-  }
-  if (lower.includes('guideline') || lower.includes('guidance') || lower.includes('policy manual')) {
-    return 'Guidelines';
-  }
-  return 'Circulars';
+// Sector names used before October 2026, still in older stored copies
+const LEGACY_SECTORS = new Set(['FinTech & Digital Assets', 'Banking & Capital Markets', 'AI Governance & Ethics', 'AML/CFT & Sanctions']);
+
+// Set a notice's sectors from its title, summary and key points, and record
+// why. Run on every notice, including stored ones, so a rule change applies
+// to the whole history.
+function tagNotice<T extends NormalizedNotice>(notice: T): T {
+  if (notice.id.startsWith('hkma-liquidity')) return notice;
+  const text = [notice.summary, ...(notice.keyPoints?.points || [])].filter(Boolean).join(' ');
+  const tagged = classifySectors({ title: notice.title, text, regulator: notice.regulator });
+  const byTitle = classifyFormat(notice.type, notice.title);
+  const bySummary = classifyFormat(notice.type, `${notice.title} ${notice.summary || ''}`);
+  const formatReason = byTitle.format === notice.format ? byTitle.reason
+    : bySummary.format === notice.format ? bySummary.reason
+    : `set from the source's own category (${notice.type.toLowerCase()})`;
+  return {
+    ...notice,
+    sector: tagged.sectors[0],
+    sectors: tagged.sectors,
+    tags: [...notice.tags.filter(t => !(SECTORS as string[]).includes(t) && !LEGACY_SECTORS.has(t)), ...tagged.sectors],
+    tagging: {
+      sectors: tagged.reasons,
+      ...(tagged.fallback ? { sectorFallback: tagged.fallback } : {}),
+      format: formatReason
+    }
+  };
 }
 
 // Helper for type color styles
@@ -222,8 +224,8 @@ async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
     const agencies = doc.agencies?.map((a: any) => a.raw_name || a.name).join(' & ') || 'US SEC & CFTC';
     const isSec = agencies.toLowerCase().includes('securities');
     const reg = isSec ? 'US SEC' : 'US CFTC';
-    const format = classifyFormat(doc.type || '', doc.title || '');
-    const sector = classifySector((doc.title || '') + ' ' + (doc.abstract || ''));
+    const format = formatOf(doc.type || '', doc.title || '');
+    const sector = sectorOf((doc.title || '') + ' ' + (doc.abstract || ''));
     const commentsClose: string | undefined = doc.comments_close_on || undefined;
     const effectiveOn: string | undefined = doc.effective_on || undefined;
 
@@ -285,8 +287,8 @@ async function fetchFcaFeed(limit = 3): Promise<NormalizedNotice[]> {
   return slice.map((item: any) => {
     const title = String(item.title || 'FCA publication');
     const description = item.description ? stripHtml(String(item.description)) : undefined;
-    const format = classifyFormat('', title);
-    const sector = classifySector(title + ' ' + (description || ''));
+    const format = formatOf('', title);
+    const sector = sectorOf(title + ' ' + (description || ''));
     const score = estimateImpact(format);
     const slug = String(item.link || title).split('/').filter(Boolean).pop();
 
@@ -325,8 +327,8 @@ async function fetchPraPublications(limit = 4): Promise<NormalizedNotice[]> {
   return (Array.isArray(items) ? items : [items]).slice(0, limit).map((item: any) => {
     const title = stripHtml(String(item.title));
     const description = item.description ? stripHtml(String(item.description)) : undefined;
-    const format = classifyFormat('', title + ' ' + (description || ''));
-    const sector = classifySector(title + ' ' + (description || ''));
+    const format = formatOf('', title + ' ' + (description || ''));
+    const sector = sectorOf(title + ' ' + (description || ''));
     const score = estimateImpact(format);
     const slug = String(item.link).split('/').filter(Boolean).pop();
 
@@ -384,8 +386,8 @@ async function fetchHkmaRss(feed: HkmaFeed, limit = feed.limit): Promise<Normali
     .slice(0, limit)
     .map((item: any) => {
       const title = stripHtml(String(item.title));
-      const format = feed.format || classifyFormat('', title);
-      const sector = classifySector(title);
+      const format = feed.format || formatOf('', title);
+      const sector = sectorOf(title);
       const score = estimateImpact(format);
       // Press releases end in /20261006-4/, BRDR documents in /20260922-1-EN
       const slug = String(item.link).split('/').filter(Boolean).pop()!.replace(/-EN$/, '');
@@ -504,8 +506,8 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
         type: 'standard'
       },
       summary: `Closing aggregate balance HK$${closing}M${rates.length ? `; ${rates.join('; ')}` : ''}. Figures as at ${time}, ${date} (Hong Kong time). Source: HKMA Daily Monetary Statistics page.`,
-      tags: ['HKMA', 'Liquidity', 'Banking & Capital Markets'],
-      sector: 'Banking & Capital Markets',
+      tags: ['HKMA', 'Liquidity', 'Monetary & Financial Stability'],
+      sector: 'Monetary & Financial Stability',
       format: 'Circulars',
       severity: 'info',
       dossierUrl: liquidityDayUrl(date),
@@ -538,7 +540,7 @@ const masDate = (value: unknown) => (value ? zonedToIso(String(value), 'Asia/Sin
 function masNotice(doc: any, type: string, format: NormalizedNotice['format']): NormalizedNotice {
   const title = stripHtml(String(doc.document_title_string_s));
   const summary = doc.document_shortsummary_t?.[0];
-  const sector = classifySector(title + ' ' + (summary || ''));
+  const sector = sectorOf(title + ' ' + (summary || ''));
   const score = estimateImpact(format);
   const slug = String(doc.page_url_s).split('/').filter(Boolean).pop();
   const publishedAt = masDate(doc.mas_date_tdt);
@@ -570,7 +572,7 @@ async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
   return docs.map((doc) => {
     const title = stripHtml(String(doc.document_title_string_s));
     const isEnforcement = doc.mas_contenttype_s === 'Enforcement Actions Media Releases';
-    return masNotice(doc, isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE', isEnforcement ? 'Enforcement' : classifyFormat('', title));
+    return masNotice(doc, isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE', isEnforcement ? 'Enforcement' : formatOf('', title));
   });
 }
 
@@ -606,8 +608,8 @@ async function fetchBisPressReleases(limit = 4): Promise<NormalizedNotice[]> {
   return (Array.isArray(items) ? items : [items]).slice(0, limit).map((item: any) => {
     const title = stripHtml(String(item.title));
     const description = item.description ? stripHtml(String(item.description)) : undefined;
-    const format = classifyFormat('', title);
-    const sector = classifySector(title + ' ' + (description || ''));
+    const format = formatOf('', title);
+    const sector = sectorOf(title + ' ' + (description || ''));
     const score = estimateImpact(format);
     const slug = String(item.link).split('/').filter(Boolean).pop();
     const regulator = /basel committee/i.test(title + ' ' + (description || '')) ? 'BCBS' : 'BIS';
@@ -660,8 +662,8 @@ async function fetchSfcRss(feed: SfcFeed, limit = feed.limit): Promise<Normalize
     const refNo = String(item.guid?.['#text'] ?? item.guid ?? '').trim()
       || new URL(String(item.link)).searchParams.get('refNo')
       || title;
-    const format = feed.format || classifyFormat('', title);
-    const sector = classifySector(title);
+    const format = feed.format || formatOf('', title);
+    const sector = sectorOf(title);
     const score = estimateImpact(format);
 
     return {
@@ -727,8 +729,8 @@ async function fetchAsicMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
       const title = stripHtml(String(item.name)).replace(new RegExp(`^${docNumber}\\s+`), '');
       const summary = item.metaDescription ? stripHtml(String(item.metaDescription)) : undefined;
       const isEnforcement = Array.isArray(item.metaFunction) && item.metaFunction.includes('enforcement');
-      const format = isEnforcement ? 'Enforcement' : classifyFormat('', title);
-      const sector = classifySector(title + ' ' + (summary || ''));
+      const format = isEnforcement ? 'Enforcement' : formatOf('', title);
+      const sector = sectorOf(title + ' ' + (summary || ''));
       const score = estimateImpact(format);
 
       return {
@@ -778,8 +780,8 @@ async function fetchJfsaNews(limit = 4): Promise<NormalizedNotice[]> {
     .filter(({ category, title }) => !JFSA_SKIPPED.test(category) && !/^FSA Weekly Review/i.test(title))
     .slice(0, limit)
     .map(({ item, category, title }) => {
-      const format = classifyFormat(category, title);
-      const sector = classifySector(title);
+      const format = formatOf(category, title);
+      const sector = sectorOf(title);
       const score = estimateImpact(format);
       // Dates end in "JST", which JavaScript does not parse
       const pubDate = String(item.pubDate || '').replace(/\bJST$/, '+0900');
@@ -819,6 +821,114 @@ async function rssItems(url: string): Promise<any[]> {
 
 const lastPathPart = (url: string) => new URL(url).pathname.split('/').filter(Boolean).pop()!.replace(/\.\w+$/, '');
 
+// Bank Negara Malaysia: press releases, from the table on each year's press
+// release page. (BNM also has an Atom feed, but Cloudflare challenges
+// automated requests for it, while the page itself is served normally.)
+const bnmYearPage = (year: number) => `https://www.bnm.gov.my/press-release-${year}`;
+const BNM_ROW = /<td>\s*<p>\s*(\d{1,2} \w{3} \d{4})\s*<\/p>\s*<\/td>\s*<td>\s*<p>\s*<a href="([^"]+)">([\s\S]*?)<\/a>/g;
+
+export function parseBnmPressReleases(html: string): { title: string; url: string; date: string }[] {
+  const out: { title: string; url: string; date: string }[] = [];
+  for (const m of html.matchAll(BNM_ROW)) {
+    const date = new Date(`${m[1]} UTC`);
+    if (isNaN(date.getTime())) continue;
+    out.push({ title: stripHtml(m[3]), url: new URL(m[2], 'https://www.bnm.gov.my').toString(), date: date.toISOString().slice(0, 10) });
+  }
+  return out;
+}
+
+async function fetchBnmPressReleases(limit = 4): Promise<NormalizedNotice[]> {
+  const year = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kuala_Lumpur', year: 'numeric' }).format(new Date()));
+  let releases = parseBnmPressReleases(await (await fetchOrThrow(bnmYearPage(year))).text());
+  // Early in the year, last year's page fills the list
+  if (releases.length < limit) {
+    releases = releases.concat(parseBnmPressReleases(await (await fetchOrThrow(bnmYearPage(year - 1))).text()));
+  }
+  if (releases.length === 0) throw new Error('No press releases found on the BNM page');
+  return releases.slice(0, limit).map(r => {
+    const format = formatOf('', r.title);
+    const sector = sectorOf(r.title);
+    const score = estimateImpact(format);
+    // Dates are Malaysian days with no time
+    const publishedAt = zonedToIso(`${r.date}T00:00:00`, 'Asia/Kuala_Lumpur');
+    return {
+      id: `bnm-${lastPathPart(r.url)}`.slice(0, 120),
+      ref: 'BNM Press Release',
+      title: r.title,
+      regulator: 'BNM',
+      jurisdiction: 'MALAYSIA',
+      jurisdictionCode: 'MY' as const,
+      type: format === 'Enforcement' ? 'ENFORCEMENT ACTION' : 'PRESS RELEASE',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+      publishedAt,
+      tags: ['BNM', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: r.url,
+      isLiveFeed: true
+    };
+  });
+}
+
+// Securities Commission Malaysia: media releases. The page has no feed, but
+// carries its whole list as data (title, description, address, date), newest first.
+const SC_MEDIA_RELEASES = 'https://www.sc.com.my/resources/media/media-release';
+const SC_RELEASE = /\{"Page Name":"((?:[^"\\]|\\.)*)","Page Description":"((?:[^"\\]|\\.)*)","Page Address":"((?:[^"\\]|\\.)*)","Display Date 2":"([^"]*)"/g;
+
+export function parseScMediaReleases(html: string): { title: string; description: string; url: string; date: string }[] {
+  const seen = new Set<string>();
+  const out: { title: string; description: string; url: string; date: string }[] = [];
+  for (const m of html.matchAll(SC_RELEASE)) {
+    const address = JSON.parse(`"${m[3]}"`) as string;
+    if (!address.startsWith('resources/media/media-release/') || seen.has(address)) continue;
+    seen.add(address);
+    const date = new Date(`${m[4]} UTC`);
+    if (isNaN(date.getTime())) continue;
+    out.push({
+      title: stripHtml(JSON.parse(`"${m[1]}"`)),
+      description: stripHtml(JSON.parse(`"${m[2]}"`)),
+      url: `https://www.sc.com.my/${address}`,
+      date: date.toISOString().slice(0, 10)
+    });
+  }
+  return out;
+}
+
+async function fetchScMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
+  const releases = parseScMediaReleases(await (await fetchOrThrow(SC_MEDIA_RELEASES)).text());
+  if (releases.length === 0) throw new Error('No media releases found on the SC page');
+  return releases.slice(0, limit).map(r => {
+    const format = formatOf('', r.title);
+    const sector = sectorOf(`${r.title} ${r.description}`);
+    const score = estimateImpact(format);
+    // Dates are Malaysian days with no time
+    const publishedAt = zonedToIso(`${r.date}T00:00:00`, 'Asia/Kuala_Lumpur');
+    return {
+      id: `sc-my-${lastPathPart(r.url)}`.slice(0, 120),
+      ref: 'SC Malaysia Media Release',
+      title: r.title,
+      regulator: 'SC Malaysia',
+      jurisdiction: 'MALAYSIA',
+      jurisdictionCode: 'MY' as const,
+      type: format === 'Enforcement' ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE',
+      typeColorClass: getTypeColor(format),
+      impactScore: score,
+      issuedTimeAgo: publishedAt ? getRelativeTime(publishedAt) : 'Recently',
+      publishedAt,
+      summary: r.description || undefined,
+      tags: ['SC Malaysia', format, sector],
+      sector,
+      format,
+      severity: severityFor(score),
+      dossierUrl: r.url,
+      isLiveFeed: true
+    };
+  });
+}
+
 // Hong Kong Exchanges and Clearing: regulatory announcements (disciplinary
 // actions, listing consultations and conclusions) from its official RSS feed
 const HKEX_REGULATORY_RSS = 'https://www.hkex.com.hk/Services/RSS-Feeds/regulatory-announcements?sc_lang=en';
@@ -827,8 +937,8 @@ async function fetchHkexRegulatory(limit = 4): Promise<NormalizedNotice[]> {
   const items = await rssItems(HKEX_REGULATORY_RSS);
   return items.slice(0, limit).map((item: any) => {
     const title = stripHtml(String(item.title));
-    const format = /disciplinary|censure|sanction/i.test(title) ? 'Enforcement' : classifyFormat('', title);
-    const sector = classifySector(title);
+    const format = /disciplinary|censure|sanction/i.test(title) ? 'Enforcement' : formatOf('', title);
+    const sector = sectorOf(title);
     const score = estimateImpact(format);
     const slug = lastPathPart(String(item.link));
     return {
@@ -865,8 +975,8 @@ async function fetchFsbPublications(limit = 4): Promise<NormalizedNotice[]> {
     .map((item: any) => {
       const title = stripHtml(String(item.title));
       const description = item.description ? stripHtml(String(item.description)) : undefined;
-      const format = classifyFormat('', title);
-      const sector = classifySector(title + ' ' + (description || ''));
+      const format = formatOf('', title);
+      const sector = sectorOf(title + ' ' + (description || ''));
       const score = estimateImpact(format);
       const slug = lastPathPart(String(item.link));
       return {
@@ -903,8 +1013,8 @@ async function fetchEsmaNews(limit = 4): Promise<NormalizedNotice[]> {
     const html = String(item.description || '');
     const published = html.match(/datetime="([^"]+)"/)?.[1] || item.pubDate;
     const section = html.match(/field--name-field-news-section[\s\S]*?field__item">([^<]+)</)?.[1]?.trim();
-    const format = classifyFormat(section || '', title);
-    const sector = classifySector(title + ' ' + (section || ''));
+    const format = formatOf(section || '', title);
+    const sector = sectorOf(title + ' ' + (section || ''));
     const score = estimateImpact(format);
     const slug = lastPathPart(String(item.link));
     return {
@@ -976,7 +1086,7 @@ export function sgxPublicUrl(apiPath: string): string {
 
 function sgxNotice(item: any, opts: { idPrefix: string; type: string; format: NormalizedNotice['format']; unixDate: number }): NormalizedNotice {
   const title = stripHtml(String(item.title));
-  const sector = classifySector(title);
+  const sector = sectorOf(title);
   const score = estimateImpact(opts.format);
   const path = String(item.link?.url || '');
   const publishedAt = opts.unixDate ? new Date(opts.unixDate * 1000).toISOString() : undefined;
@@ -1035,7 +1145,7 @@ async function fetchSgxRegulatoryNews(limit = 3): Promise<NormalizedNotice[]> {
     .map(item => {
       const title = stripHtml(String(item.title));
       const types = sgxNames(item.mediaCentreType);
-      const format = classifyFormat('', title);
+      const format = formatOf('', title);
       const type = types.includes("Regulator's Column") ? "REGULATOR'S COLUMN"
         : types.includes('Speeches') ? 'SPEECH'
         : 'REGULATORY ANNOUNCEMENT';
@@ -1090,8 +1200,8 @@ async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice[]> {
     // "On Wednesday 30 September 2026, ASX published a consultation paper on ..."
     const first = row.text.split(/(?<=\.)\s+(?=[A-Z])/)[0].replace(/^On \w+day,? \d{1,2} \w+ \d{4},\s*/i, '');
     const title = first.charAt(0).toUpperCase() + first.slice(1);
-    const format = classifyFormat('', title);
-    const sector = classifySector(row.text);
+    const format = formatOf('', title);
+    const sector = sectorOf(row.text);
     const score = estimateImpact(format);
     const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Australia/Sydney');
     const closing = /response|feedback received/i.test(title) ? undefined : extractClosingDate(row.text.split(/(?<=[.;])\s+/));
@@ -1140,8 +1250,8 @@ async function fetchFinraNotices(limit = 4): Promise<NormalizedNotice[]> {
     const link = String(item.link);
     const summary = item.description ? htmlToText(String(item.description)).replace(/^Summary\s*/i, '').trim() || undefined : undefined;
     const title = finraTitle(number, summary);
-    const format = /^information notice/i.test(number) ? 'Circulars' : classifyFormat('', `${title} ${summary || ''}`);
-    const sector = classifySector(`${title} ${summary || ''}`);
+    const format = /^information notice/i.test(number) ? 'Circulars' : formatOf('', `${title} ${summary || ''}`);
+    const sector = sectorOf(`${title} ${summary || ''}`);
     const score = estimateImpact(format);
     return {
       id: `finra-${lastPathPart(link)}`,
@@ -1210,7 +1320,7 @@ async function fetchJpxRuleRevisions(limit = 4): Promise<NormalizedNotice[]> {
     .map(row => {
       // "Enforcement Rules" is a kind of rulebook, so the title isn't used to pick the format
       const format = 'Circulars' as const;
-      const sector = classifySector(row.title);
+      const sector = sectorOf(row.title);
       const score = estimateImpact(format);
       const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Asia/Tokyo');
       const slug = row.outline ? row.outline.split('/').slice(-2, -1)[0] : row.title.slice(0, 40).replace(/\W+/g, '-');
@@ -1401,6 +1511,26 @@ const ENDPOINTS: EndpointDefinition[] = [
     ingests: true
   },
   {
+    id: 'bnm-rss',
+    name: 'BNM Press Releases',
+    agency: 'BNM (Malaysia)',
+    jurisdiction: 'Malaysia',
+    url: bnmYearPage(new Date().getUTCFullYear()),
+    protocol: 'HTML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'sc-my',
+    name: 'SC Malaysia Media Releases',
+    agency: 'SC Malaysia',
+    jurisdiction: 'Malaysia',
+    url: SC_MEDIA_RELEASES,
+    protocol: 'HTML (list data in page)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
     id: 'finra-rss',
     name: 'FINRA Notices RSS',
     agency: 'FINRA (United States)',
@@ -1545,7 +1675,7 @@ async function getLiquidityHistory(range: LiquidityRange) {
   }
   const [{ days, failed }, latestState] = await Promise.all([
     inFlight,
-    refreshSource(SOURCES.find(src => src.fetch === fetchHkmaLiquidity)!)
+    refreshSource(SOURCES.find(src => src.name === 'HKMA Interbank Liquidity')!)
   ]);
 
   // Today's figures (from the liquidity source) are added if not already present
@@ -1562,7 +1692,9 @@ async function getLiquidityHistory(range: LiquidityRange) {
 
 // Ingestion sources, keyed to the endpoint they read from
 // fetch(limit) reads more than the feed's usual number of items; the email digest uses this
-export const SOURCES: { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false }[] = [
+type SourceDefinition = { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false };
+
+const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
   { endpointId: 'fca-rss', name: 'UK FCA News RSS', fetch: fetchFcaFeed },
   { endpointId: 'boe-pra', name: 'UK PRA Publications', fetch: fetchPraPublications },
@@ -1587,8 +1719,16 @@ export const SOURCES: { endpointId: string; name: string; fetch: (limit?: number
   { endpointId: 'asx-consult', name: 'ASX Public Consultations', fetch: fetchAsxConsultations },
   { endpointId: 'jpx-rules', name: 'JPX Rule Revisions', fetch: fetchJpxRuleRevisions },
   { endpointId: 'finra-rss', name: 'FINRA Notices', fetch: fetchFinraNotices },
+  { endpointId: 'bnm-rss', name: 'BNM Press Releases', fetch: fetchBnmPressReleases },
+  { endpointId: 'sc-my', name: 'SC Malaysia Media Releases', fetch: fetchScMediaReleases },
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases }
 ];
+
+// Every source's notices get their sectors (with reasons) the same way
+export const SOURCES: SourceDefinition[] = SOURCE_LIST.map(source => ({
+  ...source,
+  fetch: (limit?: number) => source.fetch(limit).then(notices => notices.map(tagNotice))
+}));
 
 // Key points per notice id. Documents don't change once published, so each is
 // fetched and summarised once per server process. A failed fetch is not
@@ -1654,6 +1794,10 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
 
 // A notice with its key points, and the closing date or earliest date they give
 function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): NormalizedNotice {
+  return tagNotice(withKeyPointsUntagged(notice, keyPoints));
+}
+
+function withKeyPointsUntagged(notice: NormalizedNotice, keyPoints: KeyPoints): NormalizedNotice {
   // A stated closing date for comments wins over other dates in the document
   const closing = keyPoints.closingDate?.date && keyPoints.closingDate.date >= hongKongDate() ? keyPoints.closingDate : undefined;
   const deadline = closing || earliestDeadline(keyPoints);
@@ -1844,7 +1988,7 @@ async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; fa
 const ARCHIVE_FEED_DAYS = 30;
 const ARCHIVE_FEED_LIMIT = 300;
 
-const fromArchive = (n: any): NormalizedNotice => ({
+const fromArchive = (n: any): NormalizedNotice => tagNotice({
   ...n,
   archived: true,
   isLiveFeed: false,

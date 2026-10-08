@@ -1,17 +1,12 @@
 import React from 'react';
-import { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../../types/regulatory';
+import { JurisdictionCode, RegulatoryNotice } from '../../types/regulatory';
+import { SECTORS } from '../../lib/tagging';
 import { sortNewestFirst } from '../../lib/derived';
 
-const SECTORS: SectorDomain[] = [
-  'FinTech & Digital Assets',
-  'Banking & Capital Markets',
-  'ESG & Sustainability',
-  'AI Governance & Ethics',
-  'AML/CFT & Sanctions'
-];
 
 const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
   { code: 'SG', label: 'SINGAPORE (MAS, SGX REGCO)' },
+  { code: 'MY', label: 'MALAYSIA (BNM, SC)' },
   { code: 'HK', label: 'HONG KONG (HKMA, SFC, HKEX)' },
   { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA)' },
   { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA)' },
@@ -40,7 +35,7 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
           </h1>
         </div>
         <p className="font-['Inter'] text-[13px] text-ink-soft">
-          Live publications by jurisdiction and sector, newest first. Sectors are assigned by keyword rules.
+          Live publications by jurisdiction and sector, newest first. Sectors are assigned by keyword rules, and a notice with more than one sector appears in each of its rows.
         </p>
       </div>
 
@@ -60,7 +55,7 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
                 <tr key={sector} className="align-top">
                   <td className="p-3.5 pl-5 font-bold text-ink">{sector}</td>
                   {JURISDICTIONS.map(j => {
-                    const cell = sorted.filter(n => n.sector === sector && n.jurisdictionCode === j.code);
+                    const cell = sorted.filter(n => (n.sectors ?? [n.sector]).includes(sector) && n.jurisdictionCode === j.code);
                     return (
                       <td key={j.code} className="p-3.5">
                         {cell.length === 0 ? (
