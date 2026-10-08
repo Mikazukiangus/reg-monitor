@@ -298,6 +298,7 @@ This document records the full chronological instructions, technical requirement
 * **Rate limits:** FINRA requests are spaced 4s apart; after an HTTP 429 from any site the server waits for its Retry-After, or 15 minutes, before asking again. The health probe follows the same rule.
 * **SGX:** speeches given for SGX RegCo are now included (type "SPEECH"), and the media list read grows with the number of items asked for.
 * **Verified locally** (in-memory history, live sources): the first check stored 256 notices in 12s; the second added none and filled in more key points; SGX history now holds its 2026 items with key points. 75 tests pass (3 new, for the check and the 429 back-off).
+* **Merged (2026-10-08):** the user said "Merge to main". On production: 25 of 25 source feeds OK, 180 notices, a full refresh in about 5s (key points reused from the history); the SGX RegCo CEO's 4 August keynote is in the feed; `/api/feeds/poll` is live and refuses requests without the secret. The first scheduled check runs at about 15:00 UTC.
 
 ---
 
