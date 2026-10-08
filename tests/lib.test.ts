@@ -1,6 +1,8 @@
 // Pure helpers shared by the server and the page
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'fs';
+import path from 'path';
 import { extractClosingDate } from '../summarize.ts';
 import { dedupeByDocument } from '../src/lib/dedupe.ts';
 import { ruleMatches } from '../src/lib/alertRules.ts';
@@ -83,4 +85,22 @@ test('a document listed in two feeds is kept once, as the consultation', () => {
     { id: 'a', format: 'Circulars', dossierUrl: url },
     { id: 'b', format: 'Circulars', dossierUrl: url.replace('26PR161', '26PR160') }
   ]).length, 2);
+});
+
+// Vercel runs the server as plain Node modules, which need the ".js" on every
+// relative import that survives compilation; tsx and Vite don't, so a missing
+// one only shows up as a crash on the deployed site
+test('every module the server loads uses .js on its relative imports', () => {
+  const seen = new Set<string>();
+  const visit = (file: string) => {
+    if (seen.has(file)) return;
+    seen.add(file);
+    const source = readFileSync(file, 'utf8');
+    for (const m of source.matchAll(/^import\s+(?!type\b)[^'"]*from\s+'(\.{1,2}\/[^']+)'/gm)) {
+      assert.match(m[1], /\.js$/, `${file} imports '${m[1]}' without .js`);
+      visit(path.join(path.dirname(file), m[1].replace(/\.js$/, '.ts')));
+    }
+  };
+  visit('api/index.ts');
+  assert.ok(seen.has(path.join('src', 'lib', 'impact.ts')), 'the walk reached src/lib');
 });
