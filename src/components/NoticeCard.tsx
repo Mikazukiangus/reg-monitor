@@ -23,9 +23,9 @@ interface NoticeCardProps {
 // Type badge colours by format, from the theme so they follow light and dark.
 // Notices still carry the server's fixed typeColorClass, which this replaces.
 const FORMAT_BADGE: Partial<Record<InstrumentFormat, string>> = {
-  Consultations: 'bg-antwarp-tint border-antwarp-line text-antwarp',
-  Enforcement: 'bg-lake-wash border-lake-line text-lake',
-  Guidelines: 'bg-olive-wash border-olive-line text-olive',
+  Consultations: 'bg-blue-tint border-blue-line text-blue',
+  Enforcement: 'bg-orange-wash border-orange-line text-orange',
+  Guidelines: 'bg-green-wash border-green-line text-green',
   'Technical Standards': 'bg-wash border-line text-ink-soft'
 };
 const DEFAULT_BADGE = 'bg-panel border-accent-line text-accent';
@@ -60,9 +60,9 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
     if (score >= 9.0) {
       return {
         icon: 'shield',
-        color: 'text-on-lake',
-        border: 'border-lake-fill',
-        bg: 'bg-lake-fill'
+        color: 'text-on-orange',
+        border: 'border-orange-fill',
+        bg: 'bg-orange-fill'
       };
     }
     if (score >= 8.0) {
@@ -150,8 +150,8 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
 
           {notice.isLiveFeed && (
-            <span className="px-1.5 py-0.5 rounded bg-olive-tint text-olive border border-olive-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-olive animate-pulse"></span>
+            <span className="px-1.5 py-0.5 rounded bg-green-tint text-green border border-green-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-dot animate-pulse"></span>
               Live Feed
             </span>
           )}
@@ -196,9 +196,9 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               notice.statusBadge?.type === 'deadline'
                 ? 'text-accent'
                 : notice.statusBadge?.type === 'immediate'
-                ? 'text-olive'
+                ? 'text-green'
                 : notice.statusBadge?.type === 'action'
-                ? 'text-lake'
+                ? 'text-orange'
                 : 'text-ink-soft'
             }`}
           >
@@ -223,7 +223,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
               <span>Key points, quoted from source</span>
               {notice.keyPoints.ocr && (
                 <span
-                  className="px-1.5 py-0.5 rounded bg-cinnamon-tint border border-cinnamon-line text-cinnamon font-['JetBrains_Mono'] text-[9px] font-bold"
+                  className="px-1.5 py-0.5 rounded bg-cream-tint border border-cream-line text-cream font-['JetBrains_Mono'] text-[9px] font-bold"
                   title="This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors."
                 >
                   OCR · check wording
@@ -253,7 +253,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             <div className="mt-2.5 pt-2 border-t border-wash-strong space-y-1">
               {datedSentences.map((text, idx) => (
                 <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-ink-soft">
-                  <span className="material-symbols-outlined text-sm text-cinnamon shrink-0" aria-hidden="true">event</span>
+                  <span className="material-symbols-outlined text-sm text-cream shrink-0" aria-hidden="true">event</span>
                   <span className="leading-relaxed">
                     {text === notice.deadlineQuote && dateLabel && (
                       <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-accent mr-1.5">{dateLabel}:</span>

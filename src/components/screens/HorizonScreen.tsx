@@ -85,7 +85,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
             >
               <div className="md:w-40 shrink-0">
                 <span className="font-['Hanken_Grotesk'] text-[18px] font-bold text-ink block">{formatDate(e.date)}</span>
-                <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${e.days <= 14 ? 'text-lake' : e.days <= 60 ? 'text-cinnamon' : 'text-accent'}`}>
+                <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${e.days <= 14 ? 'text-orange' : e.days <= 60 ? 'text-cream' : 'text-accent'}`}>
                   {e.days === 0 ? 'Today' : `in ${e.days} days`} • {e.quarter}
                 </span>
               </div>
@@ -103,7 +103,7 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
                   {e.notice.title}
                 </button>
                 {e.quote && (
-                  <p className="font-['Inter'] text-[12px] text-ink-soft italic border-l-2 border-cinnamon-line pl-2.5">
+                  <p className="font-['Inter'] text-[12px] text-ink-soft italic border-l-2 border-cream-line pl-2.5">
                     “{e.quote}”
                   </p>
                 )}

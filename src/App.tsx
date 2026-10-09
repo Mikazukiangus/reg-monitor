@@ -648,7 +648,7 @@ export default function App() {
                   {/* Live Feeds Connected Status Strip */}
                   <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-2 h-2 rounded-full bg-olive animate-pulse"></span>
+                      <span className="w-2 h-2 rounded-full bg-green-dot animate-pulse"></span>
                       <span className="font-['JetBrains_Mono'] font-bold text-ink">
                         Automated Feed Ingestion
                       </span>
@@ -678,7 +678,7 @@ export default function App() {
 
                   {/* Offline: the notices are the copy saved on this device */}
                   {hasSynced && (isOffline || savedCopyAt) && (
-                    <div role="status" className="bg-cinnamon-wash border border-cinnamon-line px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-cinnamon">
+                    <div role="status" className="bg-cream-wash border border-cream-line px-3.5 py-2 rounded-lg flex items-center gap-2 text-[12px] text-cream">
                       <span className="material-symbols-outlined text-[16px]" aria-hidden="true">cloud_off</span>
                       <span>
                         {isOffline ? "You're offline. " : 'The feed server could not be reached. '}
@@ -806,8 +806,8 @@ export default function App() {
                         />
                       ))
                     ) : !hasSynced && syncError ? (
-                      <div className="bg-panel border border-cinnamon-line rounded-lg p-8 text-center space-y-2 shadow-xs">
-                        <span className="material-symbols-outlined text-3xl text-cinnamon" aria-hidden="true">cloud_off</span>
+                      <div className="bg-panel border border-cream-line rounded-lg p-8 text-center space-y-2 shadow-xs">
+                        <span className="material-symbols-outlined text-3xl text-cream" aria-hidden="true">cloud_off</span>
                         <h4 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
                           Live notices could not be loaded
                         </h4>

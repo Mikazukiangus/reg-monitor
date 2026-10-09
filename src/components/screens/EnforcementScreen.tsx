@@ -36,7 +36,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
             <article key={n.id} className="p-5 bg-panel border border-line rounded-xl shadow-xs space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-lake-wash border border-lake-line text-lake font-['JetBrains_Mono'] text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-orange-wash border border-orange-line text-orange font-['JetBrains_Mono'] text-[10px] font-bold">
                     {n.regulator}
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[11px] text-muted">{n.ref}</span>

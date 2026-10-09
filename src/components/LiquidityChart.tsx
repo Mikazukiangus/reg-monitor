@@ -205,13 +205,13 @@ export const LiquidityChart: React.FC = () => {
               'HIBOR (%)',
               `${Math.min(...rates).toFixed(2)} – ${Math.max(...rates).toFixed(2)}`,
               <>
-                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="var(--color-antwarp)" strokeWidth={1.5} />
+                <path d={linePath(ratePoints('overnightHibor'))} fill="none" stroke="var(--color-green)" strokeWidth={1.5} />
                 <path d={linePath(ratePoints('hiborFixing1m'))} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} />
               </>
             )}
 
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 font-['JetBrains_Mono'] text-[10px]">
-            <span className="text-antwarp">
+            <span className="text-green">
               ● Overnight {shown.overnightHibor !== null ? `${shown.overnightHibor.toFixed(2)}%` : 'n/a'}
               {previous && bp(shown.overnightHibor, previous.overnightHibor) !== null && (
                 <span className="text-muted"> ({signed(bp(shown.overnightHibor, previous.overnightHibor)!, ' bp')})</span>

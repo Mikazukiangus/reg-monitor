@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
   const allOperational = !checking && operationalCount === endpoints.length;
 
   return (
-    <header className="band fixed top-0 left-0 right-0 z-50 bg-band text-on-band border-b border-band-deep shadow-[0_1px_3px_rgba(0,0,0,0.12)]">
+    <header className="band fixed top-0 left-0 right-0 z-50 bg-band text-on-band border-b border-band-line shadow-[0_1px_3px_rgba(0,0,0,0.12)]">
       <div className="h-14 w-full px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3 shrink-0">
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
               value={selectedJurisdictionFilter}
               onChange={(e) => onJurisdictionFilterChange(e.target.value)}
               aria-label="Jurisdiction"
-              className="bg-band-deep border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-band-sub cursor-pointer transition-colors"
+              className="bg-band-field border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold h-8 px-2.5 rounded-lg focus:outline-none focus:border-band-sub cursor-pointer transition-colors"
             >
               <option value="All">All jurisdictions</option>
               <option value="Singapore MAS">Singapore (MAS, SGX RegCo)</option>
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search loaded notices by title, regulator, reference or key point..."
               aria-label="Search notices"
-              className="w-full h-9 pl-10 pr-10 bg-band-deep border border-band-line text-on-band placeholder:text-band-field-text font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:border-band-sub transition-all"
+              className="w-full h-9 pl-10 pr-10 bg-band-field border border-band-line text-on-band placeholder:text-band-field-text font-['Inter'] text-[12px] rounded-lg focus:outline-none focus:border-band-sub transition-all"
             />
             {searchQuery && (
               <button
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setShowMobileSearch(v => !v)}
             aria-label={showMobileSearch ? 'Close search' : 'Search notices'}
             aria-expanded={showMobileSearch}
-            className="md:hidden w-9 h-9 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line"
+            className="md:hidden w-9 h-9 flex items-center justify-center text-on-band hover:bg-band-field rounded-lg border border-band-line"
           >
             <span className="material-symbols-outlined text-xl" aria-hidden="true">{showMobileSearch ? 'close' : 'search'}</span>
           </button>
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Live Ingestion Indicator & Gateway Trigger */}
           <button
             onClick={onOpenEndpointsModal}
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 border border-band-line rounded-lg cursor-pointer transition-colors bg-band-deep hover:border-band-sub text-band-field-text"
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 border border-band-line rounded-lg cursor-pointer transition-colors bg-band-field hover:border-band-sub text-band-field-text"
             title="View monitored government endpoints and their current status"
           >
             <span className={`w-2 h-2 rounded-full ${allOperational ? 'bg-band-ok' : 'bg-band-sub'}`}></span>
@@ -153,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex items-center justify-center gap-1.5 min-w-9 px-2.5 h-9 sm:h-8 bg-cinnamon-fill hover:bg-cinnamon-fill-hover text-on-cinnamon font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
+              className="flex items-center justify-center gap-1.5 min-w-9 px-2.5 h-9 sm:h-8 bg-band-btn hover:bg-band-btn-hover text-on-band-btn font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors shadow-xs disabled:opacity-60 cursor-pointer"
               title="Fetch the latest notices from every source now"
               aria-label="Sync feeds now"
             >
@@ -174,11 +174,11 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => setShowNotifications(!showNotifications)}
               aria-label="Notifications"
               aria-expanded={showNotifications}
-              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line transition-colors"
+              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-field rounded-lg border border-band-line transition-colors"
             >
               <span className="material-symbols-outlined text-xl" aria-hidden="true">notifications</span>
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-cinnamon-fill text-on-cinnamon font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-band-btn text-on-band-btn font-['JetBrains_Mono'] text-[10px] font-bold rounded-full flex items-center justify-center shadow">
                   {unreadCount}
                 </span>
               )}
@@ -188,7 +188,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="band-popover fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-14 sm:top-auto mt-2 sm:w-96 bg-panel text-ink border border-line-strong rounded-lg shadow-xl p-3 z-50">
                 <div className="flex items-center justify-between pb-2 border-b border-line">
                   <span className="font-['Hanken_Grotesk'] text-[14px] font-semibold text-ink flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-lake"></span>
+                    <span className="w-2 h-2 rounded-full bg-orange"></span>
                     Latest Notices
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-muted">From live sources</span>
@@ -223,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Export Button */}
           <button
             onClick={onOpenExport}
-            className="hidden sm:flex items-center gap-1.5 px-3 h-8 hover:bg-band-deep border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 h-8 hover:bg-band-field border border-band-line text-on-band font-['Inter'] text-[11px] font-semibold rounded-lg transition-colors"
           >
             <span className="material-symbols-outlined text-base" aria-hidden="true">download</span>
             <span>Export</span>
@@ -238,7 +238,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="Session details"
               aria-expanded={showProfileMenu}
             >
-              <span className="w-9 h-9 sm:w-8 sm:h-8 rounded-full shrink-0 ring-1 ring-band-line group-hover:ring-band-sub transition-all bg-band-deep flex items-center justify-center">
+              <span className="w-9 h-9 sm:w-8 sm:h-8 rounded-full shrink-0 ring-1 ring-band-line group-hover:ring-band-sub transition-all bg-band-field flex items-center justify-center">
                 <span className="material-symbols-outlined text-on-band text-lg" aria-hidden="true">person</span>
               </span>
             </button>

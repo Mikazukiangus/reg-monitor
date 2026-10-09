@@ -16,9 +16,9 @@ interface NavigationProps {
 }
 
 const SEVERITY_DOT: Record<RegulatoryNotice['severity'], string> = {
-  critical: 'bg-lake',
-  high: 'bg-cinnamon',
-  info: 'bg-antwarp'
+  critical: 'bg-orange',
+  high: 'bg-cream',
+  info: 'bg-blue'
 };
 
 export const Navigation: React.FC<NavigationProps> = ({

@@ -111,7 +111,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               <span className="px-2 py-0.5 bg-panel rounded border border-line">
                 Jurisdiction: {notice.jurisdiction}
               </span>
-              <span className="px-2 py-0.5 bg-lake-tint text-lake-deep rounded border border-lake-line font-semibold">
+              <span className="px-2 py-0.5 bg-orange-tint text-orange-deep rounded border border-orange-line font-semibold">
                 SEAR CISO Liability: Active
               </span>
             </div>
@@ -123,7 +123,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
               <span className="font-['Hanken_Grotesk'] text-[14px] font-bold text-ink">
                 Statutory Obligations &amp; Readiness Checklist
               </span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-olive font-bold">
+              <span className="font-['JetBrains_Mono'] text-[11px] text-green font-bold">
                 {checklist.filter(c => c.status === 'Compliant').length} of {checklist.length} Controls Verified
               </span>
             </div>
@@ -152,10 +152,10 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                       aria-label={`Status: ${item.requirement}`}
                       className={`text-[11px] font-['JetBrains_Mono'] font-bold px-2.5 py-1 rounded border cursor-pointer focus:outline-none ${
                         item.status === 'Compliant'
-                          ? 'bg-olive-tint text-olive border-olive-line'
+                          ? 'bg-green-tint text-green border-green-line'
                           : item.status === 'In-Progress'
                           ? 'bg-accent-tint text-accent border-accent-line'
-                          : 'bg-lake-tint text-lake border-lake-line'
+                          : 'bg-orange-tint text-orange border-orange-line'
                       }`}
                     >
                       <option value="Compliant">✓ Compliant</option>

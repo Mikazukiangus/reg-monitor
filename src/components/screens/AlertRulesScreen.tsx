@@ -138,7 +138,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
           {digest && (
             <span
               className={`font-['JetBrains_Mono'] text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                digest.configured ? 'bg-olive-tint text-olive border-olive-line' : 'bg-cinnamon-wash text-cinnamon border-cinnamon-line'
+                digest.configured ? 'bg-green-tint text-green border-green-line' : 'bg-cream-wash text-cream border-cream-line'
               }`}
             >
               {digest.configured ? 'Sending is set up' : 'Not sending yet'}
@@ -149,7 +149,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
           {digest ? `${digest.schedule}, ` : ''}one email to the site owner listing the previous day's notices (Singapore time) that match these rules, read from up to 20 recent items per source. No email is sent on days with no matches.
           {digest && !digest.configured && ' It starts once the CRON_SECRET, RESEND_API_KEY and DIGEST_TO settings are added to the Vercel project.'}
         </p>
-        {digestError && <p className="font-['Inter'] text-[12px] text-lake">The digest settings could not be loaded.</p>}
+        {digestError && <p className="font-['Inter'] text-[12px] text-orange">The digest settings could not be loaded.</p>}
         {digest && (
           <ul className="flex flex-wrap gap-2">
             {digest.rules.filter(r => r.enabled).map(r => (
@@ -188,7 +188,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border ${
                     rule.enabled
-                      ? 'bg-olive-tint text-olive border-olive-line'
+                      ? 'bg-green-tint text-green border-green-line'
                       : 'bg-wash text-muted border-line'
                   }`}
                 >
@@ -249,15 +249,15 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 onClick={() => handleToggleRule(rule.id)}
                 className={`px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${
                   rule.enabled
-                    ? 'border-lake-line-soft bg-lake-wash text-lake hover:bg-lake-tint'
-                    : 'border-olive-line-soft bg-olive-wash text-olive hover:bg-olive-tint'
+                    ? 'border-orange-line-soft bg-orange-wash text-orange hover:bg-orange-tint'
+                    : 'border-green-line-soft bg-green-wash text-green hover:bg-green-tint'
                 }`}
               >
                 {rule.enabled ? 'Pause Rule' : 'Resume Rule'}
               </button>
               <button
                 onClick={() => handleDeleteRule(rule)}
-                className="w-9 h-9 flex items-center justify-center rounded text-muted hover:text-lake hover:bg-lake-wash transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded text-muted hover:text-orange hover:bg-orange-wash transition-colors"
                 aria-label={`Delete the rule ${rule.name}`}
                 title="Delete rule"
               >

@@ -33,8 +33,8 @@ export function deriveDeadlines(notices: RegulatoryNotice[], now = new Date()): 
         subtitle: n.statutoryDeadline || '',
         daysRemaining: days,
         dateStr: formatDate(n.deadlineDate!),
-        colorClass: days <= 14 ? 'bg-lake-wash' : 'bg-page',
-        textColorClass: days <= 14 ? 'text-lake' : days <= 60 ? 'text-cinnamon' : 'text-accent',
+        colorClass: days <= 14 ? 'bg-orange-wash' : 'bg-page',
+        textColorClass: days <= 14 ? 'text-orange' : days <= 60 ? 'text-cream' : 'text-accent',
         noticeId: n.id
       };
     });

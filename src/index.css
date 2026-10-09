@@ -1,77 +1,82 @@
 @import "tailwindcss";
 
-/* Wada Sanzo "Pale Burnt Lake & Pinkish Cinnamon": burnt lake for the
-   header band, accents and critical items, pinkish cinnamon for buttons on
-   the band and for high items. Olive and Antwarp blue, from the same
-   combination (no. 258), mark sources that are up and informational items.
-   Each colour is a variable, so the dark theme below only has to redefine the
-   variables. In the dark theme the accent turns cinnamon, so it stays light
-   enough to read on the dark panels. */
+/* Wada Sanzo "Cream Yellow & Yellow Orange +2" (plate 267): yellow orange
+   for the header band and critical items, cream yellow for the fields on the
+   band and for high items, blue for links, buttons and informational items,
+   and benzol green for sources that are up. The yellows never carry text on
+   the cream page: text uses darker versions of them. Each colour is a
+   variable, so the dark theme below only has to redefine the variables. In
+   the dark theme the accent turns light blue, so it stays readable on the
+   dark panels; the band stays yellow orange. */
 @theme {
-  --color-page: #F8EFE6;
-  --color-panel: #FFFAF5;
-  --color-panel-raised: #FBF3EB;
-  --color-wash: #F5E5D6;
-  --color-wash-mid: #F0DCCB;
-  --color-wash-strong: #EED8C6;
-  --color-line: #EAD5C3;
-  --color-line-strong: #DDC2AC;
-  --color-line-dim: #C4A795;
+  --color-page: #FFF7EA;
+  --color-panel: #FFFDF8;
+  --color-panel-raised: #FFF9EF;
+  --color-wash: #FBEBD0;
+  --color-wash-mid: #F9E7C9;
+  --color-wash-strong: #F6E2C2;
+  --color-line: #EBD9BC;
+  --color-line-strong: #DCC5A2;
+  --color-line-dim: #C4AA84;
 
-  --color-ink: #2B1715;
-  --color-ink-soft: #4B302C;
-  --color-muted: #6E5751;
+  --color-ink: #2B1A08;
+  --color-ink-soft: #4A3820;
+  --color-muted: #6B5537;
   --color-on-accent: #FFFFFF;
 
   /* Links, buttons, the active tab and focus rings */
-  --color-accent: #802626;
-  --color-accent-deep: #6A1F1F;
-  --color-accent-tint: #F7DCD2;
-  --color-accent-line: #E3B4A6;
-  --color-on-tab: #EEB480;
+  --color-accent: #00609F;
+  --color-accent-deep: #004F84;
+  --color-accent-tint: #DCEBF7;
+  --color-accent-line: #A9CBE6;
+  --color-on-tab: #FFFFFF;
 
-  /* The header band: burnt lake in both themes */
-  --color-band: #802626;
-  --color-band-deep: #6A1F1F;
-  --color-band-line: #A0504A;
-  --color-on-band: #FFFFFF;
-  --color-band-sub: #EEB480;
-  --color-band-field-text: #F3D3C0;
-  --color-band-ok: #CFC97A;
+  /* The header band: yellow orange in both themes */
+  --color-band: #F99D1B;
+  --color-band-field: #FDBF68;
+  --color-band-line: #A3600C;
+  --color-on-band: #2B1A08;
+  --color-band-sub: #5A3300;
+  --color-band-field-text: #4A2C00;
+  --color-band-ok: #00756D;
+  --color-band-btn: #006EB8;
+  --color-band-btn-hover: #005A97;
+  --color-on-band-btn: #FFFFFF;
 
-  /* Pale Burnt Lake: critical items and errors */
-  --color-lake: #802626;
-  --color-lake-deep: #6A1F1F;
-  --color-lake-fill: #802626;
-  --color-on-lake: #FFFFFF;
-  --color-lake-wash: #FBEAE3;
-  --color-lake-tint: #F7DCD2;
-  --color-lake-line: #E3B4A6;
-  --color-lake-line-soft: #EDC8BC;
+  /* Yellow Orange: critical items and errors */
+  --color-orange: #9C4300;
+  --color-orange-deep: #7E3600;
+  --color-orange-fill: #F99D1B;
+  --color-on-orange: #2B1A08;
+  --color-orange-wash: #FEF3E4;
+  --color-orange-tint: #FDE6C8;
+  --color-orange-line: #F2B76A;
+  --color-orange-line-soft: #F7CF99;
 
-  /* Pinkish Cinnamon: high items, dates, warnings and search highlights */
-  --color-cinnamon: #8A4E1E;
-  --color-cinnamon-fill: #EEB480;
-  --color-cinnamon-fill-hover: #F4C69A;
-  --color-on-cinnamon: #5F1B1B;
-  --color-cinnamon-line: #EBC39E;
-  --color-cinnamon-tint: #F9DFC6;
-  --color-cinnamon-wash: #FDF2E6;
+  /* Cream Yellow: high items, dates, warnings and search highlights */
+  --color-cream: #7A5000;
+  --color-cream-fill: #FDBF68;
+  --color-on-cream: #2B1A08;
+  --color-cream-line: #F3D196;
+  --color-cream-tint: #FFF0D6;
+  --color-cream-wash: #FFF8EB;
 
-  /* Olive: sources up and live items */
-  --color-olive: #5E5A1E;
-  --color-olive-tint: #ECEBCF;
-  --color-olive-line: #D3D0A0;
-  --color-olive-line-soft: #DFDDB8;
-  --color-olive-wash: #F4F3E2;
+  /* Benzol Green: sources up and live items. White text on it is only 3.6:1,
+     so it is used for dots, and text uses the darker green */
+  --color-green: #00756D;
+  --color-green-dot: #00978D;
+  --color-green-tint: #DDF2EF;
+  --color-green-line: #9FD8D2;
+  --color-green-line-soft: #BFE5E0;
+  --color-green-wash: #EEF8F6;
 
-  /* Antwarp blue (the dictionary's spelling): informational items */
-  --color-antwarp: #007190;
-  --color-antwarp-tint: #D6ECF2;
-  --color-antwarp-line: #A9D3E0;
+  /* Blue: informational items */
+  --color-blue: #00609F;
+  --color-blue-tint: #DCEBF7;
+  --color-blue-line: #A9CBE6;
 
-  --color-scroll: #E3CDB9;
-  --color-scroll-hover: #D3B8A2;
+  --color-scroll: #E6D2B2;
+  --color-scroll-hover: #D6BE98;
 
   --font-headline-xl: "Hanken Grotesk", sans-serif;
   --font-headline-lg: "Hanken Grotesk", sans-serif;
@@ -89,55 +94,51 @@
    device setting unless the visitor picked one) */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-page: #170F10;
-  --color-panel: #201516;
-  --color-panel-raised: #281B1C;
-  --color-wash: #2E1F1F;
-  --color-wash-mid: #33231F;
-  --color-wash-strong: #3A2827;
-  --color-line: #3E2B2A;
-  --color-line-strong: #503836;
-  --color-line-dim: #6E5450;
+  --color-page: #15110B;
+  --color-panel: #1E1912;
+  --color-panel-raised: #241E15;
+  --color-wash: #2A2318;
+  --color-wash-mid: #2F271B;
+  --color-wash-strong: #342B1E;
+  --color-line: #3A3023;
+  --color-line-strong: #4D4030;
+  --color-line-dim: #6B5A44;
 
-  --color-ink: #F7EADF;
-  --color-ink-soft: #E3CEBF;
-  --color-muted: #BCA192;
-  --color-on-accent: #1E1213;
+  --color-ink: #F6EBDA;
+  --color-ink-soft: #E2D2BA;
+  --color-muted: #BFA888;
+  --color-on-accent: #0E1620;
 
-  --color-accent: #EEB480;
-  --color-accent-deep: #F4C69A;
-  --color-accent-tint: #3D2620;
-  --color-accent-line: #6B4632;
-  --color-on-tab: #1E1213;
+  --color-accent: #6CB6EC;
+  --color-accent-deep: #8DC6F0;
+  --color-accent-tint: #12293A;
+  --color-accent-line: #24506E;
+  --color-on-tab: #0E1620;
 
-  --color-on-band: #F7EADF;
+  --color-orange: #FFAD5C;
+  --color-orange-deep: #FFC48A;
+  --color-orange-wash: #2A1D0D;
+  --color-orange-tint: #3A260F;
+  --color-orange-line: #6E4618;
+  --color-orange-line-soft: #553713;
 
-  --color-lake: #F2958A;
-  --color-lake-deep: #F7B5AB;
-  --color-on-lake: #F7EADF;
-  --color-lake-wash: #2C1819;
-  --color-lake-tint: #3A1E1F;
-  --color-lake-line: #6B2E2C;
-  --color-lake-line-soft: #552626;
+  --color-cream: #FDBF68;
+  --color-cream-line: #6A5428;
+  --color-cream-tint: #3A2E17;
+  --color-cream-wash: #251E12;
 
-  --color-cinnamon: #EEB480;
-  --color-on-cinnamon: #1E1213;
-  --color-cinnamon-line: #6B4A2E;
-  --color-cinnamon-tint: #4A3220;
-  --color-cinnamon-wash: #2A1E15;
+  --color-green: #3FC4B8;
+  --color-green-tint: #0F2B28;
+  --color-green-line: #1D4E49;
+  --color-green-line-soft: #173D39;
+  --color-green-wash: #0C2220;
 
-  --color-olive: #CFC97A;
-  --color-olive-tint: #2B2A14;
-  --color-olive-line: #4D4A22;
-  --color-olive-line-soft: #3D3B1C;
-  --color-olive-wash: #222114;
+  --color-blue: #8DC6F0;
+  --color-blue-tint: #12293A;
+  --color-blue-line: #24506E;
 
-  --color-antwarp: #6CBFD8;
-  --color-antwarp-tint: #13303A;
-  --color-antwarp-line: #24505E;
-
-  --color-scroll: #503836;
-  --color-scroll-hover: #6E5450;
+  --color-scroll: #4D4030;
+  --color-scroll-hover: #6B5A44;
 }
 
 @layer base {
@@ -187,8 +188,9 @@
   }
 }
 
-/* On the burnt lake header band the accent would vanish, so focus rings there
-   are cinnamon; its dropdowns sit on panels and keep the accent */
+/* On the yellow orange header band the blue accent is hard to see, so focus
+   rings there are dark brown; its dropdowns sit on panels and keep the
+   accent */
 .band :focus-visible {
   outline-color: var(--color-band-sub);
 }

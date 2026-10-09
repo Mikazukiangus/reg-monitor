@@ -117,7 +117,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               <span className="flex flex-col min-w-0">
                 <span className="font-['JetBrains_Mono'] text-ink-soft">{ep.name}</span>
                 {ep.ingests && ep.sync && (
-                  <span className={`font-['Inter'] text-[11px] ${ep.sync.ok ? 'text-muted' : 'text-lake'}`}>
+                  <span className={`font-['Inter'] text-[11px] ${ep.sync.ok ? 'text-muted' : 'text-orange'}`}>
                     {ep.sync.ok
                       ? ep.sync.lastSuccessAt ? `Data fetched ${timeAgo(ep.sync.lastSuccessAt)}` : 'Fetched'
                       : ep.sync.lastSuccessAt ? `Failed; last good fetch ${timeAgo(ep.sync.lastSuccessAt)}` : 'Failed; no data yet'}

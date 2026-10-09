@@ -369,6 +369,16 @@ This document records the full chronological instructions, technical requirement
 * **Deployment:** the first two preview builds stopped after about 1.5s with Vercel's "Resource provisioning failed" and no build log. The user redeployed from the Vercel dashboard, which sent the branch to production; it worked there.
 * **Merged (2026-10-08):** the user said "Merge to main." On production: theme-color #802626, the new script hash in the security policy, the new colours in the stylesheet and the recoloured icon are served; no console errors; the header band is burnt lake and the active tab lake with cinnamon text; the dark theme switches to the dark colours; 241 notices, 29 of 29 sources up.
 
+### Request 30: Cream Yellow & Yellow Orange Colour Scheme (Claude Code, 2026-10-09)
+
+**User:** "I want to change the colour scheme to 'Cream Yellow & Yellow Orange +2', plate 267 from Sanzo Wada's 1933 dictionary of colour combinations" (drawn first on a design canvas), then "apply this new colour scheme."
+
+* **Colours** (`src/index.css`): Cream Yellow #FDBF68, Yellow Orange #F99D1B, Benzol Green #00978D and Blue #006EB8, hex values from the digitised dictionary (mattdesl/dictionary-of-colour-combinations). The colour names were renamed across the components: `lake` → `orange` (critical items and errors), `cinnamon` → `cream` (high items, dates, warnings, search highlights), `olive` → `green` (sources up, live items), `antwarp` → `blue` (info items, consultations). Light neutrals are cream; dark neutrals are near-black with a brown cast. The yellows never carry text on the cream page: text uses darker versions (#9C4300, #7A5000). Blue is the accent (#00609F for text; light blue #6CB6EC in the dark theme).
+* **Header band** (`Header.tsx`, `ThemeToggle.tsx`): yellow orange in both themes with dark brown text, cream yellow fields (`band-deep` → `band-field`), and a blue Sync button and notification badge (new `band-btn` colours). Focus rings on the band are dark brown. The browser bar colour (theme-color, manifest) is the band's, #F99D1B; the inline script is unchanged, so its hash is too.
+* **Benzol Green:** white text on it is only 3.6:1, so it is used for dots and bars (new `green-dot`), and green text uses #00756D. The overnight HIBOR line is now green, so it stays distinct from the 1-month fixing line now that info and accent are both blue; the Last 7 Days bar is green too.
+* **Icons** (`public/*.png`): recoloured pixel by pixel from the original logo (yellow orange background, blue outer arc and node, cream inner arc, benzol green dot).
+* **Verified locally:** axe colour contrast finds no issues on all five tabs in both themes at 1440px, and on the feed at 375×812; type check, build and 359 tests pass.
+
 ---
 
 ## 3. Key Files & Modifications Summary

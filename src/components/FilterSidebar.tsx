@@ -89,11 +89,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('critical')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('critical')
-                    ? 'bg-lake-fill border-lake-fill text-on-lake shadow-2xs'
+                    ? 'bg-orange-fill border-orange-fill text-on-orange shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('critical') ? 'bg-on-lake' : 'bg-lake'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('critical') ? 'bg-on-orange' : 'bg-orange'}`}></span>
                 Critical ({severityCounts.critical})
               </button>
 
@@ -102,11 +102,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('high')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('high')
-                    ? 'bg-cinnamon-fill border-cinnamon-fill text-on-cinnamon shadow-2xs'
+                    ? 'bg-cream-fill border-cream-fill text-on-cream shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('high') ? 'bg-on-cinnamon' : 'bg-cinnamon'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedSeverities.includes('high') ? 'bg-on-cream' : 'bg-cream'}`}></span>
                 High ({severityCounts.high})
               </button>
 
@@ -115,11 +115,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onToggleSeverity('info')}
                 className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border font-['JetBrains_Mono'] text-[11px] font-semibold transition-all ${
                   selectedSeverities.includes('info')
-                    ? 'bg-antwarp-tint border-antwarp-line text-antwarp shadow-2xs'
+                    ? 'bg-blue-tint border-blue-line text-blue shadow-2xs'
                     : 'bg-panel-raised border-line hover:bg-wash text-ink-soft'
                 }`}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-antwarp"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue"></span>
                 Info ({severityCounts.info})
               </button>
             </div>
@@ -230,8 +230,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => onSelectFormat(selectedFormat === 'Enforcement' ? null : 'Enforcement')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Enforcement'
-                    ? 'bg-lake-fill text-on-lake border-lake-fill shadow-2xs'
-                    : 'bg-panel-raised border-line hover:bg-wash text-lake'
+                    ? 'bg-orange-fill text-on-orange border-orange-fill shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-orange'
                 }`}
               >
                 Enforcement ({formatCounts.Enforcement || 0})

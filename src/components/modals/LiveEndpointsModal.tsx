@@ -22,9 +22,9 @@ export interface EndpointMetric {
 export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';
 
 export const STATUS_STYLES: Record<EndpointStatus, { badge: string; text: string; dot: string }> = {
-  Operational: { badge: 'bg-olive-tint text-olive border-olive-line', text: 'text-olive', dot: 'bg-olive' },
-  Degraded: { badge: 'bg-cinnamon-tint text-cinnamon border-cinnamon-line', text: 'text-cinnamon', dot: 'bg-cinnamon' },
-  Down: { badge: 'bg-lake-wash text-lake border-lake-line', text: 'text-lake', dot: 'bg-lake' },
+  Operational: { badge: 'bg-green-tint text-green border-green-line', text: 'text-green', dot: 'bg-green-dot' },
+  Degraded: { badge: 'bg-cream-tint text-cream border-cream-line', text: 'text-cream', dot: 'bg-cream' },
+  Down: { badge: 'bg-orange-wash text-orange border-orange-line', text: 'text-orange', dot: 'bg-orange' },
   Checking: { badge: 'bg-wash text-muted border-line', text: 'text-muted', dot: 'bg-muted' }
 };
 

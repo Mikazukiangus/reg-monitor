@@ -132,7 +132,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
                   Key Points, Quoted from Source
                 </h2>
                 {keyPoints.ocr && (
-                  <p className="text-[12px] text-cinnamon mb-2">
+                  <p className="text-[12px] text-cream mb-2">
                     This document is a scanned PDF. Its text was read by OCR, so quotes may contain recognition errors; check them against the document.
                   </p>
                 )}
@@ -151,7 +151,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({ notice, onClos
                 </h2>
                 <ul className="space-y-2">
                   {keyPoints.facts.map((f, i) => (
-                    <li key={i} className="border-l-2 border-cinnamon-line pl-3 italic">{f.text}</li>
+                    <li key={i} className="border-l-2 border-cream-line pl-3 italic">{f.text}</li>
                   ))}
                 </ul>
               </section>

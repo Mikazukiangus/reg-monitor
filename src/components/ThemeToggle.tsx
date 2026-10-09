@@ -51,7 +51,7 @@ export const ThemeToggle: React.FC = () => {
       onClick={() => setChoice(NEXT[choice])}
       aria-label={`${LABEL[choice]}. Change theme`}
       title={LABEL[choice]}
-      className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-deep rounded-lg border border-band-line transition-colors"
+      className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center text-on-band hover:bg-band-field rounded-lg border border-band-line transition-colors"
     >
       <span className="material-symbols-outlined text-xl" aria-hidden="true">{ICON[choice]}</span>
     </button>
