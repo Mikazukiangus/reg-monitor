@@ -378,6 +378,8 @@ This document records the full chronological instructions, technical requirement
 * **Benzol Green:** white text on it is only 3.6:1, so it is used for dots and bars (new `green-dot`), and green text uses #00756D. The overnight HIBOR line is now green, so it stays distinct from the 1-month fixing line now that info and accent are both blue; the Last 7 Days bar is green too.
 * **Icons** (`public/*.png`): recoloured pixel by pixel from the original logo (yellow orange background, blue outer arc and node, cream inner arc, benzol green dot).
 * **Verified locally:** axe colour contrast finds no issues on all five tabs in both themes at 1440px, and on the feed at 375×812; type check, build and 359 tests pass.
+* **Deployment:** the branch preview build stopped after about 1.5s with Vercel's "Resource provisioning failed" and no build log; the production build from main worked.
+* **Merged (2026-10-09):** the user said "merge to main." For a while after the deploy, Vercel's security checkpoint challenged every request to production (403, "Failed to verify your browser"), so nothing could be checked automatically; the user confirmed the site looked right, and the checkpoint had lifted by the next check. On production: theme-color #F99D1B, the new colours in the stylesheet (band #F99D1B, band button #006EB8, accent #00609F / #6CB6EC, green dot #00978D), the recoloured icon, and the unchanged script hash in the security policy are served; `/api/health` is healthy; 28 of 29 sources up.
 
 ---
 
