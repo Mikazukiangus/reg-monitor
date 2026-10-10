@@ -8,6 +8,9 @@ import { RightSidebar } from './components/RightSidebar';
 import { Footer } from './components/Footer';
 import { BottomNav } from './components/BottomNav';
 import { NextUpStrip } from './components/NextUpStrip';
+import { MonitoringControls } from './components/MonitoringControls';
+import { SourceFreshness } from './components/SourceFreshness';
+import { paginationPages, readBookmarks, writeBookmarks } from './lib/preferences';
 import { searchTerms } from './components/Highlight';
 import { useDialog } from './components/useDialog';
 
@@ -23,9 +26,9 @@ import { PdfDossierModal } from './components/modals/PdfDossierModal';
 import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal, EndpointMetric } from './components/modals/LiveEndpointsModal';
 
-import { daysUntil, deriveDeadlines, deriveNotifications, sgtTime, sortNewestFirst } from './lib/derived';
+import { daysUntil, deriveDeadlines, deriveNotifications, publishedInLastDays, sgtTime, sortNewestFirst } from './lib/derived';
 import { calendarNotices, downloadIcs } from './lib/ics';
-import { copyText, defaultViewState, noticeLink, parseViewState, serializeViewState, SortOption } from './lib/urlState';
+import { copyText, defaultViewState, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState, SortOption } from './lib/urlState';
 import { readPreviousVisit, recordVisit } from './lib/visits';
 import { SECTORS } from './lib/tagging';
 import { commentsClosed } from './lib/impact';
@@ -133,7 +136,7 @@ export default function App() {
   // Search & Global Jurisdiction Filter
   const [searchQuery, setSearchQuery] = useState(initialView.search);
   const [feedKeywordSearch, setFeedKeywordSearch] = useState(initialView.keyword);
-  const [headerJurisdiction, setHeaderJurisdiction] = useState('All');
+  const [headerJurisdiction, setHeaderJurisdiction] = useState<HeaderJurisdiction>(initialView.headerJurisdiction);
 
   // Filter Facets
   const [selectedSeverities, setSelectedSeverities] = useState<UrgencySeverity[]>(initialView.severities);
@@ -142,6 +145,9 @@ export default function App() {
   const [selectedFormat, setSelectedFormat] = useState<string | null>(initialView.format);
   const [sortBy, setSortBy] = useState<SortOption>(initialView.sort);
   const [onlyNew, setOnlyNew] = useState(initialView.onlyNew);
+  const [dateFrom, setDateFrom] = useState(initialView.dateFrom);
+  const [dateTo, setDateTo] = useState(initialView.dateTo);
+  const [onlySaved, setOnlySaved] = useState(initialView.onlySaved);
   // A notice named in the URL, opened once the notices have loaded
   const [pendingNoticeId, setPendingNoticeId] = useState<string | null>(initialView.noticeId);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -153,7 +159,9 @@ export default function App() {
   const itemsPerPage = 5;
 
   // Bookmarks
-  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
+  const [savedNotices, setSavedNotices] = useState(readBookmarks);
+  const bookmarkedIds = useMemo(() => new Set(savedNotices.map(n => n.id)), [savedNotices]);
+  const savedIdKey = JSON.stringify([...bookmarkedIds]);
 
   // Active Modals
   const [activeNoticeForGap, setActiveNoticeForGap] = useState<RegulatoryNotice | null>(null);
@@ -192,6 +200,9 @@ export default function App() {
     setSearchQuery('');
     setFeedKeywordSearch('');
     setHeaderJurisdiction('All');
+    setDateFrom('');
+    setDateTo('');
+    setOnlySaved(false);
     setCurrentPage(1);
   };
 
@@ -214,12 +225,11 @@ export default function App() {
     downloadIcs([notice], `RegSonar_${notice.id}.ics`);
 
   const handleToggleBookmark = (id: string) => {
-    setBookmarkedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    const target = searchableNotices.find(n => n.id === id);
+    const next = bookmarkedIds.has(id) ? savedNotices.filter(n => n.id !== id) : target ? [...savedNotices, target] : savedNotices;
+    if (next.length > 200) { showToast('Remove a saved notice before adding another (limit 200)'); return; }
+    if (!writeBookmarks(next)) { showToast('This browser could not save your notices'); return; }
+    setSavedNotices(next);
   };
 
   // Live Feed Ingestion handlers. A GET may be answered from the CDN cache,
@@ -356,7 +366,7 @@ export default function App() {
   }, [notices]);
 
   const recentCount = notices.filter(
-    n => n.publishedAt && Date.now() - new Date(n.publishedAt).getTime() <= 7 * 24 * 60 * 60 * 1000
+    n => publishedInLastDays(n.publishedAt, 7)
   ).length;
   const consultations = notices.filter(n => n.format === 'Consultations');
   const openConsultationsCount = consultations.filter(n => !commentsClosed(n.statutoryDeadline)).length;
@@ -376,7 +386,7 @@ export default function App() {
     Object.values(selectedJurisdictions).filter(v => !v).length +
     Object.values(selectedSectors).filter(v => !v).length +
     (selectedFormat ? 1 : 0) +
-    (onlyNew ? 1 : 0);
+    (onlyNew ? 1 : 0) + (headerJurisdiction !== 'All' ? 1 : 0) + (dateFrom || dateTo ? 1 : 0) + (onlySaved ? 1 : 0);
 
   // Search the stored history as well, once the search text settles
   const searchText = (searchQuery + ' ' + feedKeywordSearch).trim();
@@ -400,10 +410,11 @@ export default function App() {
 
   // Notices loaded with the feed, plus older ones the history search found
   const searchableNotices = useMemo(() => {
-    if (!archiveResults || archiveResults.query !== searchText) return notices;
-    const ids = new Set(notices.map(n => n.id));
-    return [...notices, ...archiveResults.notices.filter(n => !ids.has(n.id))];
-  }, [notices, archiveResults, searchText]);
+    const combined = [...notices, ...(archiveResults?.query === searchText ? archiveResults.notices : [])];
+    const ids = new Set(combined.map(n => n.id));
+    if (onlySaved) combined.push(...savedNotices.filter(n => !ids.has(n.id)).map(n => ({ ...n, savedCopy: true })));
+    return [...new Map(combined.map(n => [n.id, n])).values()];
+  }, [notices, archiveResults, searchText, onlySaved, savedNotices]);
   const archiveMatchIds = useMemo(
     () => new Set(archiveResults && archiveResults.query === searchText ? archiveResults.notices.map(n => n.id) : []),
     [archiveResults, searchText]
@@ -422,7 +433,7 @@ export default function App() {
       if (headerJurisdiction === 'UK US Global' && !['UK_EU', 'US', 'GLOBAL'].includes(notice.jurisdictionCode)) return false;
 
       // Severity check
-      if (selectedSeverities.length > 0 && !selectedSeverities.includes(notice.severity)) {
+      if (!selectedSeverities.includes(notice.severity)) {
         return false;
       }
 
@@ -443,6 +454,12 @@ export default function App() {
 
       if (onlyNew && (notice.archived || !isNewNotice(notice.id))) {
         return false;
+      }
+
+      if (onlySaved && !bookmarkedIds.has(notice.id)) return false;
+      if (dateFrom || dateTo) {
+        const date = notice.publishedAt?.slice(0, 10);
+        if (!date || (dateFrom && date < dateFrom) || (dateTo && date > dateTo)) return false;
       }
 
       // Search: every word must appear, at the start of a word, in the title,
@@ -482,12 +499,46 @@ export default function App() {
     selectedSectors,
     selectedFormat,
     sortBy,
-    onlyNew
+    onlyNew, dateFrom, dateTo, onlySaved, bookmarkedIds
   ]);
 
   // Paginated items
   const totalPages = Math.max(1, Math.ceil(filteredNotices.length / itemsPerPage));
-  const currentNotices = filteredNotices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const page = Math.min(currentPage, totalPages);
+  const currentNotices = filteredNotices.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  React.useEffect(() => setCurrentPage(1), [searchQuery, feedKeywordSearch, headerJurisdiction, selectedSeverities, selectedJurisdictions, selectedSectors, selectedFormat, sortBy, onlyNew, dateFrom, dateTo, onlySaved]);
+  React.useEffect(() => setCurrentPage(p => Math.min(p, totalPages)), [totalPages]);
+
+  // Refresh saved snapshots from the feed and, when viewing them, from history.
+  React.useEffect(() => {
+    setSavedNotices(prev => {
+      const byId = new Map(notices.map(n => [n.id, n]));
+      const next = prev.map(n => byId.get(n.id) ?? n);
+      if (JSON.stringify(prev) === JSON.stringify(next)) return prev;
+      writeBookmarks(next);
+      return next;
+    });
+  }, [notices]);
+  React.useEffect(() => {
+    if (!onlySaved || !hasSynced) return;
+    const missing = (JSON.parse(savedIdKey) as string[]).filter(id => !notices.some(n => n.id === id));
+    if (!missing.length) return;
+    const controller = new AbortController();
+    const refresh = async () => {
+      for (let i = 0; i < missing.length; i += 50) {
+        const res = await fetch(`/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify(missing.slice(i, i + 50)))}`, { signal: controller.signal });
+        if (!res.ok) throw new Error('Unavailable');
+        const data = await res.json();
+        if (Array.isArray(data.notices)) setSavedNotices(prev => {
+          const byId = new Map<string, RegulatoryNotice>(data.notices.map((n: RegulatoryNotice) => [n.id, n]));
+          const next = prev.map(n => byId.get(n.id) ?? n);
+          writeBookmarks(next); return next;
+        });
+      }
+    };
+    refresh().catch(() => { if (!controller.signal.aborted) showToast('History unavailable; showing saved copies on this device'); });
+    return () => controller.abort();
+  }, [onlySaved, hasSynced, notices, savedIdKey]);
 
   const deadlines = useMemo(() => deriveDeadlines(notices), [notices]);
   const notifications = useMemo(() => deriveNotifications(notices), [notices]);
@@ -513,33 +564,41 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
-  // Open a notice named in the URL once it has loaded
+  // Shared links can outlive the latest feed, so try stored history as well.
   React.useEffect(() => {
-    if (!pendingNoticeId || notices.length === 0) return;
-    const target = notices.find(n => n.id === pendingNoticeId);
-    if (target) setActiveNoticeForDossier(target);
-    else showToast('The linked notice is no longer in the feed');
-    setPendingNoticeId(null);
-  }, [notices, pendingNoticeId]);
+    if (!pendingNoticeId || !hasSynced) return;
+    const target = notices.find(n => n.id === pendingNoticeId) ?? savedNotices.find(n => n.id === pendingNoticeId);
+    if (target) { setActiveNoticeForDossier(target); setPendingNoticeId(null); return; }
+    const controller = new AbortController();
+    fetch(`/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify([pendingNoticeId]))}`, { signal: controller.signal })
+      .then(async res => { if (!res.ok) throw new Error('Unavailable'); return res.json(); })
+      .then(data => {
+        const notice = data.notices?.find((n: RegulatoryNotice) => n.id === pendingNoticeId);
+        if (notice) setActiveNoticeForDossier(notice);
+        else showToast('This notice was not found in the feed or available history');
+        setPendingNoticeId(null);
+      }).catch(() => { if (!controller.signal.aborted) showToast('Could not load the linked notice; the link has been kept for retry'); });
+    return () => controller.abort();
+  }, [notices, pendingNoticeId, hasSynced, savedNotices]);
 
-  // Keep the URL in step with the view, so it can be shared or bookmarked
+  const view: ViewState = {
+    tab: activeTab, search: searchQuery, keyword: feedKeywordSearch,
+    severities: selectedSeverities, jurisdictions: selectedJurisdictions, sectors: selectedSectors,
+    format: selectedFormat, sort: sortBy, onlyNew, headerJurisdiction, dateFrom, dateTo, onlySaved,
+    noticeId: activeNoticeForDossier?.id ?? pendingNoticeId
+  };
+  const viewQuery = serializeViewState(view);
+  const applySavedView = (query: string) => {
+    const next = parseViewState(query);
+    setActiveTab(next.tab); setSearchQuery(next.search); setFeedKeywordSearch(next.keyword);
+    setSelectedSeverities(next.severities); setSelectedJurisdictions(next.jurisdictions); setSelectedSectors(next.sectors);
+    setSelectedFormat(next.format); setSortBy(next.sort); setOnlyNew(next.onlyNew);
+    setHeaderJurisdiction(next.headerJurisdiction); setDateFrom(next.dateFrom); setDateTo(next.dateTo); setOnlySaved(next.onlySaved);
+    setActiveNoticeForDossier(null); setPendingNoticeId(null); setCurrentPage(1);
+  };
   React.useEffect(() => {
-    const query = serializeViewState({
-      tab: activeTab,
-      search: searchQuery,
-      keyword: feedKeywordSearch,
-      severities: selectedSeverities,
-      jurisdictions: selectedJurisdictions,
-      sectors: selectedSectors,
-      format: selectedFormat,
-      sort: sortBy,
-      onlyNew,
-      noticeId: activeNoticeForDossier?.id ?? pendingNoticeId
-    });
-    if (query !== window.location.search) {
-      window.history.replaceState(null, '', `${window.location.pathname}${query}${window.location.hash}`);
-    }
-  }, [activeTab, searchQuery, feedKeywordSearch, selectedSeverities, selectedJurisdictions, selectedSectors, selectedFormat, sortBy, onlyNew, activeNoticeForDossier, pendingNoticeId]);
+    if (viewQuery !== window.location.search) window.history.replaceState(null, '', `${window.location.pathname}${viewQuery}${window.location.hash}`);
+  }, [viewQuery]);
 
   const upcomingDates = useMemo(() => calendarNotices(notices), [notices]);
   const liquidityNotice = notices.find(n => n.id.startsWith('hkma-liquidity'));
@@ -583,7 +642,7 @@ export default function App() {
           setCurrentPage(1);
         }}
         selectedJurisdictionFilter={headerJurisdiction}
-        onJurisdictionFilterChange={setHeaderJurisdiction}
+        onJurisdictionFilterChange={value => setHeaderJurisdiction(value as HeaderJurisdiction)}
         onOpenExport={() => {
           setExportFormat('csv');
           setIsExportModalOpen(true);
@@ -721,6 +780,12 @@ export default function App() {
                     </div>
                   )}
 
+                  <SourceFreshness lastSyncAt={lastSyncAt} />
+                  <MonitoringControls query={serializeViewState({ ...view, noticeId: null })}
+                    dateFrom={dateFrom} dateTo={dateTo} onDates={(from, to) => { setDateFrom(from); setDateTo(to); }}
+                    onlySaved={onlySaved} savedCount={bookmarkedIds.size} onToggleSaved={() => setOnlySaved(v => !v)}
+                    onApply={applySavedView} onMessage={showToast} />
+
                   {/* Feed Search & Sort Bar */}
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
@@ -854,16 +919,16 @@ export default function App() {
                   {/* Pagination Ribbon */}
                   <div className="p-3 bg-panel border border-line rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] text-ink-soft shadow-xs">
                     <span>
-                      Showing {Math.min(filteredNotices.length, (currentPage - 1) * itemsPerPage + 1)} to{' '}
-                      {Math.min(filteredNotices.length, currentPage * itemsPerPage)} of{' '}
+                      Showing {Math.min(filteredNotices.length, (page - 1) * itemsPerPage + 1)} to{' '}
+                      {Math.min(filteredNotices.length, page * itemsPerPage)} of{' '}
                       {filteredNotices.length} notices
                     </span>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <button
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
+                        disabled={page === 1}
                         className={`px-3 min-h-9 sm:min-h-0 sm:py-1 rounded text-[11px] font-semibold transition-colors ${
-                          currentPage === 1
+                          page === 1
                             ? 'bg-wash text-muted cursor-not-allowed border border-line'
                             : 'bg-panel-raised text-ink border border-line hover:bg-wash'
                         }`}
@@ -872,27 +937,23 @@ export default function App() {
                       </button>
 
                       <span className="sm:hidden px-1 font-['JetBrains_Mono'] text-[11px]">
-                        Page {currentPage} of {totalPages}
+                        Page {page} of {totalPages}
                       </span>
-                      {Array.from({ length: totalPages }).map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentPage(idx + 1)}
-                          className={`hidden sm:inline-block px-3 py-1 rounded font-['Inter'] text-[11px] font-semibold transition-colors ${
-                            currentPage === idx + 1
-                              ? 'bg-accent text-on-accent shadow-2xs'
-                              : 'bg-panel-raised border border-line text-ink hover:bg-wash'
-                          }`}
-                        >
-                          {idx + 1}
+                      {paginationPages(page, totalPages).map((number, idx) => number === 'gap' ? (
+                        <span key={`gap-${idx}`} className="hidden sm:inline px-1" aria-hidden="true">…</span>
+                      ) : (
+                        <button key={number} onClick={() => setCurrentPage(number)} aria-label={`Page ${number}`}
+                          aria-current={page === number ? 'page' : undefined}
+                          className={`hidden sm:inline-block px-3 py-1 rounded text-[11px] font-semibold ${page === number ? 'bg-accent text-on-accent' : 'bg-panel-raised border border-line text-ink hover:bg-wash'}`}>
+                          {number}
                         </button>
                       ))}
 
                       <button
                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
+                        disabled={page === totalPages}
                         className={`px-3 min-h-9 sm:min-h-0 sm:py-1 rounded text-[11px] font-semibold transition-colors ${
-                          currentPage === totalPages
+                          page === totalPages
                             ? 'bg-wash text-muted cursor-not-allowed border border-line'
                             : 'bg-panel-raised text-ink border border-line hover:bg-wash'
                         }`}

@@ -39,6 +39,13 @@ test('the first check fills the history, reading further back where the list was
   assert.ok(full.length > 0, 'some list had 20 or more items');
   assert.ok(full.every(r => r.read > 0));
   assert.ok(results.filter(r => r.read < 20).every(r => !r.backfilled), 'a short list is not read twice');
+  const { getDb, scheduledCheckStatus } = await import('../db.ts');
+  const status = await scheduledCheckStatus((await getDb())!);
+  assert.equal(status.latest?.status, 'completed');
+  assert.ok(status.lastCompletedAt);
+  assert.deepEqual(status.latest?.summary.failed, failed);
+  assert.equal(status.latest?.summary.sources.length, results.length);
+  assert.ok(status.latest?.summary.sources.every((r: any) => !('notices' in r)), 'the public check log has counts, not whole documents');
 });
 
 test('a second check adds nothing and does not read further back', async () => {

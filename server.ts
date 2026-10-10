@@ -9,12 +9,13 @@ import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
 import { assessImpact, severityOf } from './src/lib/impact.js';
 import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
-import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, type StoredNotice } from './db.js';
+import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, saveScheduledCheck, scheduledCheckStatus, type StoredNotice } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
 import { rateLimit, reuseFor } from './src/lib/throttle.js';
 import { isAiRuleNews, mentionsAi } from './src/lib/aiTopics.js';
-import { createHash } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
+import { publicationTime } from './src/lib/derived.js';
 
 dotenv.config();
 
@@ -67,24 +68,7 @@ interface NormalizedNotice {
 }
 
 
-// Helper to calculate relative time
-function getRelativeTime(dateString: string): string {
-  try {
-    const past = new Date(dateString).getTime();
-    if (isNaN(past)) return 'Recently';
-    const now = Date.now();
-    const diffMs = now - past;
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ago`;
-  } catch {
-    return 'Recently';
-  }
-}
+const getRelativeTime = publicationTime;
 
 // Helper to determine sector from text
 // Sector and format by keyword rules (src/lib/tagging.ts). Sources call these
@@ -2558,22 +2542,39 @@ async function backfillPageDates(until: number): Promise<number> {
 
 // Check every source and store what it lists in the history
 export async function pollSources(): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number }> {
-  const sources = SOURCES.filter(s => s.inDigest !== false);
-  const until = Date.now() + POLL_FETCH_WINDOW_MS;
-  const [settled, pageDatesFound] = await Promise.all([
-    Promise.allSettled(sources.map(s => pollSource(s, until))),
-    backfillPageDates(until).catch((err: any) => {
-      console.log(`[RegSonar History] Could not backfill page dates: ${err?.message}`);
-      return 0;
-    })
-  ]);
-  const results: PollResult[] = [];
-  const failed: { name: string; error: string }[] = [];
-  settled.forEach((r, i) => {
-    if (r.status === 'fulfilled') results.push(r.value);
-    else failed.push({ name: sources[i].name, error: describeError(r.reason) });
-  });
-  return { results, failed, pageDatesFound };
+  const db = await getDb();
+  const check = { id: randomUUID(), startedAt: new Date().toISOString(), completedAt: null as string | null, status: 'running' as const, summary: null };
+  const record = async (value: Parameters<typeof saveScheduledCheck>[1]) => {
+    if (db) await saveScheduledCheck(db, value).catch((err: any) => console.log(`[RegSonar Poll] Could not record check: ${err?.message}`));
+  };
+  await record(check);
+  try {
+    const sources = SOURCES.filter(s => s.inDigest !== false);
+    const until = Date.now() + POLL_FETCH_WINDOW_MS;
+    let pageDateError: string | null = null;
+    const [settled, pageDatesFound] = await Promise.all([
+      Promise.allSettled(sources.map(s => pollSource(s, until))),
+      backfillPageDates(until).catch((err: any) => {
+        console.log(`[RegSonar History] Could not backfill page dates: ${err?.message}`);
+        pageDateError = describeError(err);
+        return 0;
+      })
+    ]);
+    const results: PollResult[] = [];
+    const failed: { name: string; error: string }[] = [];
+    settled.forEach((r, i) => {
+      if (r.status === 'fulfilled') results.push(r.value);
+      else failed.push({ name: sources[i].name, error: describeError(r.reason) });
+    });
+    if (pageDateError) failed.push({ name: 'Publication date backfill', error: pageDateError });
+    const summary = { sources: results.map(({ notices: _notices, ...r }) => r), failed, pageDatesFound };
+    await record({ ...check, completedAt: new Date().toISOString(), status: 'completed', summary });
+    return { results, failed, pageDatesFound };
+  } catch (error) {
+    await record({ ...check, completedAt: new Date().toISOString(), status: 'failed',
+      summary: { sources: [], failed: [{ name: 'Scheduled check', error: describeError(error) }], pageDatesFound: 0 } });
+    throw error;
+  }
 }
 
 async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
@@ -2764,6 +2765,17 @@ export function createApp() {
     }
   });
 
+  // Persisted scheduled-check metadata; reading this never triggers a poll.
+  app.get('/api/feeds/checks', async (_req: Request, res: Response) => {
+    res.set('Cache-Control', 'no-store');
+    try {
+      const db = await getDb();
+      res.json(db ? { success: true, enabled: true, ...await scheduledCheckStatus(db) } : { success: true, enabled: false });
+    } catch {
+      res.status(503).json({ success: false, error: 'Scheduled check history is unavailable' });
+    }
+  });
+
   // Scheduled check of every source, run by the cron jobs in vercel.json
   // several times a day (needs CRON_SECRET, like the digest). It stores up to
   // 20 items per source in the history, reading further back when there is a
@@ -2861,6 +2873,25 @@ export function createApp() {
       res.json({ success: true, enabled: true, notices: found });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error?.message || 'Search failed' });
+    }
+  });
+
+  // Look up exact archived IDs for shared links and saved notices.
+  app.get('/api/notices/by-id', async (req: Request, res: Response) => {
+    res.set('Cache-Control', 'no-store');
+    let ids: unknown;
+    try { ids = JSON.parse(typeof req.query.ids === 'string' ? req.query.ids : 'null'); } catch { ids = null; }
+    if (!Array.isArray(ids) || ids.length === 0 || ids.length > 50 ||
+        !ids.every(id => typeof id === 'string' && id.length > 0 && id.length <= 240)) {
+      res.status(400).json({ success: false, error: 'Provide 1 to 50 notice IDs' });
+      return;
+    }
+    try {
+      const db = await getDb();
+      const found = db ? await storedNotices(db, ids) : new Map();
+      res.json({ success: true, enabled: !!db, notices: [...found.values()].map(fromArchive) });
+    } catch {
+      res.status(503).json({ success: false, error: 'Notice history is unavailable' });
     }
   });
 
