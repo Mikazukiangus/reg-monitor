@@ -394,6 +394,8 @@ This document records the full chronological instructions, technical requirement
 * **Fixed text:** the endpoints window said a server worker checked sources every few minutes and listed only six sources; it now says the open page asks the server every few minutes, each source is fetched at most once every 10 minutes, and a scheduled check runs seven times a day. The gap checklist's made-up team names (Custody Operations, Wealth Tech, …) became a free-text owner field.
 * **Not fixed (outside the app):** ftc.gov returns Akamai "Page Not Found" for every page, including its home page, from both Vercel and a local machine; the app shows the FTC feed as Degraded.
 * **Verified locally:** type check, build and 365 tests pass; axe colour contrast finds no issues in either theme.
+* **Deployment:** both branch preview builds stopped with Vercel's "Resource provisioning failed"; the production build from main worked.
+* **Merged (2026-10-10):** the user said "merge to main." On production: 262 notices, none without a date; the three live FCA notices now carry the dates their pages state (6–8 Oct); no "Source" summaries; ESMA's call for evidence shows "Comments close: 2027-01-15"; formats are Announcements 189, Enforcement 32, Consultations 30, Circulars 7, Guidelines 3, Technical Standards 1, and the filters show them; `/api/health` is healthy; FTC still 404. Older FCA notices kept only in the history (16 of 18) still have no date, because only notices in the live feed are read again.
 
 ---
 
