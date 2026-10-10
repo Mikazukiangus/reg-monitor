@@ -203,6 +203,18 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <div className="flex flex-wrap gap-1.5">
               <button
                 type="button"
+                onClick={() => onSelectFormat(selectedFormat === 'Announcements' ? null : 'Announcements')}
+                className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
+                  selectedFormat === 'Announcements'
+                    ? 'bg-accent text-on-accent border-accent shadow-2xs'
+                    : 'bg-panel-raised border-line hover:bg-wash text-ink'
+                }`}
+              >
+                Announcements ({formatCounts.Announcements || 0})
+              </button>
+
+              <button
+                type="button"
                 onClick={() => onSelectFormat(selectedFormat === 'Circulars' ? null : 'Circulars')}
                 className={`px-2 py-1 rounded border font-['JetBrains_Mono'] text-[11px] font-medium transition-all ${
                   selectedFormat === 'Circulars'

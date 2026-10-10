@@ -292,7 +292,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                   <span>Automated Continuous Ingestion Loop</span>
                 </h4>
                 <p className="font-['Inter'] text-[12px] text-ink-soft leading-relaxed mb-3">
-                  The RegSonar Sentinel server worker queries official public government endpoints every {autoSyncInterval ? `${autoSyncInterval / 60} minutes` : 'configured cycle'}. Each source is fetched at most once every 10 minutes to respect government rate limits; failed sources keep their last good results and report the error.
+                  {autoSyncInterval ? `While this page is open, it asks the server for the latest notices every ${autoSyncInterval / 60} ${autoSyncInterval === 60 ? 'minute' : 'minutes'}.` : 'Auto-sync is off: the page asks the server for notices only when you press Sync.'} The server fetches each official source at most once every 10 minutes to respect government rate limits, and a scheduled check reads every source seven times a day even when no one has the page open. Failed sources keep their last good results and report the error.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
@@ -301,7 +301,7 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                       1. Ingestion Layer
                     </span>
                     <span className="text-ink-soft">
-                      Fetches JSON from the US Federal Register and MAS news search, RSS from HKMA, the Bank of England PRA, the FCA and BIS, and HKMA liquidity figures from its Daily Monetary Statistics page. The FCA feed is behind a Cloudflare bot check and is sometimes blocked.
+                      Reads {endpoints.length} official sources: JSON APIs, RSS feeds and public web pages, listed above with their protocol and status. The FCA feed is behind a Cloudflare bot check and is sometimes blocked.
                     </span>
                   </div>
 
@@ -316,10 +316,10 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
 
                   <div className="p-3 bg-panel border border-line rounded-lg">
                     <span className="font-['JetBrains_Mono'] font-bold text-accent block mb-1">
-                      3. Live Client Push
+                      3. Refresh in the Browser
                     </span>
                     <span className="text-ink-soft">
-                      Replaces the feed with the latest notices from every source and recomputes the KPI ribbon, filters and deadlines.
+                      Each sync replaces the feed with the latest notices from every source and recomputes the KPI ribbon, filters and deadlines.
                     </span>
                   </div>
                 </div>

@@ -26,6 +26,7 @@ export type SectorDomain =
   | 'General & Institutional';
 
 export type InstrumentFormat =
+  | 'Announcements'
   | 'Circulars'
   | 'Consultations'
   | 'Enforcement'

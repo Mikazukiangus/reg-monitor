@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
+import { summarize, extractArticleText, pagePublishedDate, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
@@ -130,7 +130,7 @@ export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   };
 }
 
-const FORMATS: InstrumentFormat[] = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
+const FORMATS: InstrumentFormat[] = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 // Helper for type color styles
 function getTypeColor(format: string) {
@@ -505,7 +505,7 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
       jurisdiction: 'HONG KONG',
       jurisdictionCode: 'HK',
       type: 'MARKET DATA',
-      typeColorClass: getTypeColor('Circulars'),
+      typeColorClass: getTypeColor('Announcements'),
       // A data release, scored as the rubric scores one (src/lib/impact.ts)
       impactScore: 3,
       issuedTimeAgo: getRelativeTime(publishedAt ?? date),
@@ -517,7 +517,7 @@ async function fetchHkmaLiquidity(): Promise<NormalizedNotice[]> {
       summary: `Closing aggregate balance HK$${closing}M${rates.length ? `; ${rates.join('; ')}` : ''}. Figures as at ${time}, ${date} (Hong Kong time). Source: HKMA Daily Monetary Statistics page.`,
       tags: ['HKMA', 'Liquidity', 'Monetary & Financial Stability'],
       sector: 'Monetary & Financial Stability',
-      format: 'Circulars',
+      format: 'Announcements',
       severity: 'info',
       dossierUrl: liquidityDayUrl(date),
       isLiveFeed: true
@@ -1259,7 +1259,7 @@ async function fetchFinraNotices(limit = 4): Promise<NormalizedNotice[]> {
     const link = String(item.link);
     const summary = item.description ? htmlToText(String(item.description)).replace(/^Summary\s*/i, '').trim() || undefined : undefined;
     const title = finraTitle(number, summary);
-    const format = /^information notice/i.test(number) ? 'Circulars' : formatOf('', `${title} ${summary || ''}`);
+    const format = /^information notice/i.test(number) ? 'Announcements' : formatOf('', `${title} ${summary || ''}`);
     const sector = sectorOf(`${title} ${summary || ''}`);
     const score = estimateImpact(format);
     return {
@@ -1328,7 +1328,7 @@ async function fetchJpxRuleRevisions(limit = 4): Promise<NormalizedNotice[]> {
     .slice(0, limit)
     .map(row => {
       // "Enforcement Rules" is a kind of rulebook, so the title isn't used to pick the format
-      const format = 'Circulars' as const;
+      const format = 'Announcements' as const;
       const sector = sectorOf(row.title);
       const score = estimateImpact(format);
       const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Asia/Tokyo');
@@ -1530,12 +1530,16 @@ const CALPRIVACY_AI: AiFeed = { id: 'calprivacy', url: 'https://privacy.ca.gov/f
 // Colorado's attorney general enforces, and makes rules under, the Colorado AI Act
 const COLORADO_AG_AI: AiFeed = { id: 'co-ag', url: 'https://coag.gov/?s=artificial+intelligence&feed=rss2', regulator: 'Colorado AG', jurisdiction: 'UNITED STATES (COLORADO)', type: 'NEWS' };
 
+// A description that is only a link to the item (the California Governor's
+// feed gives just "Source"), which says nothing about it
+const LINK_ONLY = /^(?:source|read more|continue reading|more|link)\W*$/i;
+
 async function fetchAiFeed(feed: AiFeed, limit: number): Promise<NormalizedNotice[]> {
   const items = await rssItems(feed.url);
   return items
     .map((item: any) => ({
       title: plainText(String(item.title)),
-      description: item.description ? plainText(String(item.description)).replace(/\s*View Press Release$/, '').replace(/\s*The post .* appeared first on .*$/, '') : '',
+      description: item.description ? plainText(String(item.description)).replace(/\s*View Press Release$/, '').replace(/\s*The post .* appeared first on .*$/, '').replace(LINK_ONLY, '') : '',
       link: String(item.link),
       published: toIso(item.pubDate)
     }))
@@ -2298,6 +2302,7 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
   try {
     let text: string;
     let ocr = false;
+    let published: string | null = null;
     let sourceUrl = notice.dossierUrl!;
     const docText = (await fetchSfcDocText(sourceUrl)) ?? (await fetchSgxDocText(sourceUrl));
     if (docText !== null) {
@@ -2309,10 +2314,11 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
       if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
       ({ text, ocr } = await extractPdfText(data));
     } else {
-      const res = await fetchOrThrow(sourceUrl);
-      text = extractArticleText(await res.text(), sourceUrl);
+      const html = await (await fetchOrThrow(sourceUrl)).text();
+      text = extractArticleText(html, sourceUrl);
+      published = pagePublishedDate(html) ?? null;
     }
-    const result = text.length > 200 ? { ...summarize(text, { sourceUrl }), ...(ocr ? { ocr } : {}) } : null;
+    const result = text.length > 200 ? { ...summarize(text, { sourceUrl }), ...(ocr ? { ocr } : {}), published } : null;
     keyPointsCache.set(notice.id, result);
     return result;
   } catch (err: any) {
@@ -2370,8 +2376,11 @@ function withKeyPointsUntagged(notice: NormalizedNotice, keyPoints: KeyPoints): 
   const { closingDate: _legacy, dates: _previous, ...rest } = keyPoints;
   // Dates the source itself gives (Federal Register, MAS and SGX consultations) are kept
   const own = !notice.deadlineDate && (!notice.statutoryDeadline || notice.statutoryDeadline === NO_DATE);
+  // A feed that gives no date (the FCA's) takes the date the page states
+  const published = !notice.publishedAt && keyPoints.published ? toIso(keyPoints.published) : undefined;
   return {
     ...notice,
+    ...(published ? { publishedAt: published, issuedTimeAgo: getRelativeTime(published) } : {}),
     keyPoints: { ...rest, ...(dates.length ? { dates } : {}) },
     ...(own ? noticeDate(notice, dates) : {})
   };
@@ -2406,11 +2415,15 @@ async function enrichWithKeyPoints(
       enriched.push(notice);
       continue;
     }
-    let keyPoints = stored.get(notice.id) ?? null;
+    const kept = stored.get(notice.id) ?? null;
+    // A feed without dates (the FCA's) whose stored key points predate reading
+    // the page's own date: read the page again once
+    let keyPoints = kept && !notice.publishedAt && kept.published === undefined ? null : kept;
     if (!keyPoints && (keyPointsCache.has(notice.id) || (fetches < budget.maxFetches && Date.now() < budget.until))) {
       if (!keyPointsCache.has(notice.id)) fetches++;
-      keyPoints = await keyPointsFor(notice);
+      keyPoints = (await keyPointsFor(notice)) ?? kept;
     }
+    keyPoints ??= kept;
     enriched.push(keyPoints ? withKeyPoints(notice, keyPoints) : notice);
   }
   return enriched;
@@ -2565,6 +2578,8 @@ function withoutTextDates(n: NormalizedNotice): NormalizedNotice {
 export const fromArchive = (stored: any): NormalizedNotice => {
   let n = withoutTextDates({
     ...stored,
+    // Copies stored before link-only descriptions were dropped
+    summary: LINK_ONLY.test(stored.summary || '') ? undefined : stored.summary,
     archived: true,
     isLiveFeed: false,
     issuedTimeAgo: stored.publishedAt ? getRelativeTime(stored.publishedAt) : 'Earlier'

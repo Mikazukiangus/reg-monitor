@@ -28,7 +28,7 @@ const SORT_KEYS: Record<SortOption, string> = {
   'Consultation Deadline': 'deadline'
 };
 const TABS: TabId[] = ['feed', 'radar', 'horizon', 'enforcement', 'alert-rules'];
-const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
+const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 export interface ViewState {
   tab: TabId;

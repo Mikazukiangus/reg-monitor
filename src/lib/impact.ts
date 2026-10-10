@@ -66,7 +66,8 @@ const BASE: Record<InstrumentFormat, [number, string]> = {
   Enforcement: [7, 'enforcement action'],
   Guidelines: [6.5, 'guidance'],
   'Technical Standards': [6, 'technical standards'],
-  Circulars: [5, 'circular or announcement']
+  Circulars: [5, 'circular'],
+  Announcements: [5, 'announcement']
 };
 
 const DAY = 86_400_000;

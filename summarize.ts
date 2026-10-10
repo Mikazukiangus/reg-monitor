@@ -26,6 +26,9 @@ export interface KeyPoints {
   dates?: DocumentDate[];
   // Copies stored before October 2026 have this instead of dates
   closingDate?: KeyFact;
+  // When the page says it was published (YYYY-MM-DD, or a full timestamp), for
+  // feeds that give no date; null when the page was checked and gives none
+  published?: string | null;
 }
 
 export type DateKind = 'closes' | 'takesEffect' | 'complyBy';
@@ -45,6 +48,36 @@ export interface DocumentDate {
 }
 
 const BLOCK_CLOSE = /<\/(p|li|h[1-6]|div|tr|td|th|section|article|blockquote|dd|dt)>|<br\s*\/?>/gi;
+
+// When a web page says it was published, from the metadata pages commonly
+// carry (Open Graph, Dublin Core, schema.org) or a "First published:
+// DD/MM/YYYY" line as on UK government sites. Undefined when there is none or
+// the date is not plausible.
+const PUBLISHED_META = [
+  /<meta[^>]+(?:property|name)=["'](?:article:published_time|og:published_time|datePublished|dcterms\.(?:created|issued|date)|DC\.date(?:\.issued)?|publish[-_]?date|pubdate)["'][^>]*>/i
+];
+const ISO_START = /^(20\d\d-\d\d-\d\d)(T\d\d:\d\d(?::\d\d(?:\.\d+)?)?(?:Z|[+-]\d\d:?\d\d)?)?/;
+export function pagePublishedDate(html: string, now = new Date()): string | undefined {
+  const candidates: string[] = [];
+  for (const re of PUBLISHED_META) {
+    const tag = html.match(re)?.[0];
+    const content = tag?.match(/content=["']([^"']+)["']/i)?.[1];
+    if (content) candidates.push(content.trim());
+  }
+  const ld = html.match(/"datePublished"\s*:\s*"([^"]+)"/)?.[1];
+  if (ld) candidates.push(ld.trim());
+  const first = htmlToText(html).match(/\bFirst published:?\s*(\d{1,2})\/(\d{1,2})\/(20\d\d)\b/i);
+  if (first) candidates.push(`${first[3]}-${first[2].padStart(2, '0')}-${first[1].padStart(2, '0')}`);
+  for (const c of candidates) {
+    const m = c.match(ISO_START);
+    if (!m) continue;
+    const day = m[1];
+    const time = m[2] && !isNaN(new Date(c.slice(0, m[0].length)).getTime()) ? new Date(c.slice(0, m[0].length)).toISOString() : undefined;
+    if (isNaN(new Date(`${day}T00:00:00Z`).getTime()) || new Date(`${day}T00:00:00Z`).getTime() > now.getTime() + 36 * 3600e3) continue;
+    return time ?? day;
+  }
+  return undefined;
+}
 
 // HTML to plain text with paragraph breaks preserved, so headings and list
 // items don't run into the following sentence.
@@ -330,7 +363,7 @@ const withDate = (cue: string) => new RegExp(`(?:${cue})${TO_DATE}`, 'i');
 // A request for comments: "Comments should be submitted on or before ...",
 // "Stakeholders are invited to respond to the consultation by ..."
 const ASKS_FOR_COMMENTS = withDate(
-  String.raw`\b(?:comments?|respond|responses?|feedback|submissions?|submitted|views|representations)\b${IN_CLAUSE}{0,140}?\b(?:by|on or before|no later than|before|until)`
+  String.raw`\b(?:comments?|respond|responses?|feedback|submissions?|submitted|views|representations|contributions)\b${IN_CLAUSE}{0,140}?\b(?:by|on or before|no later than|before|until)`
 );
 // A statement of when comments close: "The consultation closes on ...", "The
 // consultation period ends on ...", "... will last until ..."

@@ -217,7 +217,10 @@ export const CONCLUSION = /\bconsultation conclusions?\b|\bconclude[sd]? (\w+ )?
 export const SRO_FILING = /^self-regulatory organizations[;:]/i;
 // FINRA information notices are reminders and notices of operational changes
 const INFORMATION_NOTICE = /\binformation notice\b/i;
-const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b|征求意见|意見募集|御意見の募集|パブリックコメント/i;
+// What a regulator itself calls a circular (HKMA, SFC and MAS circulars); other
+// releases, notices and speeches are announcements
+const CIRCULAR = /\bcirculars?\b/i;
+const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views|evidence|input)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b|征求意见|意見募集|御意見の募集|パブリックコメント/i;
 const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary committee|takes? action|reprimand(s|ed)?|censure[sd]?|fine[sd]?|fines|penalt(y|ies)|infringement notices?|charged|charges against|sues|sued|sentenced|convicted|jailed|imprisonment|prosecut\w*|banned|bans?|disqualified|suspends|revok(es|ed)|cancels|cancelled|stop orders?|halts offers|prohibition orders?|cease[- ]and[- ]desist|compound(s|ed)|falls? short of|wins suit|suit against|injunction|committal|judgment against|appeal against|cancellation of listing|court of appeal|high court|federal court|in (its|the \w+['’]s|\w+['’]s) favour)\b/i;
 // "SC Charges Brothers…": an agency charging someone, at the start of a title
 // (not "Bank Charges and Fees")
@@ -241,14 +244,15 @@ export function classifyFormat(type: string, title: string): FormatTagging {
   };
   const said = (m: string) => (fromType ? `the source's category ("${m}")` : `"${m}"`);
   let m: string | undefined;
-  if ((m = hit(SPEECH))) return { format: 'Circulars', reason: `speech or remarks ("${m.trim()}")` };
-  if ((m = hit(APPROVAL))) return { format: 'Circulars', reason: `approval of a proposal ("${m}")` };
-  if ((m = hit(CONCLUSION))) return { format: 'Circulars', reason: `consultation conclusions, not open for comment ("${m}")` };
-  if (SRO_FILING.test(title)) return { format: 'Circulars', reason: 'an exchange\'s or SRO\'s rule filing, published by the SEC' };
-  if ((m = hit(INFORMATION_NOTICE))) return { format: 'Circulars', reason: `"${m}"` };
+  if ((m = hit(SPEECH))) return { format: 'Announcements', reason: `speech or remarks ("${m.trim()}")` };
+  if ((m = hit(APPROVAL))) return { format: 'Announcements', reason: `approval of a proposal ("${m}")` };
+  if ((m = hit(CONCLUSION))) return { format: 'Announcements', reason: `consultation conclusions, not open for comment ("${m}")` };
+  if (SRO_FILING.test(title)) return { format: 'Announcements', reason: 'an exchange\'s or SRO\'s rule filing, published by the SEC' };
+  if ((m = hit(INFORMATION_NOTICE))) return { format: 'Announcements', reason: `"${m}"` };
   if ((m = hit(CONSULTATION))) return { format: 'Consultations', reason: said(m) };
   if ((m = hit(ENFORCEMENT) ?? title.trim().match(CHARGES)?.[0])) return { format: 'Enforcement', reason: said(m) };
   if ((m = hit(TECHNICAL))) return { format: 'Technical Standards', reason: said(m) };
   if ((m = hit(GUIDELINES))) return { format: 'Guidelines', reason: said(m) };
-  return { format: 'Circulars', reason: 'no format words matched' };
+  if ((m = hit(CIRCULAR))) return { format: 'Circulars', reason: said(m) };
+  return { format: 'Announcements', reason: 'no format words matched' };
 }

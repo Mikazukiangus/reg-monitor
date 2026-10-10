@@ -1,6 +1,7 @@
 import React from 'react';
 import { InstrumentFormat, RegulatoryNotice } from '../types/regulatory';
 import { daysUntil } from '../lib/derived';
+import { CRITICAL_SCORE, HIGH_SCORE } from '../lib/impact';
 import { Highlight } from './Highlight';
 
 interface NoticeCardProps {
@@ -55,9 +56,9 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   const datedSentences = notice.deadlineQuote && !facts.includes(notice.deadlineQuote) ? [notice.deadlineQuote, ...facts] : facts;
   const dateLabel = notice.statutoryDeadline?.replace(/:.*$/, '');
 
-  // Score badge icon and color tailored for light theme
+  // Score badge colours follow the notice's severity, as in the filters
   const getScoreBadge = (score: number) => {
-    if (score >= 9.0) {
+    if (score >= CRITICAL_SCORE) {
       return {
         icon: 'shield',
         color: 'text-on-orange',
@@ -65,12 +66,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         bg: 'bg-orange-fill'
       };
     }
-    if (score >= 8.0) {
+    if (score >= HIGH_SCORE) {
       return {
         icon: 'insights',
-        color: 'text-accent',
-        border: 'border-accent-line',
-        bg: 'bg-accent-tint'
+        color: 'text-cream',
+        border: 'border-cream-line',
+        bg: 'bg-cream-tint'
       };
     }
     return {
@@ -106,7 +107,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           </h4>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${scoreMeta.color}`}>
+          <span className={`font-['JetBrains_Mono'] text-[11px] font-bold px-1.5 py-0.5 rounded border ${scoreMeta.bg} ${scoreMeta.border} ${scoreMeta.color}`}>
             {notice.impactScore.toFixed(1)}/10
           </span>
           <button

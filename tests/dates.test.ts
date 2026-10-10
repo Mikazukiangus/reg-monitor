@@ -3,7 +3,7 @@
 // from real notices; several were once given the wrong date.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { documentDates, extractClosingDate, type DateKind } from '../summarize.ts';
+import { documentDates, extractClosingDate, pagePublishedDate, type DateKind } from '../summarize.ts';
 import { assessImpact } from '../src/lib/impact.ts';
 
 process.env.VERCEL = '1';
@@ -18,6 +18,7 @@ const SENTENCES: [string, DateKind?, string?, boolean?][] = [
   ['Stakeholders are invited to respond to the consultation by 9 November 2026.', 'closes', '2026-11-09'],
   ['Comments may be submitted via the FormSG link by 9 December 2026.', 'closes', '2026-12-09'],
   ['Comments should be received on or before December 7, 2026.', 'closes', '2026-12-07'],
+  ['Stakeholders are invited to submit their contributions through ESMA’s consultation webpage by 15 January 2027.', 'closes', '2027-01-15'],
   ['All submissions should refer to file number SR-NASDAQ-2026-080 and should be submitted on or before October 29, 2026.', 'closes', '2026-10-29'],
   ["I would be grateful if the Association's comments on the proposed amendment, as set out above, could reach us by 30 June 2026.", 'closes', '2026-06-30'],
   ['Written submissions are requested by Friday 28th February 2020.', 'closes', '2020-02-28'],
@@ -184,4 +185,35 @@ test('a Federal Register notice without a date field takes the one its text stat
   }));
   assert.equal(filing.statutoryDeadline, 'Comments close: 2099-10-29');
   assert.equal(filing.statusBadge?.type, 'deadline');
+});
+
+test('a page states when it was published', () => {
+  const now = new Date('2026-10-10T06:00:00Z');
+  assert.equal(pagePublishedDate('<meta property="article:published_time" content="2026-10-09T08:30:00+01:00">', now), '2026-10-09T07:30:00.000Z');
+  assert.equal(pagePublishedDate('<script type="application/ld+json">{"datePublished": "2026-10-08"}</script>', now), '2026-10-08');
+  assert.equal(pagePublishedDate('<p>First published: 09/10/2026</p><p>Last updated: 10/10/2026</p>', now), '2026-10-09');
+  assert.equal(pagePublishedDate('<meta name="DC.date.issued" content="2026-10-07">', now), '2026-10-07');
+  // No date, or one that is not plausible
+  assert.equal(pagePublishedDate('<p>Published in 2026</p>', now), undefined);
+  assert.equal(pagePublishedDate('<meta property="article:published_time" content="2027-01-01">', now), undefined);
+});
+
+test('a notice from a feed without dates takes the date its page states', () => {
+  const n = fromArchive({
+    id: 'fca-x', title: 'New rules to make long-term investment funds clearer', regulator: 'UK FCA', type: 'CIRCULARS',
+    jurisdiction: 'UNITED KINGDOM', jurisdictionCode: 'UK_EU', impactScore: 5, tags: [], sector: 'Capital Markets & Listings', format: 'Circulars',
+    severity: 'info', dossierUrl: 'https://www.fca.org.uk/news/x',
+    keyPoints: { points: ['A point.'], facts: [], refs: [], method: 'extractive', published: '2026-10-09' }
+  });
+  assert.equal(n.publishedAt, '2026-10-09T00:00:00.000Z');
+  assert.notEqual(n.issuedTimeAgo, 'Earlier');
+});
+
+test('a link-only description from a stored copy is dropped', () => {
+  const n = fromArchive({
+    id: 'ca-gov-x', title: 'Governor signs AI law', regulator: 'California Governor', type: 'NEWS', summary: 'Source',
+    jurisdiction: 'UNITED STATES (CALIFORNIA)', jurisdictionCode: 'US', impactScore: 5, tags: [], sector: 'AI, Cyber & Tech Risk', format: 'Circulars',
+    severity: 'info', dossierUrl: 'https://www.gov.ca.gov/x', publishedAt: '2026-09-30T00:00:00.000Z'
+  });
+  assert.equal(n.summary, undefined);
 });

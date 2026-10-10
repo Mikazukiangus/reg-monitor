@@ -33,7 +33,7 @@ const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle, tagN
 const { severityOf } = await import('../src/lib/impact.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
-const FORMATS = ['Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
+const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 for (const source of SOURCES) {
   if (source.inDigest === false) continue;
@@ -144,10 +144,10 @@ test('a stored notice is re-classified and re-scored when read back', () => {
     sector: 'General & Institutional' as const, format: 'Enforcement' as const, severity: 'critical' as const, isLiveFeed: false
   };
   const n = tagNotice(stored);
-  assert.equal(n.format, 'Circulars');
+  assert.equal(n.format, 'Announcements');
   assert.equal(n.impactScore, 3);
   assert.equal(n.severity, 'info');
-  assert.ok(!n.tags.includes('Enforcement') && n.tags.includes('Circulars'));
+  assert.ok(!n.tags.includes('Enforcement') && n.tags.includes('Announcements'));
 });
 
 test('ESMA dates come from the description', async () => {
@@ -213,7 +213,7 @@ test('JPX rule revisions are dated in Japan time and are not enforcement', async
   assert.equal(jgb?.regulator, 'OSE');
   assert.equal(jgb?.publishedAt, '2026-10-06T15:00:00.000Z');
   const enforcementRules = notices.find(n => /^Revisions to Enforcement Rules/.test(n.title));
-  assert.equal(enforcementRules?.format, 'Circulars');
+  assert.equal(enforcementRules?.format, 'Announcements');
 });
 
 test('FINRA titles add the opening of FINRA\'s summary to the notice number', () => {

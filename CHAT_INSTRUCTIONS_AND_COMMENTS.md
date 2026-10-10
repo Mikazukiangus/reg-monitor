@@ -381,6 +381,20 @@ This document records the full chronological instructions, technical requirement
 * **Deployment:** the branch preview build stopped after about 1.5s with Vercel's "Resource provisioning failed" and no build log; the production build from main worked.
 * **Merged (2026-10-09):** the user said "merge to main." For a while after the deploy, Vercel's security checkpoint challenged every request to production (403, "Failed to verify your browser"), so nothing could be checked automatically; the user confirmed the site looked right, and the checkpoint had lifted by the next check. On production: theme-color #F99D1B, the new colours in the stylesheet (band #F99D1B, band button #006EB8, accent #00609F / #6CB6EC, green dot #00978D), the recoloured icon, and the unchanged script hash in the security policy are served; `/api/health` is healthy; 28 of 29 sources up.
 
+### Request 31: Data Audit, Incorrect and Static Data (Claude Code, 2026-10-10)
+
+**User:** "Check if any data is still incorrect or static", then "Check if any other data is fabricated or stale."
+
+* **Checked:** all 258 production notices (dates, duplicates, summaries, scores, closing dates, formats), the source statuses, the KPI labels against the scoring rules, and the fixed text in every tab and window. Ages ("Issued … ago") match the publication dates; the 29 SEC rule filings closing 29–30 Oct are the standard 21-day comment period; the three duplicate titles are joint releases published by two regulators or separate SEC filings; old items in the feed are the latest a slow source has.
+* **FCA dates:** the FCA feed gives no dates, so its notices showed "Recently" and none of the 19 stored ones had a date. The server now reads the publication date the article page states (`pagePublishedDate` in `summarize.ts`: Open Graph, Dublin Core, schema.org or "First published: DD/MM/YYYY") and stored copies are read once more to get it.
+* **California summaries:** the Governor's feed gives only a "Source" link as each description, which showed as the summary. Link-only descriptions are now dropped, also from stored copies.
+* **ESMA call for evidence:** "seeks evidence" now counts as a consultation, and "submit their contributions … by" as a closing date, so it shows "Comments close: 2027-01-15".
+* **Score badge:** Critical starts at 8.5, but the badge only turned orange at 9, so two of three Critical notices looked ordinary. Badges now follow severity (Critical orange, High cream); the compact view shows them as a pill so they stay readable in the dark theme.
+* **Formats:** 195 of 258 notices were labelled "Circulars" only because no other format matched. At the user's choice the catch-all is now "Announcements"; "Circulars" is kept for what the regulator itself calls a circular.
+* **Fixed text:** the endpoints window said a server worker checked sources every few minutes and listed only six sources; it now says the open page asks the server every few minutes, each source is fetched at most once every 10 minutes, and a scheduled check runs seven times a day. The gap checklist's made-up team names (Custody Operations, Wealth Tech, …) became a free-text owner field.
+* **Not fixed (outside the app):** ftc.gov returns Akamai "Page Not Found" for every page, including its home page, from both Vercel and a local machine; the app shows the FTC feed as Degraded.
+* **Verified locally:** type check, build and 365 tests pass; axe colour contrast finds no issues in either theme.
+
 ---
 
 ## 3. Key Files & Modifications Summary

@@ -30,7 +30,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
     }))
   );
   const [newRequirement, setNewRequirement] = useState('');
-  const [newOwner, setNewOwner] = useState('Custody Operations');
+  const [newOwner, setNewOwner] = useState('');
 
   const handleStatusChange = (id: string, newStatus: ChecklistItem['status']) => {
     setChecklist(prev =>
@@ -44,7 +44,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
     const newItem: ChecklistItem = {
       id: `item-${Date.now()}`,
       requirement: newRequirement,
-      owner: newOwner,
+      owner: newOwner.trim() || 'Unassigned',
       deadline: '',
       status: 'Action-Required',
       notes: ''
@@ -178,21 +178,18 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                 type="text"
                 value={newRequirement}
                 onChange={(e) => setNewRequirement(e.target.value)}
-                placeholder="e.g. Schedule emergency external key custodian drill..."
+                placeholder="Add an action for your firm"
                 aria-label="New action item"
                 className="flex-1 bg-panel border border-line px-3 py-1.5 rounded text-[12px] text-ink focus:outline-none focus:border-accent"
               />
-              <select
+              <input
+                type="text"
                 value={newOwner}
                 onChange={(e) => setNewOwner(e.target.value)}
+                placeholder="Owner (optional)"
                 aria-label="Owner"
-                className="bg-panel border border-line px-3 py-1.5 rounded text-[12px] text-ink focus:outline-none"
-              >
-                <option value="Custody Operations">Custody Operations</option>
-                <option value="Wealth Tech">Wealth Tech</option>
-                <option value="CISO & InfoSec">CISO &amp; InfoSec</option>
-                <option value="Legal & Regulatory">Legal &amp; Regulatory</option>
-              </select>
+                className="sm:w-44 bg-panel border border-line px-3 py-1.5 rounded text-[12px] text-ink focus:outline-none focus:border-accent"
+              />
               <button
                 type="submit"
                 className="px-3.5 py-1.5 bg-accent text-on-accent text-[12px] font-semibold rounded hover:bg-accent-deep transition-colors shadow-xs"
