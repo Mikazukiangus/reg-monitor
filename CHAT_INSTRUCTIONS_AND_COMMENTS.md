@@ -403,6 +403,7 @@ This document records the full chronological instructions, technical requirement
 
 * **Backfill** (`server.ts`, `db.ts`): each scheduled check (`/api/feeds/poll`, seven times a day) now also takes up to 5 stored notices that have no date and whose page has not been checked (`undatedNotices`), reads each page once for the date it states (Request 31's `pagePublishedDate`) and saves the notice with it. A page that cannot be read is marked `pageDateTried` and not tried again, so dead links don't block the rest. The check's response reports `pageDatesFound`. The 16 older FCA notices should all be dated within a day of the merge.
 * **Verified locally:** type check, build and 366 tests pass, including a test with an in-memory database that a stored notice takes its page's date, a page that cannot be read is marked, and neither page is read again.
+* **Merged (2026-10-10):** the user said "merge to main." Production deployed the commit (healthy). The backfill runs only in scheduled checks, so at the merge 2 of 18 stored FCA notices had dates; the rest are filled in by the next checks (five per check).
 
 ---
 
