@@ -80,6 +80,7 @@ test('bookmarks and views persist safely, rejecting broken storage and handling 
 
 test('history endpoints retrieve archived IDs and report actual scheduled-check results', async () => {
   process.env.VERCEL = '1'; process.env.DATABASE_URL = 'pglite';
+  process.env.CRON_SECRET = 'monitoring-test-secret';
   const { getDb, saveNotices, storedNotices, saveScheduledCheck } = await import('../db.ts');
   const { createApp } = await import('../server.ts');
   const db = (await getDb())!;
@@ -108,5 +109,7 @@ test('history endpoints retrieve archived IDs and report actual scheduled-check 
     assert.equal(checks.lastCompletedAt, '2026-10-10T09:01:00.000Z');
     assert.deepEqual(checks.dateBackfill, { pending: 1, unresolved: 1 });
     assert.equal((await fetch(`${base}/api/feeds/poll`)).status, 401);
+    delete process.env.CRON_SECRET;
+    assert.equal((await fetch(`${base}/api/feeds/poll`)).status, 503);
   } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
 });

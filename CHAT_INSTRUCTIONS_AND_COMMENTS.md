@@ -417,7 +417,7 @@ This document records the full chronological instructions, technical requirement
 * **Freshness:** scheduled checks persist start/completion times and source counts/errors in an additive Postgres table. The public read-only status endpoint and feed disclosure report recorded completion and remaining/unresolved FCA date checks; they do not trigger polling or claim an unrecorded check succeeded.
 * **Layout:** pagination and alert-rule content stay within desktop/tablet/mobile widths. The current Wada plate 267 theme is retained. Vite's path alias now works with ESM without depending on an injected __dirname.
 * **Validation:** 372 tests, type checking and build passed. Local browser checks used the recorded production feed with an in-memory database, exercising archived lookup and check-history routes, empty-filter reloads, KPI pagination, saved views/date entry, persistent bookmarks, both downloaded export formats, both themes, and widths 375, 663 and 1440. Export files each contained 261 notices; excluding key points removed their CSV columns and content.
-* **Delivery:** feature branch `codex/audit-fixes-and-saved-views`; production changes require a separate merge instruction. Deployment status is recorded in the pull request after branch publication.
+* **Delivery:** [PR #1](https://github.com/Mikazukiangus/reg-monitor/pull/1) on feature branch `codex/audit-fixes-and-saved-views`; production changes require a separate merge instruction. Vercel's branch preview stopped with "Resource provisioning failed" before the app build. The initial CI run exposed a regression test depending on the local CRON_SECRET; the test now explicitly supplies a test-only secret and checks both unauthorized and unconfigured responses.
 
 ---
 
