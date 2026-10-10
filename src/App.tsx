@@ -786,8 +786,8 @@ export default function App() {
                     onlySaved={onlySaved} savedCount={bookmarkedIds.size} onToggleSaved={() => setOnlySaved(v => !v)}
                     onApply={applySavedView} onMessage={showToast} />
 
-                  {/* Feed Search & Sort Bar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
+                  {/* Show feed controls directly after the KPI cards on phones and tablets. */}
+                  <div className="order-first lg:order-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
                       <span className="material-symbols-outlined absolute left-3 top-2 text-muted text-lg pointer-events-none" aria-hidden="true">
                         search
