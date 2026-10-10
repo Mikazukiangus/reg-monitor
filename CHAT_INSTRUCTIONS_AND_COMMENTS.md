@@ -432,6 +432,16 @@ This document records the full chronological instructions, technical requirement
 * **Action:** added this as a standing instruction, recorded Request 33's completed merge and production verification, and refreshed the current status below. Future project tasks must update this file before reporting completion.
 * **Validation:** documentation-only change; checked the diff for whitespace errors and consistency with the verified merge, CI, deployment and production responses. No application code changed.
 
+### Request 35: Mobile Filters Directly After the Four Cards (Codex, 2026-10-10)
+
+**User:** "for the mobile view, put the 'filters' near the top after the 4 cards", with a browser comment marking the search/Filters/sort bar at a 535×724 viewport.
+
+* **Change** (`src/App.tsx`): give the existing search, Filters, sort, density and share toolbar the first position in the feed column below the four KPI cards on phones and tablets. At desktop widths (1024px and above), it keeps its existing position below the status and saved-view panels. No duplicate controls were added.
+* **Verified locally:** type checking and the production build pass. Browser checks against the built app with recorded production notices confirm the toolbar is the first visible feed panel at 535×724 and 375×812, directly after the cards; it fits both widths, and the Filters drawer opens and closes. At 1440×900 the toolbar remains below the saved-view controls. No browser warnings or errors. Mobile screenshot saved to `/private/tmp/regsonar-mobile-filters-535.png`; the temporary QA server was stopped after verification.
+* **Delivery:** application change committed as `5cba48ee586c35940a067926a8b5414bd8a47bc0` on `codex/mobile-filters-order`; [PR #2](https://github.com/Mikazukiangus/reg-monitor/pull/2) targets `main` and is awaiting a merge instruction. Production still serves the previously merged layout; this placement change has only been verified locally.
+* **CI and preview:** [GitHub CI](https://github.com/Mikazukiangus/reg-monitor/actions/runs/38053917320) passed on `3dba7f90a5279f8571360279bbb5f39a908d6cb4`, including tests, type checking and build. [Vercel preview](https://vercel.com/carbon-bc04/reg-monitor/FGcCjGuJdr8N9e3WQqmepGZ4h612) for that commit stopped with "Resource provisioning failed" before the app build (deployment `dpl_FGcCjGuJdr8N9e3WQqmepGZ4h612`); deployed preview behavior could not be checked. This status update changes documentation only.
+* **Follow-up found during QA:** the existing Saved views dropdown extends beyond the viewport at 535px. The moved toolbar itself fits; the saved-view panel needs a separate responsive-layout fix.
+
 ---
 
 ## 3. Key Files & Modifications Summary
@@ -463,5 +473,5 @@ This document records the full chronological instructions, technical requirement
 * **API verification:** `/api/health` reports `healthy`; the feed sync, scheduled-check history and exact-ID archived lookup endpoints all return HTTP 200.
 * **Scheduled-check history and FCA dates:** history storage is enabled; no completed check is recorded yet. The latest response reports 12 dates awaiting a page check and one checked without a date. The next scheduled check should create the first history entry; no manual poll or digest was triggered for verification.
 * **Application validation:** all 372 tests passed locally; type checking and build passed. [Final branch CI](https://github.com/Mikazukiangus/reg-monitor/actions/runs/38044480709) passed. Local browser checks covered both themes, responsive layouts, filters, saved views/bookmarks, archived links and both export formats. Production browser checks confirmed the archived FCA dossier, new monitoring controls and scheduled publication labels, with no console warnings or errors.
-* **Current work:** Request 33 is complete and deployed. Request 34 records the standing status-save instruction. Remaining known issues are the external FTC failure and FCA pages still awaiting dates or lacking a discoverable date.
+* **Current work:** Request 35 is implemented and locally verified on `codex/mobile-filters-order`; [PR #2](https://github.com/Mikazukiangus/reg-monitor/pull/2) is open and awaiting merge to `main`. Request 33 is complete and deployed; Request 34 records the standing status-save instruction. Remaining known issues are the external FTC failure, FCA pages still awaiting dates or lacking a discoverable date, and the Saved views dropdown's existing mobile overflow.
 * **Local runtime:** `npm run dev` serves the app and API on `PORT` (default 3000); the temporary audit QA server has been stopped.
