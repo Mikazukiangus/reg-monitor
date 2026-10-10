@@ -2,6 +2,10 @@
 
 This document records the full chronological instructions, technical requirements, error diagnoses, implementation details, and workflow commentary from this project development and maintenance session for **RegSonar APAC & Global Regulatory Intelligence**.
 
+## Standing Instructions
+
+* **Keep this file current:** the user instructed on 2026-10-10, "always save current status into CHAT_INSTRUCTIONS_AND_COMMENTS.md". After every project task, update the request log and current verification status before reporting completion. Record what changed, validation results, the branch/PR/merge and deployment state, remaining issues, and any required next action. Date live observations and distinguish verified results from pending work.
+
 ---
 
 ## 1. Project Overview & Architecture
@@ -417,7 +421,16 @@ This document records the full chronological instructions, technical requirement
 * **Freshness:** scheduled checks persist start/completion times and source counts/errors in an additive Postgres table. The public read-only status endpoint and feed disclosure report recorded completion and remaining/unresolved FCA date checks; they do not trigger polling or claim an unrecorded check succeeded.
 * **Layout:** pagination and alert-rule content stay within desktop/tablet/mobile widths. The current Wada plate 267 theme is retained. Vite's path alias now works with ESM without depending on an injected __dirname.
 * **Validation:** 372 tests, type checking and build passed. Local browser checks used the recorded production feed with an in-memory database, exercising archived lookup and check-history routes, empty-filter reloads, KPI pagination, saved views/date entry, persistent bookmarks, both downloaded export formats, both themes, and widths 375, 663 and 1440. Export files each contained 261 notices; excluding key points removed their CSV columns and content.
-* **Delivery:** [PR #1](https://github.com/Mikazukiangus/reg-monitor/pull/1) on feature branch `codex/audit-fixes-and-saved-views`; production changes require a separate merge instruction. Vercel's branch preview stopped with "Resource provisioning failed" before the app build. The initial CI run exposed a regression test depending on the local CRON_SECRET; the test now explicitly supplies a test-only secret and checks both unauthorized and unconfigured responses.
+* **Delivery:** [PR #1](https://github.com/Mikazukiangus/reg-monitor/pull/1) was developed on feature branch `codex/audit-fixes-and-saved-views`. Vercel's branch previews stopped with "Resource provisioning failed" before the app build. The initial CI run exposed a regression test depending on the local CRON_SECRET; the test now explicitly supplies a test-only secret and checks both unauthorized and unconfigured responses. [GitHub CI passed on the final branch commit](https://github.com/Mikazukiangus/reg-monitor/actions/runs/38044480709).
+* **Merged (2026-10-10):** the user said "merge to main". PR #1 merged as `35928334eacaa6cfb95889a80f06dab59111dc55`; the local checkout was fast-forwarded to `main`. Vercel's automatic production deployment `dpl_636y9wXcHZeQrBNWWsTGQgBgQyD4` is READY on that exact commit.
+* **Production verified (2026-10-10, approximately 12:04 UTC / 20:04 SGT):** `/api/health` reports healthy; `/api/feeds/sync`, `/api/feeds/checks` and `/api/notices/by-id` return HTTP 200. The feed contains 284 notices, including 20 future publications labelled "Scheduled for 13 Oct 2026". The archived FCA "Building a stronger UK investment culture" dossier opens via its shared link; the new saved-view/date controls are present, and the browser console has no warnings or errors. The scheduled-check history endpoint is enabled but has no recorded completed run yet; it reports 12 FCA dates awaiting a page check and one checked without a date. Source status remains 28 of 29 operational; FTC still returns HTTP 404.
+
+### Request 34: Always Save the Current Project Status (Codex, 2026-10-10)
+
+**User:** "always save current status into CHAT_INSTRUCTIONS_AND_COMMENTS.md"
+
+* **Action:** added this as a standing instruction, recorded Request 33's completed merge and production verification, and refreshed the current status below. Future project tasks must update this file before reporting completion.
+* **Validation:** documentation-only change; checked the diff for whitespace errors and consistency with the verified merge, CI, deployment and production responses. No application code changed.
 
 ---
 
@@ -444,9 +457,11 @@ This document records the full chronological instructions, technical requirement
 
 ## 4. Verification & Health Status
 
-* **Endpoint Ingestion Status (2026-10-06):** Production (Vercel): 7 of 7 sources up, 19 notices. Locally: 6 of 7, with UK FCA Degraded (HTTP 403, Cloudflare challenge).
-* **API Health Check (`/api/health`):** `healthy` (HTTP 200).
-* **Build Status:** `vite build` passes.
-* **Lint Status:** `tsc --noEmit` exits with 0 errors.
-* **Git Synchronization:** All commits synced to `main` at `https://github.com/Mikazukiangus/reg-monitor.git`.
-* **Runtime Status:** Production runs on Vercel (`https://reg-monitor-beta.vercel.app`). Locally, `npm run dev` serves the app and API on `PORT` (default 3000).
+* **Latest application delivery (2026-10-10):** [PR #1](https://github.com/Mikazukiangus/reg-monitor/pull/1) merged into `main` as `35928334eacaa6cfb95889a80f06dab59111dc55`; the local checkout matches the merged application commit. Request 34 updates documentation only.
+* **Production deployment:** Vercel deployment `dpl_636y9wXcHZeQrBNWWsTGQgBgQyD4` is READY on the merged application commit. Live at [RegSonar](https://reg-monitor-beta.vercel.app). Automatic branch previews failed with "Resource provisioning failed"; the production deployment succeeded.
+* **Latest live observations (2026-10-10, approximately 12:04 UTC / 20:04 SGT):** 284 notices; 28 of 29 sources operational. FTC remains degraded with upstream HTTP 404. These counts are a dated snapshot and can change after refreshes.
+* **API verification:** `/api/health` reports `healthy`; the feed sync, scheduled-check history and exact-ID archived lookup endpoints all return HTTP 200.
+* **Scheduled-check history and FCA dates:** history storage is enabled; no completed check is recorded yet. The latest response reports 12 dates awaiting a page check and one checked without a date. The next scheduled check should create the first history entry; no manual poll or digest was triggered for verification.
+* **Application validation:** all 372 tests passed locally; type checking and build passed. [Final branch CI](https://github.com/Mikazukiangus/reg-monitor/actions/runs/38044480709) passed. Local browser checks covered both themes, responsive layouts, filters, saved views/bookmarks, archived links and both export formats. Production browser checks confirmed the archived FCA dossier, new monitoring controls and scheduled publication labels, with no console warnings or errors.
+* **Current work:** Request 33 is complete and deployed. Request 34 records the standing status-save instruction. Remaining known issues are the external FTC failure and FCA pages still awaiting dates or lacking a discoverable date.
+* **Local runtime:** `npm run dev` serves the app and API on `PORT` (default 3000); the temporary audit QA server has been stopped.
