@@ -397,6 +397,13 @@ This document records the full chronological instructions, technical requirement
 * **Deployment:** both branch preview builds stopped with Vercel's "Resource provisioning failed"; the production build from main worked.
 * **Merged (2026-10-10):** the user said "merge to main." On production: 262 notices, none without a date; the three live FCA notices now carry the dates their pages state (6–8 Oct); no "Source" summaries; ESMA's call for evidence shows "Comments close: 2027-01-15"; formats are Announcements 189, Enforcement 32, Consultations 30, Circulars 7, Guidelines 3, Technical Standards 1, and the filters show them; `/api/health` is healthy; FTC still 404. Older FCA notices kept only in the history (16 of 18) still have no date, because only notices in the live feed are read again.
 
+### Request 32: Dates for Older FCA Notices (Claude Code, 2026-10-10)
+
+**User:** "add the FCA backfill"
+
+* **Backfill** (`server.ts`, `db.ts`): each scheduled check (`/api/feeds/poll`, seven times a day) now also takes up to 5 stored notices that have no date and whose page has not been checked (`undatedNotices`), reads each page once for the date it states (Request 31's `pagePublishedDate`) and saves the notice with it. A page that cannot be read is marked `pageDateTried` and not tried again, so dead links don't block the rest. The check's response reports `pageDatesFound`. The 16 older FCA notices should all be dated within a day of the merge.
+* **Verified locally:** type check, build and 366 tests pass, including a test with an in-memory database that a stored notice takes its page's date, a page that cannot be read is marked, and neither page is read again.
+
 ---
 
 ## 3. Key Files & Modifications Summary

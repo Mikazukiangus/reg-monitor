@@ -9,7 +9,7 @@ import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
 import { assessImpact, severityOf } from './src/lib/impact.js';
 import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
-import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices } from './db.js';
+import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, type StoredNotice } from './db.js';
 import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
 import { rateLimit, reuseFor } from './src/lib/throttle.js';
@@ -2533,18 +2533,47 @@ async function pollSource(source: (typeof SOURCES)[number], until: number): Prom
   };
 }
 
+// Pages of undated stored notices read on each check for the date they state
+const POLL_DATE_BACKFILL = 5;
+
+// Stored notices that came without a date (the FCA's feed gives none) and
+// were stored before pages were read for one: read each page once for the
+// date it states. A page that cannot be read is marked and not tried again.
+async function backfillPageDates(until: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  let dated = 0;
+  for (const stored of await undatedNotices(db, POLL_DATE_BACKFILL)) {
+    if (Date.now() >= until) break;
+    const notice = stored as unknown as NormalizedNotice;
+    keyPointsCache.delete(notice.id);
+    const keyPoints = await keyPointsFor(notice);
+    const updated = keyPoints ? withKeyPoints(notice, keyPoints) : { ...notice, pageDateTried: true };
+    if (updated.publishedAt) dated++;
+    const { archived: _a, related: _r, ...row } = updated as NormalizedNotice & { archived?: unknown; related?: unknown };
+    await saveNotices(db, [row as StoredNotice]);
+  }
+  return dated;
+}
+
 // Check every source and store what it lists in the history
-export async function pollSources(): Promise<{ results: PollResult[]; failed: { name: string; error: string }[] }> {
+export async function pollSources(): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number }> {
   const sources = SOURCES.filter(s => s.inDigest !== false);
   const until = Date.now() + POLL_FETCH_WINDOW_MS;
-  const settled = await Promise.allSettled(sources.map(s => pollSource(s, until)));
+  const [settled, pageDatesFound] = await Promise.all([
+    Promise.allSettled(sources.map(s => pollSource(s, until))),
+    backfillPageDates(until).catch((err: any) => {
+      console.log(`[RegSonar History] Could not backfill page dates: ${err?.message}`);
+      return 0;
+    })
+  ]);
   const results: PollResult[] = [];
   const failed: { name: string; error: string }[] = [];
   settled.forEach((r, i) => {
     if (r.status === 'fulfilled') results.push(r.value);
     else failed.push({ name: sources[i].name, error: describeError(r.reason) });
   });
-  return { results, failed };
+  return { results, failed, pageDatesFound };
 }
 
 async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
@@ -2744,7 +2773,7 @@ export function createApp() {
     res.set('Cache-Control', 'no-store');
     if (!cronAuthorized(req, res, 'scheduled checks are')) return;
     try {
-      const { results, failed } = await pollSources();
+      const { results, failed, pageDatesFound } = await pollSources();
       const added = results.reduce((sum, r) => sum + r.added, 0);
       console.log(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
       const warmed = await fetch(`${siteUrl()}/api/feeds/sync`, { signal: AbortSignal.timeout(30_000) })
@@ -2753,6 +2782,7 @@ export function createApp() {
       res.json({
         success: true,
         added,
+        pageDatesFound,
         feedRefreshed: warmed,
         sources: results.map(({ notices, ...r }) => r),
         failed

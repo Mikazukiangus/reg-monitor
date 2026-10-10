@@ -14,10 +14,13 @@ const byUrl = new Map(Object.entries(fixtures).map(([url, f]) => [withoutLimit(u
 
 const requested: string[] = [];
 let finraStatus = 200;
+// Article pages served to the date backfill test, by URL
+const pages = new Map<string, string>();
 
 globalThis.fetch = (async (input: any) => {
   const url = String(input instanceof Request ? input.url : input);
   requested.push(url);
+  if (pages.has(url)) return new Response(pages.get(url), { status: 200, headers: { 'content-type': 'text/html' } });
   if (url.includes('finra.org') && finraStatus !== 200) return new Response('', { status: finraStatus });
   const fixture = byUrl.get(withoutLimit(url));
   // Documents read for key points were not recorded
@@ -51,4 +54,29 @@ test('after an HTTP 429 the site is not asked again for a while', async () => {
   finraStatus = 200;
   await assert.rejects(finra.fetch(), /not asking again until/);
   assert.equal(requested.filter(u => u.includes('finra.org')).length, before);
+});
+
+test('a stored notice without a date takes the date its page states, once', async () => {
+  const { getDb, saveNotices, storedNotices } = await import('../db.ts');
+  const db = (await getDb())!;
+  const body = '<p>' + 'The FCA has set out clearer expectations for asset managers about long-term investments. '.repeat(6) + '</p>';
+  const dated = 'https://www.fca.org.uk/news/press-releases/dated-example';
+  const missing = 'https://www.fca.org.uk/news/press-releases/missing-example';
+  pages.set(dated, `<html><head><meta property="article:published_time" content="2026-09-15T09:00:00Z"></head><body><article><h1>Dated</h1>${body}</article></body></html>`);
+  const base = { regulator: 'UK FCA', jurisdictionCode: 'UK_EU', format: 'Announcements', type: 'ANNOUNCEMENTS', jurisdiction: 'UNITED KINGDOM',
+    impactScore: 5, issuedTimeAgo: 'Recently', tags: [], sector: 'Capital Markets & Listings', severity: 'info',
+    keyPoints: { points: ['A point.'], facts: [], refs: [], method: 'extractive' } };
+  await saveNotices(db, [
+    { ...base, id: 'fca-dated-example', title: 'Dated example', dossierUrl: dated },
+    { ...base, id: 'fca-missing-example', title: 'Missing example', dossierUrl: missing }
+  ]);
+  const first = await pollSources();
+  assert.equal(first.pageDatesFound, 1);
+  const stored = await storedNotices(db, ['fca-dated-example', 'fca-missing-example']);
+  assert.equal(stored.get('fca-dated-example')?.publishedAt, '2026-09-15T09:00:00.000Z');
+  assert.equal(stored.get('fca-missing-example')?.publishedAt, undefined);
+  assert.equal(stored.get('fca-missing-example')?.pageDateTried, true);
+  requested.length = 0;
+  await pollSources();
+  assert.ok(!requested.includes(dated) && !requested.includes(missing), 'pages are not read again');
 });

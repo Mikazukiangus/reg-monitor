@@ -142,6 +142,19 @@ export async function consultationCandidates(db: Db, limit = 2000): Promise<Stor
   return rows.map(rowToNotice);
 }
 
+// Stored notices with no date whose page has not yet been checked for one
+// (the FCA's feed gives none), oldest seen first
+export async function undatedNotices(db: Db, limit: number): Promise<StoredNotice[]> {
+  const rows = await db.query(
+    `SELECT data FROM notices
+     WHERE published_at IS NULL AND data ? 'dossierUrl' AND NOT data ? 'pageDateTried'
+       AND NOT COALESCE(data->'keyPoints' ? 'published', false)
+     ORDER BY last_seen_at LIMIT $1`,
+    [limit]
+  );
+  return rows.map(rowToNotice);
+}
+
 export async function archiveStats(db: Db): Promise<{ count: number; since: string | null }> {
   const [row] = await db.query<{ count: string; since: Date | string | null }>(`SELECT count(*) AS count, min(published_at) AS since FROM notices`);
   return { count: Number(row?.count || 0), since: row?.since ? new Date(row.since).toISOString() : null };
