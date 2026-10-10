@@ -110,6 +110,8 @@ export interface RegulatoryNotice {
   tagging?: TagReasons;
   severity: UrgencySeverity;
   bookmarked?: boolean;
+  // A bookmark snapshot saved in this browser, rather than a server refresh
+  savedCopy?: boolean;
   dossierUrl?: string;
   isLiveFeed?: boolean;
   // ISO timestamp from the source

@@ -25,6 +25,14 @@ CREATE TABLE IF NOT EXISTS notices (
 );
 CREATE INDEX IF NOT EXISTS notices_published_idx ON notices (published_at DESC);
 CREATE INDEX IF NOT EXISTS notices_search_idx ON notices USING gin (search);
+CREATE TABLE IF NOT EXISTS scheduled_checks (
+  id text PRIMARY KEY,
+  started_at timestamptz NOT NULL,
+  completed_at timestamptz,
+  status text NOT NULL,
+  summary jsonb
+);
+CREATE INDEX IF NOT EXISTS scheduled_checks_started_idx ON scheduled_checks (started_at DESC);
 `;
 
 let dbPromise: Promise<Db | null> | null = null;
@@ -97,9 +105,13 @@ export async function saveNotices(db: Db, notices: StoredNotice[]): Promise<void
          title = EXCLUDED.title,
          published_at = COALESCE(EXCLUDED.published_at, notices.published_at),
          last_seen_at = now(),
-         data = CASE
+         data = (CASE
            WHEN EXCLUDED.data ? 'keyPoints' OR NOT notices.data ? 'keyPoints' THEN EXCLUDED.data
            ELSE EXCLUDED.data || jsonb_build_object('keyPoints', notices.data->'keyPoints')
+         END) || CASE
+           WHEN EXCLUDED.published_at IS NULL AND notices.published_at IS NOT NULL
+             THEN jsonb_build_object('publishedAt', notices.data->>'publishedAt')
+           ELSE '{}'::jsonb
          END`,
       values
     );
@@ -166,4 +178,39 @@ export async function storedNotices(db: Db, ids: string[]): Promise<Map<string, 
   if (ids.length === 0) return new Map();
   const rows = await db.query(`SELECT data FROM notices WHERE id = ANY($1::text[])`, [ids]);
   return new Map(rows.map(rowToNotice).map((n: StoredNotice) => [n.id, n]));
+}
+
+export interface CheckSummary {
+  sources: { name: string; read: number; added: number; withoutKeyPoints: number }[];
+  failed: { name: string; error: string }[];
+  pageDatesFound: number;
+}
+export interface ScheduledCheck {
+  id: string;
+  startedAt: string;
+  completedAt: string | null;
+  status: 'running' | 'completed' | 'failed';
+  summary: CheckSummary | null;
+}
+export async function saveScheduledCheck(db: Db, check: ScheduledCheck): Promise<void> {
+  await db.query(`INSERT INTO scheduled_checks (id, started_at, completed_at, status, summary)
+    VALUES ($1, $2, $3, $4, $5::jsonb)
+    ON CONFLICT (id) DO UPDATE SET completed_at = EXCLUDED.completed_at, status = EXCLUDED.status, summary = EXCLUDED.summary`,
+  [check.id, check.startedAt, check.completedAt, check.status, JSON.stringify(check.summary)]);
+}
+export async function scheduledCheckStatus(db: Db) {
+  const rows = await db.query(`SELECT id, started_at, completed_at, status, summary FROM scheduled_checks ORDER BY started_at DESC LIMIT 1`);
+  const completed = await db.query(`SELECT completed_at FROM scheduled_checks WHERE status = 'completed' ORDER BY completed_at DESC LIMIT 1`);
+  const [counts] = await db.query(`SELECT
+    count(*) FILTER (WHERE NOT data ? 'pageDateTried' AND NOT COALESCE(data->'keyPoints' ? 'published', false)) AS pending,
+    count(*) FILTER (WHERE data ? 'pageDateTried' OR COALESCE(data->'keyPoints' ? 'published', false)) AS unresolved
+    FROM notices WHERE published_at IS NULL AND data ? 'dossierUrl' AND regulator = 'UK FCA'`);
+  const row = rows[0];
+  return {
+    latest: row ? { id: row.id, startedAt: new Date(row.started_at).toISOString(),
+      completedAt: row.completed_at ? new Date(row.completed_at).toISOString() : null,
+      status: row.status, summary: row.summary } : null,
+    lastCompletedAt: completed[0]?.completed_at ? new Date(completed[0].completed_at).toISOString() : null,
+    dateBackfill: { pending: Number(counts?.pending || 0), unresolved: Number(counts?.unresolved || 0) }
+  };
 }

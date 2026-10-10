@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDialog } from '../useDialog';
 import { RegulatoryNotice } from '../../types/regulatory';
+import { buildNoticeCsv, exportNotice } from '../../lib/exports';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -18,26 +19,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   const dialogRef = useDialog<HTMLDivElement>(isOpen, onClose);
 
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>(initialFormat);
-  const [includeAI, setIncludeAI] = useState(true);
+  const [includeKeyPoints, setIncludeKeyPoints] = useState(true);
+  useEffect(() => {
+    if (isOpen) setExportFormat(initialFormat);
+  }, [isOpen, initialFormat]);
 
   const handleDownload = () => {
     if (exportFormat === 'csv') {
-      const headers = ['ID', 'Reference', 'Regulator', 'Jurisdiction', 'Type', 'Impact Score', 'Published', 'Date in Source', 'Sector', 'Title', 'Source URL'];
-      const rows = notices.map(n => [
-        `"${n.id}"`,
-        `"${n.ref}"`,
-        `"${n.regulator}"`,
-        `"${n.jurisdiction}"`,
-        `"${n.type}"`,
-        n.impactScore,
-        `"${n.publishedAt || ''}"`,
-        `"${n.deadlineDate || ''}"`,
-        `"${n.sector}"`,
-        `"${n.title.replace(/"/g, '""')}"`,
-        `"${n.dossierUrl || ''}"`
-      ]);
-
-      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const csvContent = buildNoticeCsv(notices, includeKeyPoints);
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -46,22 +35,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
       link.click();
       URL.revokeObjectURL(url);
     } else {
-      const exportData = notices.map(n => ({
-        id: n.id,
-        ref: n.ref,
-        title: n.title,
-        regulator: n.regulator,
-        jurisdiction: n.jurisdiction,
-        type: n.type,
-        impactScore: n.impactScore,
-        publishedAt: n.publishedAt,
-        deadlineDate: n.deadlineDate,
-        sourceUrl: n.dossierUrl,
-        sector: n.sector,
-        tags: n.tags,
-        ...(includeAI && n.keyPoints ? { keyPoints: n.keyPoints } : {}),
-        summary: n.summary
-      }));
+      const exportData = notices.map(n => exportNotice(n, includeKeyPoints));
 
       const jsonContent = JSON.stringify(exportData, null, 2);
       const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
@@ -144,8 +118,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={includeAI}
-                onChange={(e) => setIncludeAI(e.target.checked)}
+                checked={includeKeyPoints}
+                onChange={(e) => setIncludeKeyPoints(e.target.checked)}
                 className="w-4 h-4 rounded text-accent bg-panel border-line-strong accent-accent"
               />
               <span className="text-ink text-[12px] font-medium">

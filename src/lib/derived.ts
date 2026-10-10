@@ -1,8 +1,26 @@
 // Dashboard data computed from live notices, so every figure traces back to a
 // source document.
-import { AlertNotification, DeadlineItem, RegulatoryNotice } from '../types/regulatory';
+import type { AlertNotification, DeadlineItem, RegulatoryNotice } from '../types/regulatory';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Future publication dates can be announced before the issue is published.
+export function publicationTime(iso: string | undefined, now = new Date()): string {
+  if (!iso || isNaN(new Date(iso).getTime())) return 'Date unavailable';
+  const diff = now.getTime() - new Date(iso).getTime();
+  if (diff < 0) return `Scheduled for ${formatDate(iso.slice(0, 10))}`;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  return hours < 24 ? `${hours}h ago` : `${Math.floor(hours / 24)}d ago`;
+}
+
+export function publishedInLastDays(iso: string | undefined, days: number, now = new Date()): boolean {
+  if (!iso) return false;
+  const age = now.getTime() - new Date(iso).getTime();
+  return age >= 0 && age <= days * DAY_MS;
+}
 
 export function daysUntil(isoDate: string, now = new Date()): number {
   const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
@@ -54,7 +72,7 @@ export function deriveNotifications(notices: RegulatoryNotice[], now = new Date(
       regulator: n.regulator,
       time: n.issuedTimeAgo,
       severity: n.severity,
-      unread: !!n.publishedAt && now.getTime() - new Date(n.publishedAt).getTime() < DAY_MS,
+      unread: publishedInLastDays(n.publishedAt, 1, now),
       linkId: n.id
     }));
 }

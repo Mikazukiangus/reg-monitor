@@ -133,7 +133,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-accent text-xl" aria-hidden="true">mail</span>
-            <h2 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">Daily email digest</h2>
+            <h2 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink break-words">Daily email digest</h2>
           </div>
           {digest && (
             <span
@@ -180,9 +180,9 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
             key={rule.id}
             className="p-5 bg-panel border border-line rounded-xl hover:bg-panel-raised transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
           >
-            <div className="space-y-2 flex-1">
-              <div className="flex items-center gap-3">
-                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink">
+            <div className="space-y-2 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-3">
+                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink break-words">
                   {rule.name}
                 </h3>
                 <span
@@ -209,7 +209,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
 
                 <span className="text-[11px] font-['JetBrains_Mono'] text-muted ml-2">Keywords:</span>
                 {rule.keywords.map(k => (
-                  <span key={k} className="px-2 py-0.5 bg-page text-ink-soft border border-line rounded text-[10px] font-['JetBrains_Mono'] font-medium">
+                  <span key={k} className="px-2 py-0.5 bg-page text-ink-soft border border-line rounded text-[10px] font-['JetBrains_Mono'] font-medium break-all">
                     {k}
                   </span>
                 ))}
@@ -244,7 +244,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
               <button
                 onClick={() => handleToggleRule(rule.id)}
                 className={`px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${

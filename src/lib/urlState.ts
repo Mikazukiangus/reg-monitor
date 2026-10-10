@@ -5,6 +5,8 @@ import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regula
 
 export type SortOption = 'Highest Impact Score' | 'Most Recent First' | 'Consultation Deadline';
 export type TabId = 'feed' | 'radar' | 'horizon' | 'enforcement' | 'alert-rules';
+export const HEADER_JURISDICTIONS = ['All', 'Singapore MAS', 'Malaysia', 'Hong Kong HKMA', 'Australia Japan', 'Korea China', 'UK US Global'] as const;
+export type HeaderJurisdiction = typeof HEADER_JURISDICTIONS[number];
 
 export const ALL_SEVERITIES: UrgencySeverity[] = ['critical', 'high', 'info'];
 export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
@@ -41,6 +43,10 @@ export interface ViewState {
   sort: SortOption;
   onlyNew: boolean;
   noticeId: string | null;
+  headerJurisdiction: HeaderJurisdiction;
+  dateFrom: string;
+  dateTo: string;
+  onlySaved: boolean;
 }
 
 export function defaultViewState(): ViewState {
@@ -54,11 +60,20 @@ export function defaultViewState(): ViewState {
     format: null,
     sort: 'Most Recent First',
     onlyNew: false,
-    noticeId: null
+    noticeId: null,
+    headerJurisdiction: 'All',
+    dateFrom: '',
+    dateTo: '',
+    onlySaved: false
   };
 }
 
-const list = (value: string | null) => (value ? value.split(',').filter(Boolean) : null);
+const list = (value: string | null) => (value === null ? null : value.split(',').filter(Boolean));
+const validDate = (value: string | null): string => {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+  const date = new Date(`${value}T00:00:00Z`);
+  return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value ? value : '';
+};
 
 export function parseViewState(search: string): ViewState {
   const p = new URLSearchParams(search);
@@ -86,6 +101,11 @@ export function parseViewState(search: string): ViewState {
 
   state.onlyNew = p.get('new') === '1';
   state.noticeId = p.get('notice');
+  const scope = p.get('scope') as HeaderJurisdiction;
+  if (HEADER_JURISDICTIONS.includes(scope)) state.headerJurisdiction = scope;
+  state.dateFrom = validDate(p.get('from'));
+  state.dateTo = validDate(p.get('to'));
+  state.onlySaved = p.get('saved') === '1';
   return state;
 }
 
@@ -103,6 +123,10 @@ export function serializeViewState(state: ViewState): string {
   if (state.sort !== 'Most Recent First') p.set('sort', SORT_KEYS[state.sort]);
   if (state.onlyNew) p.set('new', '1');
   if (state.noticeId) p.set('notice', state.noticeId);
+  if (state.headerJurisdiction !== 'All') p.set('scope', state.headerJurisdiction);
+  if (state.dateFrom) p.set('from', state.dateFrom);
+  if (state.dateTo) p.set('to', state.dateTo);
+  if (state.onlySaved) p.set('saved', '1');
   const query = p.toString();
   return query ? `?${query}` : '';
 }

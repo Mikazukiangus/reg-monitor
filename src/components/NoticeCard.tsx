@@ -141,16 +141,16 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             {notice.ref}
           </span>
 
-          {notice.archived && (
+          {(notice.savedCopy || notice.archived) && (
             <span
               className="px-1.5 py-0.5 rounded bg-wash text-ink-soft border border-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider"
-              title="Stored when RegSonar read this source earlier; no longer among the source's latest items"
+              title={notice.savedCopy ? 'Copy saved on this device; open the source to check for updates' : "Stored when RegSonar read this source earlier; no longer among the source's latest items"}
             >
-              From history
+              {notice.savedCopy ? 'Saved copy' : 'From history'}
             </span>
           )}
 
-          {notice.isLiveFeed && (
+          {notice.isLiveFeed && !notice.savedCopy && (
             <span className="px-1.5 py-0.5 rounded bg-green-tint text-green border border-green-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-green-dot animate-pulse"></span>
               Live Feed

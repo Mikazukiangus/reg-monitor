@@ -405,6 +405,20 @@ This document records the full chronological instructions, technical requirement
 * **Verified locally:** type check, build and 366 tests pass, including a test with an in-memory database that a stored notice takes its page's date, a page that cannot be read is marked, and neither page is read again.
 * **Merged (2026-10-10):** the user said "merge to main." Production deployed the commit (healthy). The backfill runs only in scheduled checks, so at the merge 2 of 18 stored FCA notices had dates; the rest are filled in by the next checks (five per check).
 
+
+### Request 33: Bug Fixes and Saved Monitoring Views (Codex, 2026-10-10)
+
+**User:** asked to suggest improvements and check for bugs, then "ok proceed" after the audit.
+
+* **Feed and links:** reset pagination for every filter change and clamp it when results shrink; show a bounded set of page links. Empty severity selections now mean no notices; empty facets survive URL round trips. Shared views retain the header jurisdiction and publication date range. Archived dossier links use the new exact-ID history lookup instead of failing when the notice leaves the latest feed.
+* **Saved monitoring:** bookmarks persist as notice snapshots on this device, including older notices; the Saved notices filter refreshes stored copies from history where available and labels local snapshots. Named saved views retain search, jurisdiction, sector, severity, format, sort and date filters. The controls explain that date ranges apply to loaded/search results, and preferences are local to this browser.
+* **Dates:** future publications say "Scheduled for [date]" and do not count toward Last 7 Days or unread alerts. Database refreshes preserve a backfilled publication date in the stored JSON as well as the date column.
+* **Exports:** opening JSON Feed now selects JSON. Both formats honor the optional key-point checkbox and include all sectors, date kinds/quotes and impact-score reasons. CSV escapes every string, supports Unicode and quoted multiline text, and treats formula-like source text as text.
+* **Freshness:** scheduled checks persist start/completion times and source counts/errors in an additive Postgres table. The public read-only status endpoint and feed disclosure report recorded completion and remaining/unresolved FCA date checks; they do not trigger polling or claim an unrecorded check succeeded.
+* **Layout:** pagination and alert-rule content stay within desktop/tablet/mobile widths. The current Wada plate 267 theme is retained. Vite's path alias now works with ESM without depending on an injected __dirname.
+* **Validation:** 372 tests, type checking and build passed. Local browser checks used the recorded production feed with an in-memory database, exercising archived lookup and check-history routes, empty-filter reloads, KPI pagination, saved views/date entry, persistent bookmarks, both downloaded export formats, both themes, and widths 375, 663 and 1440. Export files each contained 261 notices; excluding key points removed their CSV columns and content.
+* **Delivery:** feature branch `codex/audit-fixes-and-saved-views`; production changes require a separate merge instruction. Deployment status is recorded in the pull request after branch publication.
+
 ---
 
 ## 3. Key Files & Modifications Summary
