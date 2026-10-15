@@ -102,6 +102,8 @@ A visit refreshes each source's newest 3 or 4 items, so a regulator that publish
 
 Most feeds only list their latest 10 to 50 items, so without a store older notices drop out of view. When the Vercel project has a Postgres database (Neon, added in the project's Storage tab, which sets `DATABASE_URL`), the server saves every notice it reads, with its key points, after each successful refresh. The feed then also shows notices from the last 30 days that are no longer in the live feeds, marked "From history", and the search box searches the whole history by title, summary and key points. Without a database the site works from the live feeds alone.
 
+The database is connected to Production only. Branch preview deployments have no database: they show the live feeds as read from Vercel's Hong Kong region, without history or scheduled-check results, the same as local development. This is deliberate, for two reasons. Every refresh saves notices, so a preview with production's database would write a branch's untested results into the history. And Neon's Free plan allows 10 database branches per project, so a database copy for each preview filled the limit within about a day and stopped every preview from deploying ("Resource provisioning failed", October 2026).
+
 ## Other things that use the same data
 
 - **Status checks:** every 5 minutes, each source gets a single request to see whether it is up, slow, or blocked by a firewall or maintenance page. This feeds the "sources up" count.
