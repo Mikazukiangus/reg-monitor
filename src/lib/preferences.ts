@@ -1,5 +1,6 @@
 import type { RegulatoryNotice } from '../types/regulatory';
 import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
+import { withCurrentSectorNames } from './tagging';
 
 export interface SavedView { id: string; name: string; query: string }
 interface StorageLike { getItem(key: string): string | null; setItem(key: string, value: string): void }
@@ -17,7 +18,7 @@ function write(key: string, value: unknown[], storage?: StorageLike): boolean {
   catch { return false; }
 }
 export function readBookmarks(storage?: StorageLike): RegulatoryNotice[] {
-  return read(BOOKMARKS_KEY, storage).filter((n: any): n is RegulatoryNotice =>
+  return read(BOOKMARKS_KEY, storage).map(withCurrentSectorNames).filter((n: any): n is RegulatoryNotice =>
     n && typeof n.id === 'string' && typeof n.title === 'string' && typeof n.regulator === 'string' &&
     ALL_JURISDICTIONS.includes(n.jurisdictionCode) && Array.isArray(n.tags) && n.tags.every((t: unknown) => typeof t === 'string') &&
     n.sector in SECTOR_KEYS && (!n.sectors || (Array.isArray(n.sectors) && n.sectors.every((t: string) => t in SECTOR_KEYS))) &&

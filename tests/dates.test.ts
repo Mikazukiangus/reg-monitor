@@ -212,7 +212,7 @@ test('a notice from a feed without dates takes the date its page states', () => 
 test('a link-only description from a stored copy is dropped', () => {
   const n = fromArchive({
     id: 'ca-gov-x', title: 'Governor signs AI law', regulator: 'California Governor', type: 'NEWS', summary: 'Source',
-    jurisdiction: 'UNITED STATES (CALIFORNIA)', jurisdictionCode: 'US', impactScore: 5, tags: [], sector: 'AI, Cyber & Tech Risk', format: 'Circulars',
+    jurisdiction: 'UNITED STATES (CALIFORNIA)', jurisdictionCode: 'US', impactScore: 5, tags: [], sector: 'AI, Data Privacy, Cyber & Tech Risk', format: 'Circulars',
     severity: 'info', dossierUrl: 'https://www.gov.ca.gov/x', publishedAt: '2026-09-30T00:00:00.000Z'
   });
   assert.equal(n.summary, undefined);

@@ -16,7 +16,7 @@ export const SECTOR_KEYS: Record<SectorDomain, string> = {
   'Funds & Asset Management': 'funds',
   'Insurance & Pensions': 'insurance',
   'FinTech, Payments & Digital Assets': 'fintech',
-  'AI, Cyber & Tech Risk': 'tech',
+  'AI, Data Privacy, Cyber & Tech Risk': 'tech',
   'ESG & Sustainability': 'esg',
   'AML/CFT & Financial Crime': 'aml',
   'Conduct & Consumer Protection': 'conduct',

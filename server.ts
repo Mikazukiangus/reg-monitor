@@ -6,7 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { summarize, extractArticleText, pagePublishedDate, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
-import { classifySectors, classifyFormat, SECTORS, SPEECH } from './src/lib/tagging.js';
+import { classifySectors, classifyFormat, RENAMED_SECTORS, SECTORS, SPEECH } from './src/lib/tagging.js';
 import { assessImpact, severityOf } from './src/lib/impact.js';
 import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, saveScheduledCheck, scheduledCheckStatus, type StoredNotice } from './db.js';
@@ -78,8 +78,8 @@ const getRelativeTime = publicationTime;
 const sectorOf = (text: string): SectorDomain => classifySectors({ title: text }).sectors[0];
 const formatOf = (type: string, title: string): InstrumentFormat => classifyFormat(type, title).format;
 
-// Sector names used before October 2026, still in older stored copies
-const LEGACY_SECTORS = new Set(['FinTech & Digital Assets', 'Banking & Capital Markets', 'AI Governance & Ethics', 'AML/CFT & Sanctions']);
+// Older sector names, still in copies stored before they changed
+const LEGACY_SECTORS = new Set(['FinTech & Digital Assets', 'Banking & Capital Markets', 'AI Governance & Ethics', 'AML/CFT & Sanctions', ...RENAMED_SECTORS.keys()]);
 
 // Set a notice's sectors from its title, summary and key points, and record
 // why. Run on every notice, including stored ones, so a rule change applies

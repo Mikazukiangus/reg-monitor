@@ -15,13 +15,38 @@ export const SECTORS: SectorDomain[] = [
   'Funds & Asset Management',
   'Insurance & Pensions',
   'FinTech, Payments & Digital Assets',
-  'AI, Cyber & Tech Risk',
+  'AI, Data Privacy, Cyber & Tech Risk',
   'ESG & Sustainability',
   'AML/CFT & Financial Crime',
   'Conduct & Consumer Protection',
   'Monetary & Financial Stability',
   'General & Institutional'
 ];
+
+// Sectors renamed since, by their old name. Copies saved before a rename still
+// carry the old one: tags in the stored history, and bookmarks and the offline
+// copy of the feed on a device.
+export const RENAMED_SECTORS = new Map<string, SectorDomain>([
+  ['AI, Cyber & Tech Risk', 'AI, Data Privacy, Cyber & Tech Risk']
+]);
+const currentName = <T,>(sector: T) => (typeof sector === 'string' && RENAMED_SECTORS.get(sector)) || sector;
+
+// A saved notice with any renamed sector under its current name, including the
+// words recorded for it ("Why these tags?")
+export function withCurrentSectorNames<T>(notice: T): T {
+  if (!notice || typeof notice !== 'object') return notice;
+  const n = notice as Record<string, any>;
+  const reasons = n.tagging?.sectors;
+  return {
+    ...n,
+    sector: currentName(n.sector),
+    ...(Array.isArray(n.sectors) ? { sectors: n.sectors.map(currentName) } : {}),
+    ...(Array.isArray(n.tags) ? { tags: n.tags.map(currentName) } : {}),
+    ...(reasons && typeof reasons === 'object'
+      ? { tagging: { ...n.tagging, sectors: Object.fromEntries(Object.entries(reasons).map(([s, words]) => [currentName(s), words])) } }
+      : {})
+  } as T;
+}
 
 // Matched case-insensitively unless the pattern is listed in CASE_SENSITIVE
 const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, RegExp[]> = {
@@ -69,7 +94,7 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     /\bdigital (currenc\w+|money|bonds?)\b/, /\bopen banking\b/, /\bcrowdfunding\b/, /\bremote on-boarding\b/,
     /\b(digital|financial) innovation\b/
   ],
-  'AI, Cyber & Tech Risk': [
+  'AI, Data Privacy, Cyber & Tech Risk': [
     /\bartificial intelligence\b/, /\bAI\b/, /\bmachine learning\b/, /\bgenerative\b/, /\balgorithmic\b/, /\bcyber\w*\b/,
     /\btechnology risk\b/, /\btechnology resilience\b/, /\boperational resilience\b/, /\boutsourcing\b/,
     /\bthird-party risk\b/, /\bcloud\b/, /\bincident reporting\b/, /\bquantum\b/, /\bict\b/,
@@ -148,7 +173,7 @@ const PRIVACY_REGULATORS = /^(ICO|EDPB|PDPC|JPDP|OAIC|PPC|PIPC|CalPrivacy)\b/;
 // industry it applies to: "Guidelines on Environmental Risk Management for
 // Insurers" is mainly ESG, and also Insurance
 const TIE_ORDER: SectorDomain[] = [
-  'AML/CFT & Financial Crime', 'ESG & Sustainability', 'AI, Cyber & Tech Risk', 'FinTech, Payments & Digital Assets',
+  'AML/CFT & Financial Crime', 'ESG & Sustainability', 'AI, Data Privacy, Cyber & Tech Risk', 'FinTech, Payments & Digital Assets',
   'Conduct & Consumer Protection', 'Insurance & Pensions', 'Funds & Asset Management', 'Banking & Prudential',
   'Capital Markets & Listings', 'Monetary & Financial Stability', 'General & Institutional'
 ];
@@ -203,7 +228,7 @@ export function classifySectors(input: { title: string; text?: string; regulator
       return { sectors: ['Banking & Prudential'], reasons: {}, fallback: `no topic words matched; ${regulator} is a prudential supervisor` };
     }
     if (PRIVACY_REGULATORS.test(regulator)) {
-      return { sectors: ['AI, Cyber & Tech Risk'], reasons: {}, fallback: `no topic words matched; ${regulator} is a data protection authority` };
+      return { sectors: ['AI, Data Privacy, Cyber & Tech Risk'], reasons: {}, fallback: `no topic words matched; ${regulator} is a data protection authority` };
     }
     return { sectors: ['General & Institutional'], reasons: {}, fallback: 'no topic words matched' };
   }

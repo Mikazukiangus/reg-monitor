@@ -30,7 +30,7 @@ import { daysUntil, deriveDeadlines, deriveNotifications, publishedInLastDays, s
 import { calendarNotices, downloadIcs } from './lib/ics';
 import { copyText, defaultViewState, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState, SortOption } from './lib/urlState';
 import { readPreviousVisit, recordVisit } from './lib/visits';
-import { SECTORS } from './lib/tagging';
+import { SECTORS, withCurrentSectorNames } from './lib/tagging';
 import { commentsClosed } from './lib/impact';
 import {
   RegulatoryNotice,
@@ -255,8 +255,9 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         if (data.notices && Array.isArray(data.notices)) {
-          // The server returns the full current live set, so replace rather than append
-          setNotices(data.notices);
+          // The server returns the full current live set, so replace rather than append.
+          // Offline, it is the copy saved on this device, perhaps under old sector names.
+          setNotices(data.notices.map(withCurrentSectorNames));
           if (data.archive) setArchive(data.archive);
           recordVisit(data.notices.map((n: RegulatoryNotice) => n.id));
         }

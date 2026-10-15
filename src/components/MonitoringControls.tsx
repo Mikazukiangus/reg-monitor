@@ -45,8 +45,8 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
       </label>
       {(dateFrom || dateTo) && <button onClick={() => onDates('', '')} className="min-h-9 text-accent hover:underline">Clear dates</button>}
       <button onClick={onToggleSaved} aria-pressed={onlySaved} className={`min-h-9 px-3 rounded border ${onlySaved ? 'bg-accent text-on-accent border-accent' : 'text-ink border-line hover:bg-wash'}`}>Saved notices ({savedCount})</button>
-      <label className="text-muted min-w-0 flex-1">Saved views
-        <select aria-label="Saved views" value={selected} onChange={e => { setSelected(e.target.value); const view = views.find(v => v.id === e.target.value); if (view) onApply(view.query); }} className="block w-full min-w-[120px] max-w-full mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink">
+      <label className="text-muted min-w-0 flex-1 basis-40">Saved views
+        <select aria-label="Saved views" value={selected} onChange={e => { setSelected(e.target.value); const view = views.find(v => v.id === e.target.value); if (view) onApply(view.query); }} className="block w-full min-w-0 max-w-full mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink">
           <option value="">Choose a view</option>
           {views.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
         </select>

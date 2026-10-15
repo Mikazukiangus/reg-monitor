@@ -55,7 +55,7 @@ Left out: Texas (its AI law is enforced by the Attorney General, whose news rele
 
 ### Data privacy
 
-These come from the data protection authority of each jurisdiction RegSonar already covers. A privacy regulator's own news is kept whole, less speeches, events and procurement notices. Feeds that also cover other work (the FTC's and the OAIC's, and China's policy library) keep only items about privacy or personal data (`src/lib/privacyTopics.ts`: English, Chinese and Japanese words for it, and abbreviations such as GDPR and PDPA in capitals). Every notice from these sources is tagged "Data privacy"; one that is also about AI rules (an AI and personal data consultation, a fine for automated decision-making) is tagged "AI rules" too. Data privacy is part of the "AI, Cyber & Tech Risk" sector: privacy words count for it, and a data protection authority's notice with no topic words is placed there.
+These come from the data protection authority of each jurisdiction RegSonar already covers. A privacy regulator's own news is kept whole, less speeches, events and procurement notices. Feeds that also cover other work (the FTC's and the OAIC's, and China's policy library) keep only items about privacy or personal data (`src/lib/privacyTopics.ts`: English, Chinese and Japanese words for it, and abbreviations such as GDPR and PDPA in capitals). Every notice from these sources is tagged "Data privacy"; one that is also about AI rules (an AI and personal data consultation, a fine for automated decision-making) is tagged "AI rules" too. Data privacy is part of the "AI, Data Privacy, Cyber & Tech Risk" sector (called "AI, Cyber & Tech Risk" until October 2026): privacy words count for it, and a data protection authority's notice with no topic words is placed there. Its link key is still `tech`, so shared links and saved views keep working; bookmarks and offline copies saved on a device under the old name are read under the new one.
 
 | Jurisdiction | Source | Notes |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ Most feeds only list their latest 10 to 50 items, so without a store older notic
 
 ## Sectors and formats
 
-Each notice gets up to three of eleven sectors: Banking & Prudential; Capital Markets & Listings; Funds & Asset Management; Insurance & Pensions; FinTech, Payments & Digital Assets; AI, Cyber & Tech Risk; ESG & Sustainability; AML/CFT & Financial Crime; Conduct & Consumer Protection; Monetary & Financial Stability; General & Institutional.
+Each notice gets up to three of eleven sectors: Banking & Prudential; Capital Markets & Listings; Funds & Asset Management; Insurance & Pensions; FinTech, Payments & Digital Assets; AI, Data Privacy, Cyber & Tech Risk; ESG & Sustainability; AML/CFT & Financial Crime; Conduct & Consumer Protection; Monetary & Financial Stability; General & Institutional.
 
 - **Whole words only.** "AI" no longer matches inside "maintain", and "fund" doesn't match "own funds" or "guarantee fund". Regulator names are removed before matching, so "Monetary Authority" doesn't make a notice about monetary policy, and "Bank of England" doesn't make it about banks.
 - **The title counts most.** A word in the title scores 3; a word in the summary or key points scores 1. A sector needs 3, so the summary alone can add a sector only when several of its words appear.

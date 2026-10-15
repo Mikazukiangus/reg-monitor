@@ -18,7 +18,7 @@ export type SectorDomain =
   | 'Funds & Asset Management'
   | 'Insurance & Pensions'
   | 'FinTech, Payments & Digital Assets'
-  | 'AI, Cyber & Tech Risk'
+  | 'AI, Data Privacy, Cyber & Tech Risk'
   | 'ESG & Sustainability'
   | 'AML/CFT & Financial Crime'
   | 'Conduct & Consumer Protection'
