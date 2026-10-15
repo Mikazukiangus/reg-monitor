@@ -150,17 +150,17 @@ test('a stored notice is re-classified and re-scored when read back', () => {
   assert.ok(!n.tags.includes('Enforcement') && n.tags.includes('Announcements'));
 });
 
-test('a stored notice tagged before the AI sector was renamed gets the new name', () => {
+test('a stored notice tagged when data privacy was in the AI sector\'s name gets its own sector', () => {
   const stored = {
     id: 'ico-old', ref: 'ICO News', title: 'ICO fines retailer over data breach', regulator: 'ICO', jurisdiction: 'UNITED KINGDOM',
     jurisdictionCode: 'UK_EU' as const, type: 'MONETARY PENALTIES', typeColorClass: { bg: '', text: '' }, impactScore: 5,
-    issuedTimeAgo: '', tags: ['ICO', 'Data privacy', 'Enforcement', 'AI, Cyber & Tech Risk'],
+    issuedTimeAgo: '', tags: ['ICO', 'Data privacy', 'Enforcement', 'AI, Data Privacy, Cyber & Tech Risk'],
     sector: 'General & Institutional' as const, format: 'Enforcement' as const, severity: 'high' as const, isLiveFeed: false
   };
   const n = tagNotice(stored);
-  assert.equal(n.sector, 'AI, Data Privacy, Cyber & Tech Risk');
-  assert.ok(!n.tags.includes('AI, Cyber & Tech Risk'));
-  assert.equal(n.tags.filter(t => t === 'AI, Data Privacy, Cyber & Tech Risk').length, 1);
+  assert.equal(n.sector, 'Data Privacy & Protection');
+  assert.ok(!n.tags.includes('AI, Data Privacy, Cyber & Tech Risk') && !n.tags.includes('AI, Cyber & Tech Risk'));
+  assert.equal(n.tags.filter(t => t === 'Data Privacy & Protection').length, 1);
   assert.ok(n.tags.includes('Data privacy'));
 });
 
@@ -265,7 +265,7 @@ test('European Commission AI news keeps items on AI rules, dated as Brussels day
   const enforcing = notices.find(n => /^Commission starts enforcing AI Act rules/.test(n.title));
   assert.equal(enforcing?.publishedAt, '2026-07-30T22:00:00.000Z');
   assert.equal(enforcing?.dossierUrl, 'https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august');
-  assert.ok(notices.every(n => n.regulator === 'European Commission' && n.sectors?.includes('AI, Data Privacy, Cyber & Tech Risk')));
+  assert.ok(notices.every(n => n.regulator === 'European Commission' && n.sectors?.includes('AI, Cyber & Tech Risk')));
   // On the AI topic but not about AI rules
   assert.ok(!notices.some(n => /Startup Award|EDIC for Agri-Food/.test(n.title)));
 });
@@ -306,7 +306,7 @@ test('China policy library: AI rules in Chinese, gazette orders as department ru
   const labelling = notices.find(n => n.title === '关于印发《人工智能生成合成内容标识办法》的通知');
   assert.equal(labelling?.regulator, 'CAC');
   assert.equal(labelling?.impactScore, 7.5);
-  assert.ok(notices.every(n => n.language === 'zh' && n.sectors?.includes('AI, Data Privacy, Cyber & Tech Risk')));
+  assert.ok(notices.every(n => n.language === 'zh' && n.sectors?.includes('AI, Cyber & Tech Risk')));
   // Plans to promote AI in an industry, pilot zones and speeches are left out
   assert.ok(!notices.some(n => /人工智能\+软件|试验区|讲话/.test(n.title)), notices.map(n => n.title).join(' | '));
   // The Gazette's reprint of a document already listed is dropped
@@ -326,7 +326,7 @@ test('UK AI policy: items whose title is about AI, from DSIT or the AI Security 
   assert.ok(notices.every(n => /\bAI\b|Artificial Intelligence/i.test(n.title)), 'AI in every title');
 });
 
-test('Data privacy: each source is tagged and placed in its jurisdiction', async () => {
+test('Data privacy: each source is tagged, in the data privacy sector and placed in its jurisdiction', async () => {
   const expected: Record<string, string> = {
     'UK ICO News': 'UK_EU', 'EDPB News': 'UK_EU', 'Singapore PDPC News': 'SG', 'Malaysia JPDP Announcements': 'MY',
     'Australia OAIC on Privacy': 'AU', 'Japan PPC News': 'JP', 'Korea PIPC Notices': 'KR',
@@ -335,7 +335,7 @@ test('Data privacy: each source is tagged and placed in its jurisdiction', async
   for (const [name, code] of Object.entries(expected)) {
     const notices = await byName(name).fetch(20);
     assert.ok(notices.length > 0, name);
-    assert.ok(notices.every(n => n.jurisdictionCode === code && n.tags.includes('Data privacy')), name);
+    assert.ok(notices.every(n => n.jurisdictionCode === code && n.tags.includes('Data privacy') && n.sectors?.includes('Data Privacy & Protection')), name);
   }
 });
 

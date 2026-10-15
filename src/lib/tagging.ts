@@ -15,7 +15,8 @@ export const SECTORS: SectorDomain[] = [
   'Funds & Asset Management',
   'Insurance & Pensions',
   'FinTech, Payments & Digital Assets',
-  'AI, Data Privacy, Cyber & Tech Risk',
+  'AI, Cyber & Tech Risk',
+  'Data Privacy & Protection',
   'ESG & Sustainability',
   'AML/CFT & Financial Crime',
   'Conduct & Consumer Protection',
@@ -25,9 +26,11 @@ export const SECTORS: SectorDomain[] = [
 
 // Sectors renamed since, by their old name. Copies saved before a rename still
 // carry the old one: tags in the stored history, and bookmarks and the offline
-// copy of the feed on a device.
+// copy of the feed on a device. Data privacy was part of the AI sector's name
+// for a day (15 October 2026) before it became a sector of its own; a copy
+// saved then is refreshed from the feed or the history when it is next shown.
 export const RENAMED_SECTORS = new Map<string, SectorDomain>([
-  ['AI, Cyber & Tech Risk', 'AI, Data Privacy, Cyber & Tech Risk']
+  ['AI, Data Privacy, Cyber & Tech Risk', 'AI, Cyber & Tech Risk']
 ]);
 const currentName = <T,>(sector: T) => (typeof sector === 'string' && RENAMED_SECTORS.get(sector)) || sector;
 
@@ -94,17 +97,23 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     /\bdigital (currenc\w+|money|bonds?)\b/, /\bopen banking\b/, /\bcrowdfunding\b/, /\bremote on-boarding\b/,
     /\b(digital|financial) innovation\b/
   ],
-  'AI, Data Privacy, Cyber & Tech Risk': [
+  'AI, Cyber & Tech Risk': [
     /\bartificial intelligence\b/, /\bAI\b/, /\bmachine learning\b/, /\bgenerative\b/, /\balgorithmic\b/, /\bcyber\w*\b/,
     /\btechnology risk\b/, /\btechnology resilience\b/, /\boperational resilience\b/, /\boutsourcing\b/,
     /\bthird-party risk\b/, /\bcloud\b/, /\bincident reporting\b/, /\bquantum\b/, /\bict\b/,
-    /\binformation and communication technology\b/, /\bdata (protection|governance)\b/, /\bit risk\b/,
+    /\binformation and communication technology\b/, /\bdata governance\b/, /\bit risk\b/,
     /\boperational risk\b/, /\bchatbots?\b/, /\bdeepfakes?\b/, /\bautomated decision[- ]?making\b/, /\badmt\b/,
     /\b(frontier|foundation|large language) models?\b/, /\bllms?\b/, /\bgpai\b/, /\bsuper ?intelligen\w*/,
-    // Data privacy
-    /\bprivacy\b/, /\bpersonal (data|information)\b/, /\bdata (breach\w*|privacy|brokers?|subjects?)\b/, /\bgdpr\b/, /\bpdpa\b/,
-    // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents, personal information
-    /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ|个人信息|個人情報/
+    // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents
+    /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ/
+  ],
+  // The words src/lib/privacyTopics.ts looks for, one rule each
+  'Data Privacy & Protection': [
+    /\bprivacy\b/, /\bpersonal (data|information)\b/, /\bdata (protection|privacy|breach\w*|brokers?|subjects?|deletion)\b/,
+    /\bsensitive (personal )?data\b/, /\b(location|health|biometric|children['’]s) data\b/, /\bright to (delete|deletion|erasure)\b/,
+    /\bgdpr\b/, /\bpdpa\b/, /\bcoppa\b/, /\bhipaa\b/, /\bappi\b/, /\bccpa\b/, /\bcpra\b/,
+    // Chinese and Japanese: personal information, privacy
+    /个人信息|個人情報|隐私|プライバシー/
   ],
   'ESG & Sustainability': [
     /\besg\b/, /\bclimate\b/, /\bsustainab(le|ility)\b/, /\bgreen (bonds?|finance|taxonomy|loans?)\b/,
@@ -173,16 +182,17 @@ const PRIVACY_REGULATORS = /^(ICO|EDPB|PDPC|JPDP|OAIC|PPC|PIPC|CalPrivacy)\b/;
 // industry it applies to: "Guidelines on Environmental Risk Management for
 // Insurers" is mainly ESG, and also Insurance
 const TIE_ORDER: SectorDomain[] = [
-  'AML/CFT & Financial Crime', 'ESG & Sustainability', 'AI, Data Privacy, Cyber & Tech Risk', 'FinTech, Payments & Digital Assets',
-  'Conduct & Consumer Protection', 'Insurance & Pensions', 'Funds & Asset Management', 'Banking & Prudential',
-  'Capital Markets & Listings', 'Monetary & Financial Stability', 'General & Institutional'
+  'AML/CFT & Financial Crime', 'ESG & Sustainability', 'Data Privacy & Protection', 'AI, Cyber & Tech Risk',
+  'FinTech, Payments & Digital Assets', 'Conduct & Consumer Protection', 'Insurance & Pensions', 'Funds & Asset Management',
+  'Banking & Prudential', 'Capital Markets & Listings', 'Monetary & Financial Stability', 'General & Institutional'
 ];
 
 export interface SectorTagging {
   sectors: SectorDomain[];
   // The words that gave each sector, title words first
   reasons: Partial<Record<SectorDomain, string[]>>;
-  // No topic words matched; the sector is a default
+  // Why a sector with no words of its own was given: no topic words matched,
+  // or the regulator's field (a data protection authority)
   fallback?: string;
 }
 
@@ -228,9 +238,19 @@ export function classifySectors(input: { title: string; text?: string; regulator
       return { sectors: ['Banking & Prudential'], reasons: {}, fallback: `no topic words matched; ${regulator} is a prudential supervisor` };
     }
     if (PRIVACY_REGULATORS.test(regulator)) {
-      return { sectors: ['AI, Data Privacy, Cyber & Tech Risk'], reasons: {}, fallback: `no topic words matched; ${regulator} is a data protection authority` };
+      return { sectors: ['Data Privacy & Protection'], reasons: {}, fallback: `no topic words matched; ${regulator} is a data protection authority` };
     }
     return { sectors: ['General & Institutional'], reasons: {}, fallback: 'no topic words matched' };
+  }
+  // A data protection authority works under data protection law, so its
+  // notices are in that sector also when their words give others
+  if (PRIVACY_REGULATORS.test(input.regulator || '') && !top.some(s => s.sector === 'Data Privacy & Protection')) {
+    const kept = top.slice(0, 2);
+    return {
+      sectors: [...kept.map(s => s.sector), 'Data Privacy & Protection'],
+      reasons: Object.fromEntries(kept.map(s => [s.sector, [...new Set(s.words)]])),
+      fallback: `${input.regulator} is a data protection authority`
+    };
   }
   return {
     sectors: top.map(s => s.sector),

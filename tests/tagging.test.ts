@@ -12,7 +12,8 @@ const CAPM: SectorDomain = 'Capital Markets & Listings';
 const FUND: SectorDomain = 'Funds & Asset Management';
 const INSU: SectorDomain = 'Insurance & Pensions';
 const FINT: SectorDomain = 'FinTech, Payments & Digital Assets';
-const TECH: SectorDomain = 'AI, Data Privacy, Cyber & Tech Risk';
+const TECH: SectorDomain = 'AI, Cyber & Tech Risk';
+const PRIV: SectorDomain = 'Data Privacy & Protection';
 const ESG: SectorDomain = 'ESG & Sustainability';
 const AML: SectorDomain = 'AML/CFT & Financial Crime';
 const COND: SectorDomain = 'Conduct & Consumer Protection';
@@ -139,14 +140,20 @@ const SECTOR_EXAMPLES: [string, string, SectorDomain | SectorDomain[], SectorDom
   ['SC Issues Guidance Note on Sukuk to Strengthen Alignment with Maqasid al-Shariah', 'SC Malaysia', CAPM],
   ['Former Company Director Jailed Five Years for Unlicensed Fund Management Activities', 'SC Malaysia', FUND],
   ['SC and Bursa Malaysia Collaborate to Advance Informed Investing Among Retail Investors', 'SC Malaysia', COND],
-  // Data privacy is part of AI, cyber and tech risk; a data broker is not a securities broker
-  ['TikTok withdraws two appeals in children’s privacy action and accepts £12.7m fine', 'ICO', TECH],
-  ['CalPrivacy Continues Enforcement Blitz with Action Against Virginia Data Broker', 'CalPrivacy (CPPA)', TECH, [CAPM]],
-  ['Know your privacy obligations under the Anti-Money Laundering / Counter-Terrorism Financing reforms', 'OAIC', [TECH, AML]],
-  ['个人信息出境认证办法', 'CAC', TECH],
+  // Data privacy is a sector of its own, apart from AI and cyber risk; a data
+  // broker is not a securities broker
+  ['TikTok withdraws two appeals in children’s privacy action and accepts £12.7m fine', 'ICO', PRIV, [TECH]],
+  ['CalPrivacy Continues Enforcement Blitz with Action Against Virginia Data Broker', 'CalPrivacy (CPPA)', PRIV, [CAPM, TECH]],
+  ['Know your privacy obligations under the Anti-Money Laundering / Counter-Terrorism Financing reforms', 'OAIC', [PRIV, AML], [TECH]],
+  ['个人信息出境认证办法', 'CAC', PRIV, [TECH]],
+  ['PDPC Issues Guidance for Organisations on Responsible  Use of Personal Data in Generative AI', 'PDPC', [TECH, PRIV]],
+  ['Strengthening Cyber Resilience amid Artificial Intelligence-Empowered Cyber Threats', 'HKMA', TECH, [PRIV]],
   // A data protection authority's notice with no topic words is about data privacy
-  ['The PIPC Issues Recommendations on Robot Vacuum Makers', 'PIPC', TECH],
-  ['ICO welcomes transition to new Information Commission', 'ICO', TECH]
+  ['The PIPC Issues Recommendations on Robot Vacuum Makers', 'PIPC', PRIV],
+  ['ICO welcomes transition to new Information Commission', 'ICO', PRIV],
+  // and its other notices are in data privacy too
+  ['Complaints about automated nuisance calls hit five-year high', 'ICO', [COND, PRIV]],
+  ['New resources on transparency for use of AI and automated decision-making', 'OAIC', [TECH, PRIV]]
 ];
 
 for (const [title, regulator, main, never = []] of SECTOR_EXAMPLES) {
@@ -166,8 +173,9 @@ for (const [title, regulator, main, never = []] of SECTOR_EXAMPLES) {
 test('every sector tag says which words gave it, or why it is a default', () => {
   for (const [title, regulator] of SECTOR_EXAMPLES) {
     const tagged = classifySectors({ title, regulator });
-    if (tagged.fallback) assert.equal(tagged.sectors.length, 1);
-    else for (const s of tagged.sectors) assert.ok(tagged.reasons[s]?.length, `${title}: ${s} has no words`);
+    // One sector at most is given without words, and the fallback says why
+    const withoutWords = tagged.sectors.filter(s => !tagged.reasons[s]?.length);
+    assert.equal(withoutWords.length, tagged.fallback ? 1 : 0, `${title}: ${withoutWords.join(', ')} has no words`);
   }
 });
 

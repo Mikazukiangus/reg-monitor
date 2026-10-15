@@ -10,7 +10,7 @@ import type { RegulatoryNotice } from '../src/types/regulatory';
 const notice: RegulatoryNotice = {
   id: 'fca-older', ref: 'FCA "notice"', title: '=Older publication', regulator: 'UK FCA', jurisdiction: 'UNITED KINGDOM',
   jurisdictionCode: 'UK_EU', type: 'ANNOUNCEMENT', typeColorClass: { bg: 'x', text: 'y' }, impactScore: 7,
-  issuedTimeAgo: 'Earlier', tags: ['test'], sector: 'Banking & Prudential', sectors: ['Banking & Prudential', 'AI, Data Privacy, Cyber & Tech Risk'],
+  issuedTimeAgo: 'Earlier', tags: ['test'], sector: 'Banking & Prudential', sectors: ['Banking & Prudential', 'AI, Cyber & Tech Risk'],
   format: 'Announcements', severity: 'high', dossierUrl: 'https://www.fca.org.uk/older', publishedAt: '2026-09-01T00:00:00Z',
   statutoryDeadline: 'Takes effect: 2099-01-01', deadlineDate: '2099-01-01', deadlineQuote: 'The rules take effect on 1 January 2099.',
   keyPoints: { points: ['Quoted "text", with a comma.\nSecond line.'], facts: [], refs: [], method: 'extractive',
@@ -58,7 +58,7 @@ test('exports preserve quotes, all sectors, date meanings and score reasons, wit
   const csv = buildNoticeCsv([notice], true);
   assert.match(csv, /"FCA ""notice"""/);
   assert.ok(csv.includes('"\'=Older publication"'), 'formula-like source titles remain text');
-  assert.ok(csv.includes('Banking & Prudential; AI, Data Privacy, Cyber & Tech Risk'));
+  assert.ok(csv.includes('Banking & Prudential; AI, Cyber & Tech Risk'));
   assert.ok(csv.includes('Quoted ""text"", with a comma.\nSecond line.'));
   assert.ok(csv.includes('Takes effect') && csv.includes('Base score 7\nSource date adjustment'));
   const excluded = buildNoticeCsv([notice], false);
@@ -80,14 +80,14 @@ test('bookmarks and views persist safely, rejecting broken storage and handling 
 
 test('bookmarks saved under a renamed sector are kept, under its new name', () => {
   const old = {
-    ...notice, sector: 'AI, Cyber & Tech Risk', sectors: ['AI, Cyber & Tech Risk', 'Banking & Prudential'], tags: ['FCA', 'AI, Cyber & Tech Risk'],
-    tagging: { ...notice.tagging!, sectors: { 'AI, Cyber & Tech Risk': ['privacy'] } }
+    ...notice, sector: 'AI, Data Privacy, Cyber & Tech Risk', sectors: ['AI, Data Privacy, Cyber & Tech Risk', 'Banking & Prudential'],
+    tags: ['FCA', 'AI, Data Privacy, Cyber & Tech Risk'], tagging: { ...notice.tagging!, sectors: { 'AI, Data Privacy, Cyber & Tech Risk': ['AI'] } }
   };
   const [n] = readBookmarks({ getItem: () => JSON.stringify([old]), setItem: () => {} });
-  assert.equal(n?.sector, 'AI, Data Privacy, Cyber & Tech Risk');
-  assert.deepEqual(n.sectors, ['AI, Data Privacy, Cyber & Tech Risk', 'Banking & Prudential']);
-  assert.deepEqual(n.tags, ['FCA', 'AI, Data Privacy, Cyber & Tech Risk']);
-  assert.deepEqual(n.tagging?.sectors, { 'AI, Data Privacy, Cyber & Tech Risk': ['privacy'] });
+  assert.equal(n?.sector, 'AI, Cyber & Tech Risk');
+  assert.deepEqual(n.sectors, ['AI, Cyber & Tech Risk', 'Banking & Prudential']);
+  assert.deepEqual(n.tags, ['FCA', 'AI, Cyber & Tech Risk']);
+  assert.deepEqual(n.tagging?.sectors, { 'AI, Cyber & Tech Risk': ['AI'] });
 });
 
 test('history endpoints retrieve archived IDs and report actual scheduled-check results', async () => {
