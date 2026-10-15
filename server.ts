@@ -6,7 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { summarize, extractArticleText, pagePublishedDate, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
-import { classifySectors, classifyFormat, SECTORS } from './src/lib/tagging.js';
+import { classifySectors, classifyFormat, SECTORS, SPEECH } from './src/lib/tagging.js';
 import { assessImpact, severityOf } from './src/lib/impact.js';
 import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, saveScheduledCheck, scheduledCheckStatus, type StoredNotice } from './db.js';
@@ -14,6 +14,7 @@ import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js
 import { dedupeByDocument } from './src/lib/dedupe.js';
 import { rateLimit, reuseFor } from './src/lib/throttle.js';
 import { isAiRuleNews, mentionsAi } from './src/lib/aiTopics.js';
+import { mentionsPrivacy } from './src/lib/privacyTopics.js';
 import { createHash, randomUUID } from 'crypto';
 import { publicationTime } from './src/lib/derived.js';
 
@@ -165,7 +166,10 @@ const hostPausedUntil = new Map<string, number>();
 
 class RateLimitedError extends Error {}
 
-async function politeFetch(url: string): Promise<globalThis.Response> {
+// A POST, for the one source (the ICO) whose page asks its search service that way
+type PostRequest = { method: 'POST'; body: string; contentType: string };
+
+async function politeFetch(url: string, post?: PostRequest): Promise<globalThis.Response> {
   const host = new URL(url).host;
   const pausedUntil = hostPausedUntil.get(host) ?? 0;
   if (Date.now() < pausedUntil) {
@@ -179,7 +183,8 @@ async function politeFetch(url: string): Promise<globalThis.Response> {
   }
   const res = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { 'User-Agent': userAgentFor(url) }
+    headers: { 'User-Agent': userAgentFor(url), ...(post ? { 'Content-Type': post.contentType } : {}) },
+    ...(post ? { method: post.method, body: post.body } : {})
   });
   if (res.status === 429) {
     const retryAfter = Number(res.headers.get('retry-after'));
@@ -188,8 +193,8 @@ async function politeFetch(url: string): Promise<globalThis.Response> {
   return res;
 }
 
-async function fetchOrThrow(url: string): Promise<globalThis.Response> {
-  const res = await politeFetch(url);
+async function fetchOrThrow(url: string, post?: PostRequest): Promise<globalThis.Response> {
+  const res = await politeFetch(url, post);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
   }
@@ -1373,7 +1378,7 @@ async function readPages<T>(urls: string[], parse: (html: string) => T[]): Promi
   return rows;
 }
 
-interface AiItem {
+interface TopicItem {
   id: string;
   ref: string;
   title: string;
@@ -1388,7 +1393,8 @@ interface AiItem {
   language?: 'zh' | 'ja';
 }
 
-function aiNotice(item: AiItem): NormalizedNotice {
+// A notice from a source on AI rules or data privacy, tagged with its topics
+function topicNotice(item: TopicItem, topics: string[]): NormalizedNotice {
   const format = formatOf(item.type, item.title);
   const sector = sectorOf(`${item.title} ${item.summary || ''}`);
   const score = estimateImpact(format);
@@ -1405,7 +1411,7 @@ function aiNotice(item: AiItem): NormalizedNotice {
     issuedTimeAgo: item.publishedAt ? getRelativeTime(item.publishedAt) : 'Recently',
     publishedAt: item.publishedAt,
     ...(item.summary ? { summary: item.summary } : {}),
-    tags: [item.regulator, format, sector, 'AI rules'],
+    tags: [item.regulator, format, sector, ...topics],
     sector,
     format,
     severity: severityFor(score),
@@ -1414,6 +1420,11 @@ function aiNotice(item: AiItem): NormalizedNotice {
     ...(item.language ? { language: item.language } : {})
   };
 }
+
+// An item on AI rules whose title is also about personal data, and an item
+// on data privacy that is also about AI rules, get both tags
+const aiNotice = (item: TopicItem) => topicNotice(item, mentionsPrivacy(item.title) ? ['AI rules', 'Data privacy'] : ['AI rules']);
+const privacyNotice = (item: TopicItem) => topicNotice(item, isAiRuleNews(item.title, item.summary) ? ['Data privacy', 'AI rules'] : ['Data privacy']);
 
 const newestFirst = <T extends { date: string }>(rows: T[]) => rows.sort((a, b) => b.date.localeCompare(a.date));
 const uniqueBy = <T>(rows: T[], key: (row: T) => string) => {
@@ -1493,7 +1504,9 @@ async function fetchFederalRegisterAi(limit = 4): Promise<NormalizedNotice[]> {
 
 // RSS feeds of US agencies and states with AI rules. Their feeds cover all
 // their work, so only items about AI rules are kept (a regulator whose every
-// item is a rule matter needs only an AI mention).
+// item is a rule matter needs only an AI mention). privacy: 'mentions' also
+// keeps items whose title concerns privacy; 'all' keeps every item, from a
+// privacy regulator.
 interface AiFeed {
   id: string;
   url: string;
@@ -1501,16 +1514,19 @@ interface AiFeed {
   jurisdiction: string;
   type: string;
   aiMentionOnly?: true;
+  privacy?: 'mentions' | 'all';
 }
 
-// The FTC: inquiries, enforcement and policy statements on AI
-const FTC_AI: AiFeed = { id: 'ftc', url: 'https://www.ftc.gov/feeds/press-release.xml', regulator: 'US FTC', jurisdiction: 'UNITED STATES', type: 'PRESS RELEASE' };
+// The FTC: inquiries, enforcement and policy statements on AI, and its
+// enforcement of privacy and data security
+const FTC: AiFeed = { id: 'ftc', url: 'https://www.ftc.gov/feeds/press-release.xml', regulator: 'US FTC', jurisdiction: 'UNITED STATES', type: 'PRESS RELEASE', privacy: 'mentions' };
 // California's governor signs the state's AI laws (such as SB 53 on frontier
 // AI); the office's site search for "artificial intelligence", as a feed
 const CALIFORNIA_GOVERNOR_AI: AiFeed = { id: 'ca-gov', url: 'https://www.gov.ca.gov/?s=artificial+intelligence&feed=rss2', regulator: 'California Governor', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS' };
-// California's privacy regulator (CalPrivacy, the CPPA), which makes the rules
-// on automated decisionmaking technology (ADMT)
-const CALPRIVACY_AI: AiFeed = { id: 'calprivacy', url: 'https://privacy.ca.gov/feed/', regulator: 'CalPrivacy (CPPA)', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS', aiMentionOnly: true };
+// California's privacy regulator (CalPrivacy, the CPPA), which enforces the
+// state's privacy law and makes its rules, including those on automated
+// decisionmaking technology (ADMT). Every item is kept.
+const CALPRIVACY: AiFeed = { id: 'calprivacy', url: 'https://privacy.ca.gov/feed/', regulator: 'CalPrivacy (CPPA)', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS', aiMentionOnly: true, privacy: 'all' };
 // Colorado's attorney general enforces, and makes rules under, the Colorado AI Act
 const COLORADO_AG_AI: AiFeed = { id: 'co-ag', url: 'https://coag.gov/?s=artificial+intelligence&feed=rss2', regulator: 'Colorado AG', jurisdiction: 'UNITED STATES (COLORADO)', type: 'NEWS' };
 
@@ -1527,9 +1543,15 @@ async function fetchAiFeed(feed: AiFeed, limit: number): Promise<NormalizedNotic
       link: String(item.link),
       published: toIso(item.pubDate)
     }))
-    .filter(x => (feed.aiMentionOnly ? mentionsAi(`${x.title} ${x.description}`) : isAiRuleNews(x.title, x.description)))
+    .map(x => ({
+      ...x,
+      ai: feed.aiMentionOnly ? mentionsAi(`${x.title} ${x.description}`) : isAiRuleNews(x.title, x.description),
+      privacy: feed.privacy === 'all' || mentionsPrivacy(x.title)
+    }))
+    // An item on AI rules whose title is about personal data gets both tags
+    .filter(x => x.ai || (x.privacy && feed.privacy))
     .slice(0, limit)
-    .map(x => aiNotice({
+    .map(x => topicNotice({
       id: `${feed.id}-${lastPathPart(x.link)}`.slice(0, 120),
       ref: `${feed.regulator} ${x.published?.slice(0, 10) ?? ''}`.trim(),
       title: x.title,
@@ -1540,7 +1562,7 @@ async function fetchAiFeed(feed: AiFeed, limit: number): Promise<NormalizedNotic
       publishedAt: x.published,
       summary: x.description || undefined,
       url: x.link
-    }));
+    }, [...(x.privacy ? ['Data privacy'] : []), ...(x.ai ? ['AI rules'] : [])]));
 }
 
 // South Korea's Ministry of Science and ICT administers the Framework Act on
@@ -1590,9 +1612,12 @@ async function fetchMsitPressReleases(limit = 4): Promise<NormalizedNotice[]> {
 // documents, departments' documents, and the State Council Gazette, which
 // prints department rules (orders) some weeks after they are issued. Titles
 // stay in Chinese.
-const GOV_CN_POLICY_SEARCH = (n: number) => `https://sousuo.www.gov.cn/search-gov/data?${new URLSearchParams({
-  t: 'zhengcelibrary', q: '人工智能', searchfield: 'title', sort: 'pubtime', sortType: '1', type: 'gwyzcwjk', p: '1', n: String(n)
+// Searched for 人工智能 (artificial intelligence) or 个人信息 (personal information)
+const GOV_CN_POLICY_SEARCH = (q: string, n: number) => `https://sousuo.www.gov.cn/search-gov/data?${new URLSearchParams({
+  t: 'zhengcelibrary', q, searchfield: 'title', sort: 'pubtime', sortType: '1', type: 'gwyzcwjk', p: '1', n: String(n)
 })}`;
+const GOV_CN_AI = '人工智能';
+const GOV_CN_PRIVACY = '个人信息';
 // The library's other list (news and explainers) is left out
 const GOV_CN_LISTS: Record<string, string> = {
   gongwen: 'STATE COUNCIL DOCUMENT',
@@ -1618,6 +1643,10 @@ const GOV_CN_ISSUERS: [RegExp, string][] = [
   [/人力资源社会保障部/, 'MOHRSS'],
   [/^商务部$/, 'MOFCOM'],
   [/民航局|民用航空局/, 'CAAC'],
+  [/^民政部$/, 'MCA'],
+  [/^中国人民银行$|^人民银行$/, 'PBOC'],
+  [/金融监督管理总局|金融监管总局/, 'NFRA'],
+  [/邮政局/, 'SPB'],
   [/^国务院$/, 'State Council']
 ];
 // "...总局令（第21号）\n人工智能拟人化互动服务管理暂行办法": an order and the rules it makes
@@ -1672,22 +1701,38 @@ export function parseGovCnPolicies(json: any): { id: string; title: string; url:
 }
 
 async function fetchGovCnAiPolicies(limit = 4): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow(GOV_CN_POLICY_SEARCH(50));
+  const res = await fetchOrThrow(GOV_CN_POLICY_SEARCH(GOV_CN_AI, 50));
   return parseGovCnPolicies(await res.json())
     .filter(r => isAiRuleNews(r.title))
     .slice(0, limit)
-    .map(r => aiNotice({
-      id: r.id,
-      ref: r.order ? `${r.regulator} Order No. ${r.order}` : `${r.regulator} ${r.published.slice(0, 10)}`,
-      title: r.title,
-      regulator: r.regulator,
-      jurisdiction: 'CHINA',
-      jurisdictionCode: 'CN',
-      type: r.type,
-      publishedAt: r.published,
-      url: r.url,
-      language: 'zh'
-    }));
+    .map(r => aiNotice(govCnItem(r)));
+}
+
+// China's rules on personal information (the Personal Information Protection
+// Law's measures, such as those on cross-border transfers and compliance
+// audits), from the same library. The search also finds titles that don't
+// contain the phrase, so the title must.
+async function fetchGovCnPrivacyPolicies(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(GOV_CN_POLICY_SEARCH(GOV_CN_PRIVACY, 50));
+  return parseGovCnPolicies(await res.json())
+    .filter(r => r.title.includes(GOV_CN_PRIVACY))
+    .slice(0, limit)
+    .map(r => privacyNotice(govCnItem(r)));
+}
+
+function govCnItem(r: ReturnType<typeof parseGovCnPolicies>[number]): TopicItem {
+  return {
+    id: r.id,
+    ref: r.order ? `${r.regulator} Order No. ${r.order}` : `${r.regulator} ${r.published.slice(0, 10)}`,
+    title: r.title,
+    regulator: r.regulator,
+    jurisdiction: 'CHINA',
+    jurisdictionCode: 'CN',
+    type: r.type,
+    publishedAt: r.published,
+    url: r.url,
+    language: 'zh'
+  };
 }
 
 // The UK has no AI act; its regulators apply their existing rules (the PRA's
@@ -1748,6 +1793,278 @@ async function fetchCaoAiTopics(limit = 4): Promise<NormalizedNotice[]> {
     publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Tokyo'),
     url: r.url,
     language: 'ja'
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Data privacy, from the data protection authority of each jurisdiction. A
+// privacy regulator's own news is kept whole, less speeches, events and
+// procurement notices; feeds that also cover other work (the FTC's and the
+// OAIC's, China's policy library) are narrowed by src/lib/privacyTopics.ts.
+// Every notice from these sources is tagged "Data privacy".
+
+// The UK's Information Commissioner's Office: news, statements and blogs (not
+// speeches), from the search service its news page uses. The service is asked
+// by POST for the news page's id in the site. The ICO also regulates freedom
+// of information; those items are left out unless they concern personal data.
+const ICO_SITE = 'https://ico.org.uk';
+const ICO_NEWS_PAGE = `${ICO_SITE}/about-the-ico/media-centre/news-and-blogs/`;
+const ICO_SEARCH = `${ICO_SITE}/api/search`;
+const ICO_NEWS_PAGE_ID = 2816;
+const FREEDOM_OF_INFORMATION = /\bFOI\b|\bfreedom of information\b|\benvironmental information\b/i;
+
+// "14 October 2026, News"
+export function parseIcoNews(json: any): { id: string; title: string; date: string; kind: string; url: string; summary: string }[] {
+  return ((json?.results ?? []) as any[]).flatMap(r => {
+    const [day, kind = ''] = String(r.filterItemMetaData ?? '').split(/,\s*/);
+    const date = isoDay(day);
+    if (!date || !r.url || !r.title) return [];
+    return [{ id: String(r.id), title: plainText(String(r.title)), date, kind: kind.trim(), url: new URL(r.url, ICO_SITE).toString(), summary: plainText(String(r.description ?? '')) }];
+  });
+}
+
+async function fetchIcoNews(limit = 4): Promise<NormalizedNotice[]> {
+  const rows: ReturnType<typeof parseIcoNews> = [];
+  // 25 a page; the first page must load, later ones are skipped if they fail
+  for (let page = 1; page <= pagesFor(limit, 20, 3); page++) {
+    const body = JSON.stringify({ filters: [], pageNumber: page, order: 'newest', rootPageId: ICO_NEWS_PAGE_ID });
+    try {
+      rows.push(...parseIcoNews(await (await fetchOrThrow(ICO_SEARCH, { method: 'POST', body, contentType: 'application/json' })).json()));
+    } catch (err: any) {
+      if (page === 1) throw err;
+      console.log(`[RegSonar Feed Sentinel] Skipped ICO news page ${page}: ${describeError(err)}`);
+    }
+  }
+  return newestFirst(uniqueBy(rows, r => r.id))
+    .filter(r => r.kind !== 'Speech' && (!FREEDOM_OF_INFORMATION.test(r.title) || mentionsPrivacy(`${r.title} ${r.summary}`)))
+    .slice(0, limit)
+    .map(r => privacyNotice({
+      id: `ico-${r.id}`,
+      ref: `ICO ${r.kind || 'News'} ${r.date}`,
+      title: r.title,
+      regulator: 'ICO',
+      jurisdiction: 'UNITED KINGDOM',
+      jurisdictionCode: 'UK_EU',
+      type: (r.kind || 'News').toUpperCase(),
+      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Europe/London'),
+      summary: r.summary || undefined,
+      url: r.url
+    }));
+}
+
+// The European Data Protection Board: its guidelines, opinions and statements,
+// and national authorities' decisions that it reports (RSS)
+const EDPB_RSS = 'https://www.edpb.europa.eu/feed/news_en';
+
+async function fetchEdpbNews(limit = 4): Promise<NormalizedNotice[]> {
+  const items = await rssItems(EDPB_RSS);
+  return items.slice(0, limit).map((item: any) => {
+    const link = String(item.link);
+    const published = toIso(item.pubDate);
+    // The item's first paragraph
+    const lead = String(item.description ?? '').match(/<p>([\s\S]*?)<\/p>/)?.[1];
+    return privacyNotice({
+      id: `edpb-${lastPathPart(link)}`.slice(0, 120),
+      ref: `EDPB News ${published?.slice(0, 10) ?? ''}`.trim(),
+      title: plainText(String(item.title)),
+      regulator: 'EDPB',
+      jurisdiction: 'EUROPEAN UNION',
+      jurisdictionCode: 'UK_EU',
+      type: 'NEWS',
+      publishedAt: published,
+      summary: lead ? plainText(lead) || undefined : undefined,
+      url: link
+    });
+  });
+}
+
+// Singapore's Personal Data Protection Commission: its media and events list,
+// from the listing service its page uses. Events and speeches are left out;
+// "New Commission's Decision and Undertakings on …" are its enforcement
+// decisions.
+const PDPC_SITE = 'https://www.pdpc.gov.sg';
+const PDPC_LIST = (page: number) => `${PDPC_SITE}/api/listing-api?sort=latest&page=${page}&listingtype=media_events&itemsperpage=50&pathname=/media-events`;
+const PDPC_TYPES: Record<string, string> = { 'Press Room': 'PRESS RELEASE', Advisories: 'ADVISORY', Announcements: 'ANNOUNCEMENT', Reports: 'REPORT' };
+
+export function parsePdpcList(json: any): { id: string; title: string; date: string; type: string; url: string }[] {
+  return ((json?.data ?? []) as any[]).flatMap(r => {
+    const title = plainText(String(r.title ?? ''));
+    const date = isoDay(String(r.date ?? ''));
+    const type = PDPC_TYPES[String(r.topic)];
+    if (!title || !date || !type || !r.href || SPEECH.test(title)) return [];
+    return [{ id: String(r.id), title, date, type, url: new URL(String(r.href), PDPC_SITE).toString() }];
+  });
+}
+
+async function fetchPdpcNews(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = Array.from({ length: pagesFor(limit, 25, 3) }, (_, i) => PDPC_LIST(i + 1));
+  const rows: ReturnType<typeof parsePdpcList> = [];
+  for (const [i, url] of pages.entries()) {
+    try {
+      rows.push(...parsePdpcList(await (await fetchOrThrow(url)).json()));
+    } catch (err: any) {
+      if (i === 0) throw err;
+      console.log(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
+    }
+  }
+  return newestFirst(uniqueBy(rows, r => r.id)).slice(0, limit).map(r => privacyNotice({
+    id: `pdpc-${r.id}`,
+    ref: `PDPC ${r.date}`,
+    title: r.title,
+    regulator: 'PDPC',
+    jurisdiction: 'SINGAPORE',
+    jurisdictionCode: 'SG',
+    type: r.type,
+    publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Singapore'),
+    url: r.url
+  }));
+}
+
+// Malaysia's Personal Data Protection Department (JPDP): announcements from
+// its English site's WordPress feed, less procurement notices
+const JPDP_RSS = 'https://www.pdp.gov.my/ppdpv1/en/feed/';
+const PROCUREMENT = /\b(?:perolehan|sebut ?harga|tender|procurement)\b/i;
+
+async function fetchJpdpNews(limit = 4): Promise<NormalizedNotice[]> {
+  const items = await rssItems(JPDP_RSS);
+  return items
+    .map((item: any) => ({ title: plainText(String(item.title)), link: String(item.link), published: toIso(item.pubDate) }))
+    .filter(x => !PROCUREMENT.test(x.title))
+    .slice(0, limit)
+    .map(x => privacyNotice({
+      id: `jpdp-${lastPathPart(x.link)}`.slice(0, 120),
+      ref: `JPDP ${x.published?.slice(0, 10) ?? ''}`.trim(),
+      title: x.title,
+      regulator: 'JPDP',
+      jurisdiction: 'MALAYSIA',
+      jurisdictionCode: 'MY',
+      type: 'ANNOUNCEMENT',
+      publishedAt: x.published,
+      url: x.link
+    }));
+}
+
+// The Office of the Australian Information Commissioner: its media centre
+// list (HTML). The OAIC also handles freedom of information, so only items
+// about privacy or data breaches are kept. Links go through the site search's
+// redirect, which holds the page's address.
+const OAIC_SITE = 'https://www.oaic.gov.au';
+const OAIC_NEWS = (start: number) => `${OAIC_SITE}/news/media-centre?${new URLSearchParams({
+  collection: '113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new', form: 'result', num_ranks: '30',
+  profile: 'news-results-page', sort: 'dmetapublishedDateISO', start_rank: String(start)
+})}`;
+
+export function parseOaicNews(html: string): { url: string; title: string; date: string; tags: string[]; teaser: string }[] {
+  return html.split('<div class="card">').slice(1).flatMap(chunk => {
+    const link = chunk.match(/<a href="([^"]+)" class="card-title">([\s\S]*?)<\/a>/);
+    const date = isoDay(plainText(chunk.match(/<p class="date">([^<]*)</)?.[1] ?? ''));
+    const url = link && new URL(link[1].replace(/&amp;/g, '&'), OAIC_SITE).searchParams.get('url');
+    if (!link || !date || !url?.startsWith(`${OAIC_SITE}/`)) return [];
+    return [{
+      url,
+      title: plainText(link[2]),
+      date,
+      tags: [...chunk.matchAll(/<div class="tag">([^<]+)<\/div>/g)].map(m => plainText(m[1])),
+      teaser: plainText(chunk.match(/<p class="card-text">([\s\S]*?)<\/p>/)?.[1] ?? '')
+    }];
+  });
+}
+
+async function fetchOaicNews(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = Array.from({ length: pagesFor(limit, 15, 3) }, (_, i) => OAIC_NEWS(1 + i * 30));
+  const rows = await readPages(pages, parseOaicNews);
+  return newestFirst(uniqueBy(rows, r => r.url))
+    .filter(r => mentionsPrivacy([r.title, r.teaser, ...r.tags].join(' ')))
+    .slice(0, limit)
+    .map(r => privacyNotice({
+      id: `oaic-${lastPathPart(r.url)}`.slice(0, 120),
+      ref: `OAIC ${r.tags[0] ?? 'News'} ${r.date}`,
+      title: r.title,
+      regulator: 'OAIC',
+      jurisdiction: 'AUSTRALIA',
+      jurisdictionCode: 'AU',
+      type: (r.tags[0] ?? 'NEWS').toUpperCase(),
+      publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Australia/Sydney'),
+      summary: r.teaser || undefined,
+      url: r.url
+    }));
+}
+
+// Japan's Personal Information Protection Commission: its news list (HTML, in
+// Japanese; the English site has a few items a year). Kept: the Act on the
+// Protection of Personal Information and the My Number Act, press releases,
+// calls for comments, international cooperation and activity reports. Left
+// out: commission meetings, recruitment, budgets and procurement, and the
+// routine notices of opt-out filings received and of the chair's travel.
+const PPC_SITE = 'https://www.ppc.go.jp';
+const PPC_NEWS = `${PPC_SITE}/information/`;
+const PPC_KINDS: Record<string, string> = {
+  個人情報保護法等: 'PERSONAL INFORMATION PROTECTION ACT',
+  報道発表: 'PRESS RELEASE',
+  意見募集: 'PUBLIC CONSULTATION',
+  マイナンバー: 'MY NUMBER ACT',
+  国際関係: 'INTERNATIONAL',
+  活動報告等: 'ACTIVITY REPORT'
+};
+const PPC_ROUTINE = /オプトアウト届出書|国際活動（出張等）/;
+
+export function parsePpcNews(html: string): { date: string; kind: string; url: string; title: string }[] {
+  return html.split(/<li>\s*<time /).slice(1).flatMap(chunk => {
+    const date = chunk.match(/^datetime="(\d{4}-\d{2}-\d{2})"/)?.[1];
+    const label = chunk.match(/class="news-label [^"]*">([^<]+)</)?.[1]?.trim();
+    const link = chunk.match(/<div class="news-text">\s*<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/);
+    const kind = label && PPC_KINDS[label];
+    if (!date || !kind || !link || PPC_ROUTINE.test(link[2])) return [];
+    const url = new URL(link[1].replace(/&amp;/g, '&'), PPC_SITE);
+    url.searchParams.delete('ref');
+    return [{ date, kind, url: url.toString(), title: plainText(link[2]) }];
+  });
+}
+
+async function fetchPpcNews(limit = 4): Promise<NormalizedNotice[]> {
+  const rows = parsePpcNews(await (await fetchOrThrow(PPC_NEWS)).text());
+  return newestFirst(rows).slice(0, limit).map(r => privacyNotice({
+    // A page can be listed more than once as it is updated, so the title is part of the id
+    id: `ppc-${r.date}-${createHash('sha1').update(r.title).digest('hex').slice(0, 8)}`,
+    ref: `PPC ${r.date}`,
+    title: r.title,
+    regulator: 'PPC',
+    jurisdiction: 'JAPAN',
+    jurisdictionCode: 'JP',
+    type: r.kind,
+    publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Tokyo'),
+    url: r.url,
+    language: 'ja'
+  }));
+}
+
+// South Korea's Personal Information Protection Commission: its English
+// notices and press releases (HTML table; a row opens the release by number)
+const PIPC_LIST = 'https://pipc.go.kr/eng/user/ltn/new/noticeList.do';
+const pipcPage = (n: string) => `https://pipc.go.kr/eng/user/ltn/new/noticeDetail.do?bbsId=BBSMSTR_000000000001&nttId=${n}`;
+
+export function parsePipcNotices(html: string): { id: string; title: string; date: string }[] {
+  return html.split('<td class="tb_title">').slice(1).flatMap(chunk => {
+    const link = chunk.match(/noticeDetail\('(\d+)'\)">([\s\S]*?)<\/a>/);
+    const day = chunk.match(/class="tb_date">\s*(\d{4})\.(\d{2})\.(\d{2})/);
+    if (!link || !day) return [];
+    return [{ id: link[1], title: plainText(link[2]), date: `${day[1]}-${day[2]}-${day[3]}` }];
+  });
+}
+
+async function fetchPipcNotices(limit = 4): Promise<NormalizedNotice[]> {
+  const pages = Array.from({ length: pagesFor(limit, 10, 3) }, (_, i) => (i ? `${PIPC_LIST}?pageIndex=${i + 1}` : PIPC_LIST));
+  const rows = await readPages(pages, parsePipcNotices);
+  return newestFirst(uniqueBy(rows, r => r.id)).slice(0, limit).map(r => privacyNotice({
+    id: `pipc-${r.id}`,
+    ref: `PIPC ${r.date}`,
+    title: r.title,
+    regulator: 'PIPC',
+    jurisdiction: 'SOUTH KOREA',
+    jurisdictionCode: 'KR',
+    type: 'PRESS RELEASE',
+    publishedAt: zonedToIso(`${r.date}T00:00:00`, 'Asia/Seoul'),
+    url: pipcPage(r.id)
   }));
 }
 
@@ -1890,8 +2207,8 @@ const ENDPOINTS: EndpointDefinition[] = [
     name: 'FTC Press Releases RSS',
     agency: 'FTC (United States)',
     jurisdiction: 'US Federal',
-    url: FTC_AI.url,
-    protocol: 'RSS XML (items on AI rules only)',
+    url: FTC.url,
+    protocol: 'RSS XML (items on AI rules or privacy only)',
     auth: 'Public / None',
     ingests: true
   },
@@ -1910,8 +2227,8 @@ const ENDPOINTS: EndpointDefinition[] = [
     name: 'CalPrivacy News RSS',
     agency: 'California Privacy Protection Agency',
     jurisdiction: 'US · California',
-    url: CALPRIVACY_AI.url,
-    protocol: 'RSS XML (items mentioning AI only)',
+    url: CALPRIVACY.url,
+    protocol: 'RSS XML',
     auth: 'Public / None',
     ingests: true
   },
@@ -1940,7 +2257,7 @@ const ENDPOINTS: EndpointDefinition[] = [
     name: 'gov.cn Policy Library: AI',
     agency: 'State Council & its departments (China)',
     jurisdiction: 'China',
-    url: GOV_CN_POLICY_SEARCH(1),
+    url: GOV_CN_POLICY_SEARCH(GOV_CN_AI, 1),
     protocol: 'JSON (policy library search, in Chinese; items on AI rules only)',
     auth: 'Public / None',
     ingests: true
@@ -1952,6 +2269,86 @@ const ENDPOINTS: EndpointDefinition[] = [
     jurisdiction: 'Japan',
     url: CAO_AI_TOPICS,
     protocol: 'HTML (topics list, in Japanese)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'ico',
+    name: 'ICO News, Blogs & Statements',
+    agency: 'ICO (United Kingdom)',
+    jurisdiction: 'United Kingdom',
+    url: ICO_NEWS_PAGE,
+    protocol: 'JSON (search service behind ICO news page)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'edpb',
+    name: 'EDPB News RSS',
+    agency: 'European Data Protection Board (European Union)',
+    jurisdiction: 'European Union',
+    url: EDPB_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'pdpc',
+    name: 'PDPC Media & Events',
+    agency: 'PDPC (Singapore)',
+    jurisdiction: 'Singapore',
+    url: PDPC_LIST(1),
+    protocol: 'JSON (listing service behind PDPC page)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'jpdp',
+    name: 'JPDP Announcements RSS',
+    agency: 'Personal Data Protection Department (Malaysia)',
+    jurisdiction: 'Malaysia',
+    url: JPDP_RSS,
+    protocol: 'RSS XML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'oaic',
+    name: 'OAIC Media Centre',
+    agency: 'OAIC (Australia)',
+    jurisdiction: 'Australia',
+    url: OAIC_NEWS(1),
+    protocol: 'HTML (items on privacy only)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'ppc',
+    name: 'PPC News',
+    agency: 'Personal Information Protection Commission (Japan)',
+    jurisdiction: 'Japan',
+    url: PPC_NEWS,
+    protocol: 'HTML (news list, in Japanese)',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'pipc',
+    name: 'PIPC English Notices',
+    agency: 'Personal Information Protection Commission (South Korea)',
+    jurisdiction: 'South Korea',
+    url: PIPC_LIST,
+    protocol: 'HTML',
+    auth: 'Public / None',
+    ingests: true
+  },
+  {
+    id: 'govcn-privacy',
+    name: 'gov.cn Policy Library: Personal Information',
+    agency: 'State Council & its departments (China)',
+    jurisdiction: 'China',
+    url: GOV_CN_POLICY_SEARCH(GOV_CN_PRIVACY, 1),
+    protocol: 'JSON (policy library search, in Chinese; titles on personal information only)',
     auth: 'Public / None',
     ingests: true
   },
@@ -2197,7 +2594,7 @@ async function getLiquidityHistory(range: LiquidityRange) {
 
 // Ingestion sources, keyed to the endpoint they read from
 // fetch(limit) reads more than the feed's usual number of items; the email digest uses this
-// narrowed: keeps only the feed's items about AI rules, so a read may find none
+// narrowed: keeps only the feed's items about AI rules or privacy, so a read may find none
 type SourceDefinition = { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; ttlMs?: number; inDigest?: false; narrowed?: true };
 
 const SOURCE_LIST: SourceDefinition[] = [
@@ -2232,13 +2629,22 @@ const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'ec-ai', name: 'European Commission AI News', fetch: fetchEcAiNews, narrowed: true },
   { endpointId: 'govuk-ai', name: 'UK DSIT & AI Security Institute', fetch: fetchUkAiPolicy, narrowed: true },
   { endpointId: 'fedreg-ai', name: 'US Federal Register: AI', fetch: fetchFederalRegisterAi, narrowed: true },
-  { endpointId: 'ftc-rss', name: 'FTC on AI', fetch: (limit = 4) => fetchAiFeed(FTC_AI, limit), narrowed: true },
+  { endpointId: 'ftc-rss', name: 'FTC on AI and Privacy', fetch: (limit = 4) => fetchAiFeed(FTC, limit), narrowed: true },
   { endpointId: 'ca-gov', name: 'California Governor on AI', fetch: (limit = 4) => fetchAiFeed(CALIFORNIA_GOVERNOR_AI, limit), narrowed: true },
-  { endpointId: 'calprivacy', name: 'CalPrivacy on AI', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY_AI, limit), narrowed: true },
+  { endpointId: 'calprivacy', name: 'CalPrivacy News', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY, limit) },
   { endpointId: 'co-ag', name: 'Colorado AG on AI', fetch: (limit = 4) => fetchAiFeed(COLORADO_AG_AI, limit), narrowed: true },
   { endpointId: 'msit-kr', name: 'Korea MSIT on AI', fetch: fetchMsitPressReleases, narrowed: true },
   { endpointId: 'govcn-ai', name: 'China State Council Policy Library: AI', fetch: fetchGovCnAiPolicies, narrowed: true },
-  { endpointId: 'cao-ai', name: 'Japan Cabinet Office AI Strategy', fetch: fetchCaoAiTopics }
+  { endpointId: 'cao-ai', name: 'Japan Cabinet Office AI Strategy', fetch: fetchCaoAiTopics },
+  // Data privacy (the FTC and CalPrivacy above also cover it)
+  { endpointId: 'ico', name: 'UK ICO News', fetch: fetchIcoNews },
+  { endpointId: 'edpb', name: 'EDPB News', fetch: fetchEdpbNews },
+  { endpointId: 'pdpc', name: 'Singapore PDPC News', fetch: fetchPdpcNews },
+  { endpointId: 'jpdp', name: 'Malaysia JPDP Announcements', fetch: fetchJpdpNews },
+  { endpointId: 'oaic', name: 'Australia OAIC on Privacy', fetch: fetchOaicNews, narrowed: true },
+  { endpointId: 'ppc', name: 'Japan PPC News', fetch: fetchPpcNews },
+  { endpointId: 'pipc', name: 'Korea PIPC Notices', fetch: fetchPipcNotices },
+  { endpointId: 'govcn-privacy', name: 'China State Council Policy Library: Personal Information', fetch: fetchGovCnPrivacyPolicies, narrowed: true }
 ];
 
 // Every source's notices get their sectors (with reasons) the same way
@@ -2293,14 +2699,18 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
       text = docText;
     } else if (BRDR_PAGE.test(sourceUrl)) {
       ({ text, ocr, pdfUrl: sourceUrl } = await fetchBrdrPdfText(sourceUrl));
-    } else if (/\.pdf$/i.test(new URL(sourceUrl).pathname)) {
-      const data = new Uint8Array(await (await fetchOrThrow(sourceUrl)).arrayBuffer());
-      if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
-      ({ text, ocr } = await extractPdfText(data));
     } else {
-      const html = await (await fetchOrThrow(sourceUrl)).text();
-      text = extractArticleText(html, sourceUrl);
-      published = pagePublishedDate(html) ?? null;
+      const res = await fetchOrThrow(sourceUrl);
+      // A PDF by its address or, for links without ".pdf" (PDPC reports), by its type
+      if (/\.pdf$/i.test(new URL(sourceUrl).pathname) || /^application\/pdf\b/i.test(res.headers.get('content-type') ?? '')) {
+        const data = new Uint8Array(await res.arrayBuffer());
+        if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
+        ({ text, ocr } = await extractPdfText(data));
+      } else {
+        const html = await res.text();
+        text = extractArticleText(html, sourceUrl);
+        published = pagePublishedDate(html) ?? null;
+      }
     }
     const result = text.length > 200 ? { ...summarize(text, { sourceUrl }), ...(ocr ? { ocr } : {}), published } : null;
     keyPointsCache.set(notice.id, result);

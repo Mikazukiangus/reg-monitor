@@ -1,0 +1,1551 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+    <title>Media centre | OAIC</title>
+
+
+
+<!-- Misc Metadata -->
+<meta charset="utf-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+
+
+<!-- Global Default Metadata -->
+<meta name="dcterms.title" content="Media centre">
+<meta name="dcterms.creator" content="OAIC">
+<meta name="dcterms.created" content="2022-04-06T11:03:15+10:00">
+<meta name="dcterms.modified" content="2026-02-26T15:15:50+11:00">
+<meta name="dcterms.issued" content="2026-02-26T15:15:48+11:00">
+<meta name="dcterms.format" content="HTML">
+<meta name="dcterms.identifier" content="https://www.oaic.gov.au/news/media-centre">
+
+
+<!-- Custom Metadata -->
+
+<!-- Page //-->
+
+<!-- SEO //-->
+<meta name="publishedDate" content="26 February 2026">
+<meta name="publishedDate_ISO" content="2026-02-26T00:00:00+11:00">
+<meta name="description" content="Find our media releases, speeches, interviews and articles below. To keep up-to-date, follow us on social media." />
+<meta name="pdISO" content="2026-02-26T00:00:00+11:00" />
+<meta name="robots" content="" />
+
+<!-- Chapter navigation //-->
+<meta name="chapter-nav" content="no" />
+<meta name="chapter-nav-prev" content="" />
+<meta name="chapter-nav-next" content="" />
+<meta name="chapter-nav-prev-btn-text" content="Previous chapter" />
+<meta name="chapter-nav-next-btn-text" content="Next chapter" />
+<meta name="background_color" content="chapter-navigation__wrapper--white" />
+
+<!-- Media //-->
+<meta name="show-related-articles" content="no" />
+<meta name="topic" content="" />
+<meta name="contentType" content="" />
+<meta name="featuredNews" content="no" />
+<meta name="author-name" content="" />
+<meta name="author-title" content="" />
+<meta name="author-image" content="" />
+
+<!-- Search //-->
+<meta name="type" content="media" />
+
+<!-- Feedback //-->
+<meta name="showFeedbackWidget" content="no" />
+<meta name="showShareWidget" content="no" />
+
+
+
+<!-- Google+ Schema.org Data | https://developers.google.com/+/web/snippet/article-rendering -->
+<meta itemprop="name" content="Media centre" />
+<meta itemprop="description" content="Find our media releases, speeches, interviews and articles below. To keep up-to-date, follow us on social media." />
+<meta itemprop="image" content="" />
+
+<!-- Twitter Card Data | https://dev.twitter.com/cards/types/summary -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@OAICgov" />
+<meta name="twitter:title" content="Media centre" />
+<meta name="twitter:description" content="Find our media releases, speeches, interviews and articles below. To keep up-to-date, follow us on social media." />
+<meta name="twitter:image" content="" />
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Media centre",
+  "description": "Find our media releases, speeches, interviews and articles below. To keep up-to-date, follow us on social media.",
+  "url": "https://www.oaic.gov.au/news/media-centre",
+  "datePublished": "06am30Australia/Sydney",
+  "dateModified": "26pm28Australia/Sydney",
+  "publisher": {
+    "@type": "Organization",
+    "name": "OAIC",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.oaic.gov.au/__data/assets/image/0028/245845/OAIC-logo-inline-dark-1.png",
+      "caption": "OAIC - Australian Government - Office of the Australian Information Commissioner"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.oaic.gov.au/news/media-centre"
+  }
+}
+</script>
+
+
+
+<!-- Open Graph Data | http://ogp.me/ -->
+<meta property="og:title" content="Media centre" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.oaic.gov.au/news/media-centre" />
+<meta property="og:image" content="" />
+<meta property="og:description" content="Find our media releases, speeches, interviews and articles below. To keep up-to-date, follow us on social media." />
+<meta property="og:site_name" content="OAIC" />
+<meta property="article:published_time" content="2026-02-26T15:15:48+11:00" />
+<meta property="article:modified_time" content="2026-02-26T15:15:50+11:00" />
+<meta property="article:tag" content="" />
+
+
+<meta name="theme-color" content="#fafafa">
+
+<!-- Readspeaker -->    
+<script src="//cdn-oc.readspeaker.com/script/9755/webReader/webReader.js?pids=wr" type="text/javascript" id="rs_req_Init"></script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PTH9SP3B');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Google Site Verification -->
+<meta name="google-site-verification" content="sQVHBUKhjuCjBjithPialZYhGQ5SPKwjb1_rY8OqsjA" />
+
+<!-- Linkedin Site Verification -->
+<meta name="linkedin-site-verification" content="dae90963-e2d3-4247-ba51-75bc31edede6" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/main.css?h=0a5fa99">
+
+<link rel="stylesheet" href="https://www.oaic.gov.au/__data/assets/css_file/0024/240585/custom.css?v=0.1.400">
+
+<!-- Fonts -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<!-- Favicons -->
+<link rel="shortcut icon" href="https://www.oaic.gov.au/__data/assets/image/0016/14182/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://www.oaic.gov.au/__data/assets/image/0015/14181/apple-touch-icon.png">
+
+    
+   
+
+<!--
+  Running Squiz Matrix
+  Developed by Squiz - http://www.squiz.net
+  Squiz, Squiz Matrix, MySource, MySource Matrix and Squiz.net are registered Trademarks of Squiz Pty Ltd
+  Page generated: 15 October 2026 19:05:34
+-->
+
+
+</head>
+
+<body class="inside">
+    <!-- Cookie banner start -->
+    
+<section class="cookie-banner" aria-labelledby="cookie-heading">
+    <h2 class="visuallyhidden" id="cookie-heading">We use cookies on this site</h2>
+    <div class="cookie-banner__content">
+        <div>
+            <p>We use cookies to analyse traffic and to improve your browsing experience on our website. To find out more, read our <a href="https://www.oaic.gov.au/about-the-OAIC/our-corporate-information/plans-policies-and-procedures/privacy-policy#section-collecting-through-the-oaic-website">privacy policy</a>.</p>
+        </div>
+        <button class="cookie-banner__close primary-button" id="close-cookie-banner" aria-label="Close and accept cookie policy">Close</button>
+    </div>
+</section>
+    <!-- Cookie banner end -->
+    
+    <!-- Skip to content start -->
+    <div class="skip-to-content">
+    <a href="#main-content-area" class="skip-to-content__link visuallyhidden focusable">Skip to main content</a>
+</div>    <!-- Skip to content end -->
+    
+    <div class="page-wrapper">
+        <!-- Notification banner start -->
+                <!-- Notification banner end -->
+        
+        <!-- Header start -->
+        <!--noindex-->
+<header class="site-header">
+    
+    
+    
+    <div class="utility-nav">
+        <div class="utility-nav__wrapper">
+            
+                        <a href="../news" class="utility-nav__link ">News</a>
+                    
+                        <a href="/about-the-OAIC/join-our-team" class="utility-nav__link ">Join our team</a>
+                    
+                        <a href="/contact-us" class="utility-nav__link ">Contact us</a>
+                    
+        </div>
+    </div>
+    
+    
+    <div class="header-content">
+        <a href="https://www.oaic.gov.au" class="header-logo">
+            <img src="https://www.oaic.gov.au/__data/assets/file/0020/13664/oaic-header-logo.svg" alt="Office of the Australian Information Commissioner (OAIC)">
+        </a>
+        <button class="mobile-menu" aria-controls="header-nav" aria-expanded="false">
+            <img class="menu-icon menu-icon--burger" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/hamburger-menu.svg" alt="open menu">
+            <img class="menu-icon menu-icon--close" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/cancel-icon-white.svg" alt="close menu">
+        </button>
+        
+        <div class="search-container search-container--header">
+            <form class="input-form" action="https://www.oaic.gov.au/search" data-action="https://www.oaic.gov.au/search?SQ_ASSET_CONTENTS_RAW">
+                <input name="query" autocomplete="off" id="autoComplete" placeholder="Search&hellip;" class="search-box" aria-label="Search input"
+                  data-autocomplete-endpoint="https://dxp-au-search.funnelback.squiz.cloud/s/suggest.json?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&profile=auto-completion-global&fmt=json%2B%2B&alpha=0.5&show=10">
+                <input type="hidden" name="form" value="result">
+                <button type="button" id="clear-text-btn" class="cancel-logo" aria-label="Clear text">
+                    <img src="https://www.oaic.gov.au/__data/assets/file/0022/13666/cancel-icon.svg" alt="clear text cancel icon">
+                </button>
+                <button type="submit"  aria-label="Submit search">
+                    <img class="search-icon" src="https://www.oaic.gov.au/__data/assets/file/0023/13667/search-outline.svg" alt="Search">
+                </button>
+            </form>
+        </div>
+
+        <div id="header-nav" class="header-nav">
+    <nav class="header-nav__nav">
+        
+        														    
+            
+            <div class="header-nav__item">
+                <a 
+                    href="https://www.oaic.gov.au" 
+                    class="header-nav__link 
+                    
+                    "
+                >
+                    Home
+                </a>
+            </div>
+            
+
+                            
+                        <div class="header-nav__item">
+                            <button 
+                                class="header-nav__button "  
+                                aria-expanded="false"
+                            >
+                                Privacy                                <div class="header-nav__mobile-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-plus" alt="expand menu">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-minus" alt="collapse menu">
+                                </div>
+                                <div class="header-nav__desktop-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-down-white.svg" alt="expand menu">
+                                </div>
+                            </button>
+                            <div class="header-nav__sub">
+                                <div class="header-nav__sub-wrapper">
+                                    <div class="header-nav__sub-first">
+                                        <a href="https://www.oaic.gov.au/privacy" class="header-nav__sub-link">
+                                            Privacy                                        </a>
+                                    </div>
+                                    <div class="header-nav__sub-grid">
+                                        
+                                        														                                                 <a href="https://www.oaic.gov.au/privacy/your-privacy-rights" class="header-nav__sub-link">
+                                                     Your privacy rights                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-complaints" class="header-nav__sub-link">
+                                                     Privacy complaints                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/australian-privacy-principles" class="header-nav__sub-link">
+                                                     Australian Privacy Principles                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies" class="header-nav__sub-link">
+                                                     Privacy guidance for organisations and government agencies                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/notifiable-data-breaches" class="header-nav__sub-link">
+                                                     Notifiable data breaches                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-legislation" class="header-nav__sub-link">
+                                                     Privacy legislation                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-assessments-and-decisions" class="header-nav__sub-link">
+                                                     Privacy assessments and decisions                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-registers" class="header-nav__sub-link">
+                                                     Privacy registers                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/privacy/privacy-for-kids" class="header-nav__sub-link">
+                                                     Privacy for Kids                                                 </a>
+                                            				                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                            
+                        <div class="header-nav__item">
+                            <button 
+                                class="header-nav__button "  
+                                aria-expanded="false"
+                            >
+                                Freedom of information                                <div class="header-nav__mobile-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-plus" alt="expand menu">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-minus" alt="collapse menu">
+                                </div>
+                                <div class="header-nav__desktop-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-down-white.svg" alt="expand menu">
+                                </div>
+                            </button>
+                            <div class="header-nav__sub">
+                                <div class="header-nav__sub-wrapper">
+                                    <div class="header-nav__sub-first">
+                                        <a href="https://www.oaic.gov.au/freedom-of-information" class="header-nav__sub-link">
+                                            Freedom of information                                        </a>
+                                    </div>
+                                    <div class="header-nav__sub-grid">
+                                        
+                                        														                                                 <a href="https://www.oaic.gov.au/freedom-of-information/your-freedom-of-information-rights" class="header-nav__sub-link">
+                                                     Your freedom of information rights                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/how-to-access-government-information" class="header-nav__sub-link">
+                                                     How to access government information                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/freedom-of-information-guidance-for-government-agencies" class="header-nav__sub-link">
+                                                     Freedom of information guidance for government agencies                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/freedom-of-information-legislation-and-determinations" class="header-nav__sub-link">
+                                                     Freedom of information legislation and determinations                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/information-commissioner-decisions-and-reports" class="header-nav__sub-link">
+                                                     Information Commissioner decisions and reports                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/freedom-of-information-statistics-for-the-oaic" class="header-nav__sub-link">
+                                                     Freedom of information statistics for the OAIC                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/freedom-of-information/australian-government-freedom-of-information-statistics" class="header-nav__sub-link">
+                                                     Australian Government freedom of information statistics                                                 </a>
+                                            				                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                            
+                        <div class="header-nav__item">
+                            <button 
+                                class="header-nav__button "  
+                                aria-expanded="false"
+                            >
+                                Consumer Data Right                                <div class="header-nav__mobile-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-plus" alt="expand menu">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-minus" alt="collapse menu">
+                                </div>
+                                <div class="header-nav__desktop-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-down-white.svg" alt="expand menu">
+                                </div>
+                            </button>
+                            <div class="header-nav__sub">
+                                <div class="header-nav__sub-wrapper">
+                                    <div class="header-nav__sub-first">
+                                        <a href="https://www.oaic.gov.au/consumer-data-right" class="header-nav__sub-link">
+                                            Consumer Data Right                                        </a>
+                                    </div>
+                                    <div class="header-nav__sub-grid">
+                                        
+                                        														                                                 <a href="https://www.oaic.gov.au/consumer-data-right/information-for-consumers" class="header-nav__sub-link">
+                                                     Information for consumers                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/consumer-data-right/consumer-data-right-complaints" class="header-nav__sub-link">
+                                                     Consumer Data Right complaints                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/consumer-data-right/consumer-data-right-guidance-for-business" class="header-nav__sub-link">
+                                                     Consumer Data Right guidance for business                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/consumer-data-right/consumer-data-right-legislation,-regulation-and-definitions" class="header-nav__sub-link">
+                                                     Consumer Data Right legislation, regulation and definitions                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/consumer-data-right/consumer-data-right-assessments" class="header-nav__sub-link">
+                                                     Consumer Data Right assessments                                                 </a>
+                                            				                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                            
+                        <div class="header-nav__item">
+                            <a 
+                                href="https://www.oaic.gov.au/digital-id" 
+                                class="header-nav__link "
+                            >
+                                Digital ID                            </a>
+                        </div>
+                    
+                            
+                        <div class="header-nav__item">
+                            <button 
+                                class="header-nav__button "  
+                                aria-expanded="false"
+                            >
+                                Engage with us                                <div class="header-nav__mobile-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-plus" alt="expand menu">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-minus" alt="collapse menu">
+                                </div>
+                                <div class="header-nav__desktop-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-down-white.svg" alt="expand menu">
+                                </div>
+                            </button>
+                            <div class="header-nav__sub">
+                                <div class="header-nav__sub-wrapper">
+                                    <div class="header-nav__sub-first">
+                                        <a href="https://www.oaic.gov.au/engage-with-us" class="header-nav__sub-link">
+                                            Engage with us                                        </a>
+                                    </div>
+                                    <div class="header-nav__sub-grid">
+                                        
+                                        														                                                 <a href="https://www.oaic.gov.au/engage-with-us/consultations" class="header-nav__sub-link">
+                                                     Consultations                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/engage-with-us/submissions" class="header-nav__sub-link">
+                                                     Submissions                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/engage-with-us/translations" class="header-nav__sub-link">
+                                                     Translations                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/engage-with-us/events" class="header-nav__sub-link">
+                                                     Events                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/engage-with-us/networks" class="header-nav__sub-link">
+                                                     Networks                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/engage-with-us/research-and-training-resources" class="header-nav__sub-link">
+                                                     Research and training resources                                                 </a>
+                                            				                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                            
+                        <div class="header-nav__item">
+                            <button 
+                                class="header-nav__button "  
+                                aria-expanded="false"
+                            >
+                                About the OAIC                                <div class="header-nav__mobile-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-plus" alt="expand menu">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-plus-white.svg" class="icon-minus" alt="collapse menu">
+                                </div>
+                                <div class="header-nav__desktop-toggle">
+                                    <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-down-white.svg" alt="expand menu">
+                                </div>
+                            </button>
+                            <div class="header-nav__sub">
+                                <div class="header-nav__sub-wrapper">
+                                    <div class="header-nav__sub-first">
+                                        <a href="https://www.oaic.gov.au/about-the-OAIC" class="header-nav__sub-link">
+                                            About the OAIC                                        </a>
+                                    </div>
+                                    <div class="header-nav__sub-grid">
+                                        
+                                        														                                                 <a href="https://www.oaic.gov.au/about-the-OAIC/what-we-do" class="header-nav__sub-link">
+                                                     What we do                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/who-we-are" class="header-nav__sub-link">
+                                                     Who we are                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/join-our-team" class="header-nav__sub-link">
+                                                     Join our team                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/access-our-information" class="header-nav__sub-link">
+                                                     Access our information                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/our-regulatory-approach" class="header-nav__sub-link">
+                                                     Our regulatory approach                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/our-corporate-information" class="header-nav__sub-link">
+                                                     Our corporate information                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/commissioner-priorities" class="header-nav__sub-link">
+                                                     Commissioner Priorities                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/information-policy" class="header-nav__sub-link">
+                                                     Information policy                                                 </a>
+                                                                                             <a href="https://www.oaic.gov.au/about-the-OAIC/serving-legal-documents-on-the-australian-information-commissioner" class="header-nav__sub-link">
+                                                     Serving legal documents on the Australian Information Commissioner                                                 </a>
+                                            				                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+            				            
+        
+        
+
+            
+                        <div class="header-nav__item header-nav__item--mobile-only">
+                            <a href="/news" class="header-nav__link">News</a>
+                        </div>
+                    
+                        <div class="header-nav__item header-nav__item--mobile-only">
+                            <a href="/about-the-OAIC/join-our-team" class="header-nav__link">Join our team</a>
+                        </div>
+                    
+                        <div class="header-nav__item header-nav__item--mobile-only">
+                            <a href="/contact-us" class="header-nav__link">Contact us</a>
+                        </div>
+                    
+        
+
+        
+            
+    </nav>
+</div>
+
+    </div>
+</header>
+<div class="nav-close-overlay"></div>
+<!--endnoindex-->        <!-- Header end -->
+        
+        <main class="main">
+            
+            
+            
+    
+            <div class="breadcrumb__wrapper">
+              <div class="section 
+">
+                <div class="section-item flex-box ">
+                  <div class="breadcrumb breadcrumb--separator-chevron">
+                    <nav class="breadcrumb__nav" aria-label="Breadcrumb">
+                                                   <ul class="breadcrumb__list">
+                            
+                            <span class="breadcrumb__list-item"><a href="https://www.oaic.gov.au" class="breadcrumb__list-item-link" aria-label="Go to home page"><svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 50 50" height="24" width="24"><path d="M25 9.0937 7.281 25.3747h5.563v15.531h24.312v-15.531h5.563L25 9.0937z" fill="currentColor"></path></svg></a></span>
+                                                            
+                                <li class="breadcrumb__list-item">
+                                     <a class="breadcrumb__list-item-link" href="https://www.oaic.gov.au/news">News</a>
+                                </li>
+                                                            
+                                <li class="breadcrumb__list-item">
+                                     <a class="breadcrumb__list-item-link" href="https://www.oaic.gov.au/news/media-centre">Media centre</a>
+                                </li>
+                                                      </ul>
+                         
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+
+            
+            
+
+                
+                <!-- Body start -->
+                <div id="main-content-area" class="page-content-newsroom">
+    
+    
+    
+    <section class="landing-page">
+    <div class="container">
+        <h1 class="title rs_skip"><!-- RSPEAK_STOP -->Media centre<!-- RSPEAK_START --></h1>    
+        <div class="banner">
+             
+            <div class="text rs_skip">
+                            <h2 class="tagline rs_skip"><!-- RSPEAK_STOP -->Find our media releases and statements.<!-- RSPEAK_START --></h2>
+                <p class="desc rs_skip"><!-- RSPEAK_STOP --><p>There’s also answers to questions we’re frequently asked about notifiable data breaches, commissioner-initiated investigations and penalties, as well as contact details for our media team and photos of our commissioners.</p><!-- RSPEAK_START --></p>
+            </div>
+                        <img src="https://www.oaic.gov.au/__data/assets/image/0028/22978/newsroom.jpg" alt="Newsroom" class="image">
+                    </div>
+    </div>
+</section>
+<script>
+        if(document.querySelector('.landing-page .banner')) {
+            document.querySelector('.breadcrumb__wrapper').insertAdjacentElement('afterend',document.querySelector('.landing-page .banner').closest('.landing-page'))
+        }
+</script>
+<div id="component_240590">
+<div class="search-results-listing">
+    <div class="content">
+        <div class="title">
+        <h1 class="title">Search our media releases, articles, interviews</h1>
+        
+        </div>
+
+        <div class="search-container">
+            <form class="input-form" data-action="https://www.oaic.gov.au/site-configuration/funnelback/news-search">
+            <!-- Content from Funnelback -->
+            
+
+  <div class="search-bg" style="padding:30px 0">
+    <div class="search-div">
+      <input type="search" autocomplete="off" name="query" id="inputBox" placeholder="Search..." aria-label="Search input" value="" class="search-box">
+      <button type="button" class="cancel-logo"><img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/cancel-icon.svg" alt="clear search text"></button>
+      <button class="search-icon" type="submit">
+        <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/search-outline.svg" alt="search">
+      </button>
+    </div>
+  </div>
+  <div class="search-content">  
+    
+    
+    <div class="results">
+      <div class="search-results-cards">
+
+
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fsecuring-information-integrity-and-the-public-interest-in-a-world-of-fake-news&amp;index_url=matrix%3A%2F%2Fnews%2F269316%2F&amp;auth=LyAOukA8RsIVHybhomFfCA&amp;profile=news-results-page&amp;rank=1&amp;query=%21padrenull" class="card-title">Securing information integrity and the public interest in a world of fake news</a>
+              <p class="card-text">Information integrity can be the antidote to information disorder and misinformation and support democratic ideals.</p>
+                <div class="tags">
+                    <div class="tag">Article</div>
+                    <div class="tag">Information access</div>
+                    <div class="tag">Information governance</div>
+                </div>  
+              <div class="info">
+                <p class="date">9 October 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaic-opens-investigation-into-maker-of-heycyan-smart-glasses-phone-app&amp;index_url=matrix%3A%2F%2Fnews%2F269201%2F&amp;auth=zN2AkklVU%2FaNmu1RuCVwTw&amp;profile=news-results-page&amp;rank=2&amp;query=%21padrenull" class="card-title">OAIC opens investigation into maker of HeyCyan smart glasses phone app</a>
+              <p class="card-text">The OAIC has commenced an investigation into the privacy practices of Shenzhen Qingcheng Future Technology Co. Ltd (Shenzhen Qingcheng), the maker of the ‘HeyCyan’ Smart Glasses phone application.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">7 October 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fnew-resources-on-transparency-for-use-of-ai-and-automated-decision-making&amp;index_url=matrix%3A%2F%2Fnews%2F269003%2F&amp;auth=9m9lpcKgg%2Fonsnya47IIOQ&amp;profile=news-results-page&amp;rank=3&amp;query=%21padrenull" class="card-title">New resources on transparency for use of AI and automated decision-making</a>
+              <p class="card-text">Information that must be included in a privacy policy for APP entities who have arranged for a computer program to make or inform decisions that significantly affect individuals’ rights or interests</p>
+                <div class="tags">
+                    <div class="tag">Statement</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">30 September 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fsupporting-information-integrity-on-international-access-to-information-day&amp;index_url=matrix%3A%2F%2Fnews%2F268852%2F&amp;auth=axK%2FopSUYbVki6V8PAZ%2FSQ&amp;profile=news-results-page&amp;rank=4&amp;query=%21padrenull" class="card-title">Supporting information integrity on  International Access to Information Day</a>
+              <p class="card-text">28 September is International Access to Information Day (IAID). In a world of AI-generated content, misinformation and information disorder, trusted government information matters more than ever.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Freedom of Information</div>
+                    <div class="tag">Information access</div>
+                    <div class="tag">Information Publication Scheme</div>
+                </div>  
+              <div class="info">
+                <p class="date">28 September 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaics-action-in-relation-to-the-2023-latitude-data-breach-and-information-to-update-and-assist-individuals&amp;index_url=matrix%3A%2F%2Fnews%2F268841%2F&amp;auth=DBzdTglEa8WUQPzaAXDn5w&amp;profile=news-results-page&amp;rank=5&amp;query=%21padrenull" class="card-title">OAIC’s action in relation to the 2023 Latitude Data Breach and information to update and assist individuals</a>
+              <p class="card-text">On 10 May 2023, the OAIC commenced an investigation into the personal information handling practices of the Latitude group of companies (Latitude)</p>
+                <div class="tags">
+                    <div class="tag">Statement</div>
+                    <div class="tag">Data breach</div>
+                </div>  
+              <div class="info">
+                <p class="date">25 September 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaic-review-highlights-opportunities-to-strengthen-transparency&amp;index_url=matrix%3A%2F%2Fnews%2F266786%2F&amp;auth=rf%2FiQwBG7s8WP%2BZIMXxjgQ&amp;profile=news-results-page&amp;rank=6&amp;query=%21padrenull" class="card-title">OAIC review highlights opportunities to strengthen transparency</a>
+              <p class="card-text">The OAIC has examined the disclosure logs of 30 agencies to assess compliance with s 11C of the Freedom of Information Act 1982 (FOI Act) and OAIC FOI guidelines.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Freedom of Information</div>
+                    <div class="tag">Information access</div>
+                    <div class="tag">Information Publication Scheme</div>
+                </div>  
+              <div class="info">
+                <p class="date">7 August 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-publishes-updated-guidance-on-facial-recognition-in-retail-spaces&amp;index_url=matrix%3A%2F%2Fnews%2F266327%2F&amp;auth=BwPnj4BcCp0P71aYTnls6w&amp;profile=news-results-page&amp;rank=7&amp;query=%21padrenull" class="card-title">Privacy Commissioner publishes updated guidance on facial recognition in retail spaces</a>
+              <p class="card-text">The Office of the Australian Information Commissioner has published updates to its guidance for Australian Privacy Principle (APP) entities that are considering using facial recognition technology in high volume and publicly accessible physical</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Facial recognition technology</div>
+                </div>  
+              <div class="info">
+                <p class="date">29 July 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-completes-preliminary-inquiries-into-qantas-2025-data-incident&amp;index_url=matrix%3A%2F%2Fnews%2F265937%2F&amp;auth=8d%2BvUELS6RGGLUDQqk7Q2A&amp;profile=news-results-page&amp;rank=8&amp;query=%21padrenull" class="card-title">Privacy Commissioner completes preliminary inquiries into Qantas 2025 data incident</a>
+              <p class="card-text">The Australian Privacy Commissioner has published a report of the OAIC’s preliminary inquiries into the 2025 Qantas Airways Limited (Qantas) data breach incident.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Data breach</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">16 July 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fdata-breach-notifications-increase-to-all-time-high-in-2025%2C-new-ndb-stats-show&amp;index_url=matrix%3A%2F%2Fnews%2F265609%2F&amp;auth=EEeANnWa0vP%2FhSi7wL8sDA&amp;profile=news-results-page&amp;rank=9&amp;query=%21padrenull" class="card-title">Data breach notifications increase to all-time high in 2025, new NDB stats show</a>
+              <p class="card-text">Newly published statistics reveal that 2025 saw the highest number of data breach notification being reported to the OAIC since the reporting scheme commenced in 2018.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Data breach</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">6 July 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-finds-privacy-breaches-in-third-party-tracking-pixel-investigation&amp;index_url=matrix%3A%2F%2Fnews%2F265115%2F&amp;auth=5nHidRUN8R6%2Fk4ieIBxd7Q&amp;profile=news-results-page&amp;rank=10&amp;query=%21padrenull" class="card-title">Privacy Commissioner finds privacy breaches in third-party tracking pixel investigation</a>
+              <p class="card-text">The Privacy Commissioner has found that providers Medmate Australia Pty Ltd and Monash IVF Pty Ltd interfered with the privacy of individuals whose sensitive information was collected via third-party tracking pixels.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Determination</div>
+                    <div class="tag">Investigation</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">24 June 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fregulators-strengthen-joint-oversight-of-digital-platforms&amp;index_url=matrix%3A%2F%2Fnews%2F265005%2F&amp;auth=4FuHOEcoVF2LRG1lXE%2BuNw&amp;profile=news-results-page&amp;rank=11&amp;query=%21padrenull" class="card-title">Regulators strengthen joint oversight of digital platforms</a>
+              <p class="card-text">The Digital Platform Regulators Forum (DP-REG) has signed a Memorandum of Understanding to strengthen coordination in their regulation of digital platforms.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                </div>  
+              <div class="info">
+                <p class="date">17 June 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Faustralian-privacy-commissioner-orders-american-express-australia-limited-to-compensate-complainant-following-interference-in-privacy&amp;index_url=matrix%3A%2F%2Fnews%2F264867%2F&amp;auth=PniaP2vgSNpzoo1Hrc8Sag&amp;profile=news-results-page&amp;rank=12&amp;query=%21padrenull" class="card-title">Australian Privacy Commissioner orders American Express Australia Limited to compensate complainant following interference in privacy</a>
+              <p class="card-text">The Office of the Australian Information Commissioner (OAIC) has today published its summary report of the determination in the matter of ‘BAM’ and American Express Australia Limited</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                </div>  
+              <div class="info">
+                <p class="date">15 June 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-finds-against-optus-in-white-pages-breach&amp;index_url=matrix%3A%2F%2Fnews%2F264799%2F&amp;auth=Nn5agGxuUgrIdx2PdeakxA&amp;profile=news-results-page&amp;rank=13&amp;query=%21padrenull" class="card-title">Privacy Commissioner finds against Optus in White Pages breach</a>
+              <p class="card-text">A determination issued by the Australian Privacy Commissioner Carly Kind found Optus interfered with the privacy of individuals whose personal information was listed in the White Pages contrary to an expressed preference or request for an unlisted</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">11 June 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Faustralians-more-concerned-about-privacy-as-trust-in-ai-languishes%2C-survey-finds&amp;index_url=matrix%3A%2F%2Fnews%2F264363%2F&amp;auth=pmG6TGprtBjINkGtybunUg&amp;profile=news-results-page&amp;rank=14&amp;query=%21padrenull" class="card-title">Australians more concerned about privacy as trust in AI languishes, survey finds</a>
+              <p class="card-text">The Australian Community Attitudes to Privacy Survey (ACAPS), conducted by the OAIC every 3 years, provides a comprehensive view of Australians’ privacy attitudes and experiences, including how recent events have impacted them.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">28 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fstatement-on-australian-national-audit-office-report&amp;index_url=matrix%3A%2F%2Fnews%2F263980%2F&amp;auth=y2NQ1NLU0m8RZ3rcCTyeIQ&amp;profile=news-results-page&amp;rank=15&amp;query=%21padrenull" class="card-title">Statement on Australian National Audit Office report</a>
+              <p class="card-text">The Office of the Australian Information Commissioner has today welcomed the Australian National Audit Office and Auditor-General’s independent performance audit, Administration of the Freedom of Information Act 1982 by selected entities.</p>
+                <div class="tags">
+                    <div class="tag">Statement</div>
+                    <div class="tag">Freedom of Information</div>
+                    <div class="tag">Information Publication Scheme</div>
+                </div>  
+              <div class="info">
+                <p class="date">20 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fassociation-of-information-access-commissioners-communique&amp;index_url=matrix%3A%2F%2Fnews%2F264016%2F&amp;auth=p29l5kaLRrse8YIaMKX98Q&amp;profile=news-results-page&amp;rank=16&amp;query=%21padrenull" class="card-title">Association of Information Access Commissioners Communiqué</a>
+              <p class="card-text">The Association of Information Access Commissioners (AIAC), comprising Information Commissioners and Ombudsmen from Australia and New Zealand, held their bi-annual meeting in Sydney from 29–30 April 2026.</p>
+                <div class="tags">
+                    <div class="tag">Announcement</div>
+                    <div class="tag">Information access</div>
+                    <div class="tag">Information Publication Scheme</div>
+                </div>  
+              <div class="info">
+                <p class="date">19 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaic-finalises-investigation-into-property-lovers-and-fastproperty.ai&amp;index_url=matrix%3A%2F%2Fnews%2F263834%2F&amp;auth=nGMBlYVpQlNHELi4Ba1wLQ&amp;profile=news-results-page&amp;rank=17&amp;query=%21padrenull" class="card-title">OAIC finalises investigation into Property Lovers and fastproperty.ai</a>
+              <p class="card-text">The OAIC has today released a report of a Commissioner-initiated investigation into Property Lovers and fastproperty.ai, concluding that fastproperty.ai did not collect, use or disclose personal information.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">14 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fstatement-on-instructure-canvas-cyber-incident&amp;index_url=matrix%3A%2F%2Fnews%2F263705%2F&amp;auth=A5Mq9idKTII93aXYVQ41XA&amp;profile=news-results-page&amp;rank=18&amp;query=%21padrenull" class="card-title">Statement on Instructure (Canvas) cyber incident</a>
+              <p class="card-text">The Office of the Australian Information Commissioner (OAIC) is aware of a recent global cyber incident impacting Instructure.</p>
+                <div class="tags">
+                    <div class="tag">Statement</div>
+                    <div class="tag">Data breach</div>
+                </div>  
+              <div class="info">
+                <p class="date">8 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-launches-privacy-awareness-week-2026-trust-is-built-here&amp;index_url=matrix%3A%2F%2Fnews%2F263554%2F&amp;auth=bM0fzEhL05A96GkYOljpMw&amp;profile=news-results-page&amp;rank=19&amp;query=%21padrenull" class="card-title">Privacy Commissioner launches Privacy Awareness Week 2026: Trust is built here</a>
+              <p class="card-text">The OAIC today launched Privacy Awareness Week (PAW) 2026. The campaign calls on government agencies and Australian Privacy Principle (APP) entities to lift the standard of how they handle privacy complaints and disputes.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">4 May 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fesafety-and-oaic-working-together-to-protect-privacy-and-safety-for-all-australians&amp;index_url=matrix%3A%2F%2Fnews%2F263293%2F&amp;auth=ZeAeuiCyyBJOTPB4sqAKTA&amp;profile=news-results-page&amp;rank=20&amp;query=%21padrenull" class="card-title">eSafety and OAIC working together to protect privacy and safety for all Australians</a>
+              <p class="card-text">eSafety and the Office of the Australian Information Commissioner will work together under a new agreement to jointly ensure Australians’ privacy and safety online.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Children&#39;s privacy</div>
+                    <div class="tag">Enforcement</div>
+                    <div class="tag">Privacy</div>
+                    <div class="tag">Social Media Minimum Age</div>
+                </div>  
+              <div class="info">
+                <p class="date">23 April 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Frenttech-platforms-must-stop-unfair-and-excessive-personal-information-collection%2C-says-privacy-commissioner&amp;index_url=matrix%3A%2F%2Fnews%2F263256%2F&amp;auth=e9oJykgOxh%2FZVBaYwwNxLA&amp;profile=news-results-page&amp;rank=21&amp;query=%21padrenull" class="card-title">RentTech platforms must stop unfair and excessive personal information collection, says Privacy Commissioner</a>
+              <p class="card-text">A determination issued today by the Privacy Commissioner finds that the 2Apply rental technology platform collected excessive personal information and did so by unfair means.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Determination</div>
+                    <div class="tag">Enforcement</div>
+                    <div class="tag">Investigation</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">22 April 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaic-releases-exposure-draft-of-the-childrens-online-privacy-code&amp;index_url=matrix%3A%2F%2Fnews%2F262638%2F&amp;auth=NHZHfwA5z7cO4a1b3fI0ew&amp;profile=news-results-page&amp;rank=22&amp;query=%21padrenull" class="card-title">OAIC releases Exposure Draft of the Children’s Online Privacy Code</a>
+              <p class="card-text">The OAIC has published an exposure draft of the Children’s Online Privacy Code, including new rules which ensure the consideration the best interests of children before collecting, using or disclosing their personal information.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Children&#39;s privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">31 March 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2F2025-global-privacy-sweep-puts-websites-and-apps-used-by-children-under-the-microscope&amp;index_url=matrix%3A%2F%2Fnews%2F262480%2F&amp;auth=%2BEFRF5IuffNLrK%2BRBrmhew&amp;profile=news-results-page&amp;rank=23&amp;query=%21padrenull" class="card-title">2025 global privacy sweep puts websites and apps used by children under the microscope</a>
+              <p class="card-text">The results of the latest Global Privacy Enforcement Network sweep, published today, show risks to children’s privacy have increased over the last decade.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Children&#39;s privacy</div>
+                    <div class="tag">International</div>
+                </div>  
+              <div class="info">
+                <p class="date">26 March 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-publishes-new-guidance-to-ensure-proportionate-age-assurance-as-a-gateway-to-access-online-experiences&amp;index_url=matrix%3A%2F%2Fnews%2F262012%2F&amp;auth=kgGed2oYO6f78dbrcUXEJA&amp;profile=news-results-page&amp;rank=24&amp;query=%21padrenull" class="card-title">Privacy Commissioner publishes new guidance to ensure proportionate age assurance as a gateway to access online experiences</a>
+              <p class="card-text">The OAIC has published guidance on age assurance technologies to ensure Australians’ privacy is protected when they encounter age checks online.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Children&#39;s privacy</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">17 March 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-commissioner-statement-on-administrative-review-tribunals-bunnings-decision&amp;index_url=matrix%3A%2F%2Fnews%2F261610%2F&amp;auth=Nzspdc5qbkRwHhGgydn2Gw&amp;profile=news-results-page&amp;rank=25&amp;query=%21padrenull" class="card-title">Privacy Commissioner statement on Administrative Review Tribunal’s Bunnings decision</a>
+              <p class="card-text">Australian Privacy Commissioner Carly Kind provides an update on the Administrative Review Tribunal's Bunnings decision.</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Facial recognition technology</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">5 March 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fknow-your-privacy-obligations-under-the-anti-money-laundering-counter-terrorism-financing-amlctf-act-updated-oaic-guidance&amp;index_url=matrix%3A%2F%2Fnews%2F261384%2F&amp;auth=gVtXE2gdhJKXPOA4wu%2BC3A&amp;profile=news-results-page&amp;rank=26&amp;query=%21padrenull" class="card-title">Know your privacy obligations under the Anti-Money Laundering / Counter-Terrorism Financing (AML/CTF) Act: Updated OAIC guidance</a>
+              <p class="card-text">The Office of the Australian Information Commissioner (OAIC) has released updated Privacy guidance for reporting entities under the Anti-Money Laundering and Counter-Terrorism Financing Act 2006 (AML/CTF Act)</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">27 February 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Foaic-statement-on-administrative-review-tribunals-bunnings-decision&amp;index_url=matrix%3A%2F%2Fnews%2F259757%2F&amp;auth=%2BjM21ClLaE4i90Ef2c4W0g&amp;profile=news-results-page&amp;rank=27&amp;query=%21padrenull" class="card-title">OAIC statement on Administrative Review Tribunal’s Bunnings decision</a>
+              <p class="card-text">Today’s decision by the Administrative Review Tribunal relating to Bunnings Group Limited’s use of facial recognition technology (FRT) is an important reiteration of the key principles and protections contained in Australian privacy law.</p>
+                <div class="tags">
+                    <div class="tag">Statement</div>
+                    <div class="tag">Facial recognition technology</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">4 February 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Faustralian-information-commissioner-highlights-improved-transparency-and-integrity-for-government-agencies-in-automated-decision-making&amp;index_url=matrix%3A%2F%2Fnews%2F259447%2F&amp;auth=ItvhqibDf991aABkJddO3w&amp;profile=news-results-page&amp;rank=28&amp;query=%21padrenull" class="card-title">Australian Information Commissioner highlights improved transparency and integrity for government agencies in automated decision-making</a>
+              <p class="card-text">The Office of the Australian Information Commissioner (OAIC) has identified opportunities for Australian Government agencies to improve transparency in the use of automated decision-making (ADM).</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Artificial intelligence</div>
+                </div>  
+              <div class="info">
+                <p class="date">21 January 2026</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Faustralians-eligible-for-cambridge-analytica-payment-program-must-register-by-31-december&amp;index_url=matrix%3A%2F%2Fnews%2F258714%2F&amp;auth=7NqGFb4u7s%2FIlkzyTvn9eQ&amp;profile=news-results-page&amp;rank=29&amp;query=%21padrenull" class="card-title">Australians eligible for Cambridge Analytica payment program must register by 31 December</a>
+              <p class="card-text">Eligible Australian Facebook users impacted by the Cambridge Analytica matter have until 31 December 2025 to register under a payment program established in a landmark settlement with Australia’s Information Commissioner</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">12 December 2025</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <a href="/s/redirect?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre%2Fprivacy-compliance-sweep-to-put-privacy-policies-under-the-spotlight&amp;index_url=matrix%3A%2F%2Fnews%2F258628%2F&amp;auth=c1H5wv0nYqsKUVOVhTaJVA&amp;profile=news-results-page&amp;rank=30&amp;query=%21padrenull" class="card-title">Privacy compliance sweep to put privacy policies under the spotlight</a>
+              <p class="card-text">The Office of the Australian Information Commissioner</p>
+                <div class="tags">
+                    <div class="tag">Media release</div>
+                    <div class="tag">Privacy</div>
+                </div>  
+              <div class="info">
+                <p class="date">9 December 2025</p>
+                <button class="card-button">
+                  <img src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/icon-arrow-right.svg" alt="Arrow" class="icon">
+                </button>
+              </div>
+            </div>
+          </div>
+      </div>
+      <p class="page-number">
+            Showing 1 to 30 of 236 results
+      </p>
+      <nav aria-label="Pagination" class="search-results__pagination">
+        <ul class="search-results__pagination-nav">
+
+
+
+
+              <li class="search-results__pagination-navitems active">
+                  <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=1" class="search-results__pagination-navlinks">1</a>
+              </li>
+
+
+              <li class="search-results__pagination-navitems ">
+                  <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=31" class="search-results__pagination-navlinks">2</a>
+              </li>
+
+
+              <li class="search-results__pagination-navitems ">
+                  <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=61" class="search-results__pagination-navlinks">3</a>
+              </li>
+
+
+              <li class="search-results__pagination-navitems ">
+                  <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=91" class="search-results__pagination-navlinks">4</a>
+              </li>
+
+
+              <li class="search-results__pagination-navitems ">
+                  <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=121" class="search-results__pagination-navlinks">5</a>
+              </li>
+
+            <li class="search-results__pagination-navitems">
+              <a href="?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb~sp-oaic-web-new&amp;form=result&amp;num_ranks=30&amp;profile=news-results-page&amp;sort=dmetapublishedDateISO&amp;start_rank=31" class="search-results__pagination-navlinks">
+                <img class="chevron-forward" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-forward-outline.svg" alt="Next page of results">
+              </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  
+  
+  
+  
+  
+    <div class="results-count">
+        <b>1</b> to
+        <b>30</b> of
+        <b>236</b>
+        search results 
+    </div>
+    <div class="page-filters">
+        <div class="search-results__dropdown">
+    <select name="sort" id="sort">
+                    <option value="relevance" >Relevance </option>
+                    <option value="dmetapublishedDateISO" selected="selected">New to Old</option>
+                    <option value="metapublishedDateISO" >Old to New</option>
+                    <option value="title" >A to Z</option>
+                    <option value="dtitle" >Z to A</option>
+    </select>
+            <img class="chevron-backward" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-forward-outline.svg" alt="" />
+        </div>
+        <div class="search-results__dropdown">
+    <select name="num_ranks" id="num_ranks">
+                    <option value="" >Results per page</option>
+                    <option value="10" >10 / page</option>
+                    <option value="20" >20 / page</option>
+                    <option value="30" selected="selected">30 / page</option>
+                    <option value="40" >40 / page</option>
+    </select>
+          <img class="chevron-backward" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/chevron-forward-outline.svg" alt="" />
+        </div>
+    </div>
+    <div class="result-filters">
+      <div class="refine-mobile-button">
+          <img class="filter-icon" src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/mysource_files/filter-icon.svg" alt="filter icon">
+          <p>Refine your search</p>
+          <div class="notification-number">2</div>
+      </div>
+      <div class="filter-content">
+          <h2>Refine your search</h2>
+                <div class="filter-card">
+                  <p class="filter-info">Type</p>
+                  <ul class="checkboxes">
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Type|contentType" value="Announcement" id="checkbox-announcement-1" ><label for="checkbox-announcement-1">Announcement</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Type|contentType" value="Article" id="checkbox-article-2" ><label for="checkbox-article-2">Article</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Type|contentType" value="Interview" id="checkbox-interview-3" ><label for="checkbox-interview-3">Interview</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Type|contentType" value="Media release" id="checkbox-media_release-4" ><label for="checkbox-media_release-4">Media release</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Type|contentType" value="Statement" id="checkbox-statement-5" ><label for="checkbox-statement-5">Statement</label>
+                      </li>
+                  </ul>
+                </div>
+                <div class="filter-card">
+                  <p class="filter-info">Topic</p>
+                  <ul class="checkboxes">
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Artificial intelligence" id="checkbox-artificial_intelligence-1" ><label for="checkbox-artificial_intelligence-1">Artificial intelligence</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Children&#39;s privacy" id="checkbox-children&#39;s_privacy-2" ><label for="checkbox-children&#39;s_privacy-2">Children&#39;s privacy</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Complaints" id="checkbox-complaints-3" ><label for="checkbox-complaints-3">Complaints</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Consumer Data Right" id="checkbox-consumer_data_right-4" ><label for="checkbox-consumer_data_right-4">Consumer Data Right</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Corporate" id="checkbox-corporate-5" ><label for="checkbox-corporate-5">Corporate</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Credit reporting" id="checkbox-credit_reporting-6" ><label for="checkbox-credit_reporting-6">Credit reporting</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Data breach" id="checkbox-data_breach-7" ><label for="checkbox-data_breach-7">Data breach</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Determination" id="checkbox-determination-8" ><label for="checkbox-determination-8">Determination</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Enforcement" id="checkbox-enforcement-9" ><label for="checkbox-enforcement-9">Enforcement</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Estimates" id="checkbox-estimates-10" ><label for="checkbox-estimates-10">Estimates</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Events" id="checkbox-events-11" ><label for="checkbox-events-11">Events</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Facial recognition technology" id="checkbox-facial_recognition_technology-12" ><label for="checkbox-facial_recognition_technology-12">Facial recognition technology</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Freedom of Information" id="checkbox-freedom_of_information-13" ><label for="checkbox-freedom_of_information-13">Freedom of Information</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Funding" id="checkbox-funding-14" ><label for="checkbox-funding-14">Funding</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Health" id="checkbox-health-15" ><label for="checkbox-health-15">Health</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Information access" id="checkbox-information_access-16" ><label for="checkbox-information_access-16">Information access</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Information governance" id="checkbox-information_governance-17" ><label for="checkbox-information_governance-17">Information governance</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Information Publication Scheme" id="checkbox-information_publication_scheme-18" ><label for="checkbox-information_publication_scheme-18">Information Publication Scheme</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="International" id="checkbox-international-19" ><label for="checkbox-international-19">International</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Investigation" id="checkbox-investigation-20" ><label for="checkbox-investigation-20">Investigation</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Legislation" id="checkbox-legislation-21" ><label for="checkbox-legislation-21">Legislation</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Privacy" id="checkbox-privacy-22" ><label for="checkbox-privacy-22">Privacy</label>
+                      </li>
+                      <li class="filter-checkbox">
+                        <input type="checkbox" name="f.Topic|topic" value="Social Media Minimum Age" id="checkbox-social_media_minimum_age-23" ><label for="checkbox-social_media_minimum_age-23">Social Media Minimum Age</label>
+                      </li>
+                  </ul>
+                </div>
+      </div>
+    </div>
+    <div id="selected-filters" class="selected-filters">
+    </div>
+    
+    
+    
+    
+    
+  </div>
+
+
+
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<div class="cta-card__wrapper">
+    
+    <div class="cta-card">
+        <div class="cta-card__title">
+            
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="80" height="80" rx="40" fill="#00567D" fill-opacity="0.1"/>
+<path d="M19.8665 21.7865C19.5285 22.5524 19.4638 23.411 19.6833 24.2187C21.2908 33.2246 25.6254 41.522 32.1028 47.9922C38.5443 54.4991 46.8773 58.8122 55.9161 60.3178C56.7243 60.5312 57.5803 60.4734 58.3523 60.1532C58.4986 60.078 58.6267 59.9721 58.7279 59.8426C58.8292 59.7132 58.901 59.5633 58.9385 59.4034L60.4222 52.8383C60.4689 52.5413 60.4414 52.2375 60.3424 51.9536C60.2433 51.6697 60.0757 51.4146 59.8544 51.2108C59.6346 50.9913 54.6521 49.1991 52.2891 48.047C51.8613 47.8126 51.3624 47.7427 50.8865 47.8506C50.4106 47.9584 49.9908 48.2364 49.7063 48.6322L48.7904 50.2049C48.6326 50.4713 48.4235 50.7039 48.1751 50.8891C47.9267 51.0743 47.644 51.2085 47.3434 51.2839C45.0353 51.8691 37.8913 45.304 36.3526 43.7495C34.8139 42.1951 27.9447 34.8253 28.5309 32.5211C28.6067 32.2235 28.7413 31.9439 28.9269 31.699C29.1125 31.454 29.3454 31.2486 29.6116 31.0948L31.1869 30.1804C31.5865 29.899 31.8687 29.481 31.9801 29.0058C32.0915 28.5305 32.0244 28.031 31.7915 27.6018C30.838 25.5643 30.0657 23.4469 29.4834 21.2744C29.3668 20.7927 29.0807 20.3689 28.6772 20.0802C28.2737 19.7915 27.7796 19.6572 27.2852 19.7017L20.6542 21.183C20.4867 21.2199 20.3293 21.2931 20.1932 21.3974C20.0571 21.5017 19.9456 21.6345 19.8665 21.7865Z" stroke="#00567D" stroke-width="3" stroke-miterlimit="10"/>
+<path d="M39.9611 25.0603C43.4152 25.0603 46.7279 26.4303 49.1704 28.8687C51.6129 31.3071 52.985 34.6142 52.985 38.0626" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M39.9611 19.5554C44.8776 19.5554 49.5927 21.5052 53.0692 24.9759C56.5457 28.4465 58.4987 33.1538 58.4987 38.0621" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+            <div>Contact us if you have a media enquiry or interview request</div>
+        </div>
+        <div class="cta-card__body ">
+                        
+                                
+                                    <a href="mailto: media@oaic.gov.au" class="cta-card__inner">
+                                
+                        
+                Email <span>media@oaic.gov.au</span>
+            </a>
+                
+                                                                        <a href="tel: 0407 663 968" class="cta-card__inner">
+                                                    
+                    Phone (no texts) <span>0407 663 968</span>
+                </a>
+                    </div>
+    </div>
+    
+    
+    </div><!-- /.cta-card__wrapper --><div class="cta-card__wrapper">
+    
+    <div class="cta-card">
+        <div class="cta-card__title">
+            
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="80" height="80" rx="40" fill="#00567D" fill-opacity="0.1"/>
+<path d="M48.8893 44.4443L40.0004 53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M31.1119 44.4443L40.0008 53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M59.5555 49.7776V58.6665C59.5555 59.138 59.3682 59.5901 59.0348 59.9235C58.7014 60.2569 58.2493 60.4443 57.7778 60.4443H22.2222C21.7507 60.4443 21.2985 60.2569 20.9651 59.9235C20.6317 59.5901 20.4444 59.138 20.4444 58.6665V49.7776" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M40.0004 19.5554V53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+            <div>Photograph of Australian Information Commissioner Elizabeth Tydd</div>
+        </div>
+        <div class="cta-card__body download">
+                        <a href="/__data/assets/image/0027/163377/Elizabeth-Tydd-3600x2400.jpg" class="cta-card__inner">
+                        
+                Image 1 <span>Elizabeth Tydd</span>
+            </a>
+                
+                    </div>
+    </div>
+    
+    
+        <div class="cta-card">
+        <div class="cta-card__title">
+            
+
+            <!--<img class="icon_img" src="https://www.oaic.gov.au/__data/assets/file/0009/13212/download.svg" alt="logo" >-->
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="80" height="80" rx="40" fill="#00567D" fill-opacity="0.1"/>
+<path d="M48.8893 44.4443L40.0004 53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M31.1119 44.4443L40.0008 53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M59.5555 49.7776V58.6665C59.5555 59.138 59.3682 59.5901 59.0348 59.9235C58.7014 60.2569 58.2493 60.4443 57.7778 60.4443H22.2222C21.7507 60.4443 21.2985 60.2569 20.9651 59.9235C20.6317 59.5901 20.4444 59.138 20.4444 58.6665V49.7776" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M40.0004 19.5554V53.3332" stroke="#00567D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+            <div>Photograph of Privacy Commissioner Carly Kind</div>
+        </div>
+        <div class="cta-card__body download">
+                        <a href="/__data/assets/image/0029/163379/Carly-Kind-2140x2560.jpg" class="cta-card__inner ">
+                
+                Image 1 <span>Carly Kind</span>
+            </a>
+                
+                    </div>
+    </div>
+    </div><!-- /.cta-card__wrapper -->
+</div>
+
+   
+
+                <!-- Body end -->
+                
+                
+
+             
+             <!-- Social share -->
+             <div class="feedback">
+    
+    
+    
+    
+    
+</div>         
+
+        </main>
+        
+        <!-- Footer start -->
+        <!--noindex-->
+<div class="footer">
+    <div class="footer__upper">
+      <div class="footer__upper--wrapper">
+        <div class="back-to-top__wrapper">
+          <button class="back-to-top" aria-label="Back to top">
+            <svg class="back-to-top__icon" aria-hidden="true" focusable="false" width="28" height="47" viewBox="0 0 28 47" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8.82715L14 1.00106" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 8.82715L14 1.00106" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 21L14 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.94 41V33.41H0.36V31.25H8.1V33.41H5.52V41H2.94ZM13.2027 41.18C12.5227 41.18 11.9027 41.065 11.3427 40.835C10.7927 40.605 10.3177 40.275 9.9177 39.845C9.5277 39.405 9.2227 38.87 9.0027 38.24C8.7827 37.6 8.6727 36.88 8.6727 36.08C8.6727 35.28 8.7827 34.57 9.0027 33.95C9.2227 33.32 9.5277 32.795 9.9177 32.375C10.3177 31.945 10.7927 31.62 11.3427 31.4C11.9027 31.18 12.5227 31.07 13.2027 31.07C13.8727 31.07 14.4877 31.18 15.0477 31.4C15.6077 31.62 16.0827 31.945 16.4727 32.375C16.8727 32.805 17.1827 33.33 17.4027 33.95C17.6227 34.57 17.7327 35.28 17.7327 36.08C17.7327 36.88 17.6227 37.6 17.4027 38.24C17.1827 38.87 16.8727 39.405 16.4727 39.845C16.0827 40.275 15.6077 40.605 15.0477 40.835C14.4877 41.065 13.8727 41.18 13.2027 41.18ZM13.2027 38.96C13.7927 38.96 14.2527 38.705 14.5827 38.195C14.9227 37.675 15.0927 36.97 15.0927 36.08C15.0927 35.19 14.9227 34.505 14.5827 34.025C14.2527 33.535 13.7927 33.29 13.2027 33.29C12.6127 33.29 12.1477 33.535 11.8077 34.025C11.4777 34.505 11.3127 35.19 11.3127 36.08C11.3127 36.97 11.4777 37.675 11.8077 38.195C12.1477 38.705 12.6127 38.96 13.2027 38.96ZM19.4784 41V31.25H23.0484C23.5784 31.25 24.0834 31.305 24.5634 31.415C25.0434 31.515 25.4634 31.695 25.8234 31.955C26.1834 32.205 26.4684 32.54 26.6784 32.96C26.8984 33.37 27.0084 33.88 27.0084 34.49C27.0084 35.09 26.8984 35.605 26.6784 36.035C26.4684 36.465 26.1834 36.82 25.8234 37.1C25.4634 37.37 25.0484 37.575 24.5784 37.715C24.1084 37.845 23.6184 37.91 23.1084 37.91H22.0584V41H19.4784ZM22.0584 35.87H22.9884C23.4984 35.87 23.8734 35.75 24.1134 35.51C24.3634 35.27 24.4884 34.93 24.4884 34.49C24.4884 34.05 24.3534 33.74 24.0834 33.56C23.8134 33.38 23.4284 33.29 22.9284 33.29H22.0584V35.87Z" fill="white"/></svg>      
+          </button>
+        </div>
+        <div class="footer__logo-group">
+          
+            <img src="https://www.oaic.gov.au/__data/assets/file/0020/12962/logo.svg" class="logo--main" alt="OAIC logo">
+          
+          <a href="https://www.oaic.gov.au/about-the-OAIC/access-our-information" class="footer-logo" aria-label="Access to Information icon">
+            <img src="https://www.oaic.gov.au/__data/assets/image/0020/264053/varieties/70x.png" class="logo--sub" alt="Access to Information icon">
+          </a>
+        </div><div class="footer__link-group">
+    <ul class="link-list">
+        <li><a href="https://www.oaic.gov.au/sitemap" class="footer-link" aria-label="Site map">Site map</a></li><li><a href="https://www.oaic.gov.au/about-the-OAIC/copyright" class="footer-link" aria-label="Copyright">Copyright</a></li><li><a href="https://www.oaic.gov.au/about-the-OAIC/terms-and-conditions" class="footer-link" aria-label="Terms and conditions">Terms and conditions</a></li><li><a href="https://www.oaic.gov.au/about-the-OAIC/our-corporate-information/plans-policies-and-procedures/privacy-policy" class="footer-link" aria-label="Privacy policy">Privacy policy</a></li><li><a href="https://www.oaic.gov.au/about-the-OAIC/accessibility" class="footer-link" aria-label="Accessibility">Accessibility</a></li>
+    </ul>
+</div>        </div>
+    </div>
+    <div class="footer__lower">
+      <div class="footer__util-group">
+        <div class="footer__contact">
+          <a href="https://www.oaic.gov.au/contact-us" class="contact--link" aria-label="Contact us">Contact us</a>
+          <a href="tel:1300 363 992" class="contact--phone" aria-label="Call 1300 363 992">1300 363 992</a>
+          <p class="contact--hours">Monday to Thursday 10 am to 4 pm (AEST/AEDT)</p>
+        </div>
+
+<div id="footer_language_listing_13517">
+<div class="footer__language-list">
+    <label for="languages"><i class="bi bi-translate" aria-hidden="true"></i> Language</label>
+    <select name="languages" id="languages" onChange="if (this.value.startsWith('https://www.oaic.gov.au')) window.location = this.value;">
+        <option value="">Please select&hellip;</option>
+        <option lang="ar" value="https://www.oaic.gov.au/engage-with-us/translations/arabic">العربية</option><option lang="zh" value="https://www.oaic.gov.au/engage-with-us/translations/traditional-chinese">繁體中文</option><option lang="el" value="https://www.oaic.gov.au/engage-with-us/translations/greek">ελληνικός</option><option lang="it" value="https://www.oaic.gov.au/engage-with-us/translations/italian">Italiano</option><option lang="es" value="https://www.oaic.gov.au/engage-with-us/translations/spanish">Español</option><option lang="th" value="https://www.oaic.gov.au/engage-with-us/translations/thai">ภาษาไทย</option><option lang="vi" value="https://www.oaic.gov.au/engage-with-us/translations/vietnamese">Tiếng Việt</option><option lang="pa-IN" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-punjabi">ਪੰਜਾਬੀ</option><option lang="ks" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-karen">ကညီကျိာ်</option><option lang="zh" value="https://www.oaic.gov.au/engage-with-us/translations/simplified-chinese">简体中文</option><option lang="" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-assyrian">ܐܵܬܘܿܪܵܝܵܐ</option><option lang="" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-nepali">नेपाली</option><option lang="" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-filipino">Filipino</option><option lang="" value="https://www.oaic.gov.au/engage-with-us/translations/about-the-oaic-hazaragi">هزارگی</option><option lang="EN" value="https://www.oaic.gov.au/engage-with-us/translations/easy-english">Easy English</option>
+    </select>
+</div>
+</div>
+ 
+        <div class="footer__social">
+          <p class="social--header">Follow us</p>
+          <ul class="social-list">
+            <li>
+              <a href="https://www.facebook.com/OAICgov" class="social-link social-link--facebook" aria-label="OAIC on Facebook">
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0025/12958/facebook.svg" alt="OAIC on Facebook">
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/OAICgov" class="social-link social-link--twitter" aria-label="OAIC on Twitter" >
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0026/12959/x-logo.svg" alt="OAIC on Twitter">
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/user/oaicgov" class="social-link social-link--youtube" aria-label="OAIC on Youtube" >
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0018/12960/youtube.svg" alt="OAIC on Youtube">
+              </a>
+            </li>
+            <li>
+              <a href="https://au.linkedin.com/company/office-of-the-australian-information-commissioner" class="social-link social-link--linkedin" aria-label="OAIC on Linkedin">
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0019/12961/linkedin.svg" alt="OAIC on Linkedin">
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/oaicgov/" class="social-link social-link--Instagram" aria-label="OAIC on Instagram" >
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0023/91364/Instagram_Glyph_White.svg" alt="OAIC on Instagram">
+              </a>
+            </li>
+            <li>
+              <a href="https://www.oaic.gov.au/rss" type="application/rss+xml" class="social-link social-link--rss" aria-label="Subscribe via RSS" >
+                <img class="social-icon" src="https://www.oaic.gov.au/__data/assets/file/0027/260946/rss.svg" alt="">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__content-group">
+        <p class="footer__content-header">Acknowledgement of Country</p>
+        <p class="footer__content-text">The OAIC acknowledges Traditional Custodians of Country across Australia and their continuing connection to land, waters and communities. We pay our respect to First Nations people, cultures and Elders past and present.</p>
+        <p class="footer__content-copyright">&copy; Commonwealth of Australia</p>
+      </div>
+    </div>
+ </div><!-- /.footer -->
+<!--endnoindex-->        <!-- Footer end -->
+    </div>
+    
+    <!-- Footer JS start -->
+    <!--noindex-->
+<div id="footer_js" style="display: none !important;">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- lazysizes core + responsive plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/respimg/ls.respimg.min.js" async></script>
+
+
+    
+    <script src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/js/runtime.js?h=0a5fa99"></script>
+    <script src="https://www.oaic.gov.au/__data/assets/git_bridge/0012/12063/js/main.js?h=0a5fa99"></script>
+    <script src="https://www.oaic.gov.au/__data/assets/js_file/0025/242791/custom.js"></script>
+
+    <script>
+        var lhsWrapper = document.querySelector('.lhs-wrapper');
+        if(lhsWrapper) {
+            lhsWrapper.innerHTML.trim() === '' ? lhsWrapper.style.display='none' : '';
+        }
+        
+        
+        //Readpeaker
+        function readSpeaker() {
+            var readButtonContent = `
+                <div id="readspeaker_button1" class="rs_skip rsbtn rs_preserve">
+                    <a rel="nofollow" class="rsbtn_play" accesskey="L" title="Listen to this page using ReadSpeaker webReader" href="//app-oc.readspeaker.com/cgi-bin/rsent?customerid=9755&lang=en_au&readclass=page-content&url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre">
+                        <span class="rsbtn_left rsimg rspart"><span class="rsbtn_text"><span>Listen</span></span></span>
+                        <span class="rsbtn_right rsimg rsplay rspart"></span>
+                    </a>
+                </div>`;
+                
+                var readButtonSearch = `
+                <div id="readspeaker_button2" class="rs_skip rsbtn rs_preserve">
+                    <a rel="nofollow" class="rsbtn_play" accesskey="L" title="Listen to this page using ReadSpeaker webReader" href="//app-oc.readspeaker.com/cgi-bin/rsent?customerid=9755&lang=en_au&readclass=search-content&url=https%3A%2F%2Fwww.oaic.gov.au%2Fnews%2Fmedia-centre">
+                        <span class="rsbtn_left rsimg rspart"><span class="rsbtn_text"><span>Listen</span></span></span>
+                        <span class="rsbtn_right rsimg rsplay rspart"></span>
+                    </a>
+                </div>`;
+                
+                //for content pages
+                var pageContent = document.querySelector('.page-content');
+                //for search pages
+                var pageSearch = document.querySelector('.search-content');
+                
+                if(pageContent) pageContent.insertAdjacentHTML('afterbegin', readButtonContent);
+                if(pageSearch) pageSearch.insertAdjacentHTML('afterbegin', readButtonSearch);
+        }
+        
+        readSpeaker();
+        
+    </script>
+    
+    <script>
+        function feedbackGrepCallback(response) {
+            if (response.length > 0) {
+                document.querySelector(".feedback__submit input").disabled = false
+            }
+        }
+        
+        function feedbackGrepExpiredCallback(response) {
+            if (!response) {
+                document.querySelector(".feedback__submit input").disabled = true
+            }
+        }
+    </script>
+
+</div>
+<style>
+    .page-content section.banner-grey-newsroom__wrapper, .page-content section.landing-page {
+        display: none;
+    }
+</style>
+<!--endnoindex-->    <!-- Footer JS end -->
+
+
+
+</body>
+
+</html>

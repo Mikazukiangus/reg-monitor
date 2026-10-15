@@ -5,16 +5,16 @@ import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
 
 // Labels name only the regulators RegSonar actually reads
 const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: string }[] = [
-  { code: 'SG', label: 'Singapore (MAS, SGX RegCo)' },
-  { code: 'MY', label: 'Malaysia (BNM, SC)' },
+  { code: 'SG', label: 'Singapore (MAS, SGX RegCo; privacy: PDPC)' },
+  { code: 'MY', label: 'Malaysia (BNM, SC; privacy: JPDP)' },
   { code: 'HK', label: 'Hong Kong (HKMA, SFC, HKEX)' },
-  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI: European Commission, DSIT)' },
-  { code: 'US', label: 'United States (SEC, CFTC, FINRA; AI: federal agencies, FTC, California, Colorado)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI: European Commission, DSIT; privacy: ICO, EDPB)' },
+  { code: 'US', label: 'United States (SEC, CFTC, FINRA; AI: federal agencies, FTC, California, Colorado; privacy: FTC, CalPrivacy)' },
   { code: 'GLOBAL', label: 'Global (BIS, Basel Committee, FSB)' },
-  { code: 'AU', label: 'Australia (ASIC, ASX)' },
-  { code: 'JP', label: 'Japan (JFSA, JPX; AI: Cabinet Office)' },
-  { code: 'KR', label: 'South Korea (AI: MSIT)' },
-  { code: 'CN', label: 'China (AI: State Council policy library)' }
+  { code: 'AU', label: 'Australia (ASIC, ASX; privacy: OAIC)' },
+  { code: 'JP', label: 'Japan (JFSA, JPX; AI: Cabinet Office; privacy: PPC)' },
+  { code: 'KR', label: 'South Korea (AI: MSIT; privacy: PIPC)' },
+  { code: 'CN', label: 'China (AI and privacy: State Council policy library)' }
 ];
 
 interface FilterSidebarProps {

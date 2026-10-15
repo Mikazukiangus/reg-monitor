@@ -311,3 +311,88 @@ test('UK AI policy: items whose title is about AI, from DSIT or the AI Security 
   assert.ok(notices.every(n => ['UK DSIT', 'UK AI Security Institute'].includes(n.regulator)));
   assert.ok(notices.every(n => /\bAI\b|Artificial Intelligence/i.test(n.title)), 'AI in every title');
 });
+
+test('Data privacy: each source is tagged and placed in its jurisdiction', async () => {
+  const expected: Record<string, string> = {
+    'UK ICO News': 'UK_EU', 'EDPB News': 'UK_EU', 'Singapore PDPC News': 'SG', 'Malaysia JPDP Announcements': 'MY',
+    'Australia OAIC on Privacy': 'AU', 'Japan PPC News': 'JP', 'Korea PIPC Notices': 'KR',
+    'China State Council Policy Library: Personal Information': 'CN', 'CalPrivacy News': 'US'
+  };
+  for (const [name, code] of Object.entries(expected)) {
+    const notices = await byName(name).fetch(20);
+    assert.ok(notices.length > 0, name);
+    assert.ok(notices.every(n => n.jurisdictionCode === code && n.tags.includes('Data privacy')), name);
+  }
+});
+
+test('ICO news: from its search service, less speeches and freedom of information, dated as London days', async () => {
+  requested.length = 0;
+  const notices = await byName('UK ICO News').fetch(20);
+  assert.deepEqual(requested, ['https://ico.org.uk/api/search']);
+  const met = notices.find(n => n.title.startsWith('ICO takes action against Metropolitan Police Service'));
+  assert.equal(met?.format, 'Enforcement');
+  assert.equal(met?.publishedAt, '2026-10-13T23:00:00.000Z');
+  assert.equal(met?.dossierUrl, 'https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2026/10/ico-takes-action-against-metropolitan-police-service-over-information-governance-failures/');
+  assert.ok(!notices.some(n => /opening speech|^FOI guidance/.test(n.title)), notices.map(n => n.title).join(' | '));
+});
+
+test('EDPB news: national authorities\' fines are enforcement; an automated decision-making fine is also about AI rules', async () => {
+  const notices = await byName('EDPB News').fetch(20);
+  assert.ok(notices.every(n => n.regulator === 'EDPB'));
+  const uber = notices.find(n => n.title.startsWith('Dutch DPA fines Uber'));
+  assert.equal(uber?.format, 'Enforcement');
+  assert.ok(uber?.tags.includes('AI rules'));
+  assert.match(String(uber?.summary), /^\S/);
+});
+
+test('PDPC news: speeches and events left out, decisions and undertakings are enforcement', async () => {
+  const notices = await byName('Singapore PDPC News').fetch(20);
+  assert.ok(!notices.some(n => /^(Keynote|Opening|Closing)|Singapore Data Festival 2026$|Privacy Awareness Week/.test(n.title)), notices.map(n => n.title).join(' | '));
+  assert.equal(notices.find(n => n.title === 'New Undertakings on 9 April 2026')?.format, 'Enforcement');
+  const genAi = notices.find(n => n.title.startsWith('PDPC Issues Guidance for Organisations on Responsible'));
+  assert.equal(genAi?.format, 'Guidelines');
+  assert.ok(genAi?.tags.includes('AI rules'));
+  assert.match(String(genAi?.dossierUrl), /^https:\/\/www\.pdpc\.gov\.sg\/media-events\//);
+});
+
+test('JPDP announcements: procurement notices left out; the AI and personal data paper is a consultation', async () => {
+  const notices = await byName('Malaysia JPDP Announcements').fetch(20);
+  assert.ok(!notices.some(n => /PEROLEHAN/.test(n.title)));
+  const paper = notices.find(n => n.title.startsWith('PUBLIC CONSULTATION PAPER NO. 1/2026'));
+  assert.equal(paper?.format, 'Consultations');
+  assert.ok(paper?.tags.includes('AI rules'));
+});
+
+test('OAIC: privacy items only, linked to the page behind the search redirect', async () => {
+  const notices = await byName('Australia OAIC on Privacy').fetch(20);
+  assert.ok(!notices.some(n => /Stolen Generations|information integrity/i.test(n.title)), notices.map(n => n.title).join(' | '));
+  assert.equal(notices.find(n => n.title.startsWith('OAIC opens investigation into maker of HeyCyan'))?.dossierUrl,
+    'https://www.oaic.gov.au/news/media-centre/oaic-opens-investigation-into-maker-of-heycyan-smart-glasses-phone-app');
+});
+
+test('PPC news: in Japanese, less commission meetings and opt-out filing lists', async () => {
+  const notices = await byName('Japan PPC News').fetch(30);
+  assert.ok(notices.every(n => n.language === 'ja'));
+  assert.ok(!notices.some(n => /個人情報保護委員会を開催しました|オプトアウト届出書/.test(n.title)), notices.map(n => n.title).join(' | '));
+  assert.ok(notices.every(n => !/[?&]ref=/.test(String(n.dossierUrl))));
+});
+
+test('PIPC notices: sanctions are enforcement, linked to the release', async () => {
+  const notices = await byName('Korea PIPC Notices').fetch(20);
+  const kt = notices.find(n => n.title === 'The PIPC Sanctions KT Corporation for Data Breaches');
+  assert.equal(kt?.format, 'Enforcement');
+  assert.equal(kt?.dossierUrl, 'https://pipc.go.kr/eng/user/ltn/new/noticeDetail.do?bbsId=BBSMSTR_000000000001&nttId=3133');
+});
+
+test('China policy library: personal information rules in Chinese, titles that only match the search left out', async () => {
+  const notices = await byName('China State Council Policy Library: Personal Information').fetch(20);
+  assert.ok(notices.every(n => n.title.includes('个人信息') && n.language === 'zh'), notices.map(n => n.title).join(' | '));
+  const simplified = notices.find(n => n.title === '小型个人信息处理者个人信息保护简化措施规定');
+  assert.equal(simplified?.ref, 'CAC Order No. 25');
+  assert.equal(simplified?.type, 'DEPARTMENT RULES');
+});
+
+test('CalPrivacy: every item is kept, as data privacy', async () => {
+  const notices = await byName('CalPrivacy News').fetch(20);
+  assert.equal(notices.length, 10);
+});

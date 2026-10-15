@@ -5,15 +5,15 @@ import { sortNewestFirst } from '../../lib/derived';
 
 
 const JURISDICTIONS: { code: JurisdictionCode; label: string }[] = [
-  { code: 'SG', label: 'SINGAPORE (MAS, SGX REGCO)' },
-  { code: 'MY', label: 'MALAYSIA (BNM, SC)' },
+  { code: 'SG', label: 'SINGAPORE (MAS, SGX REGCO; PDPC PRIVACY)' },
+  { code: 'MY', label: 'MALAYSIA (BNM, SC; JPDP PRIVACY)' },
   { code: 'HK', label: 'HONG KONG (HKMA, SFC, HKEX)' },
-  { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA; AI RULES)' },
-  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI RULES)' },
-  { code: 'AU', label: 'AUSTRALIA (ASIC, ASX)' },
-  { code: 'JP', label: 'JAPAN (JFSA, JPX; AI STRATEGY)' },
-  { code: 'KR', label: 'SOUTH KOREA (MSIT, AI RULES)' },
-  { code: 'CN', label: 'CHINA (STATE COUNCIL POLICY LIBRARY, AI RULES)' },
+  { code: 'US', label: 'UNITED STATES (SEC/CFTC, FINRA; AI RULES, PRIVACY)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI RULES; ICO, EDPB PRIVACY)' },
+  { code: 'AU', label: 'AUSTRALIA (ASIC, ASX; OAIC PRIVACY)' },
+  { code: 'JP', label: 'JAPAN (JFSA, JPX; AI STRATEGY; PPC PRIVACY)' },
+  { code: 'KR', label: 'SOUTH KOREA (MSIT AI RULES; PIPC PRIVACY)' },
+  { code: 'CN', label: 'CHINA (STATE COUNCIL POLICY LIBRARY: AI RULES, PRIVACY)' },
   { code: 'GLOBAL', label: 'GLOBAL (BIS/BCBS, FSB)' }
 ];
 

@@ -42,7 +42,7 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     /\bccps?\b/, /\bsettlement\b/, /\bpost-trade\b/, /\bdepositor(y|ies)\b/, /\bcsds?\b/, /\bderivatives?\b/,
     /\bfutures\b/, /\botc\b/, /\bover-the-counter\b/, /\bmarket[- ]mak\w+\b/, /\bshort sell\w*\b/, /\bcorporate governance\b/,
     /\bdirectors['’]? duties\b/, /\bboard (renewal|of directors)\b/, /\bindependent directors?\b/, /\bmanaging corporations\b/,
-    /\bself-regulatory organi[sz]ations?\b/, /\bbroker[- ]dealers?\b/, /\bbrokers?\b/,
+    /\bself-regulatory organi[sz]ations?\b/, /\bbroker[- ]dealers?\b/, /(?<!data )\bbrokers?\b/,
     /\bbest execution\b/, /\btrace\b/, /\bmarket integrity\b/, /\binsider (trading|information|dealing)\b/,
     /\bmarket (misconduct|manipulation|structure)\b/, /\btakeovers?\b/, /\bspacs?\b/, /\bdual listings?\b/,
     /\bdematerialis\w+\b/, /\bcapital markets?\b/, /\bequities\b/, /\bbonds? market\b/, /\bfixed income\b/,
@@ -76,8 +76,10 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     /\binformation and communication technology\b/, /\bdata (protection|governance)\b/, /\bit risk\b/,
     /\boperational risk\b/, /\bchatbots?\b/, /\bdeepfakes?\b/, /\bautomated decision[- ]?making\b/, /\badmt\b/,
     /\b(frontier|foundation|large language) models?\b/, /\bllms?\b/, /\bgpai\b/, /\bsuper ?intelligen\w*/,
-    // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents
-    /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ/
+    // Data privacy
+    /\bprivacy\b/, /\bpersonal (data|information)\b/, /\bdata (breach\w*|privacy|brokers?|subjects?)\b/, /\bgdpr\b/, /\bpdpa\b/,
+    // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents, personal information
+    /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ|个人信息|個人情報/
   ],
   'ESG & Sustainability': [
     /\besg\b/, /\bclimate\b/, /\bsustainab(le|ility)\b/, /\bgreen (bonds?|finance|taxonomy|loans?)\b/,
@@ -139,6 +141,8 @@ const CASE_SENSITIVE = new Set(['\\bAI\\b']);
 const MARKET_REGULATORS = /^(HKEX|SGX RegCo|ASX|TSE|OSE|TOCOM|JPX|JPX-R|FINRA|Bursa|SFC|US SEC|SEC|CFTC|ESMA|SC Malaysia)\b/;
 // Likewise the bank and insurer supervisors and the Basel Committee
 const PRUDENTIAL_REGULATORS = /^(UK PRA|PRA|BCBS)\b/;
+// and the data protection authorities, whose notices are about data privacy
+const PRIVACY_REGULATORS = /^(ICO|EDPB|PDPC|JPDP|OAIC|PPC|PIPC|CalPrivacy)\b/;
 
 // In a tie, a topic (financial crime, climate, technology...) comes before the
 // industry it applies to: "Guidelines on Environmental Risk Management for
@@ -198,6 +202,9 @@ export function classifySectors(input: { title: string; text?: string; regulator
     if (PRUDENTIAL_REGULATORS.test(regulator)) {
       return { sectors: ['Banking & Prudential'], reasons: {}, fallback: `no topic words matched; ${regulator} is a prudential supervisor` };
     }
+    if (PRIVACY_REGULATORS.test(regulator)) {
+      return { sectors: ['AI, Cyber & Tech Risk'], reasons: {}, fallback: `no topic words matched; ${regulator} is a data protection authority` };
+    }
     return { sectors: ['General & Institutional'], reasons: {}, fallback: 'no topic words matched' };
   }
   return {
@@ -207,7 +214,7 @@ export function classifySectors(input: { title: string; text?: string; regulator
 }
 
 // Formats. Checked in this order; the first that matches wins.
-const SPEECH = /^(new )?(keynote|opening|welcome|closing|speech|remarks|address)\b|\b(keynote|speech|remarks|address) by\b/i;
+export const SPEECH = /^(new )?(keynote|opening|welcome|closing|speech|remarks|address)\b|\b(keynote|speech|remarks|address) by\b/i;
 const APPROVAL = /\border granting approval\b|\bnotice of (effectiveness|approval)\b/i;
 // A regulator's answer to a consultation sets its final position; it is not
 // open for comment (checked before the source's own "consultation" category)
@@ -221,10 +228,18 @@ const INFORMATION_NOTICE = /\binformation notice\b/i;
 // releases, notices and speeches are announcements
 const CIRCULAR = /\bcirculars?\b/i;
 const CONSULTATION = /\bconsult(s|ed|ing|ation|ations|ative)?\b|\bcomment request\b|\bseeks? (public )?(comments?|feedback|views|evidence|input)\b|\brequest for (comments?|information)\b|\bexposure drafts?\b|\bdiscussion papers?\b|\bcall for (evidence|input|views)\b|\bproposed (rules?|rule changes?|amendments?|changes?|framework|guidelines?|regulat\w*|requirements?|listing)\b|\bproposes?\b|\bproposals? (on|to|for)\b|\bdraft\b|征求意见|意見募集|御意見の募集|パブリックコメント/i;
-const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary committee|takes? action|reprimand(s|ed)?|censure[sd]?|fine[sd]?|fines|penalt(y|ies)|infringement notices?|charged|charges against|sues|sued|sentenced|convicted|jailed|imprisonment|prosecut\w*|banned|bans?|disqualified|suspends|revok(es|ed)|cancels|cancelled|stop orders?|halts offers|prohibition orders?|cease[- ]and[- ]desist|compound(s|ed)|falls? short of|wins suit|suit against|injunction|committal|judgment against|appeal against|cancellation of listing|court of appeal|high court|federal court|in (its|the \w+['’]s|\w+['’]s) favour)\b/i;
+const ENFORCEMENT = /\b(enforcement actions?|disciplinary actions?|disciplinary committee|takes? action|reprimand(s|ed)?|censure[sd]?|fine[sd]?|fines|penalt(y|ies)|infringement notices?|charged|charges against|sues|sued|sentenced|convicted|jailed|imprisonment|prosecut\w*|banned|bans?|disqualified|suspends|revok(es|ed)|cancels|cancelled|stop orders?|halts offers|prohibition orders?|cease[- ]and[- ]desist|compound(s|ed)|decisions? and undertakings?|new undertakings?|falls? short of|wins suit|suit against|injunction|committal|judgment against|appeal against|cancellation of listing|court of appeal|high court|federal court|in (its|the \w+['’]s|\w+['’]s) favour)\b/i;
 // "SC Charges Brothers…": an agency charging someone, at the start of a title
 // (not "Bank Charges and Fees")
 const CHARGES = /^[a-z][\w.&'’-]* charges\b(?! (and|for|on|of|to|payable|levied|applicable)\b)/i;
+// "The PIPC Sanctions KT Corporation…": a regulator, by its initials (checked
+// in capitals below), sanctioning someone; not "UN Sanctions List" or "EU
+// Sanctions against…"
+const SANCTIONS = /^(?:the )?([a-z]{2,6}) sanctions (?!(?:screening|lists?|regimes?|committees?|compliance|against|on|updates?)\b)/i;
+const sanctionsBy = (title: string) => {
+  const m = title.trim().match(SANCTIONS);
+  return m && m[1] === m[1].toUpperCase() ? m[0].trim() : undefined;
+};
 const TECHNICAL = /\b(technical standards?|regulatory technical|implementing technical|data standards?|reporting templates?|return templates?|disclosure templates?|xbrl|interoperab\w*|toolkit)\b/i;
 const GUIDELINES = /\bguidelines?\b|(?<!forward )\bguidance\b|\bcodes? of practice\b|\bpractice notes?\b|\bpolicy (manual|documents?)\b|\bfaqs?\b|\binterpretation note\b|\bsupervisory policy manual\b|\bsupervisory expectations?\b|(?<!monetary )\bpolicy statements?\b|\bPS\d{1,2}\/\d{2}\b|指南|指引|指針|ガイドライン/i;
 
@@ -250,7 +265,7 @@ export function classifyFormat(type: string, title: string): FormatTagging {
   if (SRO_FILING.test(title)) return { format: 'Announcements', reason: 'an exchange\'s or SRO\'s rule filing, published by the SEC' };
   if ((m = hit(INFORMATION_NOTICE))) return { format: 'Announcements', reason: `"${m}"` };
   if ((m = hit(CONSULTATION))) return { format: 'Consultations', reason: said(m) };
-  if ((m = hit(ENFORCEMENT) ?? title.trim().match(CHARGES)?.[0])) return { format: 'Enforcement', reason: said(m) };
+  if ((m = hit(ENFORCEMENT) ?? title.trim().match(CHARGES)?.[0] ?? sanctionsBy(title))) return { format: 'Enforcement', reason: said(m) };
   if ((m = hit(TECHNICAL))) return { format: 'Technical Standards', reason: said(m) };
   if ((m = hit(GUIDELINES))) return { format: 'Guidelines', reason: said(m) };
   if ((m = hit(CIRCULAR))) return { format: 'Circulars', reason: said(m) };

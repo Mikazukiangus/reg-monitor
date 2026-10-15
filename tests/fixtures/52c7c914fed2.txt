@@ -1,0 +1,1647 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	    <meta name="format-detection" content="telephone=no">
+	    <meta name="description" content="GPA, 2025 GPA, GPA Seoul, 2025 GPA Seoul, AI, Data, Privacy, GPA 서울, Global Privacy Assembly">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <link rel="shortcut icon" href="/eng/images/pipc/user/common/gov.ico">
+		<!--css-->
+		<link rel="stylesheet" href="/eng/css/pipc/user/reset.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/fonts.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/commonM.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/layout.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/responsive.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/jquery-ui.css">
+		<link rel="stylesheet" href="/eng/css/pipc/user/swiper.min.css">
+		
+	    <!--js-->
+		<script src="/eng/js/pipc/user/jquery-1.12.4.min.js"></script>
+		<script src="/eng/js/pipc/user/jquery-ui.min.js"></script>
+		<script src="/eng/js/pipc/user/ui.js"></script>
+		<script src="/eng/js/pipc/user/swiper.min.js"></script>
+
+		<script src="/eng/js/pipc/user/jquery-latest.min.js"></script>
+		<script src="/eng/js/pipc/user/prefixfree.min.js"></script>
+		<script src="/eng/js/pipc/user/jquery.bxslider.min.js"></script>
+		<script src="/eng/js/pipc/user/UserScriptConf.js"></script>
+		    
+		<script src="/eng/js/pipc/user/common.js"></script>
+		<script src="/eng/js/pipc/user/slider.js"></script> 
+		
+		<!-- M -->
+		<script src="/eng/js/pipc/user/jquery-cookie.js"></script>
+		<script src="/eng/js/pipc/user/layout.js"></script>
+    
+		<link rel="stylesheet" type="text/css" href="/eng/css/pipc/user/common.css">
+		<link rel="stylesheet" type="text/css" href="/eng/css/pipc/user/subCommon.css">
+		<link rel="stylesheet" type="text/css" href="/eng/css/pipc/user/contents.css">
+		
+    	
+			
+			
+			
+			
+		
+		
+		<title>PIPC, Korea, GPA, 2025 GPA, GPA Seoul, 2025 GPA Seoul, AI, Data, Privacy, GPA 서울, Global Privacy Assembly</title>
+		<script>
+			$(document).ready(function() {
+			});
+			
+			
+			function navDepth1Click(oneDepthNo) {
+				$('.depth02 ul.nav_list > li').hide();
+				$('.depth02 ul.nav_list > li.gnbDepth01_'+oneDepthNo).show();
+			}
+			
+			
+			function navDepth2Click(oneDepthNo) {
+				$('.depth03 ul.nav_list > li').hide();
+				$('.depth03 ul.nav_list > li.gnbDepth02_'+oneDepthNo).show();
+			}
+			
+			
+			function fnGetCookie(cookieName) {
+				var searchCookie = cookieName + '=';
+				if(document.cookie.length > 0) {
+					var offsetCookie = document.cookie.indexOf(searchCookie);
+					if(offsetCookie != -1) { // 쿠키가 존재하면
+						offsetCookie += searchCookie.length;
+						var endCookie = document.cookie.indexOf(';', offsetCookie);
+						if(endCookie == -1) {
+							endCookie = document.cookie.length;
+						}
+						return unescape(document.cookie.substring(offsetCookie, endCookie));
+					}
+				}
+				return '';
+			}
+			
+			
+			function fnSetCookie(cookieName, cookieValue, cookieExpires) {
+				var dateCookie = new Date();
+				dateCookie.setTime(dateCookie.getTime() + (cookieExpires * 24*60*60*1000));
+				document.cookie = cookieName + '=' + (cookieValue) + '; path=/; expires=' + dateCookie.toGMTString();
+			}
+			
+			
+			function openPrint() {
+				window.print();
+			}
+		</script>
+	</head>
+	<body>
+		<div class="wrap">
+			<!-- 바로가기 -->
+			<div class="skipnav">
+				<a href="#gnb">Skip to menu</a>
+				<a href="#contents">Skip to content</a>
+			</div>
+	        <div class="topBanner">
+	            <div class="top_container">
+	                <p class="topBanner__tit">
+	                    <i>
+	                        <img src="/eng/images/pipc/user/common/icon.png" alt="Korean e-government homepage mark">
+	                    </i>
+	                    This site is the official e-Government website of the Republic of Korea.
+	                </p>
+	                <div class="topBanner__right">
+	                    <ul class="sns_box">
+	                        <li><a href="https://twitter.com/pipc_pr" target="_blank" title="twitter new window" class="btn__sns i_twitter_b"><span class="blind">twitter</span></a></li>
+	                        <li><a href="https://www.facebook.com/pipc.go.kr" target="_blank" title="facebook new window" class="btn__sns i_facebook_b"><span class="blind">facebook</span></a></li>
+	                        <li><a href="https://www.youtube.com/pipcpr" target="_blank" title="youtube new window" class="btn__sns i_utube_b"><span class="blind">youtube</span></a></li>
+	                        <li><a href="https://blog.naver.com/pipcpr" target="_blank" title="naver blog new window" class="btn__sns i_blog_b"><span class="blind">naver blog</span></a></li>
+	                        <li><a href="https://www.instagram.com/pipc.go.kr/" target="_blank" title="instagram new window" class="btn__sns i_insta_b"><span class="blind">instagram</span></a></li>
+	                    </ul>
+	                    <div class="controll__box">
+	                        <button onclick="zoomInOut('plus');return false;" class="btn btn__size--up"><span class="blind">browser zoom in</span></button>
+	                        <button onclick="zoomInOut('minus');return false;" class="btn btn__size--down"><span class="blind">browser zoom out</span></button>
+	                        <dl>
+								<dt class="blind">zoom</dt>
+								<dd class="zoomNum resetText">100<span>%</span></dd>
+							</dl>
+	                    </div>
+	                    <ul class="topLanguage_box">
+	                        <li><div class="icon_global_01"><span class="blind">language</span></div></li>
+	                        <li><a href="https://www.pipc.go.kr" class="lan_txt">KOR</a></li>
+	                        <li><a href="/eng/index.do" class="active">ENG</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+
+
+
+
+<div class="header">
+	<div class="container">
+		<div class="header__top clear">
+			<h1 class="logo"><a href="/eng/index.do"><span class="blind">Personal Information Protection Commission</span></a></h1>
+                  
+			<div class="mobile__menu">
+				<button class="btn btn__menu"><span class="blind">메뉴열기</span></button>
+			</div>
+		</div><!-- // header__top -->
+		<div class="header__gnb">
+			<div class="mobileTop">
+                      <ul class="topLanguage_box">
+                          <li><a href="/eng/index.do" class="btn_home active"><span class="blind">Home</span></a></li>
+                          <li><div class="icon_global_01"><span class="blind">언어</span></div></li>
+                          <li><a href="https://www.pipc.go.kr/" class="lan_txt active">KOR</a></li>
+                          <li><a href="/eng/index.do">ENG</a></li>
+                      </ul>
+				<button class="btn mobileMene__close"><span class="blind">mobile Mene close</span></button>
+			</div>
+			<div id="gnb" class="gnb" role="navigation">
+				<ul class="navListBox">
+					
+					
+					
+					
+						
+                        
+                            
+                            	
+                                
+                                <li>
+                                    <a href="#" class="mobileOnly">News</a>
+                                    <a href="/eng/user/ltn/new/noticeList.do" class="pcOnly">News</a>
+                                    <div class="navListArea">
+                                        <div class="container gnb_sub_menu_box">
+                                            <div class="gnb_sub_menu_img_box">
+                                                <div class="sub_txt_box">
+                                                    <div class="sub_title_txt">News</div>
+                                                </div>
+                                                <div class="gnb_sub_menu_img_01"></div>
+                                            </div>
+                                            <ol class="gnbList clear">
+                            
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/ltn/new/noticeList.do" target="_top">What’s New?</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/ltn/new/noticeList.do" target="_top">Notice / Press Release</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/ltn/new/newsList.do" target="_top">Latest Photo News</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            	
+                                
+                                    </ol></div></div></li> <!-- Close previous depth 1 menu -->
+                                
+                                <li>
+                                    <a href="#" class="mobileOnly">Law & Policy</a>
+                                    <a href="/eng/user/lgp/law/lawsRegulations.do" class="pcOnly">Law & Policy</a>
+                                    <div class="navListArea">
+                                        <div class="container gnb_sub_menu_box">
+                                            <div class="gnb_sub_menu_img_box">
+                                                <div class="sub_txt_box">
+                                                    <div class="sub_title_txt">Law & Policy</div>
+                                                </div>
+                                                <div class="gnb_sub_menu_img_01"></div>
+                                            </div>
+                                            <ol class="gnbList clear">
+                            
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/law/lawsRegulations.do" target="_top">Law & Guidelines</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/law/lawsRegulations.do" target="_top">Law</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/law/ordinancesList.do" target="_top">Guidelines</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/ntp/requestAccess.do" target="_top">National Policy</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/ntp/requestAccess.do" target="_top">Request for Access, etc. to Personal Information</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/ntp/dpm/introduction.do" target="_top">Personal Information Dispute Mediation</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/ntp/reportingDivulgence.do" target="_top">Reporting on Divulgence of Personal Information</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/ntp/reportingInfringement.do" target="_top">Reporting on Infringement of Personal Information</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/bnp/pseudonymization.do" target="_top">Business Policy</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/bnp/pseudonymization.do" target="_top">PseudonymizationㆍCombination of Pseudonymized Information</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/bnp/certification.do" target="_top">ISMS-P</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/pbp/mlp/masterPlan.do" target="_top">Public Policy</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/pbp/mlp/masterPlan.do" target="_top">Master PlanㆍImplementation Plan</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/pbp/personalInformationImpactAssessment.do" target="_top">Privacy Impact Assessment</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/pbp/assessment.do" target="_top">Assessment of Data Breach Incident Factors</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/pbp/determination.do" target="_top">Assessment of Public Institutions’ Management Level</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/gbp/cooperation.do" target="_top">Global Policy</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/gbp/cooperation.do" target="_top">Cooperation among International Privacy Authorities</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/lgp/gpa/schedules.do" target="_top">2025 GPA SEOUL</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/gpa/schedules.do" target="_top">Schedule</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/gpa/instrectors.do" target="_top">Speakers</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/gpa/events.do" target="_top">Side Events</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/lgp/gpa/newsMedias.do" target="_top">News & Media</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            	
+                                
+                                    </ol></div></div></li> <!-- Close previous depth 1 menu -->
+                                
+                                <li>
+                                    <a href="#" class="mobileOnly">Publication</a>
+                                    <a href="/eng/user/pbc/reportList.do" class="pcOnly">Publication</a>
+                                    <div class="navListArea">
+                                        <div class="container gnb_sub_menu_box">
+                                            <div class="gnb_sub_menu_img_box">
+                                                <div class="sub_txt_box">
+                                                    <div class="sub_title_txt">Publication</div>
+                                                </div>
+                                                <div class="gnb_sub_menu_img_01"></div>
+                                            </div>
+                                            <ol class="gnbList clear">
+                            
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/pbc/reportList.do" target="_top">Annual Report</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/pbc/casesList.do" target="_top">Resolutions/Decisions</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            	
+                                
+                                    </ol></div></div></li> <!-- Close previous depth 1 menu -->
+                                
+                                <li>
+                                    <a href="#" class="mobileOnly">About PIPC</a>
+                                    <a href="/eng/user/itc/itc/greetings.do" class="pcOnly">About PIPC</a>
+                                    <div class="navListArea">
+                                        <div class="container gnb_sub_menu_box">
+                                            <div class="gnb_sub_menu_img_box">
+                                                <div class="sub_txt_box">
+                                                    <div class="sub_title_txt">About PIPC</div>
+                                                </div>
+                                                <div class="gnb_sub_menu_img_01"></div>
+                                            </div>
+                                            <ol class="gnbList clear">
+                            
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/itc/itc/greetings.do" target="_top">About</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/itc/rli/relatedInstitutions.do" target="_top">Commissioners</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/rli/relatedInstitutions.do" target="_top">Chairperson</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/itv/viceChairmanProfile.do" target="_top">Vice Chairperson</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/cms/commissioners.do" target="_top">Commissioners</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/itc/org/organizationChart.do" target="_top">Organization</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/org/organizationChart.do" target="_top">Organization Chart</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/org/tasksOverview.do" target="_top">Division Info</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/itc/icm/committee.do" target="_top">Dispute Mediation Committee</a>
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/icm/committee.do" target="_top">Overview</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                            
+                                <ol>
+                                    <li><a href="/eng/user/itc/icm/committeeMembers.do" target="_top">Committee Members</a></li>
+                                </ol>
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li>
+                                    <a href="/eng/user/itc/directions.do" target="_top">Location</a>
+                            
+                            
+                        
+                    
+                    <!-- 마지막 메뉴 아이템이 depth 1이 아닐 경우 닫는 태그 추가 -->
+                    
+                        </ol></div></div></li>
+                    
+				</ul>
+				<div class="mobileBottom">
+					<ul class="sns_box">
+					    <li><a href="https://twitter.com/pipc_pr" target="_blank" title="twitter new window" class="btn__sns i_twitter_w"><span class="blind">twitter</span></a></li>
+					    <li><a href="https://www.facebook.com/pipc.go.kr" target="_blank" title="facebook new window" class="btn__sns i_facebook_w"><span class="blind">facebook</span></a></li>
+					    <li><a href="https://www.youtube.com/pipcpr" target="_blank" title="youtube new window" class="btn__sns i_utube_w"><span class="blind">youtube</span></a></li>
+					    <li><a href="https://blog.naver.com/pipcpr" target="_blank" title="naver blog new window" class="btn__sns i_blog_w"><span class="blind">naver blog</span></a></li>
+					    <li><a href="https://www.instagram.com/pipc.go.kr/" target="_blank" title="instagram new window" class="btn__sns i_insta_w"><span class="blind">instagram</span></a></li>
+					</ul>
+				</div>
+			</div>
+		</div> <!-- // header__gnb -->
+	</div> <!-- // header container-->
+</div>	<!-- // header -->
+
+
+
+
+
+
+
+
+
+<script>
+    // JSP에서 JavaScript로 값 전달
+    var bbsId = "";
+    var nttId = "";
+</script>
+	
+<!--//container-->
+<div class="breadcrumbs">
+	 <div class="guideBox">
+	 	<ul class="subNav">
+			<li><a href="javascript:;"><img src="/eng/images/pipc/user/common/icon_nv_home.svg" alt="Home" onclick="location.href='/eng';"></a></li>
+			<li><a href="javascript:;">News</a>
+	            <ol class="subNavSlide snDepth1">
+		            
+			            
+							<li><a href="/eng/user/ltn/new/noticeList.do"><span>News</span></a></li>
+						
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+							<li><a href="/eng/user/lgp/law/lawsRegulations.do"><span>Law & Policy</span></a></li>
+						
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+							<li><a href="/eng/user/pbc/reportList.do"><span>Publication</span></a></li>
+						
+	                
+			            
+	                
+			            
+	                
+			            
+							<li><a href="/eng/user/itc/itc/greetings.do"><span>About PIPC</span></a></li>
+						
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+			            
+	                
+	            </ol>
+            </li>
+                    
+			
+				<li><a href="javascript:;">What’s New?</a>
+		            <ol class="subNavSlide snDepth2">
+			            
+				            
+								
+							
+							
+		                
+				            
+							
+								<li class="gnbDepth01_010000">
+									<a href="/eng/user/ltn/new/noticeList.do"><span>What’s New?</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+								
+							
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/law/lawsRegulations.do"><span>Law & Guidelines</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/ntp/requestAccess.do"><span>National Policy</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/bnp/pseudonymization.do"><span>Business Policy</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/pbp/mlp/masterPlan.do"><span>Public Policy</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/gbp/cooperation.do"><span>Global Policy</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_020000" style="display:none;">
+									<a href="/eng/user/lgp/gpa/schedules.do"><span>2025 GPA SEOUL</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+								
+							
+							
+		                
+				            
+							
+								<li class="gnbDepth01_030000" style="display:none;">
+									<a href="/eng/user/pbc/reportList.do"><span>Annual Report</span></a>
+								</li>
+							
+		                
+				            
+							
+								<li class="gnbDepth01_030000" style="display:none;">
+									<a href="/eng/user/pbc/casesList.do"><span>Resolutions/Decisions</span></a>
+								</li>
+							
+		                
+				            
+								
+							
+							
+		                
+				            
+							
+								<li class="gnbDepth01_040000" style="display:none;">
+									<a href="/eng/user/itc/itc/greetings.do"><span>About</span></a>
+								</li>
+							
+		                
+				            
+							
+								<li class="gnbDepth01_040000" style="display:none;">
+									<a href="/eng/user/itc/rli/relatedInstitutions.do"><span>Commissioners</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_040000" style="display:none;">
+									<a href="/eng/user/itc/org/organizationChart.do"><span>Organization</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_040000" style="display:none;">
+									<a href="/eng/user/itc/icm/committee.do"><span>Dispute Mediation Committee</span></a>
+								</li>
+							
+		                
+				            
+							
+		                
+				            
+							
+		                
+				            
+							
+								<li class="gnbDepth01_040000" style="display:none;">
+									<a href="/eng/user/itc/directions.do"><span>Location</span></a>
+								</li>
+							
+		                
+		            </ol>
+	            </li>
+            
+            
+            
+			
+				<li><a href="javascript:;">Notice / Press Release</a>
+		            <ol class="subNavSlide snDepth3">
+						
+							
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_010100">
+									<a href="/eng/user/ltn/new/noticeList.do">Notice / Press Release</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_010100">
+									<a href="/eng/user/ltn/new/newsList.do">Latest Photo News</a>
+								</li>
+							
+						
+							
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020100" style="display:none;">
+									<a href="/eng/user/lgp/law/lawsRegulations.do">Law</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020100" style="display:none;">
+									<a href="/eng/user/lgp/law/ordinancesList.do">Guidelines</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020200" style="display:none;">
+									<a href="/eng/user/lgp/ntp/requestAccess.do">Request for Access, etc. to Personal Information</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020200" style="display:none;">
+									<a href="/eng/user/lgp/ntp/dpm/introduction.do">Personal Information Dispute Mediation</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020200" style="display:none;">
+									<a href="/eng/user/lgp/ntp/reportingDivulgence.do">Reporting on Divulgence of Personal Information</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020200" style="display:none;">
+									<a href="/eng/user/lgp/ntp/reportingInfringement.do">Reporting on Infringement of Personal Information</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020300" style="display:none;">
+									<a href="/eng/user/lgp/bnp/pseudonymization.do">PseudonymizationㆍCombination of Pseudonymized Information</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020300" style="display:none;">
+									<a href="/eng/user/lgp/bnp/certification.do">ISMS-P</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020400" style="display:none;">
+									<a href="/eng/user/lgp/pbp/mlp/masterPlan.do">Master PlanㆍImplementation Plan</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020400" style="display:none;">
+									<a href="/eng/user/lgp/pbp/personalInformationImpactAssessment.do">Privacy Impact Assessment</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020400" style="display:none;">
+									<a href="/eng/user/lgp/pbp/assessment.do">Assessment of Data Breach Incident Factors</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020400" style="display:none;">
+									<a href="/eng/user/lgp/pbp/determination.do">Assessment of Public Institutions’ Management Level</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020500" style="display:none;">
+									<a href="/eng/user/lgp/gbp/cooperation.do">Cooperation among International Privacy Authorities</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_020600" style="display:none;">
+									<a href="/eng/user/lgp/gpa/schedules.do">Schedule</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020600" style="display:none;">
+									<a href="/eng/user/lgp/gpa/instrectors.do">Speakers</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020600" style="display:none;">
+									<a href="/eng/user/lgp/gpa/events.do">Side Events</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_020600" style="display:none;">
+									<a href="/eng/user/lgp/gpa/newsMedias.do">News & Media</a>
+								</li>
+							
+						
+							
+							
+						
+							
+								
+							
+							
+						
+							
+								
+							
+							
+						
+							
+							
+						
+							
+								
+							
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_040600" style="display:none;">
+									<a href="/eng/user/itc/rli/relatedInstitutions.do">Chairperson</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_040600" style="display:none;">
+									<a href="/eng/user/itc/itv/viceChairmanProfile.do">Vice Chairperson</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_040600" style="display:none;">
+									<a href="/eng/user/itc/cms/commissioners.do">Commissioners</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_040500" style="display:none;">
+									<a href="/eng/user/itc/org/organizationChart.do">Organization Chart</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_040500" style="display:none;">
+									<a href="/eng/user/itc/org/tasksOverview.do">Division Info</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+							
+							
+								<li class="gnbDepth02_040400" style="display:none;">
+									<a href="/eng/user/itc/icm/committee.do">Overview</a>
+								</li>
+							
+						
+							
+							
+								<li class="gnbDepth02_040400" style="display:none;">
+									<a href="/eng/user/itc/icm/committeeMembers.do">Committee Members</a>
+								</li>
+							
+						
+							
+								
+							
+							
+						
+					</ol>
+				</li>
+			
+		</ul>
+			
+		<div class="print_sns_share_box">
+			<button type="button" class="btn_print_pr" onclick="openPrint();return false;"><span></span>print</button>
+			<button type="button" class="btn_sns_sh"><span></span>share</button>
+			<div class="sns_share">
+				<!-- <ul>
+					<li><a href="#none" class="icon_kakao">카카오톡</a></li>
+					<li><a href="#none" class="icon_facebook">페이스북</a></li>
+					<li><a href="#none" class="icon_naver">네이버</a></li>
+					<li><a href="#none" class="icon_twitter">트위터</a></li>
+				</ul>
+				 -->
+				<div class="url_copy_box">
+					<p>URL LINK</p>
+            		<a href="#none" class="btn_url_copy" onclick="clip(); return false;">COPY</a>
+				</div>
+				<div class="mask_box"></div>
+			</div>
+		</div>
+	</div><!--sub_nav_wrap-->
+	</div>
+
+
+
+
+
+
+
+
+
+<script type="text/javaScript" language="javascript">
+	$(function() {
+	});
+	
+	/*********************************************************
+	 * 페이징 처리 함수
+	 ******************************************************** */
+	function fnSelectLinkPage(pageNo) {
+		document.listForm.pageIndex.value = pageNo;
+	   	document.listForm.submit();
+	}
+	
+	/*********************************************************
+	 * 조회 처리 함수
+	 ******************************************************** */
+	function noticeList() {
+
+		document.listForm.pageIndex.value = 1;
+		document.listForm.submit();
+	}
+	
+	/* ********************************************************
+	 * 상세회면 처리 함수
+	 ******************************************************** */
+	function noticeDetail(nttId) {
+	
+		document.listForm.nttId.value = nttId;
+	  	document.listForm.action = "/eng/user/ltn/new/noticeDetail.do";
+	  	document.listForm.submit();
+	}
+</script>
+
+<div class="contents inner">
+	
+		
+		
+		
+	
+	<h2 class="title_h2"><span>Notice / Press Release</span></h2>
+
+	<div class="contents_inner ">
+		<form name="listForm" action="/eng/user/ltn/new/noticeList.do" method="post" onSubmit="noticeList(); return false;" enctype="application/x-www-form-urlencoded">
+			<div class="search_box">
+				<span>Search</span>
+				<div class="form_select">
+					<select title="search select" name="searchCnd">
+						<option value="">ALL</option>
+						<option value="0">TITLE</option>
+						<option value="1">CONTENTS</option>
+					</select>
+				</div>
+				<input type="hidden" name="nttId" value="0">
+			    <!-- <input type="hidden" name="bbsId" value="BBSMSTR_000000000001"> -->
+			    <input type="hidden" name="pageIndex" value="2">
+				<input type="text" name="searchWrd" title="search text" class="input_txt" value="">
+				<button type="button" class="btn_search" onclick="javascript:noticeList();">GO</button>
+			</div>
+	
+			<div class="tb_list">
+				<table>
+					<caption>Notice List</caption>
+					<colgroup>
+						<col style="width: 80px;">
+						<col>
+						<col style="width: 140px;">
+						<col style="width: 110px;">
+						<col style="width: 80px;">
+						<col style="width: 70px;">
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Title</th>
+							<th scope="col">Department</th>
+							<th scope="col">Date</th>
+							<th scope="col">Attach</th>
+							<th scope="col">Hits</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 게시글 본문 -->
+						
+							<tr>
+								<td class="tb_no">219</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3133')">The PIPC Sanctions KT Corporation for Data Breaches</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.08.07
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">2756</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">218</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3153')">The PIPC Actively Supports Public AX Trusted by the Korean People with Privacy Protection</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.30
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">2687</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">217</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3122')">The EU’s Adequacy Decision on the Republic of Korea Renewed</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.24
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">2469</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">216</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3121')">The PIPC Expands the Technical Infrastructure for Right to Data Portability to Cover Employment and Education Sectors</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.23
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">1910</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">215</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3112')">The PIPC Sanctions Three Businesses for Failures to Implement Safeguards Required under the PIPA</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.15
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">2519</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">214</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3102')">The PIPC Shared Its Way to Respond to AI with Data Protection Authorities Around the World</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.08
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">1434</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">213</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3074')">PIPC Chairperson to Attend the G7 Data Protection and Privacy Authorities Roundtable</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.07.01
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">1450</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">212</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3081')">The PIPC to Help Support the Public Sector to Raise the Level of  Personal Information Protection</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.06.23
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">687</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">211</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3072')">The PIPC to Lead Joint Responses to Tackle the Illicit Circulation of  Personal Information in the Asia-Pacific Region</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.06.18
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">616</td>
+							</tr>
+						
+							<tr>
+								<td class="tb_no">210</td>
+								<td class="tb_title">
+									<a href="#none" class="title" onclick="javascript:noticeDetail('3071')">The PIPC Sanctions Coupang and CFS for Data Breaches and  Infringements on Privacy</a>
+								</td>
+								<td class="tb_department"></td>
+								<td class="tb_date">
+									
+										
+											2026.06.17
+										
+										
+									
+								</td>
+								<td class="tb_attach">
+									
+										<img src="/eng/images/pipc/user/common/ico_file.png" alt="file">
+									
+								</td>
+								<td class="tb_hits">6710</td>
+							</tr>
+						
+					
+						
+					</tbody>
+				</table>
+			</div>
+	
+			<!-- paginate -->
+			<div class="paging_div">
+				<ol class="paging_inner">
+					
+						<li><a href="?pageIndex=1" class="btn btn_first" onclick="fnSelectLinkPage(1);return false; "></a></li><li><a href="?pageIndex=1" class="btn btn_prev" onclick="fnSelectLinkPage(1);return false; "></a></li><li><a href="?pageIndex=1" onclick="fnSelectLinkPage(1);return false; ">1</a></li><li><em>2</em></li><li><a href="?pageIndex=3" onclick="fnSelectLinkPage(3);return false; ">3</a></li><li><a href="?pageIndex=4" onclick="fnSelectLinkPage(4);return false; ">4</a></li><li><a href="?pageIndex=5" onclick="fnSelectLinkPage(5);return false; ">5</a></li><li><a href="?pageIndex=6" onclick="fnSelectLinkPage(6);return false; ">6</a></li><li><a href="?pageIndex=7" onclick="fnSelectLinkPage(7);return false; ">7</a></li><li><a href="?pageIndex=8" onclick="fnSelectLinkPage(8);return false; ">8</a></li><li><a href="?pageIndex=9" onclick="fnSelectLinkPage(9);return false; ">9</a></li><li><a href="?pageIndex=10" onclick="fnSelectLinkPage(10);return false; ">10</a></li><li><a href="?pageIndex=11" class="btn btn_next" onclick="fnSelectLinkPage(11);return false; "></a></li><li><a href="?pageIndex=23" class="btn btn_last" onclick="fnSelectLinkPage(23);return false; "></a></li>
+
+					
+				</ol>
+			</div>
+		</form>
+	</div><!--contents_inner-->
+</div>
+
+
+
+
+
+			</div>
+		    <!--container//-->
+		
+		    <div class="footer_Wrap">
+	            <div class="footer_top_box">
+	                <div class="container">
+	                    <ul class="footer_menu_box">
+	                        <li><a href="/eng/user/cmm/privacyGuideline.do">Privacy Policy</a></li>
+	                        <li><a href="/eng/user/itc/directions.do">Location</a></li>
+	                        <li><a href="/eng/user/cmm/sitemap.do">Sitemap</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	            <div class="footer_bottom_box">
+	                <div class="container">
+	                    <div class="footer_info_box">
+	                        <p class="address">209 Sejong-daero, Jongno-gu, Seoul 03171, Korea</p>
+	                        <p class="copyRight">Copyright ⓒ Personal Information Protection Commission. All right reserved.</p>
+	                    </div>
+	                </div>
+	            </div>
+	            <a href="#wrap" class="el_top"><span class="blind">go to top</span></a><!-- //TOP -->
+			</div><!-- // footer -->
+		</div><!--wrapper//-->
+	</body>
+</html>

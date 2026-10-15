@@ -138,7 +138,15 @@ const SECTOR_EXAMPLES: [string, string, SectorDomain | SectorDomain[], SectorDom
   ['Advancing Nature-Related Financial Risk and Opportunity Assessment in Malaysia', 'BNM', ESG],
   ['SC Issues Guidance Note on Sukuk to Strengthen Alignment with Maqasid al-Shariah', 'SC Malaysia', CAPM],
   ['Former Company Director Jailed Five Years for Unlicensed Fund Management Activities', 'SC Malaysia', FUND],
-  ['SC and Bursa Malaysia Collaborate to Advance Informed Investing Among Retail Investors', 'SC Malaysia', COND]
+  ['SC and Bursa Malaysia Collaborate to Advance Informed Investing Among Retail Investors', 'SC Malaysia', COND],
+  // Data privacy is part of AI, cyber and tech risk; a data broker is not a securities broker
+  ['TikTok withdraws two appeals in children’s privacy action and accepts £12.7m fine', 'ICO', TECH],
+  ['CalPrivacy Continues Enforcement Blitz with Action Against Virginia Data Broker', 'CalPrivacy (CPPA)', TECH, [CAPM]],
+  ['Know your privacy obligations under the Anti-Money Laundering / Counter-Terrorism Financing reforms', 'OAIC', [TECH, AML]],
+  ['个人信息出境认证办法', 'CAC', TECH],
+  // A data protection authority's notice with no topic words is about data privacy
+  ['The PIPC Issues Recommendations on Robot Vacuum Makers', 'PIPC', TECH],
+  ['ICO welcomes transition to new Information Commission', 'ICO', TECH]
 ];
 
 for (const [title, regulator, main, never = []] of SECTOR_EXAMPLES) {
@@ -206,7 +214,17 @@ const FORMAT_EXAMPLES: [string, string, string][] = [
   ['', 'Monetary Policy Statement', 'Announcements'],
   ['CIRCULAR', 'Implementation of Basel III Final Reform Package', 'Circulars'],
   ['', 'PS16/26 – PRA rule changes to accommodate HM Treasury’s Overseas Prudential Requirements Regime', 'Guidelines'],
-  ['', 'Announcement - In relation to the matter of Paladin Limited (Stock Code: 495) Cancellation of listing', 'Enforcement']
+  ['', 'Announcement - In relation to the matter of Paladin Limited (Stock Code: 495) Cancellation of listing', 'Enforcement'],
+  // Data protection authorities
+  ['PRESS RELEASE', 'The PIPC Sanctions KT Corporation for Data Breaches', 'Enforcement'],
+  ['', 'UN Sanctions List Updated', 'Announcements'],
+  ['', 'Thematic Review of Sanctions Screening Systems', 'Announcements'],
+  ['ANNOUNCEMENT', 'New Commission\'s Decision and Undertakings on 26 February 2026', 'Enforcement'],
+  ['ANNOUNCEMENT', 'New Undertakings on 9 April 2026', 'Enforcement'],
+  ['NEWS', 'Italian DPA fines Wind Tre EUR 16 700 000 for unlawful telemarketing and data protection infringements', 'Enforcement'],
+  ['NEWS', 'ICO takes action against Metropolitan Police Service over information governance failures', 'Enforcement'],
+  ['ANNOUNCEMENT', 'PUBLIC CONSULTATION PAPER NO. 1/2026 : ARTIFICIAL INTELLIGENCE (AI) AND PERSONAL DATA PROTECTION FRAMEWORK', 'Consultations'],
+  ['', 'OAIC releases Exposure Draft of the Children’s Online Privacy Code', 'Consultations']
 ];
 
 for (const [type, title, format] of FORMAT_EXAMPLES) {

@@ -154,5 +154,45 @@
   "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary&q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD&searchfield=title&sort=pubtime&sortType=1&type=gwyzcwjk&p=1&n=50": {
     "file": "e52f1e2f55c1.txt",
     "contentType": "application/json"
+  },
+  "https://ico.org.uk/api/search": {
+    "file": "032ba0cca6d8.txt",
+    "contentType": "application/json; charset=utf-8"
+  },
+  "https://www.edpb.europa.eu/feed/news_en": {
+    "file": "0524fbbc6b83.txt",
+    "contentType": "application/rss+xml; charset=utf-8"
+  },
+  "https://www.pdpc.gov.sg/api/listing-api?sort=latest&page=1&listingtype=media_events&itemsperpage=50&pathname=/media-events": {
+    "file": "53f1c0fd34ed.txt",
+    "contentType": "text/plain;charset=UTF-8"
+  },
+  "https://www.pdp.gov.my/ppdpv1/en/feed/": {
+    "file": "e61a6c20a6db.txt",
+    "contentType": "application/rss+xml; charset=UTF-8"
+  },
+  "https://www.oaic.gov.au/news/media-centre?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb%7Esp-oaic-web-new&form=result&num_ranks=30&profile=news-results-page&sort=dmetapublishedDateISO&start_rank=1": {
+    "file": "951167628a69.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www.oaic.gov.au/news/media-centre?collection=113e9365-ffcc-4320-a995-5c1b98bea3bb%7Esp-oaic-web-new&form=result&num_ranks=30&profile=news-results-page&sort=dmetapublishedDateISO&start_rank=31": {
+    "file": "54f8967ea906.txt",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "https://www.ppc.go.jp/information/": {
+    "file": "14c013030cf3.txt",
+    "contentType": "text/html;charset=UTF-8"
+  },
+  "https://pipc.go.kr/eng/user/ltn/new/noticeList.do": {
+    "file": "e1a8a842c63f.txt",
+    "contentType": "text/html;charset=UTF-8"
+  },
+  "https://pipc.go.kr/eng/user/ltn/new/noticeList.do?pageIndex=2": {
+    "file": "52c7c914fed2.txt",
+    "contentType": "text/html;charset=UTF-8"
+  },
+  "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary&q=%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF&searchfield=title&sort=pubtime&sortType=1&type=gwyzcwjk&p=1&n=50": {
+    "file": "cf082941338e.txt",
+    "contentType": "application/json"
   }
 }
