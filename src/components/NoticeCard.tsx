@@ -1,6 +1,6 @@
 import React from 'react';
 import { InstrumentFormat, RegulatoryNotice } from '../types/regulatory';
-import { daysUntil } from '../lib/derived';
+import { daysUntil, formatDate, publishedDay } from '../lib/derived';
 import { CRITICAL_SCORE, HIGH_SCORE } from '../lib/impact';
 import { Highlight } from './Highlight';
 
@@ -10,7 +10,6 @@ interface NoticeCardProps {
   onOpenPdfDossier: (notice: RegulatoryNotice) => void;
   onToggleBookmark: (id: string) => void;
   isBookmarked: boolean;
-  density?: 'comfortable' | 'compact';
   // Not seen in this browser before
   isNew?: boolean;
   onCopyLink?: (notice: RegulatoryNotice) => void;
@@ -43,7 +42,6 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   onOpenPdfDossier,
   onToggleBookmark,
   isBookmarked,
-  density = 'comfortable',
   isNew = false,
   onCopyLink,
   onAddToCalendar,
@@ -87,43 +85,6 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   };
 
   const scoreMeta = getScoreBadge(notice.impactScore);
-
-  if (density === 'compact') {
-    return (
-      <article className="bg-panel border border-line rounded-lg p-3 hover:bg-panel-raised transition-colors flex items-center justify-between gap-3 shadow-xs">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            {isNew && <NewBadge />}
-            <span className="px-1.5 py-0.5 rounded bg-wash border border-line text-accent font-['JetBrains_Mono'] text-[10px] font-bold">
-              {notice.regulator}
-            </span>
-            <span className="font-['JetBrains_Mono'] text-[10px] text-muted">
-              {notice.ref}
-            </span>
-            <span className="font-['JetBrains_Mono'] text-[10px] text-ink-soft">
-              • {notice.issuedTimeAgo}
-            </span>
-          </div>
-          <h4 className="font-['Hanken_Grotesk'] text-[14px] text-ink font-bold truncate">
-            <button onClick={() => onOpenPdfDossier(notice)} className="max-w-full truncate text-left hover:text-accent cursor-pointer">
-              <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
-            </button>
-          </h4>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className={`font-['JetBrains_Mono'] text-[11px] font-bold px-1.5 py-0.5 rounded border ${scoreMeta.bg} ${scoreMeta.border} ${scoreMeta.color}`}>
-            {notice.impactScore.toFixed(1)}/10
-          </span>
-          <button
-            onClick={() => onOpenGapAnalysis(notice)}
-            className="px-2.5 py-1 bg-accent text-on-accent text-[11px] font-semibold rounded hover:bg-accent-deep transition-colors shadow-2xs"
-          >
-            Action
-          </button>
-        </div>
-      </article>
-    );
-  }
 
   return (
     <article className="bg-panel border border-line rounded-lg p-3.5 md:p-4 shadow-xs hover:bg-panel-raised transition-colors relative group">
@@ -319,7 +280,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
                 >
                   {link.title}
                 </button>
-                {link.publishedAt && <span className="text-muted"> ({new Date(link.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })})</span>}
+                {publishedDay(link.publishedAt, notice.jurisdictionCode) && <span className="text-muted"> ({formatDate(publishedDay(link.publishedAt, notice.jurisdictionCode)!)})</span>}
                 <span className="text-muted" title="Regulators don't publish this link; it is matched by regulator and title words"> · matched by title</span>
               </span>
             </div>

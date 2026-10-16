@@ -36,6 +36,8 @@ interface FilterSidebarProps {
   isPinging: boolean;
   // 'rail' is the desktop left column; 'drawer' is the mobile filter sheet
   variant?: 'rail' | 'drawer';
+  // Shown after the filters: the date range and saved views on desktop
+  children?: React.ReactNode;
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -55,7 +57,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   endpoints,
   onPingEndpoints,
   isPinging,
-  variant = 'rail'
+  variant = 'rail',
+  children
 }) => {
   return (
     <aside aria-label="Filters" className={variant === 'rail' ? 'hidden lg:flex lg:col-span-3 flex-col gap-3' : 'flex flex-col gap-3'}>
@@ -264,6 +267,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           </div>
         </div>
       </div>
+
+      {children}
 
       {/* Jurisdiction Mesh Card */}
       <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">

@@ -11,13 +11,16 @@ interface EnforcementScreenProps {
 // party names are only shown where the source text states them.
 export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, onSelectNotice }) => {
   const records = sortNewestFirst(notices.filter(n => n.format === 'Enforcement'));
-  // Phones: one regulator at a time, and each record's first key point until "Show more"
+  // One regulator at a time (chips on phones, the bar list from md); phones
+  // also show each record's first key point until "Show more"
   const [regulator, setRegulator] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const regulators = [...new Set(records.map(n => n.regulator))]
     .map(name => ({ name, count: records.filter(n => n.regulator === name).length }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
   const shown = regulator && regulators.some(r => r.name === regulator) ? regulator : null;
+  const most = regulators[0]?.count ?? 1;
+  const shownCount = shown ? regulators.find(r => r.name === shown)!.count : records.length;
   const toggle = (id: string) => setExpanded(prev => {
     const next = new Set(prev);
     if (!next.delete(id)) next.add(id);
@@ -68,7 +71,51 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
           No enforcement publications in the current live notices.
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[260px_minmax(0,1fr)] md:gap-4 md:items-start">
+        {/* Counts by regulator, which also filter the list (as in public enforcement trackers) */}
+        <section aria-labelledby="by-regulator" className="max-md:hidden md:sticky md:top-36 bg-panel border border-line rounded-xl p-4 shadow-xs">
+          <div className="flex items-baseline justify-between gap-2 mb-1">
+            <h2 id="by-regulator" className="font-['Hanken_Grotesk'] text-[15px] font-bold text-ink">By regulator</h2>
+            {shown && (
+              <button onClick={() => setRegulator(null)} className="font-['Inter'] text-[11px] font-semibold text-accent hover:underline">
+                Show all
+              </button>
+            )}
+          </div>
+          <p className="font-['Inter'] text-[11px] text-muted mb-3">
+            {records.length} {records.length === 1 ? 'publication' : 'publications'} from {regulators.length} {regulators.length === 1 ? 'regulator' : 'regulators'} in the loaded feed. Select one to filter.
+          </p>
+          <ul className="space-y-1">
+            {regulators.map(r => {
+              const active = shown === r.name;
+              return (
+                <li key={r.name}>
+                  <button
+                    onClick={() => setRegulator(active ? null : r.name)}
+                    aria-pressed={active}
+                    aria-label={`${r.name}, ${r.count} ${r.count === 1 ? 'record' : 'records'}`}
+                    className={`w-full px-2 py-1.5 rounded text-left transition-colors ${active ? 'bg-accent-tint' : 'hover:bg-wash'} ${shown && !active ? 'opacity-60' : ''}`}
+                  >
+                    <span className="flex items-baseline justify-between gap-2 font-['Inter'] text-[12px]">
+                      <span className={`font-semibold truncate ${active ? 'text-accent' : 'text-ink'}`}>{r.name}</span>
+                      <span className="font-['JetBrains_Mono'] text-[11px] text-ink-soft">{r.count}</span>
+                    </span>
+                    <span className="mt-1 block h-1.5 rounded-full bg-wash overflow-hidden" aria-hidden="true">
+                      <span className="block h-full rounded-full bg-orange" style={{ width: `${Math.max(4, (r.count / most) * 100)}%` }} />
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <div className="space-y-3 min-w-0">
+          {shown && (
+            <p className="max-md:hidden font-['Inter'] text-[12px] text-ink-soft" aria-live="polite">
+              Showing {shownCount} from {shown}.
+            </p>
+          )}
           {records.map(n => {
             const open = expanded.has(n.id);
             const more = open ? '' : 'max-md:hidden';
@@ -76,7 +123,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
             return (
               <article
                 key={n.id}
-                className={`p-3.5 md:p-5 bg-panel border border-line rounded-xl shadow-xs space-y-2 ${shown && n.regulator !== shown ? 'max-md:hidden' : ''}`}
+                className={`p-3.5 md:p-5 bg-panel border border-line rounded-xl shadow-xs space-y-2 ${shown && n.regulator !== shown ? 'hidden' : ''}`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
@@ -129,6 +176,7 @@ export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, o
               </article>
             );
           })}
+        </div>
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 // Dashboard data computed from live notices, so every figure traces back to a
 // source document.
-import type { AlertNotification, DeadlineItem, RegulatoryNotice } from '../types/regulatory';
+import type { AlertNotification, DeadlineItem, JurisdictionCode, RegulatoryNotice } from '../types/regulatory';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -90,4 +90,34 @@ export function timeAgo(iso: string, now = new Date()): string {
 // Hong Kong / Singapore clock time, e.g. "13:20 SGT"
 export function sgtTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Singapore' }) + ' SGT';
+}
+
+// Each source's own time zone, for the calendar day it published on
+const SOURCE_ZONE: Record<JurisdictionCode, string> = {
+  SG: 'Asia/Singapore', MY: 'Asia/Kuala_Lumpur', HK: 'Asia/Hong_Kong', CN: 'Asia/Shanghai',
+  JP: 'Asia/Tokyo', KR: 'Asia/Seoul', AU: 'Australia/Sydney', US: 'America/New_York',
+  UK_EU: 'Europe/London', GLOBAL: 'Europe/Zurich'
+};
+
+const zoneParts = (time: Date, timeZone: string) => {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+    timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+  }).formatToParts(time).map(p => [p.type, p.value]));
+  return { day: `${parts.year}-${parts.month}-${parts.day}`, midnight: parts.hour === '00' && parts.minute === '00' && parts.second === '00' };
+};
+
+// The day a notice was published, as the regulator dates it (YYYY-MM-DD).
+// Sources that give only a date are stored as midnight, in the source's zone,
+// UTC or Singapore depending on the source (and Central European time for
+// some EU pages), so the zone where the time is midnight names the day. A
+// full timestamp is read in the source's own zone.
+export function publishedDay(iso: string | undefined, jurisdiction?: JurisdictionCode): string | undefined {
+  const time = iso ? new Date(iso) : null;
+  if (!time || isNaN(time.getTime())) return undefined;
+  const own = jurisdiction ? SOURCE_ZONE[jurisdiction] : 'Asia/Singapore';
+  for (const zone of [own, 'UTC', 'Asia/Singapore', 'Europe/Paris']) {
+    const { day, midnight } = zoneParts(time, zone);
+    if (midnight) return day;
+  }
+  return zoneParts(time, own).day;
 }

@@ -4,13 +4,14 @@ import { Navigation, ActiveTab } from './components/Navigation';
 import { KpiRibbon } from './components/KpiRibbon';
 import { FilterSidebar } from './components/FilterSidebar';
 import { NoticeCard } from './components/NoticeCard';
+import { NoticeList } from './components/NoticeList';
 import { RightSidebar } from './components/RightSidebar';
 import { Footer } from './components/Footer';
 import { BottomNav } from './components/BottomNav';
 import { NextUpStrip } from './components/NextUpStrip';
 import { MonitoringControls } from './components/MonitoringControls';
 import { SourceFreshness } from './components/SourceFreshness';
-import { paginationPages, readBookmarks, writeBookmarks } from './lib/preferences';
+import { paginationPages, readBookmarks, readFeedLayout, writeBookmarks, writeFeedLayout, type FeedLayout } from './lib/preferences';
 import { searchTerms } from './components/Highlight';
 import { useDialog } from './components/useDialog';
 
@@ -26,7 +27,7 @@ import { PdfDossierModal } from './components/modals/PdfDossierModal';
 import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal, EndpointMetric } from './components/modals/LiveEndpointsModal';
 
-import { daysUntil, deriveDeadlines, deriveNotifications, publishedInLastDays, sgtTime, sortNewestFirst } from './lib/derived';
+import { daysUntil, deriveDeadlines, deriveNotifications, publishedDay, publishedInLastDays, sgtTime, sortNewestFirst } from './lib/derived';
 import { calendarNotices, downloadIcs } from './lib/ics';
 import { copyText, defaultViewState, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState, SortOption } from './lib/urlState';
 import { readPreviousVisit, recordVisit } from './lib/visits';
@@ -160,11 +161,12 @@ export default function App() {
   const [pendingNoticeId, setPendingNoticeId] = useState<string | null>(initialView.noticeId);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
+  // Cards, or a dense list for scanning; remembered in this browser
+  const [layout, setLayout] = useState<FeedLayout>(readFeedLayout);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = layout === 'list' ? 20 : 5;
 
   // Bookmarks
   const [savedNotices, setSavedNotices] = useState(readBookmarks);
@@ -467,7 +469,7 @@ export default function App() {
 
       if (onlySaved && !bookmarkedIds.has(notice.id)) return false;
       if (dateFrom || dateTo) {
-        const date = notice.publishedAt?.slice(0, 10);
+        const date = publishedDay(notice.publishedAt, notice.jurisdictionCode);
         if (!date || (dateFrom && date < dateFrom) || (dateTo && date > dateTo)) return false;
       }
 
@@ -517,6 +519,13 @@ export default function App() {
   const currentNotices = filteredNotices.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   React.useEffect(() => setCurrentPage(1), [searchQuery, feedKeywordSearch, headerJurisdiction, selectedSeverities, selectedJurisdictions, selectedSectors, selectedFormat, sortBy, onlyNew, dateFrom, dateTo, onlySaved]);
   React.useEffect(() => setCurrentPage(p => Math.min(p, totalPages)), [totalPages]);
+  const changeLayout = (next: FeedLayout) => {
+    if (next === layout) return;
+    const first = (page - 1) * itemsPerPage;
+    setCurrentPage(Math.floor(first / (next === 'list' ? 20 : 5)) + 1);
+    setLayout(next);
+    writeFeedLayout(next);
+  };
 
   // Refresh saved snapshots from the feed and, when viewing them, from history.
   React.useEffect(() => {
@@ -559,6 +568,18 @@ export default function App() {
     if (target) {
       setActiveNoticeForDossier(target);
     }
+  };
+
+  // The open notice's place in the feed as filtered; stepping also turns the
+  // feed's page, so the list behind the panel follows
+  const dossierIndex = activeTab === 'feed' && activeNoticeForDossier
+    ? filteredNotices.findIndex(n => n.id === activeNoticeForDossier.id)
+    : -1;
+  const stepDossier = (delta: -1 | 1) => {
+    const next = filteredNotices[dossierIndex + delta];
+    if (dossierIndex < 0 || !next) return;
+    setActiveNoticeForDossier(next);
+    setCurrentPage(Math.floor((dossierIndex + delta) / itemsPerPage) + 1);
   };
 
   // A linked consultation or conclusion: open it here if loaded, else at the source
@@ -709,7 +730,9 @@ export default function App() {
             <div className="w-full px-4 sm:px-6 py-4 flex-1">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                 {/* Left Rail (3 cols): Filters & Facets + Mesh */}
-                <FilterSidebar {...filterSidebarProps} />
+                <FilterSidebar {...filterSidebarProps}>
+                  <MonitoringControls {...monitoringControlsProps} />
+                </FilterSidebar>
 
                 {/* Center Feed (6 cols): Active Notices Feed */}
                 <section aria-labelledby="feed-heading" className="lg:col-span-6 flex flex-col gap-3 min-w-0">
@@ -721,19 +744,19 @@ export default function App() {
                   />
 
                   {/* Live Feeds Connected Status Strip */}
-                  <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-2 h-2 rounded-full bg-green-dot animate-pulse"></span>
-                      <span className="max-md:hidden font-['JetBrains_Mono'] font-bold text-ink">
+                  <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex max-sm:flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
+                    <div className="flex-1 flex items-center gap-2 min-w-0">
+                      <span className="w-2 h-2 shrink-0 rounded-full bg-green-dot animate-pulse"></span>
+                      <span className="max-md:hidden shrink-0 font-['JetBrains_Mono'] font-bold text-ink">
                         Automated Feed Ingestion
                       </span>
                       <span className="text-muted hidden sm:inline">•</span>
-                      <span className="text-muted hidden sm:inline">
+                      <span className="text-muted hidden sm:block truncate" title={ingestingSources.join(', ') || undefined}>
                         {ingestingSources.length > 0 ? ingestingSources.join(', ') : 'Waiting for first sync'}
                       </span>
                     </div>
 
-                    <div className="max-md:flex-1 flex items-center gap-2">
+                    <div className="max-md:flex-1 shrink-0 flex items-center gap-2">
                       <span
                         className="font-['JetBrains_Mono'] text-[10px] text-muted"
                         title={lastSyncAt ? `The server built this data at ${new Date(lastSyncAt).toLocaleString()}` : undefined}
@@ -802,10 +825,6 @@ export default function App() {
                   <div className="max-md:order-last">
                     <SourceFreshness lastSyncAt={lastSyncAt} />
                   </div>
-                  {/* Below lg these are in the Filters sheet, with the other filters */}
-                  <div className="hidden lg:block">
-                    <MonitoringControls {...monitoringControlsProps} />
-                  </div>
 
                   {/* Show feed controls directly after the KPI cards on phones and tablets. */}
                   <div className="order-first lg:order-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
@@ -834,7 +853,7 @@ export default function App() {
                         <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">filter_alt</span>
                         Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                       </button>
-                      <span className="font-['JetBrains_Mono'] text-[11px] text-muted hidden md:inline font-medium">
+                      <span className="font-['JetBrains_Mono'] text-[11px] text-muted hidden md:max-lg:inline xl:inline font-medium">
                         Sort:
                       </span>
                       <select
@@ -848,18 +867,22 @@ export default function App() {
                         <option value="Consultation Deadline">Consultation Deadline</option>
                       </select>
 
-                      <button
-                        onClick={() => setDensity(density === 'comfortable' ? 'compact' : 'comfortable')}
-                        className={`h-8 w-8 flex items-center justify-center border rounded transition-colors ${
-                          density === 'compact'
-                            ? 'bg-accent text-on-accent border-accent'
-                            : 'bg-panel-raised border-line text-ink-soft hover:text-ink'
-                        }`}
-                        title="Feed Density Toggle"
-                        aria-label="Toggle compact view"
-                      >
-                        <span className="material-symbols-outlined text-base" aria-hidden="true">view_agenda</span>
-                      </button>
+                      <div role="group" aria-label="Layout" className="h-9 lg:h-8 flex border border-line rounded overflow-hidden shrink-0">
+                        {([['cards', 'Cards'], ['list', 'List']] as const).map(([value, label]) => (
+                          <button
+                            key={value}
+                            onClick={() => changeLayout(value)}
+                            aria-pressed={layout === value}
+                            title={value === 'list' ? 'One line per notice, 20 to a page' : 'Cards with key points, 5 to a page'}
+                            className={`px-2 flex items-center gap-1 font-['Inter'] text-[11px] font-semibold transition-colors ${
+                              layout === value ? 'bg-accent text-on-accent' : 'bg-panel-raised text-ink-soft hover:text-ink'
+                            }`}
+                          >
+                            <span className="material-symbols-outlined text-base" aria-hidden="true">{value === 'list' ? 'view_list' : 'view_agenda'}</span>
+                            <span className="max-xl:sr-only">{label}</span>
+                          </button>
+                        ))}
+                      </div>
 
                       <button
                         onClick={handleCopyViewLink}
@@ -874,7 +897,16 @@ export default function App() {
 
                   {/* Active Notice Feed Cards */}
                   <div className="space-y-3">
-                    {currentNotices.length > 0 ? (
+                    {currentNotices.length > 0 && layout === 'list' ? (
+                      <NoticeList
+                        notices={currentNotices}
+                        isNew={n => !n.archived && isNewNotice(n.id)}
+                        bookmarkedIds={bookmarkedIds}
+                        onOpen={n => setActiveNoticeForDossier(n)}
+                        onToggleBookmark={handleToggleBookmark}
+                        highlight={highlightTerms}
+                      />
+                    ) : currentNotices.length > 0 ? (
                       currentNotices.map((notice) => (
                         <NoticeCard
                           key={notice.id}
@@ -883,7 +915,6 @@ export default function App() {
                           onOpenPdfDossier={(n) => setActiveNoticeForDossier(n)}
                           onToggleBookmark={handleToggleBookmark}
                           isBookmarked={bookmarkedIds.has(notice.id)}
-                          density={density}
                           isNew={!notice.archived && isNewNotice(notice.id)}
                           onCopyLink={handleCopyNoticeLink}
                           onAddToCalendar={handleAddToCalendar}
@@ -1092,6 +1123,13 @@ export default function App() {
       <PdfDossierModal
         notice={activeNoticeForDossier}
         onClose={() => setActiveNoticeForDossier(null)}
+        position={dossierIndex >= 0 ? { index: dossierIndex, total: filteredNotices.length } : undefined}
+        onStep={stepDossier}
+        isBookmarked={!!activeNoticeForDossier && bookmarkedIds.has(activeNoticeForDossier.id)}
+        onToggleBookmark={handleToggleBookmark}
+        onOpenGapAnalysis={n => { setActiveNoticeForDossier(null); setActiveNoticeForGap(n); }}
+        onCopyLink={handleCopyNoticeLink}
+        onOpenRelated={handleOpenRelated}
       />
 
       <ExportModal

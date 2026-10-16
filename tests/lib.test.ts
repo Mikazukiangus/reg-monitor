@@ -8,6 +8,8 @@ import { extractClosingDate } from '../summarize.ts';
 import { dedupeByDocument } from '../src/lib/dedupe.ts';
 import { ruleMatches } from '../src/lib/alertRules.ts';
 import { findRelated } from '../src/lib/related.ts';
+import { noticeTimeline } from '../src/lib/timeline.ts';
+import { publishedDay } from '../src/lib/derived.ts';
 import { buildIcs } from '../src/lib/ics.ts';
 import { defaultViewState, parseViewState, serializeViewState } from '../src/lib/urlState.ts';
 import { matchDigest, singaporeDate } from '../digest.ts';
@@ -42,6 +44,51 @@ test('a conclusion is linked to its consultation by regulator and title', () => 
   assert.deepEqual(findRelated(consultation, [response]).map(l => [l.id, l.relation]), [['r', 'conclusion']]);
   // A conclusion published before the consultation is not its conclusion
   assert.deepEqual(findRelated({ ...consultation, publishedAt: '2026-12-01T00:00:00Z' }, [response]), []);
+});
+
+test('publication days are the days the regulators give', () => {
+  // Date-only values, stored at midnight in the source's zone, UTC or Singapore
+  assert.equal(publishedDay('2026-09-29T14:00:00.000Z', 'AU'), '2026-09-30'); // ASX, Sydney
+  assert.equal(publishedDay('2026-10-14T15:00:00.000Z', 'JP'), '2026-10-15'); // JFSA, Tokyo
+  assert.equal(publishedDay('2026-10-14T16:00:00.000Z', 'HK'), '2026-10-15'); // HKMA
+  assert.equal(publishedDay('2026-10-14T16:00:00.000Z', 'US'), '2026-10-15'); // FINRA, stored at Singapore midnight
+  assert.equal(publishedDay('2026-10-07T00:00:00.000Z', 'US'), '2026-10-07'); // Federal Register
+  assert.equal(publishedDay('2026-10-14T23:00:00.000Z', 'UK_EU'), '2026-10-15'); // ICO, London
+  assert.equal(publishedDay('2026-10-14T22:00:00.000Z', 'UK_EU'), '2026-10-15'); // European Commission, Brussels
+  // Full timestamps: the source's own day
+  assert.equal(publishedDay('2026-10-15T23:01:39.000Z', 'US'), '2026-10-15'); // 7 pm in New York
+  assert.equal(publishedDay('2026-10-15T21:30:00.000Z', 'AU'), '2026-10-16'); // 8.30 am in Sydney
+  assert.equal(publishedDay('not a date', 'SG'), undefined);
+});
+
+test('the timeline lists only dates the feed or the document gives, in order', () => {
+  const steps = noticeTimeline({
+    jurisdictionCode: 'SG',
+    publishedAt: '2026-10-02T03:00:00Z',
+    statutoryDeadline: 'Comments close: 2026-11-15',
+    deadlineDate: '2026-11-15',
+    keyPoints: {
+      points: [], facts: [], refs: [], method: 'extractive',
+      dates: [
+        { kind: 'takesEffect', date: '2027-01-01', text: 'The rules will take effect on 1 January 2027.' },
+        { kind: 'closes', date: '2026-11-15', text: 'Responses are invited by 15 November 2026.' },
+        { kind: 'closes', date: '2026-10-30', text: 'The earlier consultation closes on 30 October 2026.', general: true }
+      ]
+    },
+    related: [{ id: 'c', title: 'Consultation on X', relation: 'conclusion', publishedAt: '2027-03-01T00:00:00Z' }]
+  });
+  assert.deepEqual(steps.map(s => [s.label, s.date]), [
+    ['Published', '2026-10-02'],
+    ['Comments close', '2026-11-15'],
+    ['Takes effect', '2027-01-01'],
+    ['Conclusions published', '2027-03-01']
+  ]);
+  assert.equal(steps[1].quote, 'Responses are invited by 15 November 2026.');
+  assert.equal(steps[3].relatedId, 'c');
+  // Only a publication date: nothing else is invented
+  assert.deepEqual(noticeTimeline({ jurisdictionCode: 'SG', publishedAt: '2026-10-02T03:00:00Z' }).map(s => s.label), ['Published']);
+  // A key date without a document sentence keeps the feed's label
+  assert.deepEqual(noticeTimeline({ jurisdictionCode: 'SG', deadlineDate: '2026-12-01', statutoryDeadline: 'Effective: 2026-12-01' }).map(s => s.label), ['Effective']);
 });
 
 test('calendar files fold long lines at 75 octets', () => {

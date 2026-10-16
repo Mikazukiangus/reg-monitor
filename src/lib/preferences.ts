@@ -48,3 +48,14 @@ export function paginationPages(page: number, total: number): (number | 'gap')[]
   });
   return result;
 }
+
+// Cards or a dense list, remembered in this browser
+export type FeedLayout = 'cards' | 'list';
+const LAYOUT_KEY = 'regsonar.feedLayout';
+export function readFeedLayout(storage?: StorageLike): FeedLayout {
+  try { return (storage ?? localStorage).getItem(LAYOUT_KEY) === 'list' ? 'list' : 'cards'; }
+  catch { return 'cards'; }
+}
+export function writeFeedLayout(layout: FeedLayout, storage?: StorageLike) {
+  try { (storage ?? localStorage).setItem(LAYOUT_KEY, layout); } catch { /* the choice lasts for this visit */ }
+}
