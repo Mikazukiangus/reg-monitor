@@ -827,7 +827,7 @@ export default function App() {
                   </div>
 
                   {/* Show feed controls directly after the KPI cards on phones and tablets. */}
-                  <div className="order-first lg:order-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
+                  <div className="order-first lg:order-none flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
                       <span className="material-symbols-outlined absolute left-3 top-2 max-md:top-2.5 text-muted text-lg pointer-events-none" aria-hidden="true">
                         search
@@ -845,7 +845,8 @@ export default function App() {
                       />
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    {/* Phones: Filters, layout and share on one row, sort full width below (16px text) */}
+                    <div className="flex max-md:flex-wrap items-center gap-1.5 shrink-0">
                       <button
                         onClick={() => setIsFilterDrawerOpen(true)}
                         className="lg:hidden h-9 px-3 flex items-center gap-1 bg-panel-raised border border-line text-ink font-['Inter'] text-[12px] font-semibold rounded"
@@ -860,14 +861,14 @@ export default function App() {
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
                         aria-label="Sort notices"
-                        className="h-9 lg:h-8 min-w-0 flex-1 sm:flex-none px-2 bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded focus:outline-none focus:border-accent cursor-pointer"
+                        className="h-9 lg:h-8 min-w-0 max-md:order-last max-md:basis-full md:flex-none px-2 bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] max-md:text-[16px] font-semibold rounded focus:outline-none focus:border-accent cursor-pointer"
                       >
                         <option value="Highest Impact Score">Highest Impact Score</option>
                         <option value="Most Recent First">Most Recent First</option>
                         <option value="Consultation Deadline">Consultation Deadline</option>
                       </select>
 
-                      <div role="group" aria-label="Layout" className="h-9 lg:h-8 flex border border-line rounded overflow-hidden shrink-0">
+                      <div role="group" aria-label="Layout" className="h-9 lg:h-8 max-md:ml-auto flex border border-line rounded overflow-hidden shrink-0">
                         {([['cards', 'Cards'], ['list', 'List']] as const).map(([value, label]) => (
                           <button
                             key={value}
