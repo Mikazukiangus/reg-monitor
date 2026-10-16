@@ -631,6 +631,17 @@ This document records the full chronological instructions, technical requirement
 
 ---
 
+### Request 49: Compatibility Risks of the Dependency Recommendations (Codex, 2026-10-16)
+
+**User:** "does the recommendations break anything?"
+
+* **Assessment:** the recommendations are not guaranteed to be free of regressions. Declaring the already-used Node/npm toolchain and adding update PRs should have little application impact, but stricter runtime constraints can reject unsupported developer environments. An audit gate can deliberately block future builds when advisories appear or the registry is unavailable. Exact manifest pins at the currently locked versions should preserve the dependency graph if the lockfile is kept synchronized; they are optional because CI already uses `npm ci`.
+* **Changes requiring targeted verification:** removing `bun.lock` or declaring npm can affect hosting package-manager detection, so verify Vercel's install command and a fresh npm preview first. Moving build tools into `devDependencies` can break a build that omits dev dependencies. Compatible package updates can regress behavior, especially unpdf's bundled PDF.js update; test real PDF text extraction, scanned-PDF OCR and a deployment preview in addition to type checking, the full regression suite and build. Removing apparently unused packages also requires a clean install/build check.
+* **Behavioral tradeoffs:** tighter PDF page, image and execution limits can reject legitimate long documents or high-resolution scans, or yield incomplete summaries if extraction is truncated. Choose limits against representative regulator documents and distinguish a skipped/limited summary from a complete one; preserve the source notice/link. Destroy a PDF proxy only after all extraction and OCR has settled. Replacing Tesseract's internal `is-url`/`bmp-js` utilities or adopting major dependency versions carries greater compatibility risk and should be a separately tested change, not an untested override.
+* **Recommended sequence and current state:** verify the deployment toolchain, consolidate lockfiles without changing installed versions, add update PRs/auditing, then make small dependency updates and PDF-hardening changes separately. No dependency, application or deployment changes were made for this follow-up. Request 47's code and its previously passing 442-test verification are unchanged; no tests were rerun for this documentation-only clarification. The status log is saved on `codex/fix-audit-findings`; [PR #3](https://github.com/Mikazukiangus/reg-monitor/pull/3) remains pending merge and production is unchanged.
+
+---
+
 ## 3. Key Files & Modifications Summary
 
 | File | Status | Description |
