@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { config } from './runtime-config.js';
+import { cdnCacheControl } from './config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
@@ -17,8 +18,6 @@ import { isAiRuleNews, mentionsAi } from './src/lib/aiTopics.js';
 import { mentionsPrivacy } from './src/lib/privacyTopics.js';
 import { createHash, randomUUID } from 'crypto';
 import { publicationTime } from './src/lib/derived.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -139,7 +138,7 @@ const REG_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
 const PLAIN_USER_AGENT = 'RegSonar-Feed-Gateway/2.0';
 const PLAIN_AGENT_HOSTS = new Set(['www.finra.org']);
 const userAgentFor = (url: string) => (PLAIN_AGENT_HOSTS.has(new URL(url).host) ? PLAIN_USER_AGENT : REG_USER_AGENT);
-const FETCH_TIMEOUT_MS = 8000;
+const FETCH_TIMEOUT_MS = config.ingestion.fetchTimeoutMs;
 
 // A first score while a source is read; tagNotice then sets the final score
 // for every notice with the full rubric (src/lib/impact.ts)
@@ -160,7 +159,7 @@ function stripHtml(text: string): string {
 // out. After an HTTP 429 a site is left alone for as long as its Retry-After
 // header says, or 15 minutes when it doesn't say (FINRA doesn't).
 const HOST_SPACING_MS: Record<string, number> = { 'www.finra.org': 4000 };
-const RATE_LIMIT_PAUSE_MS = 15 * 60 * 1000;
+const RATE_LIMIT_PAUSE_MS = config.ingestion.rateLimitPauseMs;
 const hostQueue = new Map<string, Promise<void>>();
 const hostPausedUntil = new Map<string, number>();
 
@@ -2503,10 +2502,10 @@ async function probeEndpoint(ep: EndpointDefinition) {
 
 // Government APIs (HKMA in particular) rate-limit aggressively, so probes and
 // source fetches are cached rather than repeated on every client poll.
-const HEALTH_TTL_MS = 5 * 60 * 1000;
-const SOURCE_TTL_MS = 10 * 60 * 1000;
+const HEALTH_TTL_MS = config.ingestion.healthTtlMs;
+const SOURCE_TTL_MS = config.ingestion.sourceTtlMs;
 // The liquidity figures change once a business day (about 7pm Hong Kong time)
-const HKMA_SOURCE_TTL_MS = 30 * 60 * 1000;
+const HKMA_SOURCE_TTL_MS = config.ingestion.hkmaSourceTtlMs;
 
 let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
 
@@ -2888,13 +2887,13 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
 // source that publishes more between checks than the feed shows is still
 // covered. When none of them is in the history yet (a new source, or a gap
 // longer than the list), it reads further back.
-const POLL_LIMIT = 20;
-const BACKFILL_LIMIT = 50;
+const POLL_LIMIT = config.polling.limit;
+const BACKFILL_LIMIT = config.polling.backfillLimit;
 
 // Documents read for key points per source on each check, and for how long a
 // check starts new reads (the function may run for 120s); later checks do the rest
-const POLL_KEY_POINT_FETCHES = 5;
-const POLL_FETCH_WINDOW_MS = 60_000;
+const POLL_KEY_POINT_FETCHES = config.polling.keyPointFetches;
+const POLL_FETCH_WINDOW_MS = config.polling.fetchWindowMs;
 
 interface PollResult {
   name: string;
@@ -2928,7 +2927,7 @@ async function pollSource(source: (typeof SOURCES)[number], until: number): Prom
 }
 
 // Pages of undated stored notices read on each check for the date they state
-const POLL_DATE_BACKFILL = 5;
+const POLL_DATE_BACKFILL = config.polling.dateBackfillLimit;
 
 // Stored notices that came without a date (the FCA's feed gives none) and
 // were stored before pages were read for one: read each page once for the
@@ -2999,8 +2998,8 @@ async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; fa
 }
 
 // How far back the feed reaches into the history, and how many notices at most
-const ARCHIVE_FEED_DAYS = 30;
-const ARCHIVE_FEED_LIMIT = 300;
+const ARCHIVE_FEED_DAYS = config.archive.days;
+const ARCHIVE_FEED_LIMIT = config.archive.limit;
 
 // Dates taken from a document's text are worked out again whenever a stored
 // notice is read, so a rule change reaches the whole history. Copies stored
@@ -3065,7 +3064,7 @@ async function withHistory(live: NormalizedNotice[]) {
 // Scheduled jobs are called by Vercel with "Authorization: Bearer <CRON_SECRET>";
 // without that secret they are turned off, so nobody else can run them
 function cronAuthorized(req: Request, res: Response, what: string): boolean {
-  const secret = process.env.CRON_SECRET;
+  const secret = config.digest.cronSecret;
   if (!secret) {
     res.status(503).json({ success: false, error: `CRON_SECRET is not set, so ${what} turned off` });
     return false;
@@ -3077,16 +3076,10 @@ function cronAuthorized(req: Request, res: Response, what: string): boolean {
   return true;
 }
 
-function siteUrl(): string {
-  if (process.env.DIGEST_SITE_URL) return process.env.DIGEST_SITE_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  return `http://localhost:${process.env.PORT || 3000}`;
-}
-
 // The feed, built at most once a minute per server instance and shared by
 // every request in between. Sources are re-read at most every 10 minutes
 // anyway; this stops refreshes from re-reading the history database each time.
-const SYNC_REUSE_MS = 60_000;
+const SYNC_REUSE_MS = config.ingestion.syncReuseMs;
 const currentSync = reuseFor(SYNC_REUSE_MS, async () => {
   console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
   const [states, endpoints] = await Promise.all([
@@ -3106,13 +3099,12 @@ const currentSync = reuseFor(SYNC_REUSE_MS, async () => {
 });
 
 // Refreshes each visitor may ask for per minute
-const REFRESH_LIMIT = 6;
-const refreshLimit = rateLimit(REFRESH_LIMIT, 60_000);
+const refreshLimit = rateLimit(config.refresh.limit, config.refresh.windowMs);
 
 // The visitor's IP address. On Vercel, X-Forwarded-For is set by Vercel (a
 // value sent by the client is replaced); elsewhere the connection's address.
 function visitorIp(req: Request): string {
-  const forwarded = process.env.VERCEL ? req.get('x-forwarded-for')?.split(',')[0].trim() : undefined;
+  const forwarded = config.runtime.isVercel ? req.get('x-forwarded-for')?.split(',')[0].trim() : undefined;
   return forwarded || req.socket.remoteAddress || 'unknown';
 }
 
@@ -3167,7 +3159,7 @@ export function createApp() {
     }
     try {
       const body = await currentSync();
-      res.set('Cache-Control', req.method === 'GET' ? 'public, s-maxage=300, stale-while-revalidate=86400' : 'no-store');
+      res.set('Cache-Control', req.method === 'GET' ? cdnCacheControl(config.cdn.sync) : 'no-store');
       res.json(body);
     } catch (error: any) {
       console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
@@ -3198,7 +3190,7 @@ export function createApp() {
       const { results, failed, pageDatesFound } = await pollSources();
       const added = results.reduce((sum, r) => sum + r.added, 0);
       console.log(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
-      const warmed = await fetch(`${siteUrl()}/api/feeds/sync`, { signal: AbortSignal.timeout(30_000) })
+      const warmed = await fetch(`${config.digest.siteUrl}/api/feeds/sync`, { signal: AbortSignal.timeout(config.polling.warmTimeoutMs) })
         .then(r => r.ok)
         .catch(() => false);
       res.json({
@@ -3227,7 +3219,7 @@ export function createApp() {
       const day = date || singaporeDate(new Date(), 1);
       const { notices, failed } = await collectDigestNotices();
       const matches = matchDigest(notices, DIGEST_RULES, day);
-      const email = renderDigest(matches, day, siteUrl(), failed);
+      const email = renderDigest(matches, day, config.digest.siteUrl, failed);
       const summary = { day, checked: notices.length, matched: matches.length, failedSources: failed, subject: email.subject };
       console.log(`[RegSonar Digest] ${day}: ${matches.length} matching of ${notices.length} notices checked${failed.length ? `; could not read ${failed.join(', ')}` : ''}`);
 
@@ -3239,13 +3231,12 @@ export function createApp() {
         res.json({ success: true, sent: false, reason: 'No matching notices', ...summary });
         return;
       }
-      const apiKey = process.env.RESEND_API_KEY;
-      const to = (process.env.DIGEST_TO || '').split(',').map(a => a.trim()).filter(Boolean);
+      const { apiKey, to, from } = config.digest;
       if (!apiKey || to.length === 0) {
         res.status(503).json({ success: false, error: 'RESEND_API_KEY and DIGEST_TO must be set to send the digest', ...summary });
         return;
       }
-      const result = await sendWithResend({ apiKey, from: process.env.DIGEST_FROM || 'RegSonar <onboarding@resend.dev>', to, ...email });
+      const result = await sendWithResend({ apiKey, from, to, ...email });
       console.log(`[RegSonar Digest] Sent ${day} digest (Resend id ${result.id})`);
       res.json({ success: true, sent: true, id: result.id, ...summary });
     } catch (error: any) {
@@ -3261,7 +3252,7 @@ export function createApp() {
       success: true,
       rules: DIGEST_RULES,
       schedule: 'Daily at about 08:00 Singapore time',
-      configured: Boolean(process.env.CRON_SECRET && process.env.RESEND_API_KEY && process.env.DIGEST_TO)
+      configured: config.digest.configured
     });
   });
 
@@ -3279,7 +3270,7 @@ export function createApp() {
         return;
       }
       const found = dedupeByDocument((await searchNotices(db, q, 40)).map(fromArchive));
-      res.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+      res.set('Cache-Control', cdnCacheControl(config.cdn.search));
       res.json({ success: true, enabled: true, notices: found });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error?.message || 'Search failed' });
@@ -3311,7 +3302,7 @@ export function createApp() {
       const range: LiquidityRange = req.query.range === '3m' ? '3m' : '1m';
       const history = await getLiquidityHistory(range);
       // Past figures never change and new ones appear once a business day
-      res.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=86400');
+      res.set('Cache-Control', cdnCacheControl(config.cdn.liquidity));
       res.json({ success: true, ...history });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error?.message || 'Could not load liquidity history' });
@@ -3323,11 +3314,10 @@ export function createApp() {
 
 async function startLocalServer() {
   const app = createApp();
-  const PORT = Number(process.env.PORT) || 3000;
-  const isProd = process.env.NODE_ENV === 'production';
+  const { port, host, isProduction } = config.runtime;
 
   // Mount Vite or Static Serving
-  if (!isProd) {
+  if (!isProduction) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -3341,15 +3331,15 @@ async function startLocalServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[RegSonar] Server running on http://0.0.0.0:${PORT}`);
+  app.listen(port, host, () => {
+    console.log(`[RegSonar] Server running on ${host}:${port}`);
   });
 }
 
 // On Vercel the app is imported by api/index.ts instead of listening on a
 // port; tests import this file too, so it only listens when run directly
 const runDirectly = process.argv[1] && path.resolve(process.argv[1]) === __filename;
-if (!process.env.VERCEL && runDirectly) {
+if (!config.runtime.isVercel && runDirectly) {
   startLocalServer().catch((err) => {
     console.error('[RegSonar] Fatal error starting server:', err);
     process.exit(1);

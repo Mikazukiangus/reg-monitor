@@ -1,5 +1,8 @@
 # How RegSonar Gets Its Data
 
+For local setup and deployment settings, see [`CONFIGURATION.md`](./CONFIGURATION.md)
+and the complete [`.env.example`](./.env.example).
+
 RegSonar has no special access or data agreements. Every notice and figure comes from a public page or feed that the regulator itself publishes, and the server reads it the same way a browser would.
 
 ## The flow of a sync

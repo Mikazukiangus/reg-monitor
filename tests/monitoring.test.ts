@@ -121,7 +121,7 @@ test('history endpoints retrieve archived IDs and report actual scheduled-check 
     assert.equal(checks.lastCompletedAt, '2026-10-10T09:01:00.000Z');
     assert.deepEqual(checks.dateBackfill, { pending: 1, unresolved: 1 });
     assert.equal((await fetch(`${base}/api/feeds/poll`)).status, 401);
-    delete process.env.CRON_SECRET;
-    assert.equal((await fetch(`${base}/api/feeds/poll`)).status, 503);
+    // Config is a validated startup snapshot. The missing-secret (503) case
+    // runs in a separate process in config.test.ts rather than mutating it here.
   } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
 });
