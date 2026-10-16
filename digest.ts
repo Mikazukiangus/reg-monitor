@@ -2,6 +2,7 @@
 // match the rules in digest-rules.ts, sent to the site owner through Resend.
 import { ruleMatches, MatchableNotice } from './src/lib/alertRules.js';
 import type { CustomAlertRule } from './src/types/regulatory.js';
+import { config } from './runtime-config.js';
 
 export interface DigestNotice extends MatchableNotice {
   id: string;
@@ -101,12 +102,12 @@ export function renderDigest(matches: DigestMatch[], day: string, siteUrl: strin
   return { subject, html, text };
 }
 
-export async function sendWithResend(options: { apiKey: string; from: string; to: string[]; subject: string; html: string; text: string }) {
+export async function sendWithResend(options: { apiKey: string; from: string; to: readonly string[]; subject: string; html: string; text: string }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: options.from, to: options.to, subject: options.subject, html: options.html, text: options.text }),
-    signal: AbortSignal.timeout(15_000)
+    signal: AbortSignal.timeout(config.digest.sendTimeoutMs)
   });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`Resend returned HTTP ${res.status}${body?.message ? `: ${body.message}` : ''}`);

@@ -3,6 +3,7 @@
 // URL the history is off and the site works from the live feeds alone.
 // DATABASE_URL=pglite runs an in-memory Postgres (PGlite) for local testing.
 import pg from 'pg';
+import { config } from './runtime-config.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
@@ -38,7 +39,7 @@ CREATE INDEX IF NOT EXISTS scheduled_checks_started_idx ON scheduled_checks (sta
 let dbPromise: Promise<Db | null> | null = null;
 
 export function databaseUrl(): string | undefined {
-  return process.env.DATABASE_URL || process.env.POSTGRES_URL || undefined;
+  return config.database.url;
 }
 
 async function connect(url: string): Promise<Db> {
@@ -52,7 +53,7 @@ async function connect(url: string): Promise<Db> {
     await lite.exec(SCHEMA);
   } else {
     // A small pool: each serverless instance handles a few requests at a time
-    const pool = new pg.Pool({ connectionString: url, max: 3, idleTimeoutMillis: 10_000 });
+    const pool = new pg.Pool({ connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs });
     db = { query: async (sql, params) => (await pool.query(sql, params as any[])).rows };
     await pool.query(SCHEMA);
   }
