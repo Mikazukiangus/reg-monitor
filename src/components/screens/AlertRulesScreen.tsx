@@ -56,6 +56,14 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   const [digest, setDigest] = useState<DigestInfo | null>(null);
   const [digestError, setDigestError] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Phones: the digest panel and each rule's criteria stay closed until asked for
+  const [digestOpen, setDigestOpen] = useState(false);
+  const [openRules, setOpenRules] = useState<Set<string>>(new Set());
+  const toggleOpen = (id: string) => setOpenRules(prev => {
+    const next = new Set(prev);
+    if (!next.delete(id)) next.add(id);
+    return next;
+  });
 
   useEffect(() => {
     fetch('/api/digest/rules')
@@ -104,32 +112,32 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   };
 
   return (
-    <div className="w-full px-4 sm:px-6 py-6 space-y-6">
+    <div className="w-full px-4 sm:px-6 py-4 md:py-6 flex flex-col gap-4 md:gap-6">
       {/* Header */}
-      <div className="bg-panel border border-line rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-panel border border-line rounded-xl p-4 md:p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-accent text-2xl" aria-hidden="true">tune</span>
-            <h1 className="font-['Hanken_Grotesk'] text-[22px] font-bold text-ink">
+            <h1 className="font-['Hanken_Grotesk'] text-[20px] md:text-[22px] font-bold text-ink">
               Watch Rules
             </h1>
           </div>
-          <p className="font-['Inter'] text-[13px] text-ink-soft">
+          <p className="font-['Inter'] text-[12px] md:text-[13px] text-ink-soft">
             Rules here are checked against the notices currently loaded and are saved in this browser only. The daily email digest below uses its own rules, stored on the server.
           </p>
         </div>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-accent hover:bg-accent-deep text-on-accent text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
+          className="px-4 py-2 max-md:min-h-11 bg-accent hover:bg-accent-deep text-on-accent text-[12px] font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
         >
           <span className="material-symbols-outlined text-base" aria-hidden="true">add</span>
           <span>New Alert Rule</span>
         </button>
       </div>
 
-      {/* Daily email digest (server side, to the site owner only) */}
-      <div className="bg-panel border border-line rounded-xl p-5 shadow-xs space-y-3">
+      {/* Daily email digest (server side, to the site owner only); last and closed on phones */}
+      <div className="max-md:order-last bg-panel border border-line rounded-xl p-4 md:p-5 shadow-xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-accent text-xl" aria-hidden="true">mail</span>
@@ -144,30 +152,40 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
               {digest.configured ? 'Sending is set up' : 'Not sending yet'}
             </span>
           )}
-        </div>
-        <p className="font-['Inter'] text-[13px] text-ink-soft">
-          {digest ? `${digest.schedule}, ` : ''}one email to the site owner listing the previous day's notices (Singapore time) that match these rules, read from up to 20 recent items per source. No email is sent on days with no matches.
-          {digest && !digest.configured && ' It starts once the CRON_SECRET, RESEND_API_KEY and DIGEST_TO settings are added to the Vercel project.'}
-        </p>
-        {digestError && <p className="font-['Inter'] text-[12px] text-orange">The digest settings could not be loaded.</p>}
-        {digest && (
-          <ul className="flex flex-wrap gap-2">
-            {digest.rules.filter(r => r.enabled).map(r => (
-              <li key={r.id} className="font-['Inter'] text-[12px] bg-wash text-ink px-2.5 py-1 rounded-md" title={`${r.jurisdictions.join(', ') || 'Any regulator'} · impact ≥ ${r.minImpact} · ${r.keywords.join(', ') || 'any keywords'}`}>
-                {r.name}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={handleCopyRules}
-            className="px-3 py-1.5 border border-line-strong hover:bg-wash text-ink text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
+            onClick={() => setDigestOpen(v => !v)}
+            aria-expanded={digestOpen}
+            className="md:hidden w-full min-h-10 flex items-center gap-1 font-['Inter'] text-[12px] font-semibold text-accent"
           >
-            <span className="material-symbols-outlined text-base" aria-hidden="true">{copied ? 'check' : 'content_copy'}</span>
-            {copied ? 'Copied' : 'Copy the rules on this tab'}
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">{digestOpen ? 'expand_less' : 'expand_more'}</span>
+            {digestOpen ? 'Hide the digest details' : 'Show the digest details'}
           </button>
-          <span className="font-['Inter'] text-[11px] text-muted">To use them for the digest, put them in digest-rules.ts in the project.</span>
+        </div>
+        <div className={`space-y-3 ${digestOpen ? '' : 'max-md:hidden'}`}>
+          <p className="font-['Inter'] text-[12px] md:text-[13px] text-ink-soft">
+            {digest ? `${digest.schedule}, ` : ''}one email to the site owner listing the previous day's notices (Singapore time) that match these rules, read from up to 20 recent items per source. No email is sent on days with no matches.
+            {digest && !digest.configured && ' It starts once the CRON_SECRET, RESEND_API_KEY and DIGEST_TO settings are added to the Vercel project.'}
+          </p>
+          {digestError && <p className="font-['Inter'] text-[12px] text-orange">The digest settings could not be loaded.</p>}
+          {digest && (
+            <ul className="flex flex-wrap gap-2">
+              {digest.rules.filter(r => r.enabled).map(r => (
+                <li key={r.id} className="font-['Inter'] text-[12px] bg-wash text-ink px-2.5 py-1 rounded-md" title={`${r.jurisdictions.join(', ') || 'Any regulator'} · impact ≥ ${r.minImpact} · ${r.keywords.join(', ') || 'any keywords'}`}>
+                  {r.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleCopyRules}
+              className="px-3 py-1.5 border border-line-strong hover:bg-wash text-ink text-[12px] font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
+            >
+              <span className="material-symbols-outlined text-base" aria-hidden="true">{copied ? 'check' : 'content_copy'}</span>
+              {copied ? 'Copied' : 'Copy the rules on this tab'}
+            </button>
+            <span className="font-['Inter'] text-[11px] text-muted">To use them for the digest, put them in digest-rules.ts in the project.</span>
+          </div>
         </div>
       </div>
 
@@ -175,18 +193,36 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
       <div className="space-y-4">
         {rules.map((rule) => {
           const matches = rule.enabled ? notices.filter(n => ruleMatches(rule, n)) : [];
+          const open = openRules.has(rule.id);
+          const more = open ? '' : 'max-md:hidden';
+          // One line for phones: "Impact ≥ 7 · MAS, HKMA, SFC +6 · 4 keywords"
+          const agencyText = rule.jurisdictions.length === 0 ? 'any regulator'
+            : rule.jurisdictions.slice(0, 3).join(', ') + (rule.jurisdictions.length > 3 ? ` +${rule.jurisdictions.length - 3}` : '');
+          const keywordText = rule.keywords.length === 0 ? 'any keywords' : `${rule.keywords.length} keyword${rule.keywords.length === 1 ? '' : 's'}`;
           return (
           <div
             key={rule.id}
-            className="p-5 bg-panel border border-line rounded-xl hover:bg-panel-raised transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
+            className="p-3.5 md:p-5 bg-panel border border-line rounded-xl hover:bg-panel-raised transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shadow-xs"
           >
             <div className="space-y-2 flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-3">
-                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink break-words">
+                <h3 className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink break-words max-md:flex-1 max-md:min-w-0">
                   {rule.name}
                 </h3>
+                {/* Phones turn a rule on and off with a switch, as in a phone's settings */}
+                <button
+                  role="switch"
+                  aria-checked={rule.enabled}
+                  aria-label={`Watch rule ${rule.name}`}
+                  onClick={() => handleToggleRule(rule.id)}
+                  className="md:hidden shrink-0 w-14 h-10 flex items-center justify-center"
+                >
+                  <span className={`w-11 h-6 rounded-full p-0.5 flex transition-colors ${rule.enabled ? 'bg-accent justify-end' : 'bg-wash-strong justify-start'}`}>
+                    <span className="w-5 h-5 rounded-full bg-panel shadow-xs" />
+                  </span>
+                </button>
                 <span
-                  className={`px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border ${
+                  className={`max-md:hidden px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold border ${
                     rule.enabled
                       ? 'bg-green-tint text-green border-green-line'
                       : 'bg-wash text-muted border-line'
@@ -194,12 +230,16 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                 >
                   {rule.enabled ? 'ACTIVE' : 'PAUSED'}
                 </span>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-muted">
+                <span className="max-md:hidden font-['JetBrains_Mono'] text-[11px] text-muted">
                   Min Impact: ≥ {rule.minImpact}
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
+              <p className={`md:hidden font-['JetBrains_Mono'] text-[11px] text-muted ${open ? 'hidden' : ''}`}>
+                Impact ≥ {rule.minImpact} · {agencyText} · {keywordText}
+              </p>
+              <p className={`font-['JetBrains_Mono'] text-[11px] text-muted md:hidden ${more}`}>Min Impact: ≥ {rule.minImpact}</p>
+              <div className={`flex flex-wrap items-center gap-2 ${more}`}>
                 <span className="text-[11px] font-['JetBrains_Mono'] text-muted">Agencies:</span>
                 {rule.jurisdictions.map(j => (
                   <span key={j} className="px-2 py-0.5 bg-page text-accent border border-line rounded text-[10px] font-['JetBrains_Mono'] font-bold">
@@ -223,8 +263,8 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                     </span>
                     {matches.length > 0 && (
                       <ul className="mt-1.5 space-y-0.5 font-['Inter'] text-[12px] text-ink-soft">
-                        {matches.slice(0, 5).map(n => (
-                          <li key={n.id} className="truncate">
+                        {matches.slice(0, 5).map((n, i) => (
+                          <li key={n.id} className={`md:truncate max-md:line-clamp-2 max-md:py-0.5 ${i >= 3 ? more : ''}`}>
                             <span className="font-['JetBrains_Mono'] text-[11px] text-accent mr-1.5">{n.regulator}</span>
                             {n.dossierUrl ? (
                               <a href={n.dossierUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent hover:underline">
@@ -244,10 +284,18 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <div className="flex flex-wrap items-center gap-3 shrink-0 max-md:justify-between max-md:-mb-1">
+              <button
+                onClick={() => toggleOpen(rule.id)}
+                aria-expanded={open}
+                className="md:hidden min-h-10 flex items-center gap-1 font-['Inter'] text-[12px] font-semibold text-accent"
+              >
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">{open ? 'expand_less' : 'expand_more'}</span>
+                {open ? 'Hide the criteria' : 'Show the criteria'}
+              </button>
               <button
                 onClick={() => handleToggleRule(rule.id)}
-                className={`px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${
+                className={`max-md:hidden px-3 py-1.5 rounded text-[11px] font-['JetBrains_Mono'] font-bold border transition-colors shadow-2xs ${
                   rule.enabled
                     ? 'border-orange-line-soft bg-orange-wash text-orange hover:bg-orange-tint'
                     : 'border-green-line-soft bg-green-wash text-green hover:bg-green-tint'
@@ -257,7 +305,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
               </button>
               <button
                 onClick={() => handleDeleteRule(rule)}
-                className="w-9 h-9 flex items-center justify-center rounded text-muted hover:text-orange hover:bg-orange-wash transition-colors"
+                className="w-10 h-10 md:w-9 md:h-9 flex items-center justify-center rounded text-muted hover:text-orange hover:bg-orange-wash transition-colors"
                 aria-label={`Delete the rule ${rule.name}`}
                 title="Delete rule"
               >
@@ -270,20 +318,20 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
       </div>
 
       <div className="flex justify-end">
-        <button onClick={handleResetRules} className="font-['Inter'] text-[12px] text-muted hover:text-accent hover:underline">
+        <button onClick={handleResetRules} className="max-md:min-h-10 font-['Inter'] text-[12px] text-muted hover:text-accent hover:underline">
           Reset to the starting rules
         </button>
       </div>
 
-      {/* Create Rule Modal */}
+      {/* Create Rule Modal; a sheet from the bottom of the screen on phones */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div ref={createDialogRef} role="dialog" aria-modal="true" aria-labelledby="create-rule-title" tabIndex={-1} className="bg-panel border border-line-strong rounded-xl w-full max-w-lg shadow-2xl p-5 space-y-4 focus:outline-none">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 backdrop-blur-xs md:p-4">
+          <div ref={createDialogRef} role="dialog" aria-modal="true" aria-labelledby="create-rule-title" tabIndex={-1} className="bg-panel border border-line-strong rounded-xl max-md:rounded-b-none w-full max-w-lg max-md:max-h-[90dvh] max-md:overflow-y-auto shadow-2xl p-5 max-md:pb-[calc(20px+env(safe-area-inset-bottom))] space-y-4 focus:outline-none">
             <div className="flex items-center justify-between pb-2 border-b border-line">
               <h3 id="create-rule-title" className="font-['Hanken_Grotesk'] text-[17px] font-bold text-ink">
                 Create Watch Rule
               </h3>
-              <button onClick={() => setShowCreateModal(false)} aria-label="Close" className="text-muted hover:text-ink">
+              <button onClick={() => setShowCreateModal(false)} aria-label="Close" className="max-md:w-10 max-md:h-10 max-md:-mr-2 flex items-center justify-center text-muted hover:text-ink">
                 <span className="material-symbols-outlined text-lg" aria-hidden="true">close</span>
               </button>
             </div>
@@ -297,7 +345,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                   value={ruleName}
                   onChange={(e) => setRuleName(e.target.value)}
                   placeholder="e.g. Stablecoin rules"
-                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-panel border border-line px-3 py-1.5 max-md:min-h-11 max-md:text-[16px] rounded text-ink focus:outline-none focus:border-accent"
                   required
                 />
               </div>
@@ -312,7 +360,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                   value={agencies}
                   onChange={(e) => setAgencies(e.target.value)}
                   placeholder="e.g. MAS, HKMA, SEC, PRA, BIS"
-                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-panel border border-line px-3 py-1.5 max-md:min-h-11 max-md:text-[16px] rounded text-ink focus:outline-none focus:border-accent"
                 />
               </div>
 
@@ -329,7 +377,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                   value={minImpact}
                   aria-describedby="rule-impact-help"
                   onChange={(e) => setMinImpact(parseFloat(e.target.value))}
-                  className="w-full accent-accent"
+                  className="w-full max-md:h-10 accent-accent"
                 />
                 <p id="rule-impact-help" className="font-['Inter'] text-[11px] text-muted mt-1">
                   3 routine releases · 4 SEC filings by exchanges · 5 announcements · 6.5 guidance · 7 enforcement and open consultations · 7.5 rules made · +1.5 when a closing or effective date is near
@@ -346,21 +394,21 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                   placeholder="e.g. custody, stablecoin, climate"
-                  className="w-full bg-panel border border-line px-3 py-1.5 rounded text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-panel border border-line px-3 py-1.5 max-md:min-h-11 max-md:text-[16px] rounded text-ink focus:outline-none focus:border-accent"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="pt-2 flex justify-end gap-2 max-md:grid max-md:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-3.5 py-1.5 text-ink-soft hover:text-ink font-semibold"
+                  className="px-3.5 py-1.5 max-md:min-h-11 max-md:border max-md:border-line max-md:rounded text-ink-soft hover:text-ink font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-accent text-on-accent font-semibold rounded hover:bg-accent-deep shadow-xs"
+                  className="px-4 py-1.5 max-md:min-h-11 bg-accent text-on-accent font-semibold rounded hover:bg-accent-deep shadow-xs"
                 >
                   Create Rule
                 </button>
