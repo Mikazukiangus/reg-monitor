@@ -13,6 +13,7 @@ import { MonitoringControls } from './components/MonitoringControls';
 import { SourceFreshness } from './components/SourceFreshness';
 import { paginationPages, readBookmarks, readFeedLayout, toggleNoticeBookmark, writeBookmarks, writeFeedLayout, type FeedLayout } from './lib/preferences';
 import { createSearchPattern, searchTerms } from './lib/search';
+import { browserLogger } from './lib/logging';
 import { useDialog } from './components/useDialog';
 
 // Screens
@@ -277,7 +278,7 @@ export default function App() {
       }
       setSyncError(`The feed server returned HTTP ${res.status}.`);
     } catch (err) {
-      console.warn('[RegSonar] Live feed sync note:', err);
+      browserLogger.warn('[RegSonar] Live feed sync note:', err);
       setSyncError('The feed server could not be reached.');
     } finally {
       setIsSyncing(false);
@@ -303,7 +304,7 @@ export default function App() {
         }
       }
     } catch (err) {
-      console.warn('[RegSonar] Endpoint ping note:', err);
+      browserLogger.warn('[RegSonar] Endpoint ping note:', err);
     } finally {
       setIsPinging(false);
     }
