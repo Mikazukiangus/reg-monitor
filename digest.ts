@@ -3,6 +3,7 @@
 import { ruleMatches, MatchableNotice } from './src/lib/alertRules.js';
 import type { CustomAlertRule } from './src/types/regulatory.js';
 import { config } from './runtime-config.js';
+import { logger } from './logging.js';
 
 export interface DigestNotice extends MatchableNotice {
   id: string;
@@ -110,6 +111,6 @@ export async function sendWithResend(options: { apiKey: string; from: string; to
     signal: AbortSignal.timeout(config.digest.sendTimeoutMs)
   });
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`Resend returned HTTP ${res.status}${body?.message ? `: ${body.message}` : ''}`);
+  if (!res.ok) throw new Error(`Resend returned HTTP ${res.status}${body?.message ? `: ${logger.errorMessage(body)}` : ''}`);
   return body as { id?: string };
 }

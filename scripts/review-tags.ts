@@ -4,6 +4,7 @@
 // change the rules in src/lib/tagging.ts until every test passes.
 const { SOURCES } = await import('../server.ts');
 const { classifySectors } = await import('../src/lib/tagging.ts');
+const { logger } = await import('../logging.ts');
 
 const perSource = Number(process.argv[2]) || 20;
 const fallback: string[] = [];
@@ -17,7 +18,7 @@ for (const source of SOURCES) {
   try {
     notices = await source.fetch(perSource);
   } catch (err) {
-    console.error(`${source.name}: not read (${(err as Error).message})`);
+    logger.warn(`${source.name}: not read`, err);
     continue;
   }
   for (const n of notices) {
@@ -40,9 +41,9 @@ for (const source of SOURCES) {
 }
 
 const section = (heading: string, note: string, lines: string[]) =>
-  console.log(`\n## ${heading} (${lines.length})\n${note}\n\n${lines.join('\n') || '- none'}`);
+  logger.info(`\n## ${heading} (${lines.length})\n${note}\n\n${lines.join('\n') || '- none'}`);
 
-console.log(`# Tags to check: ${total} live notices read, up to ${perSource} per source`);
+logger.info(`# Tags to check: ${total} live notices read, up to ${perSource} per source`);
 section('No topic words', 'Tagged by default. Is there a sector the rules should have found?', fallback);
 section('Sector from the summary only', 'The title gave no sign of these sectors. Are they right?', textOnly);
 section('Circular by default', 'No format words matched. Is any of these a consultation, enforcement action or guideline?', noFormatWords);

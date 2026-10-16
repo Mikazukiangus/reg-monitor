@@ -5,6 +5,8 @@ database or email credentials, the app serves live notices with history and emai
 sending disabled. Set secrets in your hosting provider's environment settings.
 Never put credentials in source code, commit `.env`, or prefix secrets with
 `VITE_` (that prefix is exposed to browser code).
+See [`SECURITY.md`](./SECURITY.md) for private local-file permissions, platform
+secret storage, redacted logging and historical-exposure handling.
 
 `runtime-config.ts` loads `.env` without overriding existing process variables,
 then creates one immutable `config` object using the pure schema in `config.ts`.

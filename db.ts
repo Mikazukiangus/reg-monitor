@@ -4,6 +4,7 @@
 // DATABASE_URL=pglite runs an in-memory Postgres (PGlite) for local testing.
 import pg from 'pg';
 import { config } from './runtime-config.js';
+import { logger } from './logging.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
@@ -66,7 +67,7 @@ export function getDb(): Promise<Db | null> {
   if (!url) return Promise.resolve(null);
   if (!dbPromise) {
     dbPromise = connect(url).catch(err => {
-      console.log(`[RegSonar History] Database unavailable: ${err?.message}`);
+      logger.warn('[RegSonar History] Database unavailable', err);
       dbPromise = null;
       return null;
     });

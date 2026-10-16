@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+import { logger } from './logging.js';
 import { config } from './runtime-config.js';
 import { cdnCacheControl } from './config.js';
 import path from 'path';
@@ -1371,7 +1372,7 @@ async function readPages<T>(urls: string[], parse: (html: string) => T[]): Promi
     try {
       rows.push(...parse(await (await fetchOrThrow(url)).text()));
     } catch (err: any) {
-      console.log(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
+      logger.info(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
     }
   }
   return rows;
@@ -1831,7 +1832,7 @@ async function fetchIcoNews(limit = 4): Promise<NormalizedNotice[]> {
       rows.push(...parseIcoNews(await (await fetchOrThrow(ICO_SEARCH, { method: 'POST', body, contentType: 'application/json' })).json()));
     } catch (err: any) {
       if (page === 1) throw err;
-      console.log(`[RegSonar Feed Sentinel] Skipped ICO news page ${page}: ${describeError(err)}`);
+      logger.info(`[RegSonar Feed Sentinel] Skipped ICO news page ${page}: ${describeError(err)}`);
     }
   }
   return newestFirst(uniqueBy(rows, r => r.id))
@@ -1903,7 +1904,7 @@ async function fetchPdpcNews(limit = 4): Promise<NormalizedNotice[]> {
       rows.push(...parsePdpcList(await (await fetchOrThrow(url)).json()));
     } catch (err: any) {
       if (i === 0) throw err;
-      console.log(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
+      logger.info(`[RegSonar Feed Sentinel] Skipped ${url}: ${describeError(err)}`);
     }
   }
   return newestFirst(uniqueBy(rows, r => r.id)).slice(0, limit).map(r => privacyNotice({
@@ -2488,14 +2489,14 @@ async function probeEndpoint(ep: EndpointDefinition) {
       detail = `HTTP ${res.status}`;
     }
 
-    return { ...ep, status, statusCode: res.status, pingMs, detail };
+    return { ...ep, status, statusCode: res.status, pingMs, detail: logger.errorMessage(detail) };
   } catch (err: any) {
     if (err instanceof RateLimitedError) {
-      return { ...ep, status: 'Degraded' as EndpointStatus, statusCode: 429, pingMs: null, detail: err.message };
+      return { ...ep, status: 'Degraded' as EndpointStatus, statusCode: 429, pingMs: null, detail: logger.errorMessage(err) };
     }
     const detail = err?.name === 'TimeoutError'
       ? `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`
-      : err?.cause?.code || err?.message || 'Request failed';
+      : logger.errorMessage(err?.cause?.code || err);
     return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail };
   }
 }
@@ -2715,7 +2716,7 @@ async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints | null>
     keyPointsCache.set(notice.id, result);
     return result;
   } catch (err: any) {
-    console.log(`[RegSonar Summaries] Could not fetch ${notice.dossierUrl}: ${describeError(err)}`);
+    logger.info(`[RegSonar Summaries] Could not fetch ${notice.dossierUrl}: ${describeError(err)}`);
     return null;
   }
 }
@@ -2788,7 +2789,7 @@ async function storedKeyPoints(notices: NormalizedNotice[]): Promise<Map<string,
     const stored = await storedNotices(db, notices.map(n => n.id));
     return new Map([...stored].filter(([, n]) => n.keyPoints).map(([id, n]) => [id, n.keyPoints as KeyPoints]));
   } catch (err: any) {
-    console.log(`[RegSonar History] Could not read stored key points: ${err?.message}`);
+    logger.warn('[RegSonar History] Could not read stored key points', err);
     return new Map();
   }
 }
@@ -2841,13 +2842,13 @@ async function archiveNotices(notices: NormalizedNotice[]) {
     const db = await getDb();
     if (db) await saveNotices(db, toSave.map(({ archived, related, ...n }) => n));
   } catch (err: any) {
-    console.log(`[RegSonar History] Could not save notices: ${err?.message}`);
+    logger.warn('[RegSonar History] Could not save notices', err);
   }
 }
 
 function describeError(err: any): string {
   if (err?.name === 'TimeoutError') return `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`;
-  return err?.message || 'Fetch failed';
+  return logger.errorMessage(err, 'Fetch failed');
 }
 
 // Refresh a source if its cache has expired. On failure the last good notices
@@ -2873,7 +2874,7 @@ async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceSt
       })
       .catch((err) => {
         s.error = describeError(err);
-        console.log(`[RegSonar Feed Sentinel] ${source.name} failed: ${s.error}`);
+        logger.info(`[RegSonar Feed Sentinel] ${source.name} failed: ${s.error}`);
       })
       .finally(() => {
         s.inFlight = undefined;
@@ -2954,7 +2955,7 @@ export async function pollSources(): Promise<{ results: PollResult[]; failed: { 
   const db = await getDb();
   const check = { id: randomUUID(), startedAt: new Date().toISOString(), completedAt: null as string | null, status: 'running' as const, summary: null };
   const record = async (value: Parameters<typeof saveScheduledCheck>[1]) => {
-    if (db) await saveScheduledCheck(db, value).catch((err: any) => console.log(`[RegSonar Poll] Could not record check: ${err?.message}`));
+    if (db) await saveScheduledCheck(db, value).catch((err: any) => logger.warn('[RegSonar Poll] Could not record check', err));
   };
   await record(check);
   try {
@@ -2964,7 +2965,7 @@ export async function pollSources(): Promise<{ results: PollResult[]; failed: { 
     const [settled, pageDatesFound] = await Promise.all([
       Promise.allSettled(sources.map(s => pollSource(s, until))),
       backfillPageDates(until).catch((err: any) => {
-        console.log(`[RegSonar History] Could not backfill page dates: ${err?.message}`);
+        logger.warn('[RegSonar History] Could not backfill page dates', err);
         pageDateError = describeError(err);
         return 0;
       })
@@ -3048,7 +3049,7 @@ async function withHistory(live: NormalizedNotice[]) {
       archive = { enabled: true, ...stats };
       candidates = [...linkable, ...live.filter(n => !linkable.some(c => c.id === n.id))] as RelatedCandidate[];
     } catch (err: any) {
-      console.log(`[RegSonar History] Could not read history: ${err?.message}`);
+      logger.warn('[RegSonar History] Could not read history', err);
       archive = { enabled: true, error: 'The history database could not be read' };
     }
   } else if (databaseUrl()) {
@@ -3081,7 +3082,7 @@ function cronAuthorized(req: Request, res: Response, what: string): boolean {
 // anyway; this stops refreshes from re-reading the history database each time.
 const SYNC_REUSE_MS = config.ingestion.syncReuseMs;
 const currentSync = reuseFor(SYNC_REUSE_MS, async () => {
-  console.log('[RegSonar Feed Sentinel] Querying live regulatory sources...');
+  logger.info('[RegSonar Feed Sentinel] Querying live regulatory sources...');
   const [states, endpoints] = await Promise.all([
     Promise.all(SOURCES.map(refreshSource)),
     getEndpointsHealth()
@@ -3139,7 +3140,8 @@ export function createApp() {
         endpoints: metrics
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, error: error.message });
+      logger.error('[RegSonar] Endpoint status failed', error);
+      res.status(500).json({ success: false, error: 'Endpoint status could not be loaded' });
     }
   });
 
@@ -3162,8 +3164,8 @@ export function createApp() {
       res.set('Cache-Control', req.method === 'GET' ? cdnCacheControl(config.cdn.sync) : 'no-store');
       res.json(body);
     } catch (error: any) {
-      console.log('[RegSonar Feed Sentinel] Sync catch notice:', error?.message);
-      res.status(500).json({ success: false, error: error?.message || 'Sync error' });
+      logger.error('[RegSonar Feed Sentinel] Sync failed', error);
+      res.status(500).json({ success: false, error: 'Feed sync failed' });
     }
   });
 
@@ -3172,8 +3174,9 @@ export function createApp() {
     res.set('Cache-Control', 'no-store');
     try {
       const db = await getDb();
-      res.json(db ? { success: true, enabled: true, ...await scheduledCheckStatus(db) } : { success: true, enabled: false });
-    } catch {
+      res.json(logger.redact(db ? { success: true, enabled: true, ...await scheduledCheckStatus(db) } : { success: true, enabled: false }));
+    } catch (error) {
+      logger.error('[RegSonar History] Scheduled-check status failed', error);
       res.status(503).json({ success: false, error: 'Scheduled check history is unavailable' });
     }
   });
@@ -3189,7 +3192,7 @@ export function createApp() {
     try {
       const { results, failed, pageDatesFound } = await pollSources();
       const added = results.reduce((sum, r) => sum + r.added, 0);
-      console.log(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
+      logger.info(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
       const warmed = await fetch(`${config.digest.siteUrl}/api/feeds/sync`, { signal: AbortSignal.timeout(config.polling.warmTimeoutMs) })
         .then(r => r.ok)
         .catch(() => false);
@@ -3202,8 +3205,8 @@ export function createApp() {
         failed
       });
     } catch (error: any) {
-      console.log('[RegSonar Poll] Failed:', error?.message);
-      res.status(500).json({ success: false, error: error?.message || 'Poll failed' });
+      logger.error('[RegSonar Poll] Failed', error);
+      res.status(500).json({ success: false, error: 'Scheduled check failed' });
     }
   });
 
@@ -3221,7 +3224,7 @@ export function createApp() {
       const matches = matchDigest(notices, DIGEST_RULES, day);
       const email = renderDigest(matches, day, config.digest.siteUrl, failed);
       const summary = { day, checked: notices.length, matched: matches.length, failedSources: failed, subject: email.subject };
-      console.log(`[RegSonar Digest] ${day}: ${matches.length} matching of ${notices.length} notices checked${failed.length ? `; could not read ${failed.join(', ')}` : ''}`);
+      logger.info(`[RegSonar Digest] ${day}: ${matches.length} matching of ${notices.length} notices checked${failed.length ? `; could not read ${failed.join(', ')}` : ''}`);
 
       if (req.query.dryRun === '1') {
         res.json({ success: true, sent: false, ...summary, matches: matches.map(m => ({ id: m.notice.id, title: m.notice.title, rules: m.rules })), html: email.html, text: email.text });
@@ -3237,11 +3240,11 @@ export function createApp() {
         return;
       }
       const result = await sendWithResend({ apiKey, from, to, ...email });
-      console.log(`[RegSonar Digest] Sent ${day} digest (Resend id ${result.id})`);
+      logger.info(`[RegSonar Digest] Sent ${day} digest (Resend id ${result.id})`);
       res.json({ success: true, sent: true, id: result.id, ...summary });
     } catch (error: any) {
-      console.log('[RegSonar Digest] Failed:', error?.message);
-      res.status(500).json({ success: false, error: error?.message || 'Digest failed' });
+      logger.error('[RegSonar Digest] Failed', error);
+      res.status(500).json({ success: false, error: 'Digest failed' });
     }
   });
 
@@ -3273,7 +3276,8 @@ export function createApp() {
       res.set('Cache-Control', cdnCacheControl(config.cdn.search));
       res.json({ success: true, enabled: true, notices: found });
     } catch (error: any) {
-      res.status(500).json({ success: false, error: error?.message || 'Search failed' });
+      logger.error('[RegSonar History] Search failed', error);
+      res.status(500).json({ success: false, error: 'Search failed' });
     }
   });
 
@@ -3291,7 +3295,8 @@ export function createApp() {
       const db = await getDb();
       const found = db ? await storedNotices(db, ids) : new Map();
       res.json({ success: true, enabled: !!db, notices: [...found.values()].map(fromArchive) });
-    } catch {
+    } catch (error) {
+      logger.error('[RegSonar History] Notice lookup failed', error);
       res.status(503).json({ success: false, error: 'Notice history is unavailable' });
     }
   });
@@ -3305,8 +3310,19 @@ export function createApp() {
       res.set('Cache-Control', cdnCacheControl(config.cdn.liquidity));
       res.json({ success: true, ...history });
     } catch (error: any) {
-      res.status(500).json({ success: false, error: error?.message || 'Could not load liquidity history' });
+      logger.error('[RegSonar] Liquidity history failed', error);
+      res.status(500).json({ success: false, error: 'Could not load liquidity history' });
     }
+  });
+
+  // Express's default development error handler can echo parser messages and
+  // stacks (including request content). Always return a controlled JSON error.
+  app.use((error: any, _req: Request, res: Response, next: NextFunction) => {
+    const status = [400, 413, 415].includes(error?.status) ? error.status : 500;
+    if (status < 500) logger.warn('[RegSonar] Request rejected', { status });
+    else logger.error('[RegSonar] Request failed', error);
+    if (res.headersSent) { next(new Error('Internal server error')); return; }
+    res.status(status).json({ success: false, error: status === 400 ? 'Invalid request body' : status === 413 ? 'Request body too large' : status === 415 ? 'Unsupported request encoding' : 'Internal server error' });
   });
 
   return app;
@@ -3332,7 +3348,7 @@ async function startLocalServer() {
   }
 
   app.listen(port, host, () => {
-    console.log(`[RegSonar] Server running on ${host}:${port}`);
+    logger.info(`[RegSonar] Server running on ${host}:${port}`);
   });
 }
 
@@ -3341,7 +3357,7 @@ async function startLocalServer() {
 const runDirectly = process.argv[1] && path.resolve(process.argv[1]) === __filename;
 if (!config.runtime.isVercel && runDirectly) {
   startLocalServer().catch((err) => {
-    console.error('[RegSonar] Fatal error starting server:', err);
+    logger.error('[RegSonar] Fatal error starting server:', err);
     process.exit(1);
   });
 }

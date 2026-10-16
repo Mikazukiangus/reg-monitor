@@ -718,7 +718,7 @@ var xtopiaPa = [];
 <script>
 </script>
 
-<script>var form = [], recaptchaCallback = function () {!function(a){a.xReCaptcha={},$(".x-recaptcha").each(function(c,e){var t=$(e),r=t.attr("id");t.removeClass("x-recaptcha"),a.xReCaptcha[r.substr(8)]=grecaptcha.render(r,{sitekey:"6Lcv5BUTAAAAAHhwGN6LgeSQvhWDfCz6HLxpBryF",callback:function(a){grecaptchaCallback(r,a)}})})}(window);};</script>
+<script>var form = [], recaptchaCallback = function () {!function(a){a.xReCaptcha={},$(".x-recaptcha").each(function(c,e){var t=$(e),r=t.attr("id");t.removeClass("x-recaptcha"),a.xReCaptcha[r.substr(8)]=grecaptcha.render(r,{sitekey:"fixture-public-site-key",callback:function(a){grecaptchaCallback(r,a)}})})}(window);};</script>
 
 <script>var formValidation = {};</script>
     <!--END - Dynamic Molecule JS Preload for SMART/DATA/CUSTOM-->

@@ -3808,7 +3808,7 @@ function OptanonWrapper() { }
     </div>
 </div>
 
-  <div class="hidden" id="search-config" data-popularUrl="/bin/asx/beta/servlets/popularsearch" data-host="https://api.swiftype.com/api/v1/" data-enginekey="SfHET6St8VTAoWmksQDS" data-selector="public/engines/suggest.json" data-search="public/engines/search.json" data-mdWatchlistsCountsUrl="https://asx.api.cmfyapp.com/asx-research-auth/1.0/watchlists/announcements/counts" data-pricingEndpoint="https://asx.api.cmfyapp.com/asx-research/1.0/search/price" data-f2OdaDomain="//oda.markitondemand.com" data-manifestEndpoint="https://asx.cmfyapp.com/js/manifest.js" data-commonsEndpoint="https://asx.cmfyapp.com/js/common.js" data-f2Endpoint="https://cdnjs.cloudflare.com/ajax/libs/F2/1.4.3/f2.min.js" data-markitScriptVersion="9655bf40094111edacde7c3a16a8429a00187fe2" data-chartsEndpoint="https://www.chartworks.io/content/chartworks/dist/1.4.30/js/chartworks.min.js" data-f2ApiDomain="https://asx.api.cmfyapp.com/asx-research/1.0" data-f2ManifestDomain="https://asx.cmfyapp.com" data-vendorEndpoint="https://asx.cmfyapp.com/js/vendor.js" data-authEnabled="yes" data-asxApiDomain="https://www.asx.com.au" data-forgeRockLogoutURL="https://auth.investor.asx.com.au/difam/UI/Logout?goto="></div>
+  <div class="hidden" id="search-config" data-popularUrl="/bin/asx/beta/servlets/popularsearch" data-host="https://api.swiftype.com/api/v1/" data-enginekey="fixture-public-search-key" data-selector="public/engines/suggest.json" data-search="public/engines/search.json" data-mdWatchlistsCountsUrl="https://asx.api.cmfyapp.com/asx-research-auth/1.0/watchlists/announcements/counts" data-pricingEndpoint="https://asx.api.cmfyapp.com/asx-research/1.0/search/price" data-f2OdaDomain="//oda.markitondemand.com" data-manifestEndpoint="https://asx.cmfyapp.com/js/manifest.js" data-commonsEndpoint="https://asx.cmfyapp.com/js/common.js" data-f2Endpoint="https://cdnjs.cloudflare.com/ajax/libs/F2/1.4.3/f2.min.js" data-markitScriptVersion="9655bf40094111edacde7c3a16a8429a00187fe2" data-chartsEndpoint="https://www.chartworks.io/content/chartworks/dist/1.4.30/js/chartworks.min.js" data-f2ApiDomain="https://asx.api.cmfyapp.com/asx-research/1.0" data-f2ManifestDomain="https://asx.cmfyapp.com" data-vendorEndpoint="https://asx.cmfyapp.com/js/vendor.js" data-authEnabled="yes" data-asxApiDomain="https://www.asx.com.au" data-forgeRockLogoutURL="https://auth.investor.asx.com.au/difam/UI/Logout?goto="></div>
 
   <ul style="display: none" data-swiftype-index="false">
     <li>publish</li>
@@ -5239,7 +5239,7 @@ Written submissions in response to the consultation paper are requested by Frida
 <script src="https://www.chartworks.io/content/chartworks/dist/1.4.30/js/chartworks.min.js?v=9655bf40094111edacde7c3a16a8429a00187fe2"></script>
 <!-- Start of async Intercept tracking code -->
 <script type="text/javascript">
-       var Intercept = { apiKey: 'fc588b32-f494-41e0-b756-f41a0ecbc9dc'};
+       var Intercept = { apiKey: 'fixture-public-analytics-key'};
 </script>
 <script type="text/javascript" src="https://intercept-widget.questionpro.com.au/static/js/loader.js"></script>
 <!-- End of async Intercept tracking code -->
