@@ -31,6 +31,16 @@ export function readBookmarks(storage?: StorageLike): RegulatoryNotice[] {
     ['critical', 'high', 'info'].includes(n.severity)).slice(0, 200);
 }
 export const writeBookmarks = (notices: RegulatoryNotice[], storage?: StorageLike) => write(BOOKMARKS_KEY, notices, storage);
+
+// A dossier opened by an archived shared link need not be in the loaded feed.
+export function toggleNoticeBookmark(
+  saved: RegulatoryNotice[], id: string, loaded: RegulatoryNotice[], openDossier: RegulatoryNotice | null
+): RegulatoryNotice[] {
+  if (saved.some(n => n.id === id)) return saved.filter(n => n.id !== id);
+  const notice = loaded.find(n => n.id === id) ?? (openDossier?.id === id ? openDossier : undefined);
+  return notice ? [...saved, notice] : saved;
+}
+
 export function readSavedViews(storage?: StorageLike): SavedView[] {
   return read(VIEWS_KEY, storage).filter((v: any): v is SavedView =>
     v && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.query === 'string').slice(0, 30);

@@ -11,8 +11,8 @@ import { BottomNav } from './components/BottomNav';
 import { NextUpStrip } from './components/NextUpStrip';
 import { MonitoringControls } from './components/MonitoringControls';
 import { SourceFreshness } from './components/SourceFreshness';
-import { paginationPages, readBookmarks, readFeedLayout, writeBookmarks, writeFeedLayout, type FeedLayout } from './lib/preferences';
-import { searchTerms } from './components/Highlight';
+import { paginationPages, readBookmarks, readFeedLayout, toggleNoticeBookmark, writeBookmarks, writeFeedLayout, type FeedLayout } from './lib/preferences';
+import { createSearchPattern, searchTerms } from './lib/search';
 import { useDialog } from './components/useDialog';
 
 // Screens
@@ -235,8 +235,7 @@ export default function App() {
     downloadIcs([notice], `RegSonar_${notice.id}.ics`);
 
   const handleToggleBookmark = (id: string) => {
-    const target = searchableNotices.find(n => n.id === id);
-    const next = bookmarkedIds.has(id) ? savedNotices.filter(n => n.id !== id) : target ? [...savedNotices, target] : savedNotices;
+    const next = toggleNoticeBookmark(savedNotices, id, searchableNotices, activeNoticeForDossier);
     if (next.length > 200) { showToast('Remove a saved notice before adding another (limit 200)'); return; }
     if (!writeBookmarks(next)) { showToast('This browser could not save your notices'); return; }
     setSavedNotices(next);
@@ -431,6 +430,7 @@ export default function App() {
     [archiveResults, searchText]
   );
   const highlightTerms = useMemo(() => searchTerms(searchText), [searchText]);
+  const searchPatterns = useMemo(() => highlightTerms.map(term => createSearchPattern([term])), [highlightTerms]);
 
   // Filter Notices
   const filteredNotices = useMemo(() => {
@@ -473,15 +473,16 @@ export default function App() {
         if (!date || (dateFrom && date < dateFrom) || (dateTo && date > dateTo)) return false;
       }
 
-      // Search: every word must appear, at the start of a word, in the title,
+      // Search: every term must appear in the title,
       // reference, regulator, tags, summary or key points. Notices the history
-      // search found (which also matches word forms) are kept.
-      if (highlightTerms.length > 0 && !archiveMatchIds.has(notice.id)) {
+      // search found (which also matches word forms) are kept. Spaced scripts
+      // match word prefixes; Chinese/Japanese/Korean can match without spaces.
+      if (searchPatterns.length > 0 && !archiveMatchIds.has(notice.id)) {
         const text = [
           notice.title, notice.ref, notice.regulator, ...notice.tags, notice.summary,
           ...(notice.keyPoints?.points || []), ...(notice.keyPoints?.facts.map(f => f.text) || [])
         ].join(' ');
-        if (!highlightTerms.every(term => new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i').test(text))) {
+        if (!searchPatterns.every(pattern => pattern.test(text))) {
           return false;
         }
       }
@@ -503,7 +504,7 @@ export default function App() {
   }, [
     searchableNotices,
     archiveMatchIds,
-    highlightTerms,
+    searchPatterns,
     headerJurisdiction,
     selectedSeverities,
     selectedJurisdictions,

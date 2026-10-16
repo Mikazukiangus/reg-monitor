@@ -22,6 +22,10 @@ export function publishedInLastDays(iso: string | undefined, days: number, now =
   return age >= 0 && age <= days * DAY_MS;
 }
 
+export function localDay(now = new Date()): string {
+  return `${String(now.getFullYear()).padStart(4, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
 export function daysUntil(isoDate: string, now = new Date()): number {
   const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   const [y, m, d] = isoDate.split('-').map(Number);

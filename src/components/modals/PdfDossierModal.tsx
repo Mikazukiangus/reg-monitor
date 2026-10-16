@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDialog } from '../useDialog';
 import { RegulatoryNotice } from '../../types/regulatory';
-import { daysUntil, formatDate, publishedDay } from '../../lib/derived';
+import { daysUntil, formatDate, localDay, publishedDay } from '../../lib/derived';
 import { noticeTimeline } from '../../lib/timeline';
 
 interface PdfDossierModalProps {
@@ -40,9 +40,10 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({
     if ((e.key === 'ArrowRight' || e.key === 'j') && hasNext) { e.preventDefault(); onStep!(1); }
     if ((e.key === 'ArrowLeft' || e.key === 'k') && hasPrev) { e.preventDefault(); onStep!(-1); }
   };
+  const now = new Date();
   const timeline = noticeTimeline(notice);
-  const firstUpcoming = timeline.findIndex(step => daysUntil(step.date) > 0);
-  const showToday = firstUpcoming > 0 && !timeline.some(step => daysUntil(step.date) === 0);
+  const firstUpcoming = timeline.findIndex(step => daysUntil(step.date, now) > 0);
+  const showToday = firstUpcoming > 0 && !timeline.some(step => daysUntil(step.date, now) === 0);
 
   const day = publishedDay(notice.publishedAt, notice.jurisdictionCode);
   const published = day ? formatDate(day) : 'Unknown';
@@ -191,7 +192,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({
               </h2>
               <ol className="ml-1.5 border-l-2 border-line space-y-3">
                 {timeline.map((step, i) => {
-                  const days = daysUntil(step.date);
+                  const days = daysUntil(step.date, now);
                   const dot = days < 0 ? 'bg-line-strong border-line-strong' : days === 0 ? 'bg-orange border-orange' : 'bg-panel border-accent';
                   const tone = days < 0 ? 'text-muted' : days <= 14 ? 'text-orange' : days <= 60 ? 'text-cream' : 'text-accent';
                   return (
@@ -199,7 +200,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({
                       {showToday && i === firstUpcoming && (
                         <li className="relative pl-4 font-['JetBrains_Mono'] text-[11px] font-bold text-orange">
                           <span className="absolute -left-[6px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-orange" aria-hidden="true" />
-                          Today, {formatDate(new Date().toISOString().slice(0, 10))}
+                          Today, {formatDate(localDay(now))}
                         </li>
                       )}
                       <li className="relative pl-4">
