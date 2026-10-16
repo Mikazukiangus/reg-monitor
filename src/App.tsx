@@ -829,7 +829,7 @@ export default function App() {
                   {/* Show feed controls directly after the KPI cards on phones and tablets. */}
                   <div className="order-first lg:order-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
                     <div className="relative flex-1">
-                      <span className="material-symbols-outlined absolute left-3 top-2 text-muted text-lg pointer-events-none" aria-hidden="true">
+                      <span className="material-symbols-outlined absolute left-3 top-2 max-md:top-2.5 text-muted text-lg pointer-events-none" aria-hidden="true">
                         search
                       </span>
                       <input
@@ -841,7 +841,7 @@ export default function App() {
                         }}
                         placeholder="Filter alerts by legal keyword, citation, act..."
                         aria-label="Filter the feed"
-                        className="w-full h-8 pl-9 pr-3 bg-panel-raised border border-line rounded text-ink placeholder:text-muted font-['Inter'] text-[12px] focus:outline-none focus:bg-panel focus:border-accent transition-all"
+                        className="w-full h-8 max-md:h-10 pl-9 pr-3 bg-panel-raised border border-line rounded text-ink placeholder:text-muted font-['Inter'] text-[12px] max-md:text-[16px] focus:outline-none focus:bg-panel focus:border-accent transition-all"
                       />
                     </div>
 

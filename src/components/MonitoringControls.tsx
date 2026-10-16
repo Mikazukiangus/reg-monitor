@@ -37,11 +37,11 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
   };
   return <>
     <div className="bg-panel border border-line rounded-lg p-3 flex flex-wrap items-end gap-3 text-[12px]">
-      <label className="min-w-0 text-muted">Published from
-        <input aria-label="Published from" type="date" value={dateFrom} max={dateTo || undefined} onInput={e => onDates(e.currentTarget.value, dateTo)} onChange={e => onDates(e.target.value, dateTo)} className="block mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink max-w-full" />
+      <label className="min-w-0 max-md:flex-1 max-md:min-w-32 text-muted">Published from
+        <input aria-label="Published from" type="date" value={dateFrom} max={dateTo || undefined} onInput={e => onDates(e.currentTarget.value, dateTo)} onChange={e => onDates(e.target.value, dateTo)} className="block mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink max-w-full max-md:w-full max-md:min-h-10 max-md:text-[16px]" />
       </label>
-      <label className="min-w-0 text-muted">Published to
-        <input aria-label="Published to" type="date" value={dateTo} min={dateFrom || undefined} onInput={e => onDates(dateFrom, e.currentTarget.value)} onChange={e => onDates(dateFrom, e.target.value)} className="block mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink max-w-full" />
+      <label className="min-w-0 max-md:flex-1 max-md:min-w-32 text-muted">Published to
+        <input aria-label="Published to" type="date" value={dateTo} min={dateFrom || undefined} onInput={e => onDates(dateFrom, e.currentTarget.value)} onChange={e => onDates(dateFrom, e.target.value)} className="block mt-1 bg-page border border-line rounded px-2 min-h-9 text-ink max-w-full max-md:w-full max-md:min-h-10 max-md:text-[16px]" />
       </label>
       {(dateFrom || dateTo) && <button onClick={() => onDates('', '')} className="min-h-9 text-accent hover:underline">Clear dates</button>}
       <button onClick={onToggleSaved} aria-pressed={onlySaved} className={`min-h-9 px-3 rounded border ${onlySaved ? 'bg-accent text-on-accent border-accent' : 'text-ink border-line hover:bg-wash'}`}>Saved notices ({savedCount})</button>
