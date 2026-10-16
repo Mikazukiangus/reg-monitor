@@ -32,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           <span className="text-line-strong hidden sm:inline">|</span>
 
-          <span className="font-['Inter'] text-[12px] text-muted">
+          <span className="max-md:hidden font-['Inter'] text-[12px] text-muted">
             Latencies:{' '}
             {endpoints
               .map(ep => `${ep.jurisdiction} (${ep.pingMs !== null ? `${ep.pingMs}ms` : ep.status === 'Checking' ? '…' : 'no response'})`)

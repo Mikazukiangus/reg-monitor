@@ -634,6 +634,13 @@ export default function App() {
     isPinging
   };
 
+  const monitoringControlsProps = {
+    query: serializeViewState({ ...view, noticeId: null }),
+    dateFrom, dateTo, onDates: (from: string, to: string) => { setDateFrom(from); setDateTo(to); },
+    onlySaved, savedCount: bookmarkedIds.size, onToggleSaved: () => setOnlySaved(v => !v),
+    onApply: applySavedView, onMessage: showToast
+  };
+
   return (
     <div className="bg-page font-['Inter'] text-ink antialiased min-h-screen flex flex-col pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
       {/* Fixed Top Header */}
@@ -674,7 +681,7 @@ export default function App() {
       />
 
       {/* Main Content Viewport */}
-      <main id="main" tabIndex={-1} className="focus:outline-none w-full pt-[88px] md:pt-32 bg-page min-h-screen flex-1 flex flex-col">
+      <main id="main" tabIndex={-1} className="focus:outline-none w-full pt-14 md:pt-32 bg-page min-h-screen flex-1 flex flex-col">
         {activeTab === 'feed' && (
           <div className="flex flex-col w-full">
             {/* Executive KPI Ribbon */}
@@ -717,7 +724,7 @@ export default function App() {
                   <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] shadow-2xs">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="w-2 h-2 rounded-full bg-green-dot animate-pulse"></span>
-                      <span className="font-['JetBrains_Mono'] font-bold text-ink">
+                      <span className="max-md:hidden font-['JetBrains_Mono'] font-bold text-ink">
                         Automated Feed Ingestion
                       </span>
                       <span className="text-muted hidden sm:inline">•</span>
@@ -726,7 +733,7 @@ export default function App() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="max-md:flex-1 flex items-center gap-2">
                       <span
                         className="font-['JetBrains_Mono'] text-[10px] text-muted"
                         title={lastSyncAt ? `The server built this data at ${new Date(lastSyncAt).toLocaleString()}` : undefined}
@@ -736,9 +743,10 @@ export default function App() {
                       </span>
                       <button
                         onClick={() => setIsEndpointsModalOpen(true)}
-                        className="text-accent hover:text-accent-deep font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1"
+                        className="text-accent hover:text-accent-deep font-bold text-[11px] flex items-center gap-0.5 cursor-pointer ml-1 max-md:ml-auto max-md:min-h-8"
                       >
-                        <span>Endpoints Gateway</span>
+                        <span className="md:hidden">Sources</span>
+                        <span className="max-md:hidden">Endpoints Gateway</span>
                         <span className="material-symbols-outlined text-[13px]" aria-hidden="true">open_in_new</span>
                       </button>
                     </div>
@@ -757,7 +765,8 @@ export default function App() {
 
                   {/* New since the last visit in this browser */}
                   {previousVisit && hasSynced && (
-                    <div className="bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] shadow-2xs">
+                    // Phones show this only when there is something new
+                    <div className={`bg-panel border border-line px-3.5 py-2 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] shadow-2xs ${newCount > 0 || onlyNew ? '' : 'max-md:hidden'}`}>
                       <span className="text-ink-soft">
                         {newCount > 0 ? (
                           <>
@@ -789,11 +798,14 @@ export default function App() {
                     </div>
                   )}
 
-                  <SourceFreshness lastSyncAt={lastSyncAt} />
-                  <MonitoringControls query={serializeViewState({ ...view, noticeId: null })}
-                    dateFrom={dateFrom} dateTo={dateTo} onDates={(from, to) => { setDateFrom(from); setDateTo(to); }}
-                    onlySaved={onlySaved} savedCount={bookmarkedIds.size} onToggleSaved={() => setOnlySaved(v => !v)}
-                    onApply={applySavedView} onMessage={showToast} />
+                  {/* Phones show the scheduled checks after the notices */}
+                  <div className="max-md:order-last">
+                    <SourceFreshness lastSyncAt={lastSyncAt} />
+                  </div>
+                  {/* Below lg these are in the Filters sheet, with the other filters */}
+                  <div className="hidden lg:block">
+                    <MonitoringControls {...monitoringControlsProps} />
+                  </div>
 
                   {/* Show feed controls directly after the KPI cards on phones and tablets. */}
                   <div className="order-first lg:order-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-panel border border-line p-2.5 rounded-lg shadow-xs">
@@ -1053,6 +1065,9 @@ export default function App() {
             </div>
             <div className="flex-1 overflow-y-auto p-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
               <FilterSidebar {...filterSidebarProps} variant="drawer" />
+              <div className="mt-3">
+                <MonitoringControls {...monitoringControlsProps} />
+              </div>
             </div>
           </div>
         </div>

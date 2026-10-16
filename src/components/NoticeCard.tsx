@@ -55,6 +55,10 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   const facts = notice.keyPoints?.facts.map(f => f.text) || [];
   const datedSentences = notice.deadlineQuote && !facts.includes(notice.deadlineQuote) ? [notice.deadlineQuote, ...facts] : facts;
   const dateLabel = notice.statutoryDeadline?.replace(/:.*$/, '');
+  // Phones show the first key point and the actions; the rest opens with "Show more"
+  const [expanded, setExpanded] = React.useState(false);
+  const more = expanded ? '' : 'max-md:hidden';
+  const extraPoints = Math.max(0, (notice.keyPoints?.points.length ?? 0) - 1);
 
   // Score badge colours follow the notice's severity, as in the filters
   const getScoreBadge = (score: number) => {
@@ -122,13 +126,13 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   }
 
   return (
-    <article className="bg-panel border border-line rounded-lg p-4 shadow-xs hover:bg-panel-raised transition-colors relative group">
+    <article className="bg-panel border border-line rounded-lg p-3.5 md:p-4 shadow-xs hover:bg-panel-raised transition-colors relative group">
       {/* Top Badge Cluster & Impact Score */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex flex-wrap items-center gap-1.5">
           {isNew && <NewBadge />}
           <span className="px-2 py-0.5 rounded bg-wash border border-line text-accent font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider">
-            {notice.regulator} • {notice.jurisdiction}
+            {notice.regulator}<span className="max-md:hidden"> • {notice.jurisdiction}</span>
           </span>
 
           <span
@@ -137,7 +141,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             {notice.type}
           </span>
 
-          <span className="font-['JetBrains_Mono'] text-[11px] text-muted">
+          <span className={`font-['JetBrains_Mono'] text-[11px] text-muted break-all ${more}`}>
             {notice.ref}
           </span>
 
@@ -151,7 +155,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
 
           {notice.isLiveFeed && !notice.savedCopy && (
-            <span className="px-1.5 py-0.5 rounded bg-green-tint text-green border border-green-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+            <span className="max-md:hidden px-1.5 py-0.5 rounded bg-green-tint text-green border border-green-line font-['JetBrains_Mono'] text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-green-dot animate-pulse"></span>
               Live Feed
             </span>
@@ -161,6 +165,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         {/* Impact Score */}
         <div
           className={`flex items-center gap-1.5 shrink-0 ${scoreMeta.bg} border ${scoreMeta.border} px-2 py-1 rounded`}
+          title={`Impact score ${notice.impactScore.toFixed(1)} out of 10`}
         >
           <span className={`material-symbols-outlined text-sm ${scoreMeta.color}`} aria-hidden="true">
             {scoreMeta.icon}
@@ -168,14 +173,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           <span className={`font-['JetBrains_Mono'] text-[11px] font-bold ${scoreMeta.color}`}>
             {notice.impactScore.toFixed(1)}/10
           </span>
-          <span className="font-['JetBrains_Mono'] text-[10px] font-semibold text-muted uppercase">
+          <span className="max-md:hidden font-['JetBrains_Mono'] text-[10px] font-semibold text-muted uppercase">
             Impact
           </span>
         </div>
       </div>
 
       {/* Main Title */}
-      <h3 className="font-['Hanken_Grotesk'] text-[18px] text-ink font-bold mb-1 leading-snug">
+      <h3 className="font-['Hanken_Grotesk'] text-[17px] md:text-[18px] text-ink font-bold mb-1 leading-snug">
         <button onClick={() => onOpenPdfDossier(notice)} className="text-left hover:text-accent transition-colors cursor-pointer">
           <span lang={notice.language}><Highlight text={notice.title} terms={highlight} /></span>
         </button>
@@ -217,11 +222,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
 
       {/* Key points quoted from the source, or the source's own summary */}
       {notice.keyPoints && notice.keyPoints.points.length > 0 ? (
-        <div className="p-3.5 bg-page border border-wash-strong rounded-lg mb-3">
+        <div className="p-3 md:p-3.5 bg-page border border-wash-strong rounded-lg mb-3">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="flex items-center gap-1.5 text-accent font-['Inter'] text-[12px] font-bold">
               <span className="material-symbols-outlined text-base text-accent" aria-hidden="true">format_quote</span>
-              <span>Key points, quoted from source</span>
+              <span className="md:hidden">Quoted from source</span>
+              <span className="max-md:hidden">Key points, quoted from source</span>
               {notice.keyPoints.ocr && (
                 <span
                   className="px-1.5 py-0.5 rounded bg-cream-tint border border-cream-line text-cream font-['JetBrains_Mono'] text-[9px] font-bold"
@@ -244,14 +250,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           </div>
           <ul lang={notice.language} className="space-y-1.5 font-['Inter'] text-[12px] text-ink">
             {notice.keyPoints.points.map((point, idx) => (
-              <li key={idx} className="flex items-start gap-2">
+              <li key={idx} className={`flex items-start gap-2 ${idx > 0 ? more : ''}`}>
                 <span className="text-accent mt-0.5 text-xs font-bold shrink-0">“</span>
-                <span className="leading-relaxed"><Highlight text={point} terms={highlight} /></span>
+                <span className={`leading-relaxed ${expanded ? '' : 'max-md:line-clamp-3'}`}><Highlight text={point} terms={highlight} /></span>
               </li>
             ))}
           </ul>
           {datedSentences.length > 0 && (
-            <div className="mt-2.5 pt-2 border-t border-wash-strong space-y-1">
+            <div className={`mt-2.5 pt-2 border-t border-wash-strong space-y-1 ${more}`}>
               {datedSentences.map((text, idx) => (
                 <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-ink-soft">
                   <span className="material-symbols-outlined text-sm text-cream shrink-0" aria-hidden="true">event</span>
@@ -266,7 +272,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             </div>
           )}
           {notice.keyPoints.refs.length > 0 && (
-            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <div className={`mt-2 flex flex-wrap items-center gap-1.5 ${more}`}>
               <span className="font-['JetBrains_Mono'] text-[10px] text-muted">Referenced:</span>
               {notice.keyPoints.refs.map((ref) => (
                 <span key={ref} className="font-['JetBrains_Mono'] text-[10px] text-ink-soft bg-panel border border-line px-1.5 py-0.5 rounded">
@@ -277,7 +283,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
         </div>
       ) : notice.summary ? (
-        <p className="font-['Inter'] text-[13px] text-ink-soft mb-3 leading-relaxed">
+        <p className={`font-['Inter'] text-[13px] text-ink-soft mb-3 leading-relaxed ${expanded ? '' : 'max-md:line-clamp-4'}`}>
           <Highlight text={notice.summary} terms={highlight} />
         </p>
       ) : notice.dossierUrl ? (
@@ -286,9 +292,20 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
         </p>
       ) : null}
 
+      {/* Phones: the rest of the notice opens here */}
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        className="md:hidden -mt-1 mb-2 min-h-10 flex items-center gap-1 font-['Inter'] text-[12px] font-semibold text-accent"
+      >
+        <span className="material-symbols-outlined text-lg" aria-hidden="true">{expanded ? 'expand_less' : 'expand_more'}</span>
+        {expanded ? 'Show less' : extraPoints > 0 ? `Show more: ${extraPoints} more key point${extraPoints === 1 ? '' : 's'}, tags, score` : 'Show more: tags, score'}
+      </button>
+
       {/* Consultation and conclusions, matched by title */}
       {notice.related && notice.related.length > 0 && (
-        <div className="mb-3 space-y-1">
+        <div className={`mb-3 space-y-1 ${more}`}>
           {notice.related.map(link => (
             <div key={link.id} className="flex items-start gap-1.5 font-['Inter'] text-[12px] text-ink-soft">
               <span className="material-symbols-outlined text-sm text-accent shrink-0" aria-hidden="true">
@@ -313,7 +330,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
       {/* Footer Row: Impacted Units / Tags & Dynamic Actions */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
         {/* Left: Tags or Units */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className={`flex flex-wrap items-center gap-1.5 ${more}`}>
           {notice.tags.map((tag) => (
             <span
               key={tag}
@@ -348,12 +365,12 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           )}
         </div>
 
-        {/* Right: Actions */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        {/* Right: Actions; on phones one row of icons, with Source on the right */}
+        <div className="max-md:w-full flex flex-wrap items-center gap-0.5 md:gap-1.5">
           {onCopyLink && (
             <button
               onClick={() => onCopyLink(notice)}
-              className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded text-muted hover:text-ink hover:bg-wash transition-colors"
+              className="w-10 h-10 md:w-auto md:h-auto md:p-1.5 flex items-center justify-center rounded text-muted hover:text-ink hover:bg-wash transition-colors"
               title="Copy a link to this notice"
               aria-label="Copy a link to this notice"
             >
@@ -364,7 +381,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           {onAddToCalendar && hasUpcomingDate && (
             <button
               onClick={() => onAddToCalendar(notice)}
-              className="w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded text-muted hover:text-ink hover:bg-wash transition-colors"
+              className="w-10 h-10 md:w-auto md:h-auto md:p-1.5 flex items-center justify-center rounded text-muted hover:text-ink hover:bg-wash transition-colors"
               title={`Add ${notice.deadlineDate} to your calendar (.ics)`}
               aria-label="Add this date to your calendar"
             >
@@ -376,7 +393,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           <button
             onClick={() => onToggleBookmark(notice.id)}
             aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-            className={`w-9 h-9 sm:w-auto sm:h-auto sm:p-1.5 flex items-center justify-center rounded transition-colors ${
+            className={`w-10 h-10 md:w-auto md:h-auto md:p-1.5 flex items-center justify-center rounded transition-colors ${
               isBookmarked
                 ? 'text-accent bg-accent-tint'
                 : 'text-muted hover:text-ink hover:bg-panel-raised'
@@ -390,24 +407,26 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
 
           <button
             onClick={() => onOpenGapAnalysis(notice)}
-            className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-panel hover:bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+            title="Gap Checklist"
+            className="max-md:w-10 h-10 md:h-auto md:px-2.5 md:py-1.5 bg-panel hover:bg-panel-raised border border-line text-ink max-md:border-transparent max-md:bg-transparent max-md:shadow-none max-md:text-muted font-['Inter'] text-[11px] font-semibold rounded flex items-center justify-center gap-1 transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-sm" aria-hidden="true">assignment</span>
-            Gap Checklist
+            <span className="material-symbols-outlined text-lg md:text-sm" aria-hidden="true">assignment</span>
+            <span className="max-md:sr-only">Gap Checklist</span>
           </button>
           <button
             onClick={() => onOpenPdfDossier(notice)}
-            className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-panel hover:bg-panel-raised border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-2xs"
+            title="Dossier"
+            className="max-md:w-10 h-10 md:h-auto md:px-2.5 md:py-1.5 bg-panel hover:bg-panel-raised border border-line text-ink max-md:border-transparent max-md:bg-transparent max-md:shadow-none max-md:text-muted font-['Inter'] text-[11px] font-semibold rounded flex items-center justify-center gap-1 transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-sm" aria-hidden="true">description</span>
-            Dossier
+            <span className="material-symbols-outlined text-lg md:text-sm" aria-hidden="true">description</span>
+            <span className="max-md:sr-only">Dossier</span>
           </button>
           {notice.dossierUrl && (
             <a
               href={notice.dossierUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-2.5 min-h-9 sm:min-h-0 sm:py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
+              className="max-md:ml-auto px-2.5 h-10 md:h-auto md:py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[12px] md:text-[11px] font-semibold rounded flex items-center gap-1 transition-colors shadow-xs"
             >
               <span className="material-symbols-outlined text-sm" aria-hidden="true">open_in_new</span>
               Source

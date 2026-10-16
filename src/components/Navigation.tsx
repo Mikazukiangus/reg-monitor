@@ -95,8 +95,8 @@ export const Navigation: React.FC<NavigationProps> = ({
 
       </div>
 
-      {/* Real-Time Wire Banner */}
-      <section aria-label="Latest notices" className="h-8 w-full px-4 sm:px-6 bg-wash-mid border-b border-line flex items-center overflow-hidden">
+      {/* Real-Time Wire Banner; phones show one cut-off headline, so they leave it to the feed */}
+      <section aria-label="Latest notices" className="hidden md:flex h-8 w-full px-4 sm:px-6 bg-wash-mid border-b border-line items-center overflow-hidden">
         <div className="flex items-center gap-1 shrink-0 pr-4 border-r border-line-strong mr-4">
           <span className="material-symbols-outlined text-accent text-sm animate-pulse" aria-hidden="true">
             bolt

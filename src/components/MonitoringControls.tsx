@@ -55,7 +55,7 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
       {selected && <button onClick={() => { if (persist(views.filter(v => v.id !== selected))) setSelected(''); }} className="min-h-9 text-muted hover:text-ink" aria-label="Remove selected saved view">Remove view</button>}
       <p className="w-full text-[11px] text-muted">Dates filter the loaded feed and search results. Saved notices and views stay on this device.</p>
     </div>
-    {isOpen && <div className="fixed inset-0 z-50 bg-black/50 p-4 flex items-center justify-center">
+    {isOpen && <div className="fixed inset-0 z-[80] bg-black/50 p-4 flex items-center justify-center">
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="save-view-title" tabIndex={-1} className="bg-panel border border-line rounded-xl p-5 w-full max-w-sm focus:outline-none">
         <h2 id="save-view-title" className="text-ink font-bold mb-3">Save this monitoring view</h2>
         <form onSubmit={save} className="space-y-4">

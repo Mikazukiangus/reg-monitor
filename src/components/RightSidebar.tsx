@@ -111,7 +111,14 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           </span>
         </div>
 
-        <div className="space-y-1.5 mb-3 text-[11px]">
+        {/* Below lg this panel follows the feed, so it lists only the sources with problems;
+            Manage APIs opens the full list */}
+        <p className="lg:hidden mb-3 font-['Inter'] text-[12px] text-ink-soft">
+          {endpoints.length === 0 || endpoints.some(e => e.status === 'Checking') ? 'Checking sources…' : operationalCount === endpoints.length
+            ? 'All monitored sources are operational.'
+            : `Not operational: ${endpoints.filter(e => e.status !== 'Operational').map(e => `${e.name} (${e.status})`).join(', ')}`}
+        </p>
+        <div className="max-lg:hidden space-y-1.5 mb-3 text-[11px]">
           {endpoints.map((ep) => (
             <div key={ep.id} className="flex items-start justify-between gap-2 py-1 border-b border-page last:border-b-0" title={ep.detail}>
               <span className="flex flex-col min-w-0">
@@ -137,7 +144,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           {onOpenLiveEndpointsModal && (
             <button
               onClick={onOpenLiveEndpointsModal}
-              className="flex-1 py-1.5 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
+              className="flex-1 min-h-10 lg:min-h-0 py-1.5 bg-panel-raised hover:bg-wash border border-line text-ink font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-2xs"
             >
               <span className="material-symbols-outlined text-sm text-accent" aria-hidden="true">hub</span>
               <span>Manage APIs</span>
@@ -148,7 +155,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={isSyncing}
-              className="flex-1 py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
+              className="flex-1 min-h-10 lg:min-h-0 py-1.5 bg-accent hover:bg-accent-deep text-on-accent font-['Inter'] text-[11px] font-semibold rounded transition-colors flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
             >
               <span className={`material-symbols-outlined text-sm ${isSyncing ? 'animate-spin' : ''}`} aria-hidden="true">
                 sync

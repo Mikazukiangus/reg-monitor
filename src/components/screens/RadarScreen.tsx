@@ -49,7 +49,7 @@ export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotic
           tabIndex={0}
           role="region"
           aria-label="Notices by sector and jurisdiction"
-          className="overflow-auto max-h-[calc(100dvh_-_88px_-_56px_-_env(safe-area-inset-bottom)_-_24px)] md:max-h-[calc(100dvh_-_128px_-_24px)] focus-visible:-outline-offset-2"
+          className="overflow-auto max-h-[calc(100dvh_-_56px_-_56px_-_env(safe-area-inset-bottom)_-_24px)] md:max-h-[calc(100dvh_-_128px_-_24px)] focus-visible:-outline-offset-2"
         >
           <table className="w-full text-left text-[12px] font-['Inter'] border-separate border-spacing-0">
             <thead>
