@@ -493,6 +493,7 @@ This document records the full chronological instructions, technical requirement
   * Production was redeployed from the same commit (`5998c34`) as `dpl_5q8fRRggSPsPvF6DjvrTQgHVtRs8`, READY, so it uses the recreated variables. `/api/health` 200; the history has 1,027 notices (the feed shows 350, 200 from history); history search for "personal data" returns 34; the last scheduled check completed at 05:55 SGT; 44 of 45 sources OK (ASX and SC Malaysia fine; FTC 404).
   * Previews are now viewed through Vercel login (the project's deployment protection) or a temporary share link.
 * **Merged (2026-10-16, about 09:00 SGT):** on the user's "merge to main", `vercel-previews` was fast-forwarded into `main` (`e6fdc8c`, docs and status only). Production deployment `dpl_4cuNau6mLcbBAesCH4gZbizKNRLt` is READY. `/api/health` 200; scheduled checks enabled, last completed 08:58 SGT; 350 notices loaded; 36 of 37 endpoints operational; history search for "personal data" returns 34.
+* **Cleanup (2026-10-16):** the user deleted the leftover `preview/...` Neon branches. Afterwards production still reads its database: scheduled checks enabled, history search for "personal data" returns 34.
 
 ---
 
