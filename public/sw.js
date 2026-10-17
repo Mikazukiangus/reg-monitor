@@ -4,12 +4,12 @@
 // - Pages: network first, falling back to the last saved copy.
 // - Built files in /assets/ have hashed names, so a saved copy is always right.
 // - Icons and other files in public/: network first, then the saved copy.
-// - Notices and liquidity figures: network first; offline, the last saved
+// - Notices: network first; offline, the last saved
 //   response is returned with an X-RegSonar-Saved header giving when it was saved.
 // - Google Fonts: the saved copy is used and refreshed in the background.
-const VERSION = 'regsonar-v1';
+const VERSION = 'regsonar-v2';
 const SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/favicon-32.png'];
-const SAVED_API = ['/api/feeds/sync', '/api/hkma/liquidity-history'];
+const SAVED_API = ['/api/feeds/sync'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -38,7 +38,7 @@ async function networkFirst(request, cacheKey) {
 
 async function savedApiResponse(request, url) {
   const cache = await caches.open(VERSION);
-  // One saved copy per path and query (the liquidity chart has 1M and 3M)
+  // One saved copy per path and query
   const cacheKey = url.pathname + url.search;
   try {
     const response = await fetch(request);

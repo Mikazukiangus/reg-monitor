@@ -7,7 +7,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 
 ## The flow of a sync
 
-1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes when someone visits; the HKMA liquidity page every 30. Separately, a scheduled check reads every source every three hours (see "Keeping every source up to date" below).
+1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes when someone visits. Separately, a scheduled check reads every source every three hours (see "Keeping every source up to date" below).
 2. **Each item is put into a common format:** title, regulator, date, link, type and so on.
 3. **Key points are quoted from the document itself** (`summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR". Chinese and Japanese documents are split into sentences at "。" and quoted as published, not translated.
 4. **Each notice is saved to the history database** (`db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
@@ -20,7 +20,6 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 |---|---|---|
 | **US SEC & CFTC** | Federal Register API, the US government's official JSON API | Includes comment deadlines and effective dates |
 | **HKMA notices** | Official RSS feeds for press releases, circulars and consultations | Circulars link to HKMA's regulatory-document site (BRDR), so key points come from the PDF |
-| **HKMA liquidity** | The Daily Monetary Statistics web page, read as HTML | The HKMA Open API's firewall blocks cloud servers, so the public web page is used instead. Before about 7pm Hong Kong time, the most recent dated page is used |
 | **SFC** | Official RSS feeds for press releases, circulars and consultations | Document pages load their text from SFC's own JSON service, which the server reads for key points |
 | **HKEX** | Official RSS feed of regulatory announcements | Disciplinary actions, censures and sanctions are classed as enforcement |
 | **MAS** | The search service behind mas.gov.sg/news (JSON): media releases, consultations, and circulars and guidelines | Undocumented, and MAS shows a "Maintenance" page to unknown clients, so the server identifies itself like a normal browser. Times are Singapore time mislabelled as UTC, so they are converted. Consultation closing dates come from MAS's own closing-date field |

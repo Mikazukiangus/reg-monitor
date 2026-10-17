@@ -29,15 +29,13 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, zonedToIso, parseHkmaDailyStats, sgxPublicUrl, finraTitle, tagNotice, parseMsitPressReleases } = await import('../server.ts');
+const { SOURCES, zonedToIso, sgxPublicUrl, finraTitle, tagNotice, parseMsitPressReleases } = await import('../server.ts');
 const { severityOf } = await import('../src/lib/impact.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 for (const source of SOURCES) {
-  if (source.inDigest === false) continue;
-
   if (source.name === 'UK FCA News RSS') {
     test('UK FCA: a blocked feed is reported as an error', async () => {
       await assert.rejects(source.fetch(), /HTTP 403/);
@@ -60,11 +58,9 @@ for (const source of SOURCES) {
       const t = Date.parse(n.publishedAt!);
       assert.ok(t > Date.UTC(2020, 0, 1) && t < Date.now() + 2 * 86_400_000, `date ${n.publishedAt}`);
       // Every source is scored by the same rubric, with its steps recorded
-      if (!n.id.startsWith('hkma-liquidity')) {
-        assert.ok(n.tagging?.impact?.length, `no score reasons for ${n.id}`);
-        assert.match(n.tagging!.impact!.at(-1)!, /: [+]?[\d.]+$/);
-        assert.equal(n.severity, severityOf(n.impactScore));
-      }
+      assert.ok(n.tagging?.impact?.length, `no score reasons for ${n.id}`);
+      assert.match(n.tagging!.impact!.at(-1)!, /: [+]?[\d.]+$/);
+      assert.equal(n.severity, severityOf(n.impactScore));
     }
   });
 
@@ -174,16 +170,6 @@ test('zonedToIso converts local times, including daylight saving', () => {
   assert.equal(zonedToIso('2026-07-01T10:00:00', 'Australia/Sydney'), '2026-07-01T00:00:00.000Z');
   assert.equal(zonedToIso('2026-10-07T11:00:00Z', 'Asia/Singapore'), '2026-10-07T03:00:00.000Z');
   assert.equal(zonedToIso('not a date', 'Asia/Singapore'), undefined);
-});
-
-test('HKMA liquidity figures are read from a dated page', () => {
-  const day = parseHkmaDailyStats(readFileSync('tests/fixtures/hkma-dms-20261006.html', 'utf8'));
-  assert.equal(day?.date, '2026-10-06');
-  assert.ok(day && day.closingBalance > 0);
-});
-
-test('HKMA weekend pages have no figures', () => {
-  assert.equal(parseHkmaDailyStats(readFileSync('tests/fixtures/hkma-dms-20261003-weekend.html', 'utf8')), null);
 });
 
 test('SGX RegCo consultations carry the closing date SGX publishes, as a Singapore date', async () => {

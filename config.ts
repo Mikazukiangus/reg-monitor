@@ -89,7 +89,6 @@ export function createConfig(env: Environment) {
       rateLimitPauseMs: integer('RATE_LIMIT_PAUSE_MS', 900_000),
       healthTtlMs: integer('HEALTH_TTL_MS', 300_000),
       sourceTtlMs: integer('SOURCE_TTL_MS', 600_000),
-      hkmaSourceTtlMs: integer('HKMA_SOURCE_TTL_MS', 1_800_000),
       syncReuseMs: integer('SYNC_REUSE_MS', 60_000)
     }),
     polling: Object.freeze({
@@ -109,8 +108,7 @@ export function createConfig(env: Environment) {
     }),
     cdn: Object.freeze({
       sync: cachePolicy('SYNC_CDN_TTL_SECONDS', 300, 'SYNC_CDN_STALE_SECONDS', 86_400),
-      search: cachePolicy('SEARCH_CDN_TTL_SECONDS', 300, 'SEARCH_CDN_STALE_SECONDS', 3600),
-      liquidity: cachePolicy('LIQUIDITY_CDN_TTL_SECONDS', 1800, 'LIQUIDITY_CDN_STALE_SECONDS', 86_400)
+      search: cachePolicy('SEARCH_CDN_TTL_SECONDS', 300, 'SEARCH_CDN_STALE_SECONDS', 3600)
     })
   };
   // Never include input values: database URLs and tokens contain secrets.

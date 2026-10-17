@@ -1,49 +1,31 @@
 import React from 'react';
-import { DeadlineItem, RegulatoryNotice } from '../types/regulatory';
+import { DeadlineItem } from '../types/regulatory';
 
 interface NextUpStripProps {
   nextDeadline?: DeadlineItem;
-  liquidity?: RegulatoryNotice;
   onOpenNotice: (id: string) => void;
 }
 
-// Phones show the side columns last, so the next date and the latest HKMA
-// liquidity figure are summarised at the top of the feed
-export const NextUpStrip: React.FC<NextUpStripProps> = ({ nextDeadline, liquidity, onOpenNotice }) => {
-  if (!nextDeadline && !liquidity) return null;
-  const balance = liquidity?.statusBadge?.text.replace(/^Closing Bal:\s*/, '');
+// Phones show the side columns last, so the next date is summarised at the
+// top of the feed
+export const NextUpStrip: React.FC<NextUpStripProps> = ({ nextDeadline, onOpenNotice }) => {
+  if (!nextDeadline) return null;
 
   return (
-    <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-2">
-      {nextDeadline && (
-        <button
-          onClick={() => nextDeadline.noticeId && onOpenNotice(nextDeadline.noticeId)}
-          className="text-left bg-panel border border-line rounded-lg px-3 py-2.5 flex items-center justify-between gap-3 shadow-xs"
-        >
-          <span className="min-w-0">
-            <span className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-wider text-muted block">Next date</span>
-            <span className="font-['Inter'] text-[13px] font-semibold text-ink line-clamp-2">{nextDeadline.title}</span>
-          </span>
-          <span className="text-right shrink-0">
-            <span className={`font-['Hanken_Grotesk'] text-[18px] font-bold block ${nextDeadline.textColorClass}`}>
-              {nextDeadline.daysRemaining === 0 ? 'Today' : `${nextDeadline.daysRemaining}d`}
-            </span>
-            <span className="font-['JetBrains_Mono'] text-[10px] text-muted">{nextDeadline.dateStr}</span>
-          </span>
-        </button>
-      )}
-      {liquidity && balance && (
-        <a
-          href="#liquidity-card"
-          className="bg-panel border border-line rounded-lg px-3 py-2.5 flex items-center justify-between gap-3 shadow-xs no-underline"
-        >
-          <span className="min-w-0">
-            <span className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-wider text-muted block">HKMA aggregate balance</span>
-            <span className="font-['Inter'] text-[12px] text-ink-soft">{liquidity.ref.replace('HKMA Daily Monetary Statistics ', 'As at ')} · see chart</span>
-          </span>
-          <span className="font-['Hanken_Grotesk'] text-[16px] font-bold text-ink shrink-0">{balance}</span>
-        </a>
-      )}
-    </div>
+    <button
+      onClick={() => nextDeadline.noticeId && onOpenNotice(nextDeadline.noticeId)}
+      className="lg:hidden text-left bg-panel border border-line rounded-lg px-3 py-2.5 flex items-center justify-between gap-3 shadow-xs"
+    >
+      <span className="min-w-0">
+        <span className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-wider text-muted block">Next date</span>
+        <span className="font-['Inter'] text-[13px] font-semibold text-ink line-clamp-2">{nextDeadline.title}</span>
+      </span>
+      <span className="text-right shrink-0">
+        <span className={`font-['Hanken_Grotesk'] text-[18px] font-bold block ${nextDeadline.textColorClass}`}>
+          {nextDeadline.daysRemaining === 0 ? 'Today' : `${nextDeadline.daysRemaining}d`}
+        </span>
+        <span className="font-['JetBrains_Mono'] text-[10px] text-muted">{nextDeadline.dateStr}</span>
+      </span>
+    </button>
   );
 };

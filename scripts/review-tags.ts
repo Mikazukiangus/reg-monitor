@@ -13,7 +13,6 @@ const noFormatWords: string[] = [];
 let total = 0;
 
 for (const source of SOURCES) {
-  if (source.inDigest === false) continue;
   let notices;
   try {
     notices = await source.fetch(perSource);

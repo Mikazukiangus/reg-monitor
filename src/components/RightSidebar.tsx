@@ -1,7 +1,6 @@
 import React from 'react';
 import { DeadlineItem } from '../types/regulatory';
 import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
-import { LiquidityChart } from './LiquidityChart';
 import { timeAgo } from '../lib/derived';
 
 interface RightSidebarProps {
@@ -92,8 +91,6 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           </button>
         )}
       </div>
-
-      <LiquidityChart />
 
       {/* Live Feeds Sentinel */}
       <div className="bg-panel border border-line rounded-lg p-3.5 shadow-xs">
