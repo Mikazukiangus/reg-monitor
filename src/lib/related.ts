@@ -1,6 +1,7 @@
 // Links a consultation to the conclusions or response published later, and
 // back. Regulators don't publish this link in a machine-readable form, so it
 // is matched by regulator and title words, and labelled as such on the site.
+import type { RelatedLink } from '../types/regulatory';
 
 export interface RelatedCandidate {
   id: string;
@@ -11,13 +12,6 @@ export interface RelatedCandidate {
   dossierUrl?: string;
 }
 
-export interface RelatedLink {
-  id: string;
-  title: string;
-  relation: 'consultation' | 'conclusion';
-  publishedAt?: string;
-  dossierUrl?: string;
-}
 
 const CONCLUSION = /\bconclu(?:des|ded|sion|sions)\b|\bresponse to (?:the )?(?:public )?consultation\b|\bconsultation (?:conclusions|response)\b/i;
 const CONSULTATION = /\bconsult(?:s|ing|ation|ative)?\b/i;

@@ -265,20 +265,23 @@ export const LiveEndpointsModal: React.FC<LiveEndpointsModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-line flex items-center justify-between">
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-muted truncate max-w-[260px]">
-                      {ep.url}
-                    </span>
-                    <button
-                      onClick={() => handleCopy(ep.url)}
-                      className="text-muted hover:text-accent transition-colors p-1 rounded"
-                      title="Copy URL endpoint"
-                    >
-                      <span className="material-symbols-outlined text-sm" aria-hidden="true">
-                        {copiedUrl === ep.url ? 'check' : 'content_copy'}
+                  {/* The address arrives with the first status */}
+                  {ep.url && (
+                    <div className="pt-2 border-t border-line flex items-center justify-between">
+                      <span className="font-['JetBrains_Mono'] text-[10px] text-muted truncate max-w-[260px]">
+                        {ep.url}
                       </span>
-                    </button>
-                  </div>
+                      <button
+                        onClick={() => handleCopy(ep.url)}
+                        className="text-muted hover:text-accent transition-colors p-1 rounded"
+                        title="Copy URL endpoint"
+                      >
+                        <span className="material-symbols-outlined text-sm" aria-hidden="true">
+                          {copiedUrl === ep.url ? 'check' : 'content_copy'}
+                        </span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

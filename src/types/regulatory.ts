@@ -42,12 +42,13 @@ export interface TagReasons {
   impact?: string[];
 }
 
+// Key points quoted from a notice's document (summarize.ts builds them)
 export interface KeyFact {
   text: string;
+  // ISO date (YYYY-MM-DD) when the sentence names a full calendar date
   date?: string;
 }
 
-// Mirrors KeyPoints in summarize.ts
 export interface KeyPoints {
   points: string[];
   facts: KeyFact[];
@@ -58,13 +59,26 @@ export interface KeyPoints {
   ocr?: boolean;
   // Dates the document states for itself, each with its kind and sentence
   dates?: DocumentDate[];
+  // Copies stored before October 2026 have this instead of dates
+  closingDate?: KeyFact;
+  // When the page says it was published (YYYY-MM-DD, or a full timestamp), for
+  // feeds that give no date; null when the page was checked and gives none
+  published?: string | null;
 }
 
-// Mirrors DocumentDate in summarize.ts
+export type DateKind = 'closes' | 'takesEffect' | 'complyBy';
+
+// A date a document states for itself: when comments close, when it takes
+// effect, or when firms must comply by
 export interface DocumentDate {
-  kind: 'closes' | 'takesEffect' | 'complyBy';
+  kind: DateKind;
+  // ISO date (YYYY-MM-DD)
   date: string;
+  // The sentence it comes from, verbatim
   text: string;
+  // "The consultation closes on ..." rather than a request for comments.
+  // Counts only on a consultation: a digest or event notice may be quoting
+  // another paper's closing date.
   general?: boolean;
 }
 

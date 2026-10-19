@@ -3,7 +3,8 @@
 // from real notices; several were once given the wrong date.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { documentDates, extractClosingDate, pagePublishedDate, type DateKind } from '../summarize.ts';
+import { documentDates, extractClosingDate, pagePublishedDate } from '../summarize.ts';
+import type { DateKind } from '../src/types/regulatory.ts';
 import { assessImpact } from '../src/lib/impact.ts';
 
 process.env.VERCEL = '1';

@@ -5,20 +5,21 @@ import { cdnCacheControl } from './config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { XMLParser } from 'fast-xml-parser';
-import { summarize, extractArticleText, pagePublishedDate, extractPdfText, extractClosingDate, documentDates, htmlToText, KeyPoints, DocumentDate, DateKind } from './summarize.js';
+import { summarize, extractArticleText, pagePublishedDate, extractPdfText, extractClosingDate, documentDates, htmlToText } from './summarize.js';
 import { matchDigest, renderDigest, sendWithResend, singaporeDate } from './digest.js';
 import { DIGEST_RULES } from './digest-rules.js';
 import { classifySectors, classifyFormat, RENAMED_SECTORS, SECTORS, SPEECH } from './src/lib/tagging.js';
 import { assessImpact, severityOf } from './src/lib/impact.js';
-import type { SectorDomain, InstrumentFormat, TagReasons } from './src/types/regulatory.js';
+import type { SectorDomain, InstrumentFormat, TagReasons, RegulatoryNotice, KeyPoints, DocumentDate, DateKind } from './src/types/regulatory.js';
 import { getDb, saveNotices, recentNotices, searchNotices, consultationCandidates, archiveStats, databaseUrl, storedNotices, undatedNotices, saveScheduledCheck, scheduledCheckStatus, type StoredNotice } from './db.js';
-import { findRelated, RelatedCandidate, RelatedLink } from './src/lib/related.js';
+import { findRelated, RelatedCandidate } from './src/lib/related.js';
 import { dedupeByDocument } from './src/lib/dedupe.js';
 import { rateLimit, reuseFor } from './src/lib/throttle.js';
 import { isAiRuleNews, mentionsAi } from './src/lib/aiTopics.js';
 import { mentionsPrivacy } from './src/lib/privacyTopics.js';
 import { createHash, randomUUID } from 'crypto';
 import { publicationTime } from './src/lib/derived.js';
+import { ENDPOINT_CATALOG, EndpointId, EndpointInfo } from './src/lib/endpoints.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,45 +29,9 @@ const xmlParser = new XMLParser({
   attributeNamePrefix: '@_'
 });
 
-interface NormalizedNotice {
-  id: string;
-  ref: string;
-  title: string;
-  regulator: string;
-  jurisdiction: string;
-  jurisdictionCode: 'SG' | 'MY' | 'HK' | 'AU' | 'JP' | 'KR' | 'CN' | 'UK_EU' | 'US' | 'GLOBAL';
-  type: string;
-  typeColorClass: {
-    bg: string;
-    text: string;
-  };
-  impactScore: number;
-  issuedTimeAgo: string;
-  statutoryDeadline?: string;
-  deadlineDate?: string;
-  // The sentence the date was taken from, when it comes from the document's text
-  deadlineQuote?: string;
-  statusBadge?: {
-    text: string;
-    type: 'deadline' | 'immediate' | 'action' | 'standard';
-  };
-  summary?: string;
-  keyPoints?: KeyPoints;
-  tags: string[];
-  sector: SectorDomain;
-  sectors?: SectorDomain[];
-  format: InstrumentFormat;
-  tagging?: TagReasons;
-  severity: 'critical' | 'high' | 'info';
-  dossierUrl?: string;
-  isLiveFeed?: boolean;
-  publishedAt?: string;
-  // From the stored history rather than the latest read of the source
-  archived?: boolean;
-  related?: RelatedLink[];
-  // The title's and document's language, when not English
-  language?: 'zh' | 'ja';
-}
+// A notice as the server builds it: the browser's notice without the fields
+// only the browser sets
+type NormalizedNotice = Omit<RegulatoryNotice, 'bookmarked' | 'savedCopy'>;
 
 
 const getRelativeTime = publicationTime;
@@ -1973,379 +1938,50 @@ async function fetchPipcNotices(limit = 4): Promise<NormalizedNotice[]> {
 
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
 
-interface EndpointDefinition {
-  id: string;
-  name: string;
-  agency: string;
-  jurisdiction: string;
-  url: string;
-  protocol: string;
-  auth: string;
-  ingests: boolean;
-}
+// The address each endpoint's status is checked at, built from the source
+// adapters' constants above. Every endpoint in the shared catalog needs one.
+const PROBE_URLS: Record<EndpointId, string> = {
+  'fed-reg': 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&order=newest&per_page=1',
+  'hkma-rss': 'https://www.hkma.gov.hk/eng/other-information/rss/rss_press-release.xml',
+  'fca-rss': 'https://www.fca.org.uk/news/rss.xml',
+  'boe-pra': 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications',
+  'mas-gov': 'https://www.mas.gov.sg/api/v1/search?q=*:*&rows=1&wt=json',
+  'sfc-rss': `${SFC_RSS}/Press-releases`,
+  'hkex-rss': HKEX_REGULATORY_RSS,
+  'esma-rss': ESMA_RSS,
+  'ec-ai': EC_AI_NEWS,
+  'govuk-ai': `${GOV_UK_AI}&count=1`,
+  'fedreg-ai': `${FEDERAL_REGISTER_AI}&per_page=1`,
+  'ftc-rss': FTC.url,
+  'ca-gov': CALIFORNIA_GOVERNOR_AI.url,
+  calprivacy: CALPRIVACY.url,
+  'co-ag': COLORADO_AG_AI.url,
+  'msit-kr': MSIT_LIST,
+  'govcn-ai': GOV_CN_POLICY_SEARCH(GOV_CN_AI, 1),
+  'cao-ai': CAO_AI_TOPICS,
+  ico: ICO_NEWS_PAGE,
+  edpb: EDPB_RSS,
+  pdpc: PDPC_LIST(1),
+  jpdp: JPDP_RSS,
+  oaic: OAIC_NEWS(1),
+  ppc: PPC_NEWS,
+  pipc: PIPC_LIST,
+  'govcn-privacy': GOV_CN_POLICY_SEARCH(GOV_CN_PRIVACY, 1),
+  'fsb-rss': FSB_RSS,
+  'asic-gov': ASIC_MEDIA_RELEASES,
+  'jfsa-rss': JFSA_RSS,
+  'sgx-regco': `${SGX_CONTENT_API}?queryId=${SGX_QUERY_ID}%3Apublic_consultations_list&variables=%7B%22limit%22%3A1%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D`,
+  'asx-consult': ASX_CONSULTATIONS_PAGE,
+  'jpx-rules': JPX_REVISIONS_BASE + 'index.html',
+  'bnm-rss': bnmYearPage(new Date().getUTCFullYear()),
+  'sc-my': SC_MEDIA_RELEASES,
+  'finra-rss': FINRA_NOTICES_RSS,
+  'bis-portal': 'https://www.bis.org/doclist/all_pressrels.rss'
+};
 
-const ENDPOINTS: EndpointDefinition[] = [
-  {
-    id: 'fed-reg',
-    name: 'US Federal Register API',
-    agency: 'SEC & CFTC',
-    jurisdiction: 'US Federal',
-    url: 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&order=newest&per_page=1',
-    protocol: 'REST JSON',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'hkma-rss',
-    name: 'HKMA RSS Feeds',
-    agency: 'HKMA (Hong Kong)',
-    jurisdiction: 'Hong Kong',
-    url: 'https://www.hkma.gov.hk/eng/other-information/rss/rss_press-release.xml',
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'fca-rss',
-    name: 'UK FCA News RSS',
-    agency: 'FCA (United Kingdom)',
-    jurisdiction: 'United Kingdom',
-    url: 'https://www.fca.org.uk/news/rss.xml',
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'boe-pra',
-    name: 'Bank of England PRA Publications RSS',
-    agency: 'PRA (United Kingdom)',
-    jurisdiction: 'United Kingdom',
-    url: 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications',
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'mas-gov',
-    name: 'Singapore MAS News Search API',
-    agency: 'MAS (Singapore)',
-    jurisdiction: 'Singapore',
-    url: 'https://www.mas.gov.sg/api/v1/search?q=*:*&rows=1&wt=json',
-    protocol: 'JSON (undocumented)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'sfc-rss',
-    name: 'SFC RSS Feeds',
-    agency: 'SFC (Hong Kong)',
-    jurisdiction: 'Hong Kong',
-    url: `${SFC_RSS}/Press-releases`,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'hkex-rss',
-    name: 'HKEX Regulatory Announcements RSS',
-    agency: 'HKEX (Hong Kong)',
-    jurisdiction: 'Hong Kong',
-    url: HKEX_REGULATORY_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'esma-rss',
-    name: 'ESMA News RSS',
-    agency: 'ESMA (European Union)',
-    jurisdiction: 'European Union',
-    url: ESMA_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'ec-ai',
-    name: 'European Commission AI News',
-    agency: 'European Commission (European Union)',
-    jurisdiction: 'European Union',
-    url: EC_AI_NEWS,
-    protocol: 'HTML (news list, AI topic)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'govuk-ai',
-    name: 'GOV.UK Search API: DSIT & AI Security Institute',
-    agency: 'DSIT & AI Security Institute (UK)',
-    jurisdiction: 'United Kingdom',
-    url: `${GOV_UK_AI}&count=1`,
-    protocol: 'REST JSON (items on AI rules only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'fedreg-ai',
-    name: 'Federal Register API: AI documents',
-    agency: 'US federal agencies',
-    jurisdiction: 'US Federal',
-    url: `${FEDERAL_REGISTER_AI}&per_page=1`,
-    protocol: 'REST JSON (titles about AI only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'ftc-rss',
-    name: 'FTC Press Releases RSS',
-    agency: 'FTC (United States)',
-    jurisdiction: 'US Federal',
-    url: FTC.url,
-    protocol: 'RSS XML (items on AI rules or privacy only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'ca-gov',
-    name: 'California Governor: site search feed',
-    agency: 'Governor of California',
-    jurisdiction: 'US · California',
-    url: CALIFORNIA_GOVERNOR_AI.url,
-    protocol: 'RSS XML (search for AI; items on AI rules only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'calprivacy',
-    name: 'CalPrivacy News RSS',
-    agency: 'California Privacy Protection Agency',
-    jurisdiction: 'US · California',
-    url: CALPRIVACY.url,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'co-ag',
-    name: 'Colorado AG: site search feed',
-    agency: 'Colorado Attorney General',
-    jurisdiction: 'US · Colorado',
-    url: COLORADO_AG_AI.url,
-    protocol: 'RSS XML (search for AI; items on AI rules only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'msit-kr',
-    name: 'MSIT English Press Releases',
-    agency: 'Ministry of Science and ICT (South Korea)',
-    jurisdiction: 'South Korea',
-    url: MSIT_LIST,
-    protocol: 'HTML (list data in page; items on AI rules only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'govcn-ai',
-    name: 'gov.cn Policy Library: AI',
-    agency: 'State Council & its departments (China)',
-    jurisdiction: 'China',
-    url: GOV_CN_POLICY_SEARCH(GOV_CN_AI, 1),
-    protocol: 'JSON (policy library search, in Chinese; items on AI rules only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'cao-ai',
-    name: 'Cabinet Office AI Strategy Topics',
-    agency: 'Cabinet Office (Japan)',
-    jurisdiction: 'Japan',
-    url: CAO_AI_TOPICS,
-    protocol: 'HTML (topics list, in Japanese)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'ico',
-    name: 'ICO News, Blogs & Statements',
-    agency: 'ICO (United Kingdom)',
-    jurisdiction: 'United Kingdom',
-    url: ICO_NEWS_PAGE,
-    protocol: 'JSON (search service behind ICO news page)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'edpb',
-    name: 'EDPB News RSS',
-    agency: 'European Data Protection Board (European Union)',
-    jurisdiction: 'European Union',
-    url: EDPB_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'pdpc',
-    name: 'PDPC Media & Events',
-    agency: 'PDPC (Singapore)',
-    jurisdiction: 'Singapore',
-    url: PDPC_LIST(1),
-    protocol: 'JSON (listing service behind PDPC page)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'jpdp',
-    name: 'JPDP Announcements RSS',
-    agency: 'Personal Data Protection Department (Malaysia)',
-    jurisdiction: 'Malaysia',
-    url: JPDP_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'oaic',
-    name: 'OAIC Media Centre',
-    agency: 'OAIC (Australia)',
-    jurisdiction: 'Australia',
-    url: OAIC_NEWS(1),
-    protocol: 'HTML (items on privacy only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'ppc',
-    name: 'PPC News',
-    agency: 'Personal Information Protection Commission (Japan)',
-    jurisdiction: 'Japan',
-    url: PPC_NEWS,
-    protocol: 'HTML (news list, in Japanese)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'pipc',
-    name: 'PIPC English Notices',
-    agency: 'Personal Information Protection Commission (South Korea)',
-    jurisdiction: 'South Korea',
-    url: PIPC_LIST,
-    protocol: 'HTML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'govcn-privacy',
-    name: 'gov.cn Policy Library: Personal Information',
-    agency: 'State Council & its departments (China)',
-    jurisdiction: 'China',
-    url: GOV_CN_POLICY_SEARCH(GOV_CN_PRIVACY, 1),
-    protocol: 'JSON (policy library search, in Chinese; titles on personal information only)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'fsb-rss',
-    name: 'FSB Publications RSS',
-    agency: 'FSB (Global)',
-    jurisdiction: 'Global',
-    url: FSB_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'asic-gov',
-    name: 'ASIC Media Releases',
-    agency: 'ASIC (Australia)',
-    jurisdiction: 'Australia',
-    url: ASIC_MEDIA_RELEASES,
-    protocol: 'JSON (behind ASIC newsroom page)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'jfsa-rss',
-    name: 'JFSA English News RSS',
-    agency: 'JFSA (Japan)',
-    jurisdiction: 'Japan',
-    url: JFSA_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'sgx-regco',
-    name: 'SGX RegCo Content API',
-    agency: 'SGX RegCo (Singapore)',
-    jurisdiction: 'Singapore',
-    url: `${SGX_CONTENT_API}?queryId=${SGX_QUERY_ID}%3Apublic_consultations_list&variables=%7B%22limit%22%3A1%2C%22offset%22%3A0%2C%22lang%22%3A%22EN%22%7D`,
-    protocol: 'JSON (behind SGX RegCo pages)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'asx-consult',
-    name: 'ASX Public Consultations',
-    agency: 'ASX (Australia)',
-    jurisdiction: 'Australia',
-    url: ASX_CONSULTATIONS_PAGE,
-    protocol: 'HTML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'jpx-rules',
-    name: 'JPX Rule Revisions',
-    agency: 'TSE, OSE, TOCOM, JPX-R (Japan)',
-    jurisdiction: 'Japan',
-    url: JPX_REVISIONS_BASE + 'index.html',
-    protocol: 'HTML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'bnm-rss',
-    name: 'BNM Press Releases',
-    agency: 'BNM (Malaysia)',
-    jurisdiction: 'Malaysia',
-    url: bnmYearPage(new Date().getUTCFullYear()),
-    protocol: 'HTML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'sc-my',
-    name: 'SC Malaysia Media Releases',
-    agency: 'SC Malaysia',
-    jurisdiction: 'Malaysia',
-    url: SC_MEDIA_RELEASES,
-    protocol: 'HTML (list data in page)',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'finra-rss',
-    name: 'FINRA Notices RSS',
-    agency: 'FINRA (United States)',
-    jurisdiction: 'US',
-    url: FINRA_NOTICES_RSS,
-    protocol: 'RSS XML',
-    auth: 'Public / None',
-    ingests: true
-  },
-  {
-    id: 'bis-portal',
-    name: 'BIS Media Releases RSS',
-    agency: 'BIS & Basel Committee',
-    jurisdiction: 'Global',
-    url: 'https://www.bis.org/doclist/all_pressrels.rss',
-    protocol: 'RSS 1.0 (RDF)',
-    auth: 'Public / None',
-    ingests: true
-  }
-];
+type EndpointDefinition = EndpointInfo & { url: string };
+
+const ENDPOINTS: EndpointDefinition[] = ENDPOINT_CATALOG.map(endpoint => ({ ...endpoint, url: PROBE_URLS[endpoint.id] }));
 
 // Pages that return HTTP 200 but carry no usable content
 const UNUSABLE_PAGE_TITLE = /maintenance|just a moment|attention required|access denied|service unavailable/i;
@@ -2416,7 +2052,7 @@ function hongKongDate(): string {
 // Ingestion sources, keyed to the endpoint they read from
 // fetch(limit) reads more than the feed's usual number of items; the email digest uses this
 // narrowed: keeps only the feed's items about AI rules or privacy, so a read may find none
-type SourceDefinition = { endpointId: string; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; narrowed?: true };
+type SourceDefinition = { endpointId: EndpointId; name: string; fetch: (limit?: number) => Promise<NormalizedNotice[]>; narrowed?: true };
 
 const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'fed-reg', name: 'US Federal Register', fetch: fetchFederalRegister },
