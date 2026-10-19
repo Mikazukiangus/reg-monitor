@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
+import { buildGapCsv } from '../../lib/exports';
+import { FILE_TYPES, saveFile } from '../../lib/download';
 import { RegulatoryNotice } from '../../types/regulatory';
 
 interface GapAnalysisModalProps {
@@ -53,21 +55,8 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
     setNewRequirement('');
   };
 
-  const handleExportGapReport = () => {
-    const csvCell = (v: string) => `"${v.replace(/"/g, '""')}"`;
-    const rows = [
-      ['Requirement', 'Owner', 'Deadline', 'Status', 'Notes'],
-      ...checklist.map(item => [item.requirement, item.owner, item.deadline, item.status, item.notes])
-    ];
-    const header = `# ${notice.regulator}: ${notice.title}\n# Source: ${notice.dossierUrl || 'n/a'}\n`;
-    const blob = new Blob([header + rows.map(r => r.map(csvCell).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `RegSonar_Gap_Checklist_${notice.id}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
+  const handleExportGapReport = () =>
+    saveFile(`RegSonar_Gap_Checklist_${notice.id}.csv`, buildGapCsv(notice, checklist), FILE_TYPES.csv);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">

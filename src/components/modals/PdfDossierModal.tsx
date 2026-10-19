@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDialog } from '../useDialog';
+import { buildDossierText } from '../../lib/exports';
+import { FILE_TYPES, saveFile } from '../../lib/download';
 import { RegulatoryNotice } from '../../types/regulatory';
 import { daysUntil, formatDate, localDay, publishedDay } from '../../lib/derived';
 import { noticeTimeline } from '../../lib/timeline';
@@ -49,35 +51,8 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({
   const published = day ? formatDate(day) : 'Unknown';
   const keyPoints = notice.keyPoints;
 
-  const handleDownload = () => {
-    const lines = [
-      `REGSONAR NOTICE DOSSIER`,
-      ``,
-      `Title: ${notice.title}`,
-      `Regulator: ${notice.regulator} (${notice.jurisdiction})`,
-      `Reference: ${notice.ref}`,
-      `Type: ${notice.type}`,
-      `Published: ${published}`,
-      `Key date: ${notice.statutoryDeadline || 'None found'}${notice.deadlineQuote ? ` (from: "${notice.deadlineQuote}")` : ''}`,
-      `Impact score (rubric by document kind and dates): ${notice.impactScore.toFixed(1)}/10${notice.tagging?.impact ? ` (${notice.tagging.impact.join('; ')})` : ''}`,
-      `Source: ${notice.dossierUrl || 'n/a'}`,
-      ``,
-      ...(notice.summary ? [`SOURCE SUMMARY`, notice.summary, ``] : []),
-      ...(keyPoints?.ocr ? [`NOTE: the source is a scanned PDF read by OCR; quotes may contain recognition errors.`, ``] : []),
-      ...(keyPoints?.points.length ? [`KEY POINTS (quoted verbatim from the source document)`, ...keyPoints.points.map(p => `- "${p}"`), ``] : []),
-      ...(keyPoints?.facts.length ? [`DATED STATEMENTS (quoted)`, ...keyPoints.facts.map(f => `- "${f.text}"`), ``] : []),
-      ...(keyPoints?.refs.length ? [`REFERENCES MENTIONED`, keyPoints.refs.join(', '), ``] : []),
-      `Generated ${new Date().toISOString()} by RegSonar from public regulator publications.`
-    ];
-
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `RegSonar_Dossier_${notice.id}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
+  const handleDownload = () =>
+    saveFile(`RegSonar_Dossier_${notice.id}.txt`, buildDossierText(notice, published), FILE_TYPES.text);
 
   const meta: [string, string][] = [
     ['Reference', notice.ref],

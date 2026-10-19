@@ -1,5 +1,5 @@
-// What this browser remembers: saved notices, saved views, alert rules and
-// the feed's layout. Kept in this browser only; nothing is sent to the server.
+// What this browser remembers: saved notices, saved views, alert rules, the
+// feed's layout and the theme. Kept in this browser only; nothing is sent to the server.
 import type { CustomAlertRule, RegulatoryNotice } from '../types/regulatory';
 import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
 import { withCurrentSectorNames } from './tagging';
@@ -87,4 +87,24 @@ export function readFeedLayout(storage?: StorageLike): FeedLayout {
 }
 export function writeFeedLayout(layout: FeedLayout, storage?: StorageLike) {
   try { (storage ?? localStorage).setItem(LAYOUT_KEY, layout); } catch { /* the choice lasts for this visit */ }
+}
+
+// Light, dark, or follow the device ('system', kept by saving nothing). The
+// script in index.html reads the same key before the page draws.
+export type ThemeChoice = 'system' | 'light' | 'dark';
+const THEME_KEY = 'regsonar.theme';
+
+export function readTheme(storage?: Pick<Storage, 'getItem'>): ThemeChoice {
+  try {
+    const saved = (storage ?? localStorage).getItem(THEME_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+  } catch { /* Blocked storage: follow the device */ }
+  return 'system';
+}
+
+export function writeTheme(choice: ThemeChoice, storage?: Pick<Storage, 'setItem' | 'removeItem'>): void {
+  try {
+    if (choice === 'system') (storage ?? localStorage).removeItem(THEME_KEY);
+    else (storage ?? localStorage).setItem(THEME_KEY, choice);
+  } catch { /* The choice still applies until the tab is closed */ }
 }

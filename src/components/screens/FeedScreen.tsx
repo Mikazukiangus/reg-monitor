@@ -11,7 +11,8 @@ import { MonitoringControls } from '../MonitoringControls';
 import { SourceFreshness } from '../SourceFreshness';
 import { paginationPages } from '../../lib/preferences';
 import { countNew, feedFigures, ingestingAgencies } from '../../lib/feedStats';
-import { downloadIcs } from '../../lib/ics';
+import { buildIcs } from '../../lib/ics';
+import { FILE_TYPES, saveFile } from '../../lib/download';
 import type { PreviousVisit } from '../../lib/visits';
 import type { FeedSync } from '../../hooks/useFeedSync';
 import type { FeedFiltersState } from '../../hooks/useFeedFilters';
@@ -377,7 +378,7 @@ export function FeedScreen({
                 isSyncing={isSyncing}
                 endpoints={endpoints}
                 calendarCount={upcomingDates.length}
-                onExportCalendar={() => downloadIcs(upcomingDates, 'RegSonar_dates.ics')}
+                onExportCalendar={() => saveFile('RegSonar_dates.ics', buildIcs(upcomingDates), FILE_TYPES.calendar)}
               />
             </div>
           </div>

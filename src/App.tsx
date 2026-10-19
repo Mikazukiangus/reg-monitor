@@ -21,7 +21,8 @@ import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal } from './components/modals/LiveEndpointsModal';
 
 import { deriveDeadlines, deriveNotifications, sortNewestFirst } from './lib/derived';
-import { calendarNotices, downloadIcs } from './lib/ics';
+import { buildIcs, calendarNotices } from './lib/ics';
+import { FILE_TYPES, saveFile } from './lib/download';
 import { copyText, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState } from './lib/urlState';
 import { readPreviousVisit } from './lib/visits';
 import { countFacets, filterNotices } from './lib/feedFilter';
@@ -83,7 +84,7 @@ export default function App() {
   };
 
   const handleAddToCalendar = (notice: RegulatoryNotice) =>
-    downloadIcs([notice], `RegSonar_${notice.id}.ics`);
+    saveFile(`RegSonar_${notice.id}.ics`, buildIcs([notice]), FILE_TYPES.calendar);
 
   const handleToggleBookmark = (id: string) => toggleBookmark(id, searchableNotices, activeNoticeForDossier);
 

@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { readTheme, writeTheme, type ThemeChoice } from '../lib/preferences';
 
-// Light, dark, or follow the device. The choice is kept in this browser; the
-// script in index.html applies it before the page draws, so there is no flash.
+// Light, dark, or follow the device. The choice is kept in this browser
+// (src/lib/preferences.ts); the script in index.html applies it before the
+// page draws, so there is no flash.
 // The browser bar colour (theme-color) is the header band's in both themes.
-type ThemeChoice = 'system' | 'light' | 'dark';
-const KEY = 'regsonar.theme';
 const NEXT: Record<ThemeChoice, ThemeChoice> = { system: 'light', light: 'dark', dark: 'system' };
 const LABEL: Record<ThemeChoice, string> = { system: 'Theme: follows device', light: 'Theme: light', dark: 'Theme: dark' };
 const ICON: Record<ThemeChoice, string> = { system: 'contrast', light: 'light_mode', dark: 'dark_mode' };
-
-function loadChoice(): ThemeChoice {
-  try {
-    const saved = localStorage.getItem(KEY);
-    if (saved === 'light' || saved === 'dark') return saved;
-  } catch {}
-  return 'system';
-}
 
 const darkQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -30,14 +22,11 @@ function apply(choice: ThemeChoice) {
 }
 
 export const ThemeToggle: React.FC = () => {
-  const [choice, setChoice] = useState<ThemeChoice>(loadChoice);
+  const [choice, setChoice] = useState<ThemeChoice>(() => readTheme());
 
   useEffect(() => {
     apply(choice);
-    try {
-      if (choice === 'system') localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, choice);
-    } catch {}
+    writeTheme(choice);
     if (choice !== 'system') return;
     const query = darkQuery();
     const onChange = () => apply('system');

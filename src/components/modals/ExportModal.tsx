@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../useDialog';
 import { RegulatoryNotice } from '../../types/regulatory';
-import { buildNoticeCsv, exportNotice } from '../../lib/exports';
+import { buildNoticeCsv, buildNoticeJson, exportFilename } from '../../lib/exports';
+import { FILE_TYPES, saveFile } from '../../lib/download';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -25,27 +26,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   }, [isOpen, initialFormat]);
 
   const handleDownload = () => {
-    if (exportFormat === 'csv') {
-      const csvContent = buildNoticeCsv(notices, includeKeyPoints);
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `RegSonar_Statutory_Export_${new Date().toISOString().split('T')[0]}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
-    } else {
-      const exportData = notices.map(n => exportNotice(n, includeKeyPoints));
-
-      const jsonContent = JSON.stringify(exportData, null, 2);
-      const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `RegSonar_Statutory_Export_${new Date().toISOString().split('T')[0]}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-    }
+    if (exportFormat === 'csv') saveFile(exportFilename('csv'), buildNoticeCsv(notices, includeKeyPoints), FILE_TYPES.csv);
+    else saveFile(exportFilename('json'), buildNoticeJson(notices, includeKeyPoints), FILE_TYPES.json);
 
     onClose();
   };
