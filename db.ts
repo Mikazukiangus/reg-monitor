@@ -76,7 +76,9 @@ export function getDb(): Promise<Db | null> {
   return dbPromise;
 }
 
-export interface StoredNotice {
+// A notice as the table holds it (the whole notice is in the data column);
+// server/store.ts gives it its full type
+export interface StoredRow {
   id: string;
   regulator: string;
   jurisdictionCode: string;
@@ -89,7 +91,7 @@ export interface StoredNotice {
 
 // Insert or refresh notices. Key points already stored are kept when the
 // new copy has none (for example when a document fetch failed this time).
-export async function saveNotices(db: Db, notices: StoredNotice[]): Promise<void> {
+export async function saveNotices(db: Db, notices: StoredRow[]): Promise<void> {
   for (let i = 0; i < notices.length; i += 50) {
     const batch = notices.slice(i, i + 50);
     const values: unknown[] = [];
@@ -124,7 +126,7 @@ export async function saveNotices(db: Db, notices: StoredNotice[]): Promise<void
 const rowToNotice = (row: { data: any }) => (typeof row.data === 'string' ? JSON.parse(row.data) : row.data);
 
 // Notices published in the last `days` days, newest first
-export async function recentNotices(db: Db, days: number, limit: number): Promise<StoredNotice[]> {
+export async function recentNotices(db: Db, days: number, limit: number): Promise<StoredRow[]> {
   const rows = await db.query(
     `SELECT data FROM notices WHERE published_at >= now() - make_interval(days => $1) ORDER BY published_at DESC LIMIT $2`,
     [days, limit]
@@ -133,7 +135,7 @@ export async function recentNotices(db: Db, days: number, limit: number): Promis
 }
 
 // Full-text search over titles, summaries and key points, best matches first
-export async function searchNotices(db: Db, query: string, limit: number): Promise<StoredNotice[]> {
+export async function searchNotices(db: Db, query: string, limit: number): Promise<StoredRow[]> {
   const rows = await db.query(
     `SELECT data FROM notices
      WHERE search @@ websearch_to_tsquery('english', $1)
@@ -145,7 +147,7 @@ export async function searchNotices(db: Db, query: string, limit: number): Promi
 }
 
 // Consultations and conclusions, for linking the two (titles and dates only)
-export async function consultationCandidates(db: Db, limit = 2000): Promise<StoredNotice[]> {
+export async function consultationCandidates(db: Db, limit = 2000): Promise<StoredRow[]> {
   const rows = await db.query(
     `SELECT jsonb_build_object('id', id, 'regulator', regulator, 'jurisdictionCode', jurisdiction_code, 'format', format,
        'title', title, 'publishedAt', published_at, 'dossierUrl', data->>'dossierUrl') AS data
@@ -159,7 +161,7 @@ export async function consultationCandidates(db: Db, limit = 2000): Promise<Stor
 
 // Stored notices with no date whose page has not yet been checked for one
 // (the FCA's feed gives none), oldest seen first
-export async function undatedNotices(db: Db, limit: number): Promise<StoredNotice[]> {
+export async function undatedNotices(db: Db, limit: number): Promise<StoredRow[]> {
   const rows = await db.query(
     `SELECT data FROM notices
      WHERE published_at IS NULL AND data ? 'dossierUrl' AND NOT data ? 'pageDateTried'
@@ -177,10 +179,10 @@ export async function archiveStats(db: Db): Promise<{ count: number; since: stri
 
 // The stored copies of these notices, by id (for reusing key points and
 // spotting where a source's list joins up with what is already stored)
-export async function storedNotices(db: Db, ids: string[]): Promise<Map<string, StoredNotice>> {
+export async function storedNotices(db: Db, ids: string[]): Promise<Map<string, StoredRow>> {
   if (ids.length === 0) return new Map();
   const rows = await db.query(`SELECT data FROM notices WHERE id = ANY($1::text[])`, [ids]);
-  return new Map(rows.map(rowToNotice).map((n: StoredNotice) => [n.id, n]));
+  return new Map(rows.map(rowToNotice).map((n: StoredRow) => [n.id, n]));
 }
 
 export interface ScheduledCheck {

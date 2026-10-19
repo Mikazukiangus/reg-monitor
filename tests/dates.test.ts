@@ -11,7 +11,9 @@ import { assessImpact } from '../src/lib/impact.ts';
 process.env.VERCEL = '1';
 delete process.env.DATABASE_URL;
 const { noticeDate } = await import('../server/dates.ts');
-const { fromArchive } = await import('../server/history.ts');
+const history = await import('../server/history.ts');
+// Copies stored by older versions lack fields a new notice has
+const fromArchive = (row: object) => history.fromArchive(row as Parameters<typeof history.fromArchive>[0]);
 
 // [sentence, kind, date, stated generally] or [sentence] when it gives no date
 const SENTENCES: [string, DateKind?, string?, boolean?][] = [

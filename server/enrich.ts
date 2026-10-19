@@ -4,7 +4,7 @@ import { logger } from '../logging.js';
 import { summarize } from './summarize.js';
 import { extractArticleText, pagePublishedDate, extractPdfText, htmlToText } from './extract.js';
 import type { KeyPoints } from '../src/types/regulatory.js';
-import { getDb, storedNotices } from '../db.js';
+import { openStore, type StoreArg } from './store.js';
 import { fetchOrThrow, describeError } from './http.js';
 import { type NormalizedNotice, tagNotice } from './notice.js';
 import { fetchSgxDocText } from './sources/sgx.js';
@@ -85,12 +85,12 @@ export function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): N
 
 // Key points already in the history, so documents are read once rather than
 // again by every new server instance
-async function storedKeyPoints(notices: NormalizedNotice[]): Promise<Map<string, KeyPoints>> {
+async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg): Promise<Map<string, KeyPoints>> {
   try {
-    const db = await getDb();
-    if (!db) return new Map();
-    const stored = await storedNotices(db, notices.map(n => n.id));
-    return new Map([...stored].filter(([, n]) => n.keyPoints).map(([id, n]) => [id, n.keyPoints as KeyPoints]));
+    const store = await storeArg;
+    if (!store) return new Map();
+    const stored = await store.byIds(notices.map(n => n.id));
+    return new Map([...stored].flatMap(([id, n]) => (n.keyPoints ? [[id, n.keyPoints] as const] : [])));
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not read stored key points', err);
     return new Map();
@@ -102,9 +102,10 @@ async function storedKeyPoints(notices: NormalizedNotice[]): Promise<Map<string,
 // limits how many documents it reads (and until when); later checks do the rest.
 export async function enrichWithKeyPoints(
   notices: NormalizedNotice[],
-  budget: { maxFetches: number; until: number } = { maxFetches: Infinity, until: Infinity }
+  budget: { maxFetches: number; until: number } = { maxFetches: Infinity, until: Infinity },
+  store: StoreArg = openStore()
 ): Promise<NormalizedNotice[]> {
-  const stored = await storedKeyPoints(notices);
+  const stored = await storedKeyPoints(notices, store);
   const enriched: NormalizedNotice[] = [];
   let fetches = 0;
   for (const notice of notices) {

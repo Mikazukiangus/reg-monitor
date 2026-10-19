@@ -2,7 +2,7 @@
 // fills the history, and the notices the email digest checks.
 import { logger } from '../logging.js';
 import { config } from '../runtime-config.js';
-import { getDb, saveNotices, storedNotices, undatedNotices, saveScheduledCheck, type StoredNotice } from '../db.js';
+import { openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
 import { dedupeByDocument } from '../src/lib/dedupe.js';
 import { randomUUID } from 'crypto';
 import { describeError } from './http.js';
@@ -26,11 +26,10 @@ const sourceState = new Map<string, SourceState>();
 
 // Store notices in the history database, if there is one. Failures are logged
 // and never affect the live feed.
-async function archiveNotices(notices: NormalizedNotice[]) {
+async function archiveNotices(notices: NormalizedNotice[], store: StoreArg = openStore()) {
   if (notices.length === 0) return;
   try {
-    const db = await getDb();
-    if (db) await saveNotices(db, notices.map(({ archived, related, ...n }) => n));
+    await (await store)?.save(notices);
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not save notices', err);
   }
@@ -90,18 +89,17 @@ interface PollResult {
   notices: NormalizedNotice[];
 }
 
-async function pollSource(source: (typeof SOURCES)[number], until: number): Promise<PollResult> {
-  const db = await getDb();
+async function pollSource(source: (typeof SOURCES)[number], until: number, store: NoticeStore | null): Promise<PollResult> {
   let notices = await source.fetch(POLL_LIMIT);
-  let stored = db ? await storedNotices(db, notices.map(n => n.id)) : new Map();
+  let stored = store ? await store.byIds(notices.map(n => n.id)) : new Map();
   let backfilled = false;
-  if (db && notices.length >= POLL_LIMIT && stored.size === 0) {
+  if (store && notices.length >= POLL_LIMIT && stored.size === 0) {
     notices = await source.fetch(BACKFILL_LIMIT);
-    stored = await storedNotices(db, notices.map(n => n.id));
+    stored = await store.byIds(notices.map(n => n.id));
     backfilled = true;
   }
-  const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until });
-  await archiveNotices(enriched);
+  const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until }, store);
+  await archiveNotices(enriched, store);
   return {
     name: source.name,
     read: notices.length,
@@ -118,37 +116,34 @@ const POLL_DATE_BACKFILL = config.polling.dateBackfillLimit;
 // Stored notices that came without a date (the FCA's feed gives none) and
 // were stored before pages were read for one: read each page once for the
 // date it states. A page that cannot be read is marked and not tried again.
-async function backfillPageDates(until: number): Promise<number> {
-  const db = await getDb();
-  if (!db) return 0;
+async function backfillPageDates(until: number, store: NoticeStore | null): Promise<number> {
+  if (!store) return 0;
   let dated = 0;
-  for (const stored of await undatedNotices(db, POLL_DATE_BACKFILL)) {
+  for (const notice of await store.undated(POLL_DATE_BACKFILL)) {
     if (Date.now() >= until) break;
-    const notice = stored as unknown as NormalizedNotice;
     keyPointsCache.delete(notice.id);
     const keyPoints = await keyPointsFor(notice);
     const updated = keyPoints ? withKeyPoints(notice, keyPoints) : { ...notice, pageDateTried: true };
     if (updated.publishedAt) dated++;
-    const { archived: _a, related: _r, ...row } = updated as NormalizedNotice & { archived?: unknown; related?: unknown };
-    await saveNotices(db, [row as StoredNotice]);
+    await store.save([updated]);
   }
   return dated;
 }
 
 // Check every source and store what it lists in the history
-export async function pollSources(): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number }> {
-  const db = await getDb();
+export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number }> {
+  const store = await storeArg;
   const check = { id: randomUUID(), startedAt: new Date().toISOString(), completedAt: null as string | null, status: 'running' as const, summary: null };
-  const record = async (value: Parameters<typeof saveScheduledCheck>[1]) => {
-    if (db) await saveScheduledCheck(db, value).catch((err: any) => logger.warn('[RegSonar Poll] Could not record check', err));
+  const record = async (value: ScheduledCheck) => {
+    if (store) await store.saveCheck(value).catch((err: any) => logger.warn('[RegSonar Poll] Could not record check', err));
   };
   await record(check);
   try {
     const until = Date.now() + POLL_FETCH_WINDOW_MS;
     let pageDateError: string | null = null;
     const [settled, pageDatesFound] = await Promise.all([
-      Promise.allSettled(SOURCES.map(s => pollSource(s, until))),
-      backfillPageDates(until).catch((err: any) => {
+      Promise.allSettled(SOURCES.map(s => pollSource(s, until, store))),
+      backfillPageDates(until, store).catch((err: any) => {
         logger.warn('[RegSonar History] Could not backfill page dates', err);
         pageDateError = describeError(err);
         return 0;

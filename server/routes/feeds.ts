@@ -7,7 +7,7 @@ import { getEndpointsHealth } from '../health.js';
 import { refreshSource } from '../ingest.js';
 import { withHistory } from '../history.js';
 import { cdnCacheControl } from '../../config.js';
-import { getDb, scheduledCheckStatus } from '../../db.js';
+import { openStore } from '../store.js';
 import { pollSources } from '../ingest.js';
 import { cronAuthorized } from './cron.js';
 
@@ -92,8 +92,8 @@ export function feedRoutes(): Router {
   router.get('/api/feeds/checks', async (_req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
     try {
-      const db = await getDb();
-      res.json(logger.redact(db ? { success: true, enabled: true, ...await scheduledCheckStatus(db) } : { success: true, enabled: false }));
+      const store = await openStore();
+      res.json(logger.redact(store ? { success: true, enabled: true, ...await store.checkStatus() } : { success: true, enabled: false }));
     } catch (error) {
       logger.error('[RegSonar History] Scheduled-check status failed', error);
       res.status(503).json({ success: false, error: 'Scheduled check history is unavailable' });

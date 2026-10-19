@@ -2,7 +2,7 @@
 // notices from the history added and related notices linked.
 import { logger } from '../logging.js';
 import { config } from '../runtime-config.js';
-import { getDb, recentNotices, consultationCandidates, archiveStats, databaseUrl } from '../db.js';
+import { historyConfigured, openStore, type StoredNotice, type StoreArg } from './store.js';
 import { findRelated, RelatedCandidate } from '../src/lib/related.js';
 import { dedupeByDocument } from '../src/lib/dedupe.js';
 import { type NormalizedNotice, tagNotice, formatOf, getRelativeTime } from './notice.js';
@@ -27,7 +27,7 @@ function withoutTextDates(n: NormalizedNotice): NormalizedNotice {
   return rest;
 }
 
-export const fromArchive = (stored: any): NormalizedNotice => {
+export const fromArchive = (stored: StoredNotice): NormalizedNotice => {
   let n = withoutTextDates({
     ...stored,
     // Copies stored before link-only descriptions were dropped
@@ -44,18 +44,18 @@ export const fromArchive = (stored: any): NormalizedNotice => {
 
 // Add the last 30 days from the history to the live notices, and link
 // consultations to their conclusions
-export async function withHistory(live: NormalizedNotice[]) {
-  const db = await getDb();
+export async function withHistory(live: NormalizedNotice[], storeArg: StoreArg = openStore()) {
+  const store = await storeArg;
   let notices = live;
   let archive: { enabled: boolean; count?: number; since?: string | null; error?: string } = { enabled: false };
   let candidates: RelatedCandidate[] = live;
-  if (db) {
+  if (store) {
     try {
       const liveIds = new Set(live.map(n => n.id));
       const [recent, stats, linkable] = await Promise.all([
-        recentNotices(db, ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT),
-        archiveStats(db),
-        consultationCandidates(db)
+        store.recent(ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT),
+        store.stats(),
+        store.consultationCandidates()
       ]);
       notices = [...live, ...recent.filter(n => !liveIds.has(n.id)).map(fromArchive)];
       archive = { enabled: true, ...stats };
@@ -64,7 +64,7 @@ export async function withHistory(live: NormalizedNotice[]) {
       logger.warn('[RegSonar History] Could not read history', err);
       archive = { enabled: true, error: 'The history database could not be read' };
     }
-  } else if (databaseUrl()) {
+  } else if (historyConfigured()) {
     archive = { enabled: true, error: 'The history database could not be reached' };
   }
   notices = dedupeByDocument(notices).map(n => {
