@@ -1,6 +1,6 @@
 // The date a notice shows (comments close, takes effect, comply by), chosen
 // from the dates its document states for itself.
-import { documentDates } from '../summarize.js';
+import { documentDates } from './document-dates.js';
 import type { KeyPoints, DocumentDate, DateKind } from '../src/types/regulatory.js';
 import { type NormalizedNotice, formatOf, getRelativeTime } from './notice.js';
 import { hongKongDate, toIso } from './text.js';

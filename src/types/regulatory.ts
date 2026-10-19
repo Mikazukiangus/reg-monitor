@@ -42,7 +42,7 @@ export interface TagReasons {
   impact?: string[];
 }
 
-// Key points quoted from a notice's document (summarize.ts builds them)
+// Key points quoted from a notice's document (server/summarize.ts builds them)
 export interface KeyFact {
   text: string;
   // ISO date (YYYY-MM-DD) when the sentence names a full calendar date

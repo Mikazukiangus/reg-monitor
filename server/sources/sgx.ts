@@ -1,4 +1,4 @@
-import { htmlToText } from '../../summarize.js';
+import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor, formatOf } from '../notice.js';
 import { stripHtml, closingDateFields, singaporeDay } from '../text.js';

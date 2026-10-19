@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'crypto';
 import { readdirSync, readFileSync, statSync } from 'fs';
 import path from 'path';
-import { extractClosingDate } from '../summarize.ts';
+import { extractClosingDate } from '../server/document-dates.ts';
 import { dedupeByDocument } from '../src/lib/dedupe.ts';
 import { ruleMatches } from '../src/lib/alertRules.ts';
 import { findRelated } from '../src/lib/related.ts';

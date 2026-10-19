@@ -1,6 +1,9 @@
-import type { RegulatoryNotice } from '../types/regulatory';
+// What this browser remembers: saved notices, saved views, alert rules and
+// the feed's layout. Kept in this browser only; nothing is sent to the server.
+import type { CustomAlertRule, RegulatoryNotice } from '../types/regulatory';
 import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
 import { withCurrentSectorNames } from './tagging';
+import { DEFAULT_RULES } from './alertRules';
 
 export interface SavedView { id: string; name: string; query: string }
 interface StorageLike { getItem(key: string): string | null; setItem(key: string, value: string): void }
@@ -46,6 +49,22 @@ export function readSavedViews(storage?: StorageLike): SavedView[] {
     v && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.query === 'string').slice(0, 30);
 }
 export const writeSavedViews = (views: SavedView[], storage?: StorageLike) => write(VIEWS_KEY, views, storage);
+
+// Rules made on the Alert Rules tab; the default rules until any are saved
+const ALERT_RULES_KEY = 'regsonar.alertRules';
+export function readAlertRules(storage?: StorageLike): CustomAlertRule[] {
+  try {
+    const saved = (storage ?? localStorage).getItem(ALERT_RULES_KEY);
+    if (saved) {
+      const rules = JSON.parse(saved);
+      if (Array.isArray(rules)) return rules;
+    }
+  } catch {
+    // Private windows and blocked storage: start from the default rules
+  }
+  return DEFAULT_RULES;
+}
+export const writeAlertRules = (rules: CustomAlertRule[], storage?: StorageLike) => write(ALERT_RULES_KEY, rules, storage);
 
 // A bounded row of page links, with gaps instead of every page in the feed.
 export function paginationPages(page: number, total: number): (number | 'gap')[] {

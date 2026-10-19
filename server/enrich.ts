@@ -1,7 +1,8 @@
 // Key points for notices: each document is read (HTML, SFC and SGX document
 // text, HKMA BRDR PDFs) and summarised once, or taken from the history.
 import { logger } from '../logging.js';
-import { summarize, extractArticleText, pagePublishedDate, extractPdfText, htmlToText } from '../summarize.js';
+import { summarize } from './summarize.js';
+import { extractArticleText, pagePublishedDate, extractPdfText, htmlToText } from './extract.js';
 import type { KeyPoints } from '../src/types/regulatory.js';
 import { getDb, storedNotices } from '../db.js';
 import { fetchOrThrow, describeError } from './http.js';

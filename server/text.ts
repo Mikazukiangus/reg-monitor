@@ -1,6 +1,6 @@
 // Text and date helpers shared by the source adapters: HTML to plain text,
 // local dates to ISO timestamps, and sorting and de-duplicating list rows.
-import { htmlToText } from '../summarize.js';
+import { htmlToText } from './extract.js';
 import type { NormalizedNotice } from './notice.js';
 
 export function toIso(dateString: string | undefined): string | undefined {

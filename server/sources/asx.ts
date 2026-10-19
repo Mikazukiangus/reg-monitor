@@ -1,4 +1,5 @@
-import { extractClosingDate, htmlToText } from '../../summarize.js';
+import { extractClosingDate } from '../document-dates.js';
+import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso, lastPathPart, closingDateFields } from '../text.js';

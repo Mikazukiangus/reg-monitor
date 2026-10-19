@@ -4,7 +4,8 @@ import { once } from 'node:events';
 import { buildNoticeCsv, exportNotice } from '../src/lib/exports';
 import { defaultViewState, parseViewState, serializeViewState } from '../src/lib/urlState';
 import { deriveNotifications, publicationTime, publishedInLastDays } from '../src/lib/derived';
-import { paginationPages, readBookmarks, readSavedViews, writeBookmarks, writeSavedViews } from '../src/lib/preferences';
+import { paginationPages, readAlertRules, readBookmarks, readSavedViews, writeAlertRules, writeBookmarks, writeSavedViews } from '../src/lib/preferences';
+import { DEFAULT_RULES } from '../src/lib/alertRules';
 import type { RegulatoryNotice } from '../src/types/regulatory';
 
 const notice: RegulatoryNotice = {
@@ -76,6 +77,20 @@ test('bookmarks and views persist safely, rejecting broken storage and handling 
   assert.deepEqual(readBookmarks({ ...storage, getItem: () => '[{"id":"broken"}]' }), []);
   assert.deepEqual(readSavedViews({ ...storage, getItem: () => '{invalid' }), []);
   assert.equal(writeBookmarks([notice], { ...storage, setItem: () => { throw new Error('Quota exceeded'); } }), false);
+});
+
+test('alert rules start from the defaults and keep what was saved, even no rules', () => {
+  const values = new Map<string, string>();
+  const storage = { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => { values.set(key, value); } };
+  assert.deepEqual(readAlertRules(storage), DEFAULT_RULES);
+  const rules = [{ ...DEFAULT_RULES[0], id: 'mine', enabled: false }];
+  assert.equal(writeAlertRules(rules, storage), true);
+  assert.deepEqual(readAlertRules(storage), rules);
+  assert.equal(writeAlertRules([], storage), true);
+  assert.deepEqual(readAlertRules(storage), []);
+  assert.deepEqual(readAlertRules({ ...storage, getItem: () => '{invalid' }), DEFAULT_RULES);
+  assert.deepEqual(readAlertRules({ ...storage, getItem: () => { throw new Error('Blocked'); } }), DEFAULT_RULES);
+  assert.equal(writeAlertRules(rules, { ...storage, setItem: () => { throw new Error('Quota exceeded'); } }), false);
 });
 
 test('bookmarks saved under a renamed sector are kept, under its new name', () => {

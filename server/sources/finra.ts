@@ -1,4 +1,4 @@
-import { htmlToText } from '../../summarize.js';
+import { htmlToText } from '../extract.js';
 import { rssItems } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, lastPathPart, toIso } from '../text.js';

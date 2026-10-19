@@ -2,31 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDialog } from '../useDialog';
 import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
 import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
+import { readAlertRules, writeAlertRules } from '../../lib/preferences';
 import { copyText } from '../../lib/urlState';
-
-// Rules made on this tab are kept in this browser only
-const RULES_KEY = 'regsonar.alertRules';
-
-function loadRules(): CustomAlertRule[] {
-  try {
-    const saved = localStorage.getItem(RULES_KEY);
-    if (saved) {
-      const rules = JSON.parse(saved);
-      if (Array.isArray(rules)) return rules;
-    }
-  } catch {
-    // Private windows and blocked storage: start from the default rules
-  }
-  return DEFAULT_RULES;
-}
-
-function saveRules(rules: CustomAlertRule[]) {
-  try {
-    localStorage.setItem(RULES_KEY, JSON.stringify(rules));
-  } catch {
-    // Not saved; the rules still work until the tab is closed
-  }
-}
 
 interface DigestInfo {
   rules: CustomAlertRule[];
@@ -39,11 +16,12 @@ interface AlertRulesScreenProps {
 }
 
 export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) => {
-  const [rules, setRulesState] = useState<CustomAlertRule[]>(loadRules);
+  const [rules, setRulesState] = useState<CustomAlertRule[]>(() => readAlertRules());
   const setRules = (update: CustomAlertRule[] | ((prev: CustomAlertRule[]) => CustomAlertRule[])) => {
     setRulesState(prev => {
       const next = typeof update === 'function' ? update(prev) : update;
-      saveRules(next);
+      // When not saved, the rules still work until the tab is closed
+      writeAlertRules(next);
       return next;
     });
   };
