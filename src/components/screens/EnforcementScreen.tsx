@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RegulatoryNotice } from '../../types/regulatory';
-import { sortNewestFirst } from '../../lib/derived';
+import { countByRegulator, enforcementRecords } from '../../lib/enforcement';
 
 interface EnforcementScreenProps {
   notices: RegulatoryNotice[];
@@ -10,14 +10,12 @@ interface EnforcementScreenProps {
 // Enforcement-related publications from live sources. Penalty amounts and
 // party names are only shown where the source text states them.
 export const EnforcementScreen: React.FC<EnforcementScreenProps> = ({ notices, onSelectNotice }) => {
-  const records = sortNewestFirst(notices.filter(n => n.format === 'Enforcement'));
+  const records = enforcementRecords(notices);
   // One regulator at a time (chips on phones, the bar list from md); phones
   // also show each record's first key point until "Show more"
   const [regulator, setRegulator] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
-  const regulators = [...new Set(records.map(n => n.regulator))]
-    .map(name => ({ name, count: records.filter(n => n.regulator === name).length }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  const regulators = countByRegulator(records);
   const shown = regulator && regulators.some(r => r.name === regulator) ? regulator : null;
   const most = regulators[0]?.count ?? 1;
   const shownCount = shown ? regulators.find(r => r.name === shown)!.count : records.length;

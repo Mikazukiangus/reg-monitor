@@ -1,20 +1,13 @@
 import React from 'react';
 import { STATUS_STYLES } from './modals/LiveEndpointsModal';
 import type { EndpointMetric } from '../types/regulatory';
+import { agencyName, endpointHealth, percentOf, type FeedFigures } from '../lib/feedStats';
 import { CRITICAL_SCORE } from '../lib/impact';
 
 interface KpiRibbonProps {
   onFilterBySeverity?: (severity: string) => void;
   onFilterByFormat?: (format: string) => void;
-  totalNoticesCount: number;
-  criticalCount: number;
-  // Consultations still open for comment, and those whose closing date has passed
-  consultationsCount: number;
-  closedConsultationsCount: number;
-  // Notices published in the last 7 days
-  recentCount: number;
-  // Consultations with a date in the next 14 days
-  closingSoonCount: number;
+  figures: FeedFigures;
   activeFilter?: string;
   endpoints: EndpointMetric[];
 }
@@ -22,21 +15,15 @@ interface KpiRibbonProps {
 export const KpiRibbon: React.FC<KpiRibbonProps> = ({
   onFilterBySeverity,
   onFilterByFormat,
-  totalNoticesCount,
-  criticalCount,
-  consultationsCount,
-  closedConsultationsCount,
-  recentCount,
-  closingSoonCount,
+  figures,
   activeFilter,
   endpoints
 }) => {
-  const operational = endpoints.filter(e => e.status === 'Operational');
-  const notOperational = endpoints.filter(e => e.status !== 'Operational' && e.status !== 'Checking');
-  const checking = endpoints.some(e => e.status === 'Checking');
-  const tone = checking ? STATUS_STYLES.Checking : notOperational.length === 0 ? STATUS_STYLES.Operational : STATUS_STYLES.Degraded;
-  const pct = (n: number) => `${totalNoticesCount ? Math.round((n / totalNoticesCount) * 100) : 0}%`;
-  const operationalPct = endpoints.length ? Math.round((operational.length / endpoints.length) * 100) : 0;
+  const { total: totalNoticesCount, critical: criticalCount, openConsultations: consultationsCount,
+    closedConsultations: closedConsultationsCount, recent: recentCount, closingSoon: closingSoonCount } = figures;
+  const { up: operational, issues: notOperational, checking, upPercent: operationalPct, overall } = endpointHealth(endpoints);
+  const tone = STATUS_STYLES[overall];
+  const pct = (n: number) => `${percentOf(n, totalNoticesCount)}%`;
 
   return (
     <div className="w-full px-4 sm:px-6 py-3 bg-wash border-b border-line shadow-xs">
@@ -146,7 +133,7 @@ export const KpiRibbon: React.FC<KpiRibbonProps> = ({
             </span>
             <span className="max-md:hidden font-['Inter'] text-[12px] text-muted truncate">
               {notOperational.length > 0
-                ? `Issues: ${notOperational.map(e => e.agency.replace(/ \(.*\)$/, '')).join(', ')}`
+                ? `Issues: ${notOperational.map(e => agencyName(e.agency)).join(', ')}`
                 : 'of monitored sources'}
             </span>
           </div>

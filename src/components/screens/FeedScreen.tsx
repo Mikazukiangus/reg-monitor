@@ -10,9 +10,8 @@ import { NextUpStrip } from '../NextUpStrip';
 import { MonitoringControls } from '../MonitoringControls';
 import { SourceFreshness } from '../SourceFreshness';
 import { paginationPages } from '../../lib/preferences';
-import { daysUntil, publishedInLastDays } from '../../lib/derived';
+import { countNew, feedFigures, ingestingAgencies } from '../../lib/feedStats';
 import { downloadIcs } from '../../lib/ics';
-import { commentsClosed } from '../../lib/impact';
 import type { PreviousVisit } from '../../lib/visits';
 import type { FeedSync } from '../../hooks/useFeedSync';
 import type { FeedFiltersState } from '../../hooks/useFeedFilters';
@@ -58,32 +57,15 @@ export function FeedScreen({
   } = filters;
   const { layout, changeLayout, pageItems: currentNotices, page, totalPages, itemsPerPage } = pagination;
 
-  const recentCount = notices.filter(
-    n => publishedInLastDays(n.publishedAt, 7)
-  ).length;
-  const consultations = notices.filter(n => n.format === 'Consultations');
-  const openConsultationsCount = consultations.filter(n => !commentsClosed(n.statutoryDeadline)).length;
-  const closingSoonCount = notices.filter(n => {
-    if (n.format !== 'Consultations' || !n.deadlineDate) return false;
-    const d = daysUntil(n.deadlineDate);
-    return d >= 0 && d <= 14;
-  }).length;
-
-  const ingestingSources = endpoints.filter(ep => ep.ingests && ep.sync?.ok).map(ep => ep.agency.replace(/ \(.*\)$/, ''));
-
-  // Notices from the stored history are older ones, so they never count as new
-  const newCount = notices.filter(n => !n.archived && isNewNotice(n.id)).length;
+  const figures = feedFigures(notices);
+  const ingestingSources = ingestingAgencies(endpoints);
+  const newCount = countNew(notices, isNewNotice);
 
   return (
         <div className="flex flex-col w-full">
           {/* Executive KPI Ribbon */}
           <KpiRibbon
-            totalNoticesCount={notices.length}
-            criticalCount={notices.filter(n => n.severity === 'critical').length}
-            consultationsCount={openConsultationsCount}
-            closedConsultationsCount={consultations.length - openConsultationsCount}
-            recentCount={recentCount}
-            closingSoonCount={closingSoonCount}
+            figures={figures}
             endpoints={endpoints}
             onFilterBySeverity={(sev) => {
               if (sev === 'critical') {

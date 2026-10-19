@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
 import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
-import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
+import { DEFAULT_RULES, ruleFromForm, ruleMatches } from '../../lib/alertRules';
 import { readAlertRules, writeAlertRules } from '../../lib/preferences';
 import { copyText } from '../../lib/urlState';
 import { useDigestInfo } from '../../hooks/useDigestInfo';
@@ -59,16 +59,8 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
 
   const handleCreateRule = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ruleName.trim()) return;
-
-    const newRule: CustomAlertRule = {
-      id: `rule-${Date.now()}`,
-      name: ruleName,
-      jurisdictions: agencies.split(',').map(a => a.trim()).filter(Boolean),
-      minImpact: minImpact,
-      keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
-      enabled: true
-    };
+    const newRule = ruleFromForm({ name: ruleName, agencies, minImpact, keywords });
+    if (!newRule) return;
 
     setRules([newRule, ...rules]);
     setRuleName('');

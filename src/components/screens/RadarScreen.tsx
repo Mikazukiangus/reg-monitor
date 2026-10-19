@@ -1,21 +1,8 @@
 import React, { useState } from 'react';
 import { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../../types/regulatory';
 import { SECTORS } from '../../lib/tagging';
-import { sortNewestFirst } from '../../lib/derived';
+import { RADAR_JURISDICTIONS as JURISDICTIONS, buildRadar, sectorsIn, shownJurisdiction } from '../../lib/radar';
 
-
-const JURISDICTIONS: { code: JurisdictionCode; name: string; sources: string }[] = [
-  { code: 'SG', name: 'Singapore', sources: 'MAS, SGX RegCo; PDPC privacy' },
-  { code: 'MY', name: 'Malaysia', sources: 'BNM, SC; JPDP privacy' },
-  { code: 'HK', name: 'Hong Kong', sources: 'HKMA, SFC, HKEX' },
-  { code: 'US', name: 'United States', sources: 'SEC/CFTC, FINRA; AI rules, privacy' },
-  { code: 'UK_EU', name: 'UK & EU', sources: 'PRA, FCA, ESMA; AI rules; ICO, EDPB privacy' },
-  { code: 'AU', name: 'Australia', sources: 'ASIC, ASX; OAIC privacy' },
-  { code: 'JP', name: 'Japan', sources: 'JFSA, JPX; AI strategy; PPC privacy' },
-  { code: 'KR', name: 'South Korea', sources: 'MSIT AI rules; PIPC privacy' },
-  { code: 'CN', name: 'China', sources: 'State Council policy library: AI rules, privacy' },
-  { code: 'GLOBAL', name: 'Global', sources: 'BIS/BCBS, FSB' }
-];
 
 // Titles shown per sector on phones before "Show all"
 const PHONE_TITLES = 3;
@@ -28,18 +15,15 @@ interface RadarScreenProps {
 // Where live publications are landing, by sector and jurisdiction. Sector is
 // assigned by keyword rules, so treat the grid as an index, not an assessment.
 export const RadarScreen: React.FC<RadarScreenProps> = ({ notices, onSelectNotice }) => {
-  const sorted = sortNewestFirst(notices);
-  const cellOf = (sector: SectorDomain, code: JurisdictionCode) =>
-    sorted.filter(n => (n.sectors ?? [n.sector]).includes(sector) && n.jurisdictionCode === code);
+  const radar = buildRadar(notices);
+  const cellOf = radar.cell;
+  const counts = radar.counts;
 
   // Phones show one jurisdiction at a time; until one is picked, the first with notices
   const [picked, setPicked] = useState<JurisdictionCode | null>(null);
   const [openSectors, setOpenSectors] = useState<Set<SectorDomain>>(new Set());
-  const counts = new Map(JURISDICTIONS.map(j => [j.code, sorted.filter(n => n.jurisdictionCode === j.code).length]));
-  const current = JURISDICTIONS.find(j => j.code === picked) ?? JURISDICTIONS.find(j => counts.get(j.code)) ?? JURISDICTIONS[0];
-  const rows = SECTORS.map(sector => ({ sector, cell: cellOf(sector, current.code) }));
-  const busy = rows.filter(r => r.cell.length > 0).sort((a, b) => b.cell.length - a.cell.length);
-  const quiet = rows.filter(r => r.cell.length === 0).map(r => r.sector);
+  const current = shownJurisdiction(radar, picked);
+  const { busy, quiet } = sectorsIn(radar, current.code);
   const pick = (code: JurisdictionCode) => { setPicked(code); setOpenSectors(new Set()); };
   const toggleSector = (sector: SectorDomain) => setOpenSectors(prev => {
     const next = new Set(prev);

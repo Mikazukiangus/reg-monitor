@@ -55,3 +55,22 @@ export function ruleMatches(rule: CustomAlertRule, notice: MatchableNotice): boo
   const text = [notice.title, notice.summary, ...(notice.keyPoints?.points || [])].join(' ');
   return keywords.some(k => keywordPattern(k).test(text));
 }
+
+// "MAS, HKMA, " → ["MAS", "HKMA"]
+export const commaList = (text: string) => text.split(',').map(s => s.trim()).filter(Boolean);
+
+// A new rule from the Alert Rules form; null without a name
+export function ruleFromForm(
+  form: { name: string; agencies: string; minImpact: number; keywords: string },
+  id = `rule-${Date.now()}`
+): CustomAlertRule | null {
+  if (!form.name.trim()) return null;
+  return {
+    id,
+    name: form.name,
+    jurisdictions: commaList(form.agencies),
+    minImpact: form.minImpact,
+    keywords: commaList(form.keywords),
+    enabled: true
+  };
+}
