@@ -2,7 +2,7 @@
 // to check by eye: `npm run tags:review` (add a number to read more per source).
 // When one is wrong, add it to tests/tagging.test.ts with the right answer and
 // change the rules in src/lib/tagging.ts until every test passes.
-const { SOURCES } = await import('../server.ts');
+const { SOURCES } = await import('../server/sources/index.ts');
 const { classifySectors } = await import('../src/lib/tagging.ts');
 const { logger } = await import('../logging.ts');
 

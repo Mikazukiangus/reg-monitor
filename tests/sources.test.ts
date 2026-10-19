@@ -29,7 +29,12 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, zonedToIso, sgxPublicUrl, finraTitle, tagNotice, parseMsitPressReleases } = await import('../server.ts');
+const { SOURCES } = await import('../server/sources/index.ts');
+const { zonedToIso } = await import('../server/text.ts');
+const { tagNotice } = await import('../server/notice.ts');
+const { sgxPublicUrl } = await import('../server/sources/sgx.ts');
+const { finraTitle } = await import('../server/sources/finra.ts');
+const { parseMsitPressReleases } = await import('../server/sources/msit.ts');
 const { severityOf } = await import('../src/lib/impact.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];

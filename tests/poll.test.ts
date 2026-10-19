@@ -29,7 +29,8 @@ globalThis.fetch = (async (input: any) => {
   return new Response(readFileSync(`tests/fixtures/${fixture.file}`), { status, headers: { 'content-type': fixture.contentType } });
 }) as typeof fetch;
 
-const { SOURCES, pollSources } = await import('../server.ts');
+const { SOURCES } = await import('../server/sources/index.ts');
+const { pollSources } = await import('../server.ts');
 
 test('the first check fills the history, reading further back where the list was full', async () => {
   const { results, failed } = await pollSources();

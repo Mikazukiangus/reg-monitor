@@ -9,7 +9,8 @@ import { assessImpact } from '../src/lib/impact.ts';
 
 process.env.VERCEL = '1';
 delete process.env.DATABASE_URL;
-const { noticeDate, fromArchive } = await import('../server.ts');
+const { noticeDate } = await import('../server/dates.ts');
+const { fromArchive } = await import('../server.ts');
 
 // [sentence, kind, date, stated generally] or [sentence] when it gives no date
 const SENTENCES: [string, DateKind?, string?, boolean?][] = [
