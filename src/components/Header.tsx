@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AlertNotification } from '../types/regulatory';
-import { EndpointMetric } from './modals/LiveEndpointsModal';
+import type { EndpointMetric } from '../types/regulatory';
 import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {

@@ -1,6 +1,7 @@
 // Notices saved in this browser (up to 200), kept up to date from the feed
 // and, while only saved notices are shown, from the history
 import React, { useMemo, useState } from 'react';
+import { noticesByIdBatches } from '../api/client';
 import { readBookmarks, toggleNoticeBookmark, writeBookmarks } from '../lib/preferences';
 import { RegulatoryNotice } from '../types/regulatory';
 
@@ -40,12 +41,9 @@ export function useBookmarks({ notices, hasSynced, onlySaved, onMessage }: Optio
     if (!missing.length) return;
     const controller = new AbortController();
     const refresh = async () => {
-      for (let i = 0; i < missing.length; i += 50) {
-        const res = await fetch(`/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify(missing.slice(i, i + 50)))}`, { signal: controller.signal });
-        if (!res.ok) throw new Error('Unavailable');
-        const data = await res.json();
-        if (Array.isArray(data.notices)) setSavedNotices(prev => {
-          const byId = new Map<string, RegulatoryNotice>(data.notices.map((n: RegulatoryNotice) => [n.id, n]));
+      for await (const found of noticesByIdBatches(missing, controller.signal)) {
+        setSavedNotices(prev => {
+          const byId = new Map<string, RegulatoryNotice>(found.map(n => [n.id, n]));
           const next = prev.map(n => byId.get(n.id) ?? n);
           writeBookmarks(next); return next;
         });

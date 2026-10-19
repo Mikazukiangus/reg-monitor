@@ -5,6 +5,7 @@
 import pg from 'pg';
 import { config } from './runtime-config.js';
 import { logger } from './logging.js';
+import type { CheckSummary } from './src/types/regulatory.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
@@ -182,11 +183,6 @@ export async function storedNotices(db: Db, ids: string[]): Promise<Map<string, 
   return new Map(rows.map(rowToNotice).map((n: StoredNotice) => [n.id, n]));
 }
 
-export interface CheckSummary {
-  sources: { name: string; read: number; added: number; withoutKeyPoints: number }[];
-  failed: { name: string; error: string }[];
-  pageDatesFound: number;
-}
 export interface ScheduledCheck {
   id: string;
   startedAt: string;

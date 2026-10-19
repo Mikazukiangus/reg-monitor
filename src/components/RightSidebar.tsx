@@ -1,6 +1,7 @@
 import React from 'react';
 import { DeadlineItem } from '../types/regulatory';
-import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
+import { STATUS_STYLES } from './modals/LiveEndpointsModal';
+import type { EndpointMetric } from '../types/regulatory';
 import { timeAgo } from '../lib/derived';
 
 interface RightSidebarProps {

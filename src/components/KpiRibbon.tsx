@@ -1,5 +1,6 @@
 import React from 'react';
-import { EndpointMetric, STATUS_STYLES } from './modals/LiveEndpointsModal';
+import { STATUS_STYLES } from './modals/LiveEndpointsModal';
+import type { EndpointMetric } from '../types/regulatory';
 import { CRITICAL_SCORE } from '../lib/impact';
 
 interface KpiRibbonProps {

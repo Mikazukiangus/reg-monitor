@@ -1,33 +1,20 @@
-// The live feed: notices and source status from /api/feeds/sync, endpoint
-// checks from /api/feeds/status, background refreshes, and the copy saved on
+// The live feed: notices and source status from the feed sync, endpoint
+// status checks, background refreshes, and the copy saved on
 // this device when offline. There is no sample data.
 import React, { useState } from 'react';
-import type { EndpointMetric } from '../components/modals/LiveEndpointsModal';
+import { fetchEndpointStatus, fetchFeed, type ArchiveStatus, type SourceSyncResult } from '../api/client';
 import { ENDPOINT_CATALOG } from '../lib/endpoints';
 import { browserLogger } from '../lib/logging';
 import { sgtTime } from '../lib/derived';
 import { recordVisit } from '../lib/visits';
 import { withCurrentSectorNames } from '../lib/tagging';
-import { RegulatoryNotice } from '../types/regulatory';
+import type { EndpointMetric, RegulatoryNotice } from '../types/regulatory';
+
+export type { ArchiveStatus };
 
 // Listed until the first status arrives; the server's reply adds each
 // endpoint's address and status
 const DEFAULT_ENDPOINTS: EndpointMetric[] = ENDPOINT_CATALOG.map(ep => ({ ...ep, url: '', status: 'Checking' as const, pingMs: null }));
-
-interface SourceSyncResult {
-  endpointId: string;
-  ok: boolean;
-  count: number;
-  lastSuccessAt?: string | null;
-  error?: string;
-}
-
-export interface ArchiveStatus {
-  enabled: boolean;
-  count?: number;
-  since?: string | null;
-  error?: string;
-}
 
 // A cached sync older than this is followed by a fresh one
 const STALE_SYNC_MS = 10 * 60 * 1000;
@@ -77,21 +64,21 @@ export function useFeedSync(onMessage: (message: string) => void) {
   const handleSyncFeeds = async (force = true): Promise<string | null> => {
     setIsSyncing(true);
     try {
-      const res = await fetch('/api/feeds/sync', { method: force ? 'POST' : 'GET' });
+      const reply = await fetchFeed(force);
       // The server allows each visitor a few refreshes a minute; the notices shown stay as they are
-      if (res.status === 429) {
-        const wait = res.headers.get('Retry-After');
+      if (reply.kind === 'rateLimited') {
+        const wait = reply.retryAfter;
         onMessage(`Refreshed several times just now. Try again in ${wait ? `${wait} seconds` : 'a minute'}.`);
         return null;
       }
-      if (res.ok) {
-        const data = await res.json();
+      if (reply.kind === 'ok') {
+        const { data } = reply;
         if (data.notices && Array.isArray(data.notices)) {
           // The server returns the full current live set, so replace rather than append.
           // Offline, it is the copy saved on this device, perhaps under old sector names.
           setNotices(data.notices.map(withCurrentSectorNames));
           if (data.archive) setArchive(data.archive);
-          recordVisit(data.notices.map((n: RegulatoryNotice) => n.id));
+          recordVisit(data.notices.map(n => n.id));
         }
         setHasSynced(true);
         setSyncError(null);
@@ -102,11 +89,11 @@ export function useFeedSync(onMessage: (message: string) => void) {
         setLastSyncAt(syncedAt);
         setLastSyncTime(sgtTime(syncedAt));
         // The service worker marks a copy it saved earlier; no point refreshing it while offline
-        const savedAt = res.headers.get('X-RegSonar-Saved');
+        const { savedAt } = reply;
         setSavedCopyAt(savedAt);
         return savedAt ? null : syncedAt;
       }
-      setSyncError(`The feed server returned HTTP ${res.status}.`);
+      setSyncError(`The feed server returned HTTP ${reply.status}.`);
     } catch (err) {
       browserLogger.warn('[RegSonar] Live feed sync note:', err);
       setSyncError('The feed server could not be reached.');
@@ -123,15 +110,10 @@ export function useFeedSync(onMessage: (message: string) => void) {
   const handlePingEndpoints = async () => {
     setIsPinging(true);
     try {
-      const res = await fetch('/api/feeds/status');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.endpoints && Array.isArray(data.endpoints)) {
-          // Keep the last sync summary; status probes don't fetch notices
-          setEndpoints(prev =>
-            data.endpoints.map((ep: EndpointMetric) => ({ ...ep, sync: prev.find(p => p.id === ep.id)?.sync }))
-          );
-        }
+      const status = await fetchEndpointStatus();
+      if (status) {
+        // Keep the last sync summary; status probes don't fetch notices
+        setEndpoints(prev => status.map(ep => ({ ...ep, sync: prev.find(p => p.id === ep.id)?.sync })));
       }
     } catch (err) {
       browserLogger.warn('[RegSonar] Endpoint ping note:', err);

@@ -1,26 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import type { CheckSummary } from '../../db';
+import React from 'react';
+import { useScheduledChecks } from '../hooks/useScheduledChecks';
 
-interface Status {
-  enabled: boolean;
-  latest: { startedAt: string; completedAt: string | null; status: string; summary: CheckSummary | null } | null;
-  lastCompletedAt: string | null;
-  dateBackfill: { pending: number; unresolved: number };
-}
 const timestamp = (value: string) => new Date(value).toLocaleString('en-GB', { timeZone: 'Asia/Singapore', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' SGT';
 export function SourceFreshness({ lastSyncAt }: { lastSyncAt: string | null }) {
-  const [status, setStatus] = useState<Status | null>(null);
-  const [unavailable, setUnavailable] = useState(false);
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('/api/feeds/checks', { signal: controller.signal }).then(async res => {
-      if (!res.ok) throw new Error('Unavailable');
-      const data = await res.json();
-      if (!data.success) throw new Error('Unavailable');
-      setStatus(data); setUnavailable(false);
-    }).catch(() => { if (!controller.signal.aborted) { setStatus(null); setUnavailable(true); } });
-    return () => controller.abort();
-  }, [lastSyncAt]);
+  const { status, unavailable } = useScheduledChecks(lastSyncAt);
   const latest = status?.latest;
   const summary = latest?.summary;
   return <details className="bg-panel border border-line rounded-lg px-3.5 py-2 text-[12px] text-muted">

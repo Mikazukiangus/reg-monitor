@@ -1,25 +1,6 @@
 import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
-
-export interface EndpointMetric {
-  id: string;
-  name: string;
-  agency: string;
-  jurisdiction: string;
-  url: string;
-  protocol: string;
-  auth: string;
-  status: EndpointStatus;
-  statusCode?: number | null;
-  pingMs: number | null;
-  detail?: string;
-  ingests?: boolean;
-  // Result of the most recent notice sync for sources read from this endpoint
-  // lastSuccessAt: when the oldest of its sources last fetched successfully
-  sync?: { ok: boolean; count: number; error?: string; lastSuccessAt?: string | null };
-}
-
-export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';
+import type { EndpointMetric, EndpointStatus } from '../../types/regulatory';
 
 export const STATUS_STYLES: Record<EndpointStatus, { badge: string; text: string; dot: string }> = {
   Operational: { badge: 'bg-green-tint text-green border-green-line', text: 'text-green', dot: 'bg-green-dot' },

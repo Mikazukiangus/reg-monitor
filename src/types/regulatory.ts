@@ -168,3 +168,32 @@ export interface CustomAlertRule {
   keywords: string[];
   enabled: boolean;
 }
+
+export type EndpointStatus = 'Operational' | 'Degraded' | 'Down' | 'Checking';
+
+// A regulator's endpoint: its latest status check and, after a feed sync,
+// the result of reading notices from it
+export interface EndpointMetric {
+  id: string;
+  name: string;
+  agency: string;
+  jurisdiction: string;
+  url: string;
+  protocol: string;
+  auth: string;
+  status: EndpointStatus;
+  statusCode?: number | null;
+  pingMs: number | null;
+  detail?: string;
+  ingests?: boolean;
+  // Result of the most recent notice sync for sources read from this endpoint
+  // lastSuccessAt: when the oldest of its sources last fetched successfully
+  sync?: { ok: boolean; count: number; error?: string; lastSuccessAt?: string | null };
+}
+
+// What a scheduled source check read (stored by the server, shown on the feed)
+export interface CheckSummary {
+  sources: { name: string; read: number; added: number; withoutKeyPoints: number }[];
+  failed: { name: string; error: string }[];
+  pageDatesFound: number;
+}

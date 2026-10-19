@@ -2,6 +2,7 @@
 // once the text settles, and a notice named in a shared link, looked up in the
 // history when it is not in the feed
 import React, { useMemo, useState } from 'react';
+import { noticesById, searchHistory } from '../api/client';
 import { RegulatoryNotice } from '../types/regulatory';
 import type { ArchiveStatus } from './useFeedSync';
 
@@ -17,9 +18,8 @@ export function useHistorySearch(searchText: string, archive: ArchiveStatus) {
     }
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      fetch(`/api/notices/search?q=${encodeURIComponent(searchText)}`, { signal: controller.signal })
-        .then(res => (res.ok ? res.json() : null))
-        .then(data => data?.notices && setArchiveResults({ query: searchText, notices: data.notices }))
+      searchHistory(searchText, controller.signal)
+        .then(found => found && setArchiveResults({ query: searchText, notices: found }))
         .catch(() => {});
     }, 400);
     return () => {
@@ -55,10 +55,9 @@ export function useLinkedNotice(initialId: string | null, { notices, savedNotice
     const target = notices.find(n => n.id === pendingNoticeId) ?? savedNotices.find(n => n.id === pendingNoticeId);
     if (target) { onFound(target); setPendingNoticeId(null); return; }
     const controller = new AbortController();
-    fetch(`/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify([pendingNoticeId]))}`, { signal: controller.signal })
-      .then(async res => { if (!res.ok) throw new Error('Unavailable'); return res.json(); })
-      .then(data => {
-        const notice = data.notices?.find((n: RegulatoryNotice) => n.id === pendingNoticeId);
+    noticesById([pendingNoticeId], controller.signal)
+      .then(found => {
+        const notice = found.find(n => n.id === pendingNoticeId);
         if (notice) onFound(notice);
         else onMessage('This notice was not found in the feed or available history');
         setPendingNoticeId(null);

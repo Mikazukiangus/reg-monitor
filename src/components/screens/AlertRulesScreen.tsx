@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
 import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
 import { DEFAULT_RULES, ruleMatches } from '../../lib/alertRules';
 import { readAlertRules, writeAlertRules } from '../../lib/preferences';
 import { copyText } from '../../lib/urlState';
-
-interface DigestInfo {
-  rules: CustomAlertRule[];
-  schedule: string;
-  configured: boolean;
-}
+import { useDigestInfo } from '../../hooks/useDigestInfo';
 
 interface AlertRulesScreenProps {
   notices: RegulatoryNotice[];
@@ -31,8 +26,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
   const [ruleName, setRuleName] = useState('');
   const [minImpact, setMinImpact] = useState(7);
   const [keywords, setKeywords] = useState('');
-  const [digest, setDigest] = useState<DigestInfo | null>(null);
-  const [digestError, setDigestError] = useState(false);
+  const { digest, digestError } = useDigestInfo();
   const [copied, setCopied] = useState(false);
   // Phones: the digest panel and each rule's criteria stay closed until asked for
   const [digestOpen, setDigestOpen] = useState(false);
@@ -42,13 +36,6 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
     if (!next.delete(id)) next.add(id);
     return next;
   });
-
-  useEffect(() => {
-    fetch('/api/digest/rules')
-      .then(res => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then(data => setDigest({ rules: data.rules, schedule: data.schedule, configured: data.configured }))
-      .catch(() => setDigestError(true));
-  }, []);
 
   const handleCopyRules = async () => {
     const ok = await copyText(JSON.stringify(rules.map(({ id, name, jurisdictions, minImpact, keywords, enabled }) => ({ id, name, jurisdictions, minImpact, keywords, enabled })), null, 2));
