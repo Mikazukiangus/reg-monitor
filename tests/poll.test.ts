@@ -30,7 +30,7 @@ globalThis.fetch = (async (input: any) => {
 }) as typeof fetch;
 
 const { SOURCES } = await import('../server/sources/index.ts');
-const { pollSources } = await import('../server.ts');
+const { pollSources } = await import('../server/ingest.ts');
 
 test('the first check fills the history, reading further back where the list was full', async () => {
   const { results, failed } = await pollSources();
