@@ -1,0 +1,29 @@
+# Pull requests that keep the npm packages patched. Once a week, the patch
+# releases of package.json's dependencies arrive together in one pull request,
+# changing only package-lock.json within the ranges package.json already allows.
+# Minor and major releases are left for a deliberate update (they have changed
+# PDF.js, Vite and the TypeScript compiler before). Fixes for known
+# vulnerabilities come in their own grouped pull request as soon as GitHub
+# finds them, once Dependabot security updates are enabled in the repository's
+# settings. CI checks every pull request, and nothing merges without review.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Asia/Singapore
+    versioning-strategy: lockfile-only
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+    groups:
+      patches:
+        applies-to: version-updates
+        patterns: ["*"]
+      security-fixes:
+        applies-to: security-updates
+        patterns: ["*"]
+    open-pull-requests-limit: 2
