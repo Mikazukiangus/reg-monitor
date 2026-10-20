@@ -36,6 +36,7 @@ const { sgxPublicUrl } = await import('../server/sources/sgx.ts');
 const { finraTitle } = await import('../server/sources/finra.ts');
 const { parseMsitPressReleases } = await import('../server/sources/msit.ts');
 const { severityOf } = await import('../shared/impact.ts');
+const { noticeProblem } = await import('../src/lib/noticeShape.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
@@ -66,6 +67,8 @@ for (const source of SOURCES) {
       assert.ok(n.tagging?.impact?.length, `no score reasons for ${n.id}`);
       assert.match(n.tagging!.impact!.at(-1)!, /: [+]?[\d.]+$/);
       assert.equal(n.severity, severityOf(n.impactScore));
+      // The page's check of the feed reply (src/api/feedReply.ts) accepts it
+      assert.equal(noticeProblem(JSON.parse(JSON.stringify(n))), null, n.id);
     }
   });
 

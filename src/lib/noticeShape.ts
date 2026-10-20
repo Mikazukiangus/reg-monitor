@@ -1,0 +1,33 @@
+// Whether a value from outside the page (a feed reply, or a notice saved in
+// this browser) has the fields the screens read without checking. Sector
+// names should be brought up to date first (withCurrentSectorNames).
+import type { RegulatoryNotice } from '../../shared/regulatory';
+import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
+
+const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
+const SEVERITIES = ['critical', 'high', 'info'];
+const isString = (v: unknown): v is string => typeof v === 'string';
+const allStrings = (v: unknown) => Array.isArray(v) && v.every(isString);
+
+// The first field that is missing or of the wrong kind, or null when the notice can be shown
+export function noticeProblem(n: any): string | null {
+  if (!n || typeof n !== 'object' || Array.isArray(n)) return 'not an object';
+  for (const field of ['id', 'title', 'regulator', 'ref', 'jurisdiction', 'type', 'issuedTimeAgo'] as const) {
+    if (!isString(n[field])) return `${field} is not text`;
+  }
+  if (!ALL_JURISDICTIONS.includes(n.jurisdictionCode)) return `unknown jurisdictionCode ${JSON.stringify(n.jurisdictionCode)}`;
+  if (!allStrings(n.tags)) return 'tags is not a list of text';
+  if (!(n.sector in SECTOR_KEYS)) return `unknown sector ${JSON.stringify(n.sector)}`;
+  if (n.sectors && !(Array.isArray(n.sectors) && n.sectors.every((s: string) => s in SECTOR_KEYS))) return 'sectors has an unknown sector';
+  if (!FORMATS.includes(n.format)) return `unknown format ${JSON.stringify(n.format)}`;
+  if (!Number.isFinite(n.impactScore)) return 'impactScore is not a number';
+  if (!isString(n.typeColorClass?.bg) || !isString(n.typeColorClass?.text)) return 'typeColorClass is incomplete';
+  const kp = n.keyPoints;
+  if (kp && !(allStrings(kp.points) && Array.isArray(kp.facts) && kp.facts.every((f: any) => f && isString(f.text)) && Array.isArray(kp.refs))) {
+    return 'keyPoints is incomplete';
+  }
+  if (!SEVERITIES.includes(n.severity)) return `unknown severity ${JSON.stringify(n.severity)}`;
+  return null;
+}
+
+export const isNotice = (n: unknown): n is RegulatoryNotice => noticeProblem(n) === null;

@@ -1,7 +1,7 @@
 // What this browser remembers: saved notices, saved views, alert rules, the
 // feed's layout and the theme. Kept in this browser only; nothing is sent to the server.
 import type { CustomAlertRule, RegulatoryNotice } from '../../shared/regulatory';
-import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
+import { isNotice } from './noticeShape';
 import { withCurrentSectorNames } from '../../shared/tagging';
 import { DEFAULT_RULES } from '../../shared/alertRules';
 
@@ -21,17 +21,7 @@ function write(key: string, value: unknown[], storage?: StorageLike): boolean {
   catch { return false; }
 }
 export function readBookmarks(storage?: StorageLike): RegulatoryNotice[] {
-  return read(BOOKMARKS_KEY, storage).map(withCurrentSectorNames).filter((n: any): n is RegulatoryNotice =>
-    n && typeof n.id === 'string' && typeof n.title === 'string' && typeof n.regulator === 'string' &&
-    ALL_JURISDICTIONS.includes(n.jurisdictionCode) && Array.isArray(n.tags) && n.tags.every((t: unknown) => typeof t === 'string') &&
-    n.sector in SECTOR_KEYS && (!n.sectors || (Array.isArray(n.sectors) && n.sectors.every((t: string) => t in SECTOR_KEYS))) &&
-    ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'].includes(n.format) &&
-    typeof n.ref === 'string' && typeof n.jurisdiction === 'string' && typeof n.type === 'string' &&
-    Number.isFinite(n.impactScore) && typeof n.issuedTimeAgo === 'string' &&
-    typeof n.typeColorClass?.bg === 'string' && typeof n.typeColorClass?.text === 'string' &&
-    (!n.keyPoints || (Array.isArray(n.keyPoints.points) && n.keyPoints.points.every((p: unknown) => typeof p === 'string') &&
-      Array.isArray(n.keyPoints.facts) && n.keyPoints.facts.every((f: any) => f && typeof f.text === 'string') && Array.isArray(n.keyPoints.refs))) &&
-    ['critical', 'high', 'info'].includes(n.severity)).slice(0, 200);
+  return read(BOOKMARKS_KEY, storage).map(withCurrentSectorNames).filter(isNotice).slice(0, 200);
 }
 export const writeBookmarks = (notices: RegulatoryNotice[], storage?: StorageLike) => write(BOOKMARKS_KEY, notices, storage);
 

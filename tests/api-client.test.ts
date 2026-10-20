@@ -26,7 +26,13 @@ test('the feed: a forced refresh posts, and the reply says rate limited, failed 
   assert.deepEqual(await fetchFeed(false), { kind: 'failed', status: 503 });
 
   stubFetch(() => json({ notices: [], lastSync: '2026-10-19T00:00:00Z' }, { headers: { 'X-RegSonar-Saved': '2026-10-18T00:00:00Z' } }));
-  assert.deepEqual(await fetchFeed(false), { kind: 'ok', data: { notices: [], lastSync: '2026-10-19T00:00:00Z' }, savedAt: '2026-10-18T00:00:00Z' });
+  assert.deepEqual(await fetchFeed(false), { kind: 'ok', data: { notices: [], lastSync: '2026-10-19T00:00:00Z' }, savedAt: '2026-10-18T00:00:00Z', leftOut: [] });
+
+  // A reply that is not JSON, or not a feed, is reported as malformed rather than as an unreachable server
+  stubFetch(() => new Response('<html>Gateway error</html>', { status: 200 }));
+  assert.deepEqual(await fetchFeed(false), { kind: 'malformed', problem: 'the reply is not JSON' });
+  stubFetch(() => json({ success: true, notice: [] }));
+  assert.deepEqual(await fetchFeed(false), { kind: 'malformed', problem: 'the reply has no notices list' });
 });
 
 test('notices by id are asked for 50 at a time, and a failed batch stops after the ones found', async () => {

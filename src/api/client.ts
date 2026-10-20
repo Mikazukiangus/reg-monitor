@@ -2,6 +2,7 @@
 // reply as a typed result. Hooks decide what to show; nothing here touches
 // React state or the page.
 import type { CheckSummary, CustomAlertRule, EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
+import { checkFeedReply } from './feedReply';
 
 export interface SourceSyncResult {
   endpointId: string;
@@ -27,8 +28,11 @@ export interface FeedData {
 }
 
 export type SyncReply =
-  // savedAt: set when the service worker answered with the copy saved on this device
-  | { kind: 'ok'; data: FeedData; savedAt: string | null }
+  // savedAt: set when the service worker answered with the copy saved on this device.
+  // leftOut: a line for each notice, endpoint or source result too malformed to show.
+  | { kind: 'ok'; data: FeedData; savedAt: string | null; leftOut: string[] }
+  // The reply could not be read as a feed (see feedReply.ts); nothing in it is used
+  | { kind: 'malformed'; problem: string }
   // The server allows each visitor a few refreshes a minute
   | { kind: 'rateLimited'; retryAfter: string | null }
   | { kind: 'failed'; status: number };
@@ -39,7 +43,15 @@ export async function fetchFeed(force: boolean): Promise<SyncReply> {
   const res = await fetch('/api/feeds/sync', { method: force ? 'POST' : 'GET' });
   if (res.status === 429) return { kind: 'rateLimited', retryAfter: res.headers.get('Retry-After') };
   if (!res.ok) return { kind: 'failed', status: res.status };
-  return { kind: 'ok', data: await res.json(), savedAt: res.headers.get('X-RegSonar-Saved') };
+  let body: unknown;
+  try {
+    body = await res.json();
+  } catch {
+    return { kind: 'malformed', problem: 'the reply is not JSON' };
+  }
+  const checked = checkFeedReply(body);
+  if (!checked.ok) return { kind: 'malformed', problem: checked.problem };
+  return { kind: 'ok', data: checked.data, savedAt: res.headers.get('X-RegSonar-Saved'), leftOut: checked.leftOut };
 }
 
 // Each endpoint's status check, without a sync result; null when the server

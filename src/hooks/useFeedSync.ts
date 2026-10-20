@@ -7,7 +7,6 @@ import { ENDPOINT_CATALOG } from '../../shared/endpoints';
 import { browserLogger } from '../../shared/logging';
 import { sgtTime } from '../../shared/derived';
 import { recordVisit } from '../lib/visits';
-import { withCurrentSectorNames } from '../../shared/tagging';
 import type { EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
 
 export type { ArchiveStatus };
@@ -71,12 +70,22 @@ export function useFeedSync(onMessage: (message: string) => void) {
         onMessage(`Refreshed several times just now. Try again in ${wait ? `${wait} seconds` : 'a minute'}.`);
         return null;
       }
+      // A reply that cannot be read as a feed: the notices shown stay as they are
+      if (reply.kind === 'malformed') {
+        browserLogger.warn('[RegSonar] Feed reply refused:', reply.problem);
+        setSyncError('The feed server sent a reply this page could not read.');
+        return null;
+      }
       if (reply.kind === 'ok') {
         const { data } = reply;
-        if (data.notices && Array.isArray(data.notices)) {
+        if (reply.leftOut.length > 0) {
+          browserLogger.warn(`[RegSonar] Left out ${reply.leftOut.length} malformed item(s) of the feed reply:`, reply.leftOut.slice(0, 5));
+        }
+        if (data.notices) {
           // The server returns the full current live set, so replace rather than append.
-          // Offline, it is the copy saved on this device, perhaps under old sector names.
-          setNotices(data.notices.map(withCurrentSectorNames));
+          // Offline, it is the copy saved on this device; its sector names were
+          // brought up to date when the reply was checked.
+          setNotices(data.notices);
           if (data.archive) setArchive(data.archive);
           recordVisit(data.notices.map(n => n.id));
         }
