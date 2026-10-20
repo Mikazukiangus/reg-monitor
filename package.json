@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "npm@11.17.0",
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.12 <25"
   },
   "scripts": {
     "dev": "tsx server.ts",
