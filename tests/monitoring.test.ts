@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { buildNoticeCsv, exportNotice } from '../src/lib/exports';
 import { defaultViewState, parseViewState, serializeViewState } from '../src/lib/urlState';
-import { deriveNotifications, publicationTime, publishedInLastDays } from '../src/lib/derived';
+import { deriveNotifications, publicationTime, publishedInLastDays } from '../shared/derived';
 import { paginationPages, readAlertRules, readBookmarks, readSavedViews, writeAlertRules, writeBookmarks, writeSavedViews } from '../src/lib/preferences';
-import { DEFAULT_RULES } from '../src/lib/alertRules';
-import type { RegulatoryNotice } from '../src/types/regulatory';
+import { DEFAULT_RULES } from '../shared/alertRules';
+import type { RegulatoryNotice } from '../shared/regulatory';
 
 const notice: RegulatoryNotice = {
   id: 'fca-older', ref: 'FCA "notice"', title: '=Older publication', regulator: 'UK FCA', jurisdiction: 'UNITED KINGDOM',
@@ -108,7 +108,7 @@ test('bookmarks saved under a renamed sector are kept, under its new name', () =
 test('history endpoints retrieve archived IDs and report actual scheduled-check results', async () => {
   process.env.VERCEL = '1'; process.env.DATABASE_URL = 'pglite';
   process.env.CRON_SECRET = 'monitoring-test-secret';
-  const { getDb, saveNotices, storedNotices, saveScheduledCheck } = await import('../db.ts');
+  const { getDb, saveNotices, storedNotices, saveScheduledCheck } = await import('../server/db.ts');
   const { createApp } = await import('../server.ts');
   const db = (await getDb())!;
   await saveNotices(db, [notice as any]);

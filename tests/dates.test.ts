@@ -5,8 +5,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { documentDates, extractClosingDate } from '../server/document-dates.ts';
 import { pagePublishedDate } from '../server/extract.ts';
-import type { DateKind } from '../src/types/regulatory.ts';
-import { assessImpact } from '../src/lib/impact.ts';
+import type { DateKind } from '../shared/regulatory.ts';
+import { assessImpact } from '../shared/impact.ts';
 
 process.env.VERCEL = '1';
 delete process.env.DATABASE_URL;

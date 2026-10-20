@@ -1,4 +1,4 @@
-import { isAiRuleNews } from '../../src/lib/aiTopics.js';
+import { isAiRuleNews } from '../../shared/aiTopics.js';
 import { fetchOrThrow } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { lastPathPart } from '../text.js';

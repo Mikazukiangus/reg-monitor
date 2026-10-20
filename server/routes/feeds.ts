@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
-import { logger } from '../../logging.js';
+import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
-import { rateLimit } from '../../src/lib/throttle.js';
+import { rateLimit } from '../throttle.js';
 import { cdnCacheControl } from '../../config.js';
 import { currentFeed, endpointStatus, runScheduledCheck, scheduledCheckStatus } from '../services/feed.js';
 import { cronAuthorized } from './cron.js';

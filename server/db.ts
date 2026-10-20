@@ -3,9 +3,9 @@
 // URL the history is off and the site works from the live feeds alone.
 // DATABASE_URL=pglite runs an in-memory Postgres (PGlite) for local testing.
 import pg from 'pg';
-import { config } from './runtime-config.js';
+import { config } from '../runtime-config.js';
 import { logger } from './logging.js';
-import type { CheckSummary } from './src/types/regulatory.js';
+import type { CheckSummary } from '../shared/regulatory.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;

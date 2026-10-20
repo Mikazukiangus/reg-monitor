@@ -6,7 +6,7 @@ import { countFacets, filterNotices, type FeedFilters, type FilterContext } from
 import { defaultViewState } from '../src/lib/urlState.ts';
 import { createSearchPattern } from '../src/lib/search.ts';
 import { mergeSyncResults } from '../src/hooks/useFeedSync.ts';
-import type { RegulatoryNotice } from '../src/types/regulatory.ts';
+import type { RegulatoryNotice } from '../shared/regulatory.ts';
 
 const notice = (id: string, fields: Partial<RegulatoryNotice> = {}): RegulatoryNotice => ({
   id, ref: id, title: `Notice ${id}`, regulator: 'MAS', jurisdiction: 'SINGAPORE', jurisdictionCode: 'SG',

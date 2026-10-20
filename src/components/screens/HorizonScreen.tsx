@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { RegulatoryNotice } from '../../types/regulatory';
-import { formatDate } from '../../lib/derived';
+import { RegulatoryNotice } from '../../../shared/regulatory';
+import { formatDate } from '../../../shared/derived';
 import { byMonth, dateParts, horizonEvents } from '../../lib/horizon';
 
 interface HorizonScreenProps {

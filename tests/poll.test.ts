@@ -40,7 +40,7 @@ test('the first check fills the history, reading further back where the list was
   assert.ok(full.length > 0, 'some list had 20 or more items');
   assert.ok(full.every(r => r.read > 0));
   assert.ok(results.filter(r => r.read < 20).every(r => !r.backfilled), 'a short list is not read twice');
-  const { getDb, scheduledCheckStatus } = await import('../db.ts');
+  const { getDb, scheduledCheckStatus } = await import('../server/db.ts');
   const status = await scheduledCheckStatus((await getDb())!);
   assert.equal(status.latest?.status, 'completed');
   assert.ok(status.lastCompletedAt);
@@ -65,7 +65,7 @@ test('after an HTTP 429 the site is not asked again for a while', async () => {
 });
 
 test('a stored notice without a date takes the date its page states, once', async () => {
-  const { getDb, saveNotices, storedNotices } = await import('../db.ts');
+  const { getDb, saveNotices, storedNotices } = await import('../server/db.ts');
   const db = (await getDb())!;
   const body = '<p>' + 'The FCA has set out clearer expectations for asset managers about long-term investments. '.repeat(6) + '</p>';
   const dated = 'https://www.fca.org.uk/news/press-releases/dated-example';

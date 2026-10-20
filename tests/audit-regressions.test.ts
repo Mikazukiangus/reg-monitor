@@ -4,10 +4,10 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Highlight } from '../src/components/Highlight';
 import { PdfDossierModal } from '../src/components/modals/PdfDossierModal';
-import { daysUntil, localDay } from '../src/lib/derived';
+import { daysUntil, localDay } from '../shared/derived';
 import { readBookmarks, toggleNoticeBookmark, writeBookmarks } from '../src/lib/preferences';
 import { createSearchPattern, searchTerms } from '../src/lib/search';
-import type { RegulatoryNotice } from '../src/types/regulatory';
+import type { RegulatoryNotice } from '../shared/regulatory';
 
 const archived: RegulatoryNotice = {
   id: 'fca-building-stronger-uk-investment-culture', title: 'Building a stronger UK investment culture',

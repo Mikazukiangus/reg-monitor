@@ -1,8 +1,8 @@
 import React from 'react';
-import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
-import { SECTORS } from '../lib/tagging';
+import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../../shared/regulatory';
+import { SECTORS } from '../../shared/tagging';
 import { STATUS_STYLES } from './modals/LiveEndpointsModal';
-import type { EndpointMetric } from '../types/regulatory';
+import type { EndpointMetric } from '../../shared/regulatory';
 
 // Labels name only the regulators RegSonar actually reads
 const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: string }[] = [

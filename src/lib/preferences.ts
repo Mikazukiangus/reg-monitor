@@ -1,9 +1,9 @@
 // What this browser remembers: saved notices, saved views, alert rules, the
 // feed's layout and the theme. Kept in this browser only; nothing is sent to the server.
-import type { CustomAlertRule, RegulatoryNotice } from '../types/regulatory';
+import type { CustomAlertRule, RegulatoryNotice } from '../../shared/regulatory';
 import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
-import { withCurrentSectorNames } from './tagging';
-import { DEFAULT_RULES } from './alertRules';
+import { withCurrentSectorNames } from '../../shared/tagging';
+import { DEFAULT_RULES } from '../../shared/alertRules';
 
 export interface SavedView { id: string; name: string; query: string }
 interface StorageLike { getItem(key: string): string | null; setItem(key: string, value: string): void }

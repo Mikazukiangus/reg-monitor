@@ -1,6 +1,6 @@
 // Requests to regulator sites: the user agent each site accepts, timeouts,
 // spacing for sites that rate-limit, and reading RSS feeds and paged lists.
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { XMLParser } from 'fast-xml-parser';
 

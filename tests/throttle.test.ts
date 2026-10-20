@@ -1,7 +1,7 @@
-// Limits on the work a visitor can make the server do (src/lib/throttle.ts)
+// Limits on the work a visitor can make the server do (server/throttle.ts)
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rateLimit, reuseFor } from '../src/lib/throttle.ts';
+import { rateLimit, reuseFor } from '../server/throttle.ts';
 
 test('a built result is reused until it is a minute old', async () => {
   let builds = 0;

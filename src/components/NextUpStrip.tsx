@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeadlineItem } from '../types/regulatory';
+import { DeadlineItem } from '../../shared/regulatory';
 
 interface NextUpStripProps {
   nextDeadline?: DeadlineItem;

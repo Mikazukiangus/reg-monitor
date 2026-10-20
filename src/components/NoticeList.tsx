@@ -1,7 +1,7 @@
 import React from 'react';
-import { InstrumentFormat, RegulatoryNotice } from '../types/regulatory';
-import { daysUntil, formatDate, publishedDay } from '../lib/derived';
-import { CRITICAL_SCORE, HIGH_SCORE } from '../lib/impact';
+import { InstrumentFormat, RegulatoryNotice } from '../../shared/regulatory';
+import { daysUntil, formatDate, publishedDay } from '../../shared/derived';
+import { CRITICAL_SCORE, HIGH_SCORE } from '../../shared/impact';
 import { Highlight } from './Highlight';
 
 interface NoticeListProps {

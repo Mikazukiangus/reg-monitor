@@ -1,8 +1,8 @@
 import React from 'react';
 import { STATUS_STYLES } from './modals/LiveEndpointsModal';
-import type { EndpointMetric } from '../types/regulatory';
+import type { EndpointMetric } from '../../shared/regulatory';
 import { agencyName, endpointHealth, percentOf, type FeedFigures } from '../lib/feedStats';
-import { CRITICAL_SCORE } from '../lib/impact';
+import { CRITICAL_SCORE } from '../../shared/impact';
 
 interface KpiRibbonProps {
   onFilterBySeverity?: (severity: string) => void;

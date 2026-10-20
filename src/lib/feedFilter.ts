@@ -1,9 +1,9 @@
 // Which notices the feed shows, and in what order, for the filters chosen,
 // and how many notices fall under each filter choice. Pure, so it is tested
 // without the page.
-import { JurisdictionCode, RegulatoryNotice, SectorDomain, UrgencySeverity } from '../types/regulatory';
-import { publishedDay } from './derived';
-import { SECTORS } from './tagging';
+import { JurisdictionCode, RegulatoryNotice, SectorDomain, UrgencySeverity } from '../../shared/regulatory';
+import { publishedDay } from '../../shared/derived';
+import { SECTORS } from '../../shared/tagging';
 import type { ViewState } from './urlState';
 
 export type FeedFilters = Pick<ViewState,

@@ -1,7 +1,7 @@
 // The live feed, endpoint status and the scheduled check, for the feed routes
-import { logger } from '../../logging.js';
+import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
-import { reuseFor } from '../../src/lib/throttle.js';
+import { reuseFor } from '../throttle.js';
 import { SOURCES } from '../sources/index.js';
 import { getEndpointsHealth } from '../health.js';
 import { pollSources, refreshSource } from '../ingest.js';

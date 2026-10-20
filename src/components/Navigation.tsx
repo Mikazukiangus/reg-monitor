@@ -1,5 +1,5 @@
 import React from 'react';
-import { RegulatoryNotice } from '../types/regulatory';
+import { RegulatoryNotice } from '../../shared/regulatory';
 
 export type ActiveTab =
   | 'feed'

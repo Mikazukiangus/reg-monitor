@@ -1,7 +1,7 @@
 // Notices from the history: search, and lookup by id. `enabled` is false when
 // no history database is set up.
 import { openStore, type StoreArg } from '../store.js';
-import { dedupeByDocument } from '../../src/lib/dedupe.js';
+import { dedupeByDocument } from '../../shared/dedupe.js';
 import { fromArchive } from '../history.js';
 import type { NormalizedNotice } from '../notice.js';
 

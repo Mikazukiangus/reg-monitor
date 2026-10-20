@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../../types/regulatory';
-import { SECTORS } from '../../lib/tagging';
+import { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../../../shared/regulatory';
+import { SECTORS } from '../../../shared/tagging';
 import { RADAR_JURISDICTIONS as JURISDICTIONS, buildRadar, sectorsIn, shownJurisdiction } from '../../lib/radar';
 
 

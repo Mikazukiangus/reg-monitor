@@ -1,6 +1,6 @@
 // Sends email through Resend's API
 import { config } from '../runtime-config.js';
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 
 export async function sendWithResend(options: { apiKey: string; from: string; to: readonly string[]; subject: string; html: string; text: string }) {
   const res = await fetch('https://api.resend.com/emails', {

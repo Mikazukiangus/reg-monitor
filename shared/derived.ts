@@ -1,6 +1,6 @@
 // Dashboard data computed from live notices, so every figure traces back to a
 // source document.
-import type { AlertNotification, DeadlineItem, JurisdictionCode, RegulatoryNotice } from '../types/regulatory';
+import type { AlertNotification, DeadlineItem, JurisdictionCode, RegulatoryNotice } from './regulatory';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

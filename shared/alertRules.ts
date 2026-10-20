@@ -1,12 +1,12 @@
 // Alert rules, shared by the Alert Rules screen and the server's email digest
-import type { CustomAlertRule } from '../types/regulatory';
+import type { CustomAlertRule } from './regulatory';
 
 export const DEFAULT_RULES: CustomAlertRule[] = [
   {
     id: 'rule-1',
     name: 'Consultations & Deadlines',
     jurisdictions: ['MAS', 'HKMA', 'SFC', 'PRA', 'SEC', 'SGX', 'ASX', 'FINRA', 'SC Malaysia'],
-    // Open consultations score 7; closed ones 4 (src/lib/impact.ts)
+    // Open consultations score 7; closed ones 4 (shared/impact.ts)
     minImpact: 7,
     keywords: ['consult', 'comments', 'deadline', 'feedback'],
     enabled: true

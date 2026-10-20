@@ -1,6 +1,6 @@
 // Reading the sources: the live feed's cached reads, and the scheduled check
 // that fills the history.
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
 import { randomUUID } from 'crypto';

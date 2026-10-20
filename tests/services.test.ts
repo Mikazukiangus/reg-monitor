@@ -13,7 +13,7 @@ const { scheduledCheckStatus } = await import('../server/services/feed.ts');
 type NoticeStore = import('../server/store.ts').NoticeStore;
 type DigestDeps = import('../server/services/digest.ts').DigestDeps;
 type NormalizedNotice = import('../server/notice.ts').NormalizedNotice;
-type CustomAlertRule = import('../src/types/regulatory.ts').CustomAlertRule;
+type CustomAlertRule = import('../shared/regulatory.ts').CustomAlertRule;
 
 const notice = (id: string, fields: Partial<NormalizedNotice> = {}): NormalizedNotice => ({
   id, ref: id, title: `SFC fines broker ${id}`, regulator: 'SFC', jurisdiction: 'HONG KONG', jurisdictionCode: 'HK',

@@ -1,6 +1,6 @@
 // Enforcement publications, newest first, and how many each regulator has
-import type { RegulatoryNotice } from '../types/regulatory';
-import { sortNewestFirst } from './derived';
+import type { RegulatoryNotice } from '../../shared/regulatory';
+import { sortNewestFirst } from '../../shared/derived';
 
 export function enforcementRecords(notices: RegulatoryNotice[]): RegulatoryNotice[] {
   return sortNewestFirst(notices.filter(n => n.format === 'Enforcement'));

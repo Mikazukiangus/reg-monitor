@@ -1,4 +1,4 @@
-import { isAiRuleNews } from '../../src/lib/aiTopics.js';
+import { isAiRuleNews } from '../../shared/aiTopics.js';
 import { pagesFor, readPages } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { isoDay, plainText, newestFirst, uniqueBy, zonedToIso } from '../text.js';

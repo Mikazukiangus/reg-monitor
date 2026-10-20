@@ -1,6 +1,6 @@
 // Status checks of the endpoints: each is asked once, and what happened is
 // reported as it was (HTTP status, firewall or maintenance pages, timeouts).
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { politeFetch, RateLimitedError, FETCH_TIMEOUT_MS } from './http.js';
 import { type EndpointDefinition, ENDPOINTS } from './sources/index.js';

@@ -1,6 +1,6 @@
 // The files the page offers: notices as CSV, JSON or a dossier text file,
 // and a notice's gap checklist as CSV. Pure text; src/lib/download.ts saves it.
-import type { RegulatoryNotice } from '../types/regulatory';
+import type { RegulatoryNotice } from '../../shared/regulatory';
 
 export function exportNotice(n: RegulatoryNotice, includeKeyPoints: boolean) {
   return {

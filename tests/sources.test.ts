@@ -35,7 +35,7 @@ const { tagNotice } = await import('../server/notice.ts');
 const { sgxPublicUrl } = await import('../server/sources/sgx.ts');
 const { finraTitle } = await import('../server/sources/finra.ts');
 const { parseMsitPressReleases } = await import('../server/sources/msit.ts');
-const { severityOf } = await import('../src/lib/impact.ts');
+const { severityOf } = await import('../shared/impact.ts');
 
 const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];

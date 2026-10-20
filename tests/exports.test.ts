@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildDossierText, buildGapCsv, buildNoticeJson, exportFilename } from '../src/lib/exports.ts';
 import { readTheme, writeTheme } from '../src/lib/preferences.ts';
-import type { RegulatoryNotice } from '../src/types/regulatory.ts';
+import type { RegulatoryNotice } from '../shared/regulatory.ts';
 
 const notice = {
   id: 'mas-1', ref: 'MAS-1', title: 'Consultation on stablecoin reserves', regulator: 'MAS', jurisdiction: 'SINGAPORE', jurisdictionCode: 'SG',

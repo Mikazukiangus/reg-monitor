@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { useDialog } from '../useDialog';
 import { buildDossierText } from '../../lib/exports';
 import { FILE_TYPES, saveFile } from '../../lib/download';
-import { RegulatoryNotice } from '../../types/regulatory';
-import { daysUntil, formatDate, localDay, publishedDay } from '../../lib/derived';
+import { RegulatoryNotice } from '../../../shared/regulatory';
+import { daysUntil, formatDate, localDay, publishedDay } from '../../../shared/derived';
 import { noticeTimeline } from '../../lib/timeline';
 
 interface PdfDossierModalProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { STATUS_STYLES } from './modals/LiveEndpointsModal';
-import type { EndpointMetric } from '../types/regulatory';
+import type { EndpointMetric } from '../../shared/regulatory';
 
 interface FooterProps {
   onOpenAuditLog: () => void;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
 import { buildGapCsv } from '../../lib/exports';
 import { FILE_TYPES, saveFile } from '../../lib/download';
-import { RegulatoryNotice } from '../../types/regulatory';
+import { RegulatoryNotice } from '../../../shared/regulatory';
 
 interface GapAnalysisModalProps {
   notice: RegulatoryNotice;

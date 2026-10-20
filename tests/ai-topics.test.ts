@@ -2,7 +2,7 @@
 // titles are from the feeds RegSonar reads.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { isAiRuleNews, mentionsAi } from '../src/lib/aiTopics.ts';
+import { isAiRuleNews, mentionsAi } from '../shared/aiTopics.ts';
 
 const RULE_NEWS = [
   'Governor Newsom signs new law to protect workers, require disclosures on AI-generated advertising',

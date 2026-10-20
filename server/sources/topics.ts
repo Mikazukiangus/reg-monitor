@@ -1,6 +1,6 @@
 // Notices from the sources on AI rules and data privacy, tagged with their topics.
-import { isAiRuleNews } from '../../src/lib/aiTopics.js';
-import { mentionsPrivacy } from '../../src/lib/privacyTopics.js';
+import { isAiRuleNews } from '../../shared/aiTopics.js';
+import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 
 export interface TopicItem {

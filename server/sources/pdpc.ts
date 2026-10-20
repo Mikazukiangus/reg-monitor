@@ -1,5 +1,5 @@
-import { logger } from '../../logging.js';
-import { SPEECH } from '../../src/lib/tagging.js';
+import { logger } from '../logging.js';
+import { SPEECH } from '../../shared/tagging.js';
 import { pagesFor, fetchOrThrow, describeError } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { plainText, isoDay, newestFirst, uniqueBy, zonedToIso } from '../text.js';

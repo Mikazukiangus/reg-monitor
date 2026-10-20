@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { noticesByIdBatches } from '../api/client';
 import { readBookmarks, toggleNoticeBookmark, writeBookmarks } from '../lib/preferences';
-import { RegulatoryNotice } from '../types/regulatory';
+import { RegulatoryNotice } from '../../shared/regulatory';
 
 interface Options {
   notices: RegulatoryNotice[];

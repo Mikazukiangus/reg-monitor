@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { logger } from '../../logging.js';
+import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
 import { cdnCacheControl } from '../../config.js';
 import { noticesByIds, searchNotices } from '../services/notices.js';

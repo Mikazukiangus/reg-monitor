@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { logger } from './logging.js';
+import { logger } from './server/logging.js';
 import { config } from './runtime-config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';

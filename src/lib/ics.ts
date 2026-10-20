@@ -1,7 +1,7 @@
 // iCalendar (.ics) export of dates found in notices, as all-day events that
 // Outlook, Google Calendar and Apple Calendar can import.
-import { RegulatoryNotice } from '../types/regulatory';
-import { daysUntil } from './derived';
+import { RegulatoryNotice } from '../../shared/regulatory';
+import { daysUntil } from '../../shared/derived';
 
 function escapeText(text: string): string {
   return text.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');

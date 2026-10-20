@@ -1,6 +1,6 @@
 // Dates a document states for itself, found by rules: when comments close,
 // when it takes effect, when firms must comply, and dated statements
-import type { DateKind, DocumentDate, KeyFact } from '../src/types/regulatory.js';
+import type { DateKind, DocumentDate, KeyFact } from '../shared/regulatory.js';
 import { tokenize } from './sentences.js';
 
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];

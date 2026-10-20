@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
-import type { EndpointMetric, EndpointStatus } from '../../types/regulatory';
+import type { EndpointMetric, EndpointStatus } from '../../../shared/regulatory';
 
 export const STATUS_STYLES: Record<EndpointStatus, { badge: string; text: string; dot: string }> = {
   Operational: { badge: 'bg-green-tint text-green border-green-line', text: 'text-green', dot: 'bg-green-dot' },

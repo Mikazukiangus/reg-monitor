@@ -1,10 +1,10 @@
 // The daily email digest: read the sources, pick the notices published on one
 // Singapore day that match the digest rules, and email them to the site owner.
-import { logger } from '../../logging.js';
+import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
-import type { CustomAlertRule } from '../../src/types/regulatory.js';
+import type { CustomAlertRule } from '../../shared/regulatory.js';
 import { DIGEST_RULES } from '../../digest-rules.js';
-import { dedupeByDocument } from '../../src/lib/dedupe.js';
+import { dedupeByDocument } from '../../shared/dedupe.js';
 import type { NormalizedNotice } from '../notice.js';
 import { SOURCES } from '../sources/index.js';
 import { pollSources, refreshSource } from '../ingest.js';

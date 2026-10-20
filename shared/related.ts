@@ -1,7 +1,7 @@
 // Links a consultation to the conclusions or response published later, and
 // back. Regulators don't publish this link in a machine-readable form, so it
 // is matched by regulator and title words, and labelled as such on the site.
-import type { RelatedLink } from '../types/regulatory';
+import type { RelatedLink } from './regulatory';
 
 export interface RelatedCandidate {
   id: string;

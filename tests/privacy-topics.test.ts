@@ -3,7 +3,7 @@
 // the feeds RegSonar reads.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mentionsPrivacy } from '../src/lib/privacyTopics.ts';
+import { mentionsPrivacy } from '../shared/privacyTopics.ts';
 
 const PRIVACY = [
   'FTC Finalizes Changes to Children’s Privacy Rule',

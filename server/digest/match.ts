@@ -1,7 +1,7 @@
 // Which notices go in the daily email digest: those published on the previous
 // Singapore day that match the rules in digest-rules.ts.
-import { ruleMatches, MatchableNotice } from '../../src/lib/alertRules.js';
-import type { CustomAlertRule } from '../../src/types/regulatory.js';
+import { ruleMatches, MatchableNotice } from '../../shared/alertRules.js';
+import type { CustomAlertRule } from '../../shared/regulatory.js';
 
 export interface DigestNotice extends MatchableNotice {
   id: string;

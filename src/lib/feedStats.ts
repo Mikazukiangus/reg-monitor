@@ -1,8 +1,8 @@
 // The feed's headline figures and source status, worked out from the notices
 // and endpoints loaded. Pure, so the rules are tested without the page.
-import type { EndpointMetric, EndpointStatus, RegulatoryNotice } from '../types/regulatory';
-import { daysUntil, publishedInLastDays } from './derived';
-import { commentsClosed } from './impact';
+import type { EndpointMetric, EndpointStatus, RegulatoryNotice } from '../../shared/regulatory';
+import { daysUntil, publishedInLastDays } from '../../shared/derived';
+import { commentsClosed } from '../../shared/impact';
 
 // "Last 7 days" and "closing soon" on the headline tiles
 export const RECENT_DAYS = 7;

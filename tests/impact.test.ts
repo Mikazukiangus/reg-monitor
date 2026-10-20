@@ -1,9 +1,9 @@
-// The impact rubric (src/lib/impact.ts), on real notices from the sources.
+// The impact rubric (shared/impact.ts), on real notices from the sources.
 // Each example gives the score a reader applying the rubric would give.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { assessImpact, commentsClosed, severityOf } from '../src/lib/impact.ts';
-import { classifyFormat } from '../src/lib/tagging.ts';
+import { assessImpact, commentsClosed, severityOf } from '../shared/impact.ts';
+import { classifyFormat } from '../shared/tagging.ts';
 
 const TODAY = new Date('2026-10-08T05:00:00Z');
 

@@ -43,7 +43,7 @@ masking to protect application runtime logs.
 
 ## Log events through the shared logger
 
-Server code imports `logger` from `logging.ts`:
+Server code imports `logger` from `server/logging.ts`:
 
 ```ts
 import { logger } from './logging.js';
@@ -63,7 +63,7 @@ JWTs and private-key blocks. Error output includes sanitized name/message/code/c
 without raw stacks, request bodies or arbitrary Error fields. Control characters
 are escaped to prevent forged log lines. Inputs are not mutated.
 
-For browser diagnostics, use `browserLogger` from `src/lib/logging.ts`; it has the
+For browser diagnostics, use `browserLogger` from `shared/logging.ts`; it has the
 format-based sanitizer and receives no server secret values. Never import the
 server logger or runtime configuration into `src/`.
 

@@ -3,7 +3,7 @@
 import dotenv from 'dotenv';
 import { createConfig } from './config.js';
 
-// Load before constructing the singleton, including when db.ts is imported
+// Load before constructing the singleton, including when server/db.ts is imported
 // directly. Existing process settings win over the local .env file.
 dotenv.config({ quiet: true });
 

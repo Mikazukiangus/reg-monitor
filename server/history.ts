@@ -1,10 +1,10 @@
 // Notices read back from the history database, and the live feed with recent
 // notices from the history added and related notices linked.
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { historyConfigured, openStore, type StoredNotice, type StoreArg } from './store.js';
-import { findRelated, RelatedCandidate } from '../src/lib/related.js';
-import { dedupeByDocument } from '../src/lib/dedupe.js';
+import { findRelated, RelatedCandidate } from '../shared/related.js';
+import { dedupeByDocument } from '../shared/dedupe.js';
 import { type NormalizedNotice, tagNotice, formatOf, getRelativeTime } from './notice.js';
 import { closingDateFields } from './text.js';
 import { LINK_ONLY } from './sources/us-feeds.js';

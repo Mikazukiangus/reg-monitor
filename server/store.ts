@@ -5,8 +5,8 @@
 import {
   getDb, databaseUrl, saveNotices, recentNotices, searchNotices, consultationCandidates, undatedNotices,
   archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck
-} from '../db.js';
-import type { RelatedCandidate } from '../src/lib/related.js';
+} from './db.js';
+import type { RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
 
 // A notice as stored: without what is worked out when it is read back (the

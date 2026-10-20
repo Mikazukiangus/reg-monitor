@@ -1,8 +1,8 @@
 // Upcoming dates for the Regulatory Horizon: each notice's deadline that is
 // still ahead, with the sentence from the source that names it, by quarter
 // and by month. Pure, so it is tested without the page.
-import type { RegulatoryNotice } from '../types/regulatory';
-import { daysUntil } from './derived';
+import type { RegulatoryNotice } from '../../shared/regulatory';
+import { daysUntil } from '../../shared/derived';
 
 export interface HorizonEvent {
   notice: RegulatoryNotice;

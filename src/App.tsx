@@ -20,7 +20,7 @@ import { PdfDossierModal } from './components/modals/PdfDossierModal';
 import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal } from './components/modals/LiveEndpointsModal';
 
-import { deriveDeadlines, deriveNotifications, sortNewestFirst } from './lib/derived';
+import { deriveDeadlines, deriveNotifications, sortNewestFirst } from '../shared/derived';
 import { buildIcs, calendarNotices } from './lib/ics';
 import { FILE_TYPES, saveFile } from './lib/download';
 import { copyText, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState } from './lib/urlState';
@@ -32,7 +32,7 @@ import { useFeedFilters } from './hooks/useFeedFilters';
 import { usePagination } from './hooks/usePagination';
 import { useBookmarks } from './hooks/useBookmarks';
 import { useHistorySearch, useLinkedNotice } from './hooks/useHistorySearch';
-import { RegulatoryNotice } from './types/regulatory';
+import { RegulatoryNotice } from '../shared/regulatory';
 
 export default function App() {
   // The view in the URL when the page opened (a shared link, or a reload)

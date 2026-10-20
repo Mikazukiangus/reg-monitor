@@ -3,7 +3,7 @@
 // history when it is not in the feed
 import React, { useMemo, useState } from 'react';
 import { noticesById, searchHistory } from '../api/client';
-import { RegulatoryNotice } from '../types/regulatory';
+import { RegulatoryNotice } from '../../shared/regulatory';
 import type { ArchiveStatus } from './useFeedSync';
 
 export function useHistorySearch(searchText: string, archive: ArchiveStatus) {

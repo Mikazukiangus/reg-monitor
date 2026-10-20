@@ -1,6 +1,6 @@
 // Every source the server reads, and the address each endpoint's status is
 // checked at. One file per regulator in this folder holds its adapter.
-import { ENDPOINT_CATALOG, type EndpointId, type EndpointInfo } from '../../src/lib/endpoints.js';
+import { ENDPOINT_CATALOG, type EndpointId, type EndpointInfo } from '../../shared/endpoints.js';
 import { type NormalizedNotice, tagNotice } from '../notice.js';
 import { FEDERAL_REGISTER_AI, fetchFederalRegister, fetchFederalRegisterAi } from './federal-register.js';
 import { fetchFcaFeed } from './fca.js';
@@ -113,7 +113,7 @@ const SOURCE_LIST: SourceDefinition[] = [
   { endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases },
   // Rules for artificial intelligence, from the official source in each
   // jurisdiction that makes or enforces them. General government feeds are
-  // narrowed to items about AI rules (src/lib/aiTopics.ts), so a read of one
+  // narrowed to items about AI rules (shared/aiTopics.ts), so a read of one
   // may find none.
   { endpointId: 'ec-ai', name: 'European Commission AI News', fetch: fetchEcAiNews, narrowed: true },
   { endpointId: 'govuk-ai', name: 'UK DSIT & AI Security Institute', fetch: fetchUkAiPolicy, narrowed: true },
@@ -129,7 +129,7 @@ const SOURCE_LIST: SourceDefinition[] = [
   // protection authority of each jurisdiction. A privacy regulator's own news
   // is kept whole, less speeches, events and procurement notices; feeds that
   // also cover other work (the FTC's and the OAIC's, China's policy library)
-  // are narrowed by src/lib/privacyTopics.ts. Every notice from these sources
+  // are narrowed by shared/privacyTopics.ts. Every notice from these sources
   // is tagged "Data privacy".
   { endpointId: 'ico', name: 'UK ICO News', fetch: fetchIcoNews },
   { endpointId: 'edpb', name: 'EDPB News', fetch: fetchEdpbNews },

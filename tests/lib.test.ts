@@ -5,11 +5,11 @@ import { createHash } from 'crypto';
 import { readdirSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import { extractClosingDate } from '../server/document-dates.ts';
-import { dedupeByDocument } from '../src/lib/dedupe.ts';
-import { ruleMatches } from '../src/lib/alertRules.ts';
-import { findRelated } from '../src/lib/related.ts';
+import { dedupeByDocument } from '../shared/dedupe.ts';
+import { ruleMatches } from '../shared/alertRules.ts';
+import { findRelated } from '../shared/related.ts';
 import { noticeTimeline } from '../src/lib/timeline.ts';
-import { publishedDay } from '../src/lib/derived.ts';
+import { publishedDay } from '../shared/derived.ts';
 import { buildIcs } from '../src/lib/ics.ts';
 import { defaultViewState, parseViewState, serializeViewState } from '../src/lib/urlState.ts';
 import { matchDigest, singaporeDate } from '../server/digest/match.ts';
@@ -150,7 +150,7 @@ test('every module the server loads uses .js on its relative imports', () => {
     }
   };
   visit('api/index.ts');
-  assert.ok(seen.has(path.join('src', 'lib', 'impact.ts')), 'the walk reached src/lib');
+  assert.ok(seen.has(path.join('shared', 'impact.ts')), 'the walk reached shared/');
 });
 
 // Icon names in the page's source: the text of each icon span, names chosen

@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { logger } from '../../logging.js';
+import { logger } from '../logging.js';
 import { digestInfo, runDigest } from '../services/digest.js';
 import { cronAuthorized } from './cron.js';
 

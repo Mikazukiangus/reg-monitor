@@ -1,7 +1,7 @@
 // The site's own API, as the browser uses it: each request's address, and its
 // reply as a typed result. Hooks decide what to show; nothing here touches
 // React state or the page.
-import type { CheckSummary, CustomAlertRule, EndpointMetric, RegulatoryNotice } from '../types/regulatory';
+import type { CheckSummary, CustomAlertRule, EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
 
 export interface SourceSyncResult {
   endpointId: string;

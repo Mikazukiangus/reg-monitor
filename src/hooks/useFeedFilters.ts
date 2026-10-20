@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { createSearchPattern, searchTerms } from '../lib/search';
 import { defaultViewState, type HeaderJurisdiction, type SortOption, type ViewState } from '../lib/urlState';
-import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
+import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../../shared/regulatory';
 
 export function useFeedFilters(initialView: ViewState) {
   // Search & Global Jurisdiction Filter

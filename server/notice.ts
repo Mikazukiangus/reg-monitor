@@ -1,9 +1,9 @@
 // The notice the server builds, and its tags: sector, format, type colour
 // and impact score, set the same way for every source and stored copy.
-import { classifySectors, classifyFormat, RENAMED_SECTORS, SECTORS } from '../src/lib/tagging.js';
-import { assessImpact, severityOf } from '../src/lib/impact.js';
-import type { SectorDomain, InstrumentFormat, RegulatoryNotice } from '../src/types/regulatory.js';
-import { publicationTime } from '../src/lib/derived.js';
+import { classifySectors, classifyFormat, RENAMED_SECTORS, SECTORS } from '../shared/tagging.js';
+import { assessImpact, severityOf } from '../shared/impact.js';
+import type { SectorDomain, InstrumentFormat, RegulatoryNotice } from '../shared/regulatory.js';
+import { publicationTime } from '../shared/derived.js';
 
 // A notice as the server builds it: the browser's notice without the fields
 // only the browser sets
@@ -13,7 +13,7 @@ export type NormalizedNotice = Omit<RegulatoryNotice, 'bookmarked' | 'savedCopy'
 export const getRelativeTime = publicationTime;
 
 // Helper to determine sector from text
-// Sector and format by keyword rules (src/lib/tagging.ts). Sources call these
+// Sector and format by keyword rules (shared/tagging.ts). Sources call these
 // while parsing; tagNotice then sets every sector with its reasons, using the
 // summary and, once read, the key points.
 export const sectorOf = (text: string): SectorDomain => classifySectors({ title: text }).sectors[0];
@@ -74,6 +74,6 @@ export function getTypeColor(format: string) {
 }
 
 // A first score while a source is read; tagNotice then sets the final score
-// for every notice with the full rubric (src/lib/impact.ts)
+// for every notice with the full rubric (shared/impact.ts)
 export const estimateImpact = (format: InstrumentFormat): number => assessImpact({ format, type: '', title: '' }).score;
 export const severityFor = severityOf;

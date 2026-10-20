@@ -1,7 +1,7 @@
 // The feed's view (tab, filters, search, sort and an open notice) kept in the
 // page URL, so a link opens the same view. Only values that differ from the
 // defaults are written, so the plain URL stays clean.
-import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../types/regulatory';
+import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../../shared/regulatory';
 
 export type SortOption = 'Highest Impact Score' | 'Most Recent First' | 'Consultation Deadline';
 export type TabId = 'feed' | 'radar' | 'horizon' | 'enforcement' | 'alert-rules';

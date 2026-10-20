@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RegulatoryNotice } from '../../types/regulatory';
+import { RegulatoryNotice } from '../../../shared/regulatory';
 import { countByRegulator, enforcementRecords } from '../../lib/enforcement';
 
 interface EnforcementScreenProps {

@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { parse } from 'dotenv';
-import { createLogger, createRedactor, REDACTED } from '../src/lib/logging.ts';
+import { createLogger, createRedactor, REDACTED } from '../shared/logging.ts';
 
 test('configured secrets and their encoded forms are removed without changing the input', () => {
   const secret = ['opaque', 'credential', 'canary'].join('/');
@@ -124,7 +124,7 @@ test('the API and captured logs do not expose configured secrets or malformed re
   const env = { ...process.env, ...example, NODE_ENV: 'development', DATABASE_URL: 'pglite', CRON_SECRET: 'cron-canary-value', RESEND_API_KEY: 'resend-canary-value', DIGEST_TO: 'private-canary@example.com' };
   const serverUrl = pathToFileURL(path.join(root, 'server.ts')).href;
   const runtimeUrl = pathToFileURL(path.join(root, 'runtime-config.ts')).href;
-  const dbUrl = pathToFileURL(path.join(root, 'db.ts')).href;
+  const dbUrl = pathToFileURL(path.join(root, 'server', 'db.ts')).href;
   const { stdout } = await promisify(execFile)(process.execPath, ['--import', import.meta.resolve('tsx'), '--input-type=module', '-e', `
     import assert from 'node:assert/strict';
     import { once } from 'node:events';

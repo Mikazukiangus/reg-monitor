@@ -25,7 +25,7 @@
 //
 // Critical (8.5 and up) is therefore only something with a date close at
 // hand: a consultation about to close, or rules about to take effect.
-import type { InstrumentFormat, UrgencySeverity } from '../types/regulatory';
+import type { InstrumentFormat, UrgencySeverity } from './regulatory';
 import { CONCLUSION, SRO_FILING } from './tagging.js';
 
 export const CRITICAL_SCORE = 8.5;

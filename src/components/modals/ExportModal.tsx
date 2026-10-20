@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../useDialog';
-import { RegulatoryNotice } from '../../types/regulatory';
+import { RegulatoryNotice } from '../../../shared/regulatory';
 import { buildNoticeCsv, buildNoticeJson, exportFilename } from '../../lib/exports';
 import { FILE_TYPES, saveFile } from '../../lib/download';
 

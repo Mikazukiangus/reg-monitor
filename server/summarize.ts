@@ -1,7 +1,7 @@
 // Extractive summaries for regulatory documents. No generative model or
 // external API: every key point is a sentence quoted verbatim from the source
 // document, and key facts (deadlines, references) are pulled out with rules.
-import type { KeyPoints } from '../src/types/regulatory.js';
+import type { KeyPoints } from '../shared/regulatory.js';
 import { tokenize, splitSentences } from './sentences.js';
 import { extractDateFacts, documentDates } from './document-dates.js';
 

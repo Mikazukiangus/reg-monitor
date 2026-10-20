@@ -10,7 +10,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 1. **A server on Vercel (Hong Kong region, `hkg1`) fetches each source.** The site's own Express server (`server.ts`) does the fetching, not the visitor's browser and not any AI service. Each source is fetched at most once every 10 minutes when someone visits. Separately, a scheduled check reads every source every three hours (see "Keeping every source up to date" below).
 2. **Each item is put into a common format:** title, regulator, date, link, type and so on.
 3. **Key points are quoted from the document itself** (`server/summarize.ts`). For each notice, the server opens the linked document once (key points already in the history are reused, so a new server instance doesn't read the documents again) and picks its most central sentences word for word using TextRank, a ranking algorithm, not an AI model. It also picks out sentences containing dates and reference numbers. Scanned PDFs are read with Tesseract OCR, and those quotes are labelled "OCR". Chinese and Japanese documents are split into sentences at "。" and quoted as published, not translated.
-4. **Each notice is saved to the history database** (`db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
+4. **Each notice is saved to the history database** (`server/db.ts`, Postgres on Neon) when a database is connected. See "Notice history" below.
 5. **Vercel's CDN keeps a copy** of the combined result for up to 5 minutes. Visitors get it instantly, and "Data as of" shows when it was built. A refresh (the Sync button, or a copy older than 10 minutes) skips the CDN; the server then reuses a result it built in the last minute, and each visitor may refresh 6 times a minute (after that the server answers HTTP 429 and the page says when to try again). Both limits are kept per server instance.
 6. **The visitor's device keeps its own copy** (`public/sw.js`) for offline use.
 
@@ -39,7 +39,7 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 
 ### Rules for artificial intelligence
 
-These come from the official body in each jurisdiction that makes or enforces AI rules. Feeds that cover all of an agency's work are narrowed by `src/lib/aiTopics.ts`: the title must be about AI (English, Chinese or Japanese words for it) and the title or summary must concern rules or their enforcement (a law, rules, guidance, consultation, investigation, executive order and so on), so funding rounds, industry programmes and passing mentions are left out. A narrowed feed often has nothing new; that is not an error. Every notice from these sources is tagged "AI rules".
+These come from the official body in each jurisdiction that makes or enforces AI rules. Feeds that cover all of an agency's work are narrowed by `shared/aiTopics.ts`: the title must be about AI (English, Chinese or Japanese words for it) and the title or summary must concern rules or their enforcement (a law, rules, guidance, consultation, investigation, executive order and so on), so funding rounds, industry programmes and passing mentions are left out. A narrowed feed often has nothing new; that is not an error. Every notice from these sources is tagged "AI rules".
 
 | Jurisdiction | Source | Notes |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ Left out: Texas (its AI law is enforced by the Attorney General, whose news rele
 
 ### Data privacy
 
-These come from the data protection authority of each jurisdiction RegSonar already covers. A privacy regulator's own news is kept whole, less speeches, events and procurement notices. Feeds that also cover other work (the FTC's and the OAIC's, and China's policy library) keep only items about privacy or personal data (`src/lib/privacyTopics.ts`: English, Chinese and Japanese words for it, and abbreviations such as GDPR and PDPA in capitals). Every notice from these sources is tagged "Data privacy"; one that is also about AI rules (an AI and personal data consultation, a fine for automated decision-making) is tagged "AI rules" too. Data privacy is also a sector, "Data Privacy & Protection" (link key `privacy`), with its own filter and Radar row. Privacy words give it (the same words as above, from any source), and every notice from a data protection authority is in it, even when its words give other sectors too ("Complaints about automated nuisance calls" is Conduct and Data Privacy); "Why these tags?" then says the regulator is a data protection authority. On 15 October 2026 privacy was briefly part of the AI sector's name ("AI, Data Privacy, Cyber & Tech Risk"); bookmarks and offline copies saved under that name are read as "AI, Cyber & Tech Risk" and refreshed from the feed when shown. A link or saved view with only some sectors ticked lists them by key, so one made before the new sector doesn't include it; tick it and save the view again to add it. One with every sector ticked has no list and includes it.
+These come from the data protection authority of each jurisdiction RegSonar already covers. A privacy regulator's own news is kept whole, less speeches, events and procurement notices. Feeds that also cover other work (the FTC's and the OAIC's, and China's policy library) keep only items about privacy or personal data (`shared/privacyTopics.ts`: English, Chinese and Japanese words for it, and abbreviations such as GDPR and PDPA in capitals). Every notice from these sources is tagged "Data privacy"; one that is also about AI rules (an AI and personal data consultation, a fine for automated decision-making) is tagged "AI rules" too. Data privacy is also a sector, "Data Privacy & Protection" (link key `privacy`), with its own filter and Radar row. Privacy words give it (the same words as above, from any source), and every notice from a data protection authority is in it, even when its words give other sectors too ("Complaints about automated nuisance calls" is Conduct and Data Privacy); "Why these tags?" then says the regulator is a data protection authority. On 15 October 2026 privacy was briefly part of the AI sector's name ("AI, Data Privacy, Cyber & Tech Risk"); bookmarks and offline copies saved under that name are read as "AI, Cyber & Tech Risk" and refreshed from the feed when shown. A link or saved view with only some sectors ticked lists them by key, so one made before the new sector doesn't include it; tick it and save the view again to add it. One with every sector ticked has no list and includes it.
 
 | Jurisdiction | Source | Notes |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ Sources considered and left out: SGX Group news releases about listings, awards,
 These come from rules in the code, not from the regulators:
 
 - **Impact score and severity:** one rubric for every source, described below.
-- **Sector and format:** assigned by keyword rules in `src/lib/tagging.ts`, described below.
+- **Sector and format:** assigned by keyword rules in `shared/tagging.ts`, described below.
 - **Dates:** taken from the source's own date fields where there are any (the Federal Register's comment and effective dates, MAS's and SGX's consultation closing dates). Otherwise from a sentence in the document that states a date for the document itself, and every date says what kind it is:
   - **Comments close:** a request for comments with its date ("Comments should be submitted by 30 November 2026"), or, on a consultation only, a statement such as "The consultation closes on 14 October 2026". A digest or event notice can mention another paper's closing date, so there the general statement is not used. A closing date already past is shown as "Comments closed".
   - **Takes effect:** "will take effect on", "become effective on", "the effective date ... is", "shall apply on". Not used on consultations, where the date is only proposed.
@@ -130,7 +130,7 @@ Quality checks:
 
 ## Impact score
 
-Every notice gets its score from one function, `src/lib/impact.ts`, the same way for every source and for notices read back from the history. Before this, each source set a fixed number per format and the Federal Register used its own scale, so a routine SEC paperwork notice scored "High" while a final MAS circular scored "Info", and notices kept whatever score they were stored with.
+Every notice gets its score from one function, `shared/impact.ts`, the same way for every source and for notices read back from the history. Before this, each source set a fixed number per format and the Federal Register used its own scale, so a routine SEC paperwork notice scored "High" while a final MAS circular scored "Info", and notices kept whatever score they were stored with.
 
 What the document does (the first that applies):
 

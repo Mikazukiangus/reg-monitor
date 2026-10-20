@@ -14,7 +14,7 @@ const run = promisify(execFile);
 const example = parse(await readFile(path.join(root, '.env.example')));
 const runtimeUrl = pathToFileURL(path.join(root, 'runtime-config.ts')).href;
 const serverUrl = pathToFileURL(path.join(root, 'server.ts')).href;
-const dbUrl = pathToFileURL(path.join(root, 'db.ts')).href;
+const dbUrl = pathToFileURL(path.join(root, 'server', 'db.ts')).href;
 const mailerUrl = pathToFileURL(path.join(root, 'server', 'mailer.ts')).href;
 const tsxUrl = import.meta.resolve('tsx');
 const isolatedEnv = (overrides: Record<string, string> = {}): Record<string, string | undefined> => ({ ...process.env, ...example, NODE_ENV: 'test', ...overrides });

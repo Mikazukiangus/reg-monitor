@@ -4,8 +4,8 @@
 // before the rule is fixed.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { classifySectors, classifyFormat } from '../src/lib/tagging.ts';
-import type { SectorDomain } from '../src/types/regulatory.ts';
+import { classifySectors, classifyFormat } from '../shared/tagging.ts';
+import type { SectorDomain } from '../shared/regulatory.ts';
 
 const BANK: SectorDomain = 'Banking & Prudential';
 const CAPM: SectorDomain = 'Capital Markets & Listings';

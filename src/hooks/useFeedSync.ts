@@ -3,12 +3,12 @@
 // this device when offline. There is no sample data.
 import React, { useState } from 'react';
 import { fetchEndpointStatus, fetchFeed, type ArchiveStatus, type SourceSyncResult } from '../api/client';
-import { ENDPOINT_CATALOG } from '../lib/endpoints';
-import { browserLogger } from '../lib/logging';
-import { sgtTime } from '../lib/derived';
+import { ENDPOINT_CATALOG } from '../../shared/endpoints';
+import { browserLogger } from '../../shared/logging';
+import { sgtTime } from '../../shared/derived';
 import { recordVisit } from '../lib/visits';
-import { withCurrentSectorNames } from '../lib/tagging';
-import type { EndpointMetric, RegulatoryNotice } from '../types/regulatory';
+import { withCurrentSectorNames } from '../../shared/tagging';
+import type { EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
 
 export type { ArchiveStatus };
 

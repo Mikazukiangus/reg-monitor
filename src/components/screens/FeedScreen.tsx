@@ -17,7 +17,7 @@ import type { PreviousVisit } from '../../lib/visits';
 import type { FeedSync } from '../../hooks/useFeedSync';
 import type { FeedFiltersState } from '../../hooks/useFeedFilters';
 import type { Pagination } from '../../hooks/usePagination';
-import { DeadlineItem, RegulatoryNotice } from '../../types/regulatory';
+import { DeadlineItem, RegulatoryNotice } from '../../../shared/regulatory';
 
 interface Props {
   notices: RegulatoryNotice[];

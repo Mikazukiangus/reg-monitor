@@ -1,5 +1,5 @@
-import { logger } from '../../logging.js';
-import { mentionsPrivacy } from '../../src/lib/privacyTopics.js';
+import { logger } from '../logging.js';
+import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { pagesFor, fetchOrThrow, describeError } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { isoDay, plainText, newestFirst, uniqueBy, zonedToIso } from '../text.js';

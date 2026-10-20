@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { logger } from '../logging.js';
+import { logger } from './logging.js';
 import { feedRoutes } from './routes/feeds.js';
 import { digestRoutes } from './routes/digest.js';
 import { noticeRoutes } from './routes/notices.js';

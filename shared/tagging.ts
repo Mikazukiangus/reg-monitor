@@ -7,7 +7,7 @@
 // summary or key points counts 1 (each distinct word once), and a sector needs
 // 3 to be given: one title word, or three different words in the text. A
 // notice gets up to three sectors, strongest first; the first is its main one.
-import type { InstrumentFormat, SectorDomain } from '../types/regulatory';
+import type { InstrumentFormat, SectorDomain } from './regulatory';
 
 export const SECTORS: SectorDomain[] = [
   'Banking & Prudential',
@@ -107,7 +107,7 @@ const SECTOR_RULES: Record<Exclude<SectorDomain, 'General & Institutional'>, Reg
     // Chinese and Japanese: artificial intelligence, deep synthesis, large models, AI agents
     /人工智能|人工知能|深度合成|大模型|智能体|ＡＩ/
   ],
-  // The words src/lib/privacyTopics.ts looks for, one rule each
+  // The words shared/privacyTopics.ts looks for, one rule each
   'Data Privacy & Protection': [
     /\bprivacy\b/, /\bpersonal (data|information)\b/, /\bdata (protection|privacy|breach\w*|brokers?|subjects?|deletion)\b/,
     /\bsensitive (personal )?data\b/, /\b(location|health|biometric|children['’]s) data\b/, /\bright to (delete|deletion|erasure)\b/,

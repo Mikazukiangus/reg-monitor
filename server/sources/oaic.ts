@@ -1,4 +1,4 @@
-import { mentionsPrivacy } from '../../src/lib/privacyTopics.js';
+import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { pagesFor, readPages } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { isoDay, plainText, newestFirst, uniqueBy, lastPathPart, zonedToIso } from '../text.js';

@@ -1,5 +1,5 @@
 import { summarize } from '../summarize.js';
-import { mentionsAi } from '../../src/lib/aiTopics.js';
+import { mentionsAi } from '../../shared/aiTopics.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { toIso } from '../text.js';

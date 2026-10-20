@@ -7,8 +7,8 @@ import { countNew, endpointHealth, feedFigures, ingestingAgencies, percentOf } f
 import { byMonth, horizonEvents, quarterOf } from '../src/lib/horizon.ts';
 import { countByRegulator, enforcementRecords } from '../src/lib/enforcement.ts';
 import { buildRadar, sectorsIn, shownJurisdiction } from '../src/lib/radar.ts';
-import { ruleFromForm } from '../src/lib/alertRules.ts';
-import type { EndpointMetric, RegulatoryNotice } from '../src/types/regulatory.ts';
+import { ruleFromForm } from '../shared/alertRules.ts';
+import type { EndpointMetric, RegulatoryNotice } from '../shared/regulatory.ts';
 
 const notice = (id: string, fields: Partial<RegulatoryNotice> = {}): RegulatoryNotice => ({
   id, ref: id, title: `Notice ${id}`, regulator: 'MAS', jurisdiction: 'SINGAPORE', jurisdictionCode: 'SG',

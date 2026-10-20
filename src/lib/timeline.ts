@@ -2,8 +2,8 @@
 // linked consultation or conclusions were published, and the dates its own
 // text states (comments close, takes effect, comply by). Nothing is
 // estimated; a date appears only when the feed or the document gives it.
-import type { DocumentDate, RegulatoryNotice } from '../types/regulatory';
-import { publishedDay } from './derived';
+import type { DocumentDate, RegulatoryNotice } from '../../shared/regulatory';
+import { publishedDay } from '../../shared/derived';
 
 export interface TimelineStep {
   label: string;

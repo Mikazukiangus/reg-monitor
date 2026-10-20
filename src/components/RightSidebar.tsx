@@ -1,8 +1,8 @@
 import React from 'react';
-import { DeadlineItem } from '../types/regulatory';
+import { DeadlineItem } from '../../shared/regulatory';
 import { STATUS_STYLES } from './modals/LiveEndpointsModal';
-import type { EndpointMetric } from '../types/regulatory';
-import { timeAgo } from '../lib/derived';
+import type { EndpointMetric } from '../../shared/regulatory';
+import { timeAgo } from '../../shared/derived';
 
 interface RightSidebarProps {
   deadlines: DeadlineItem[];

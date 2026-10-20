@@ -1,5 +1,5 @@
 // Shared, dependency-free log sanitization. The browser logger never receives
-// server configuration; the server supplies its known secrets in logging.ts.
+// server configuration; the server supplies its known secrets in server/logging.ts.
 export const REDACTED = '[REDACTED]';
 
 const sensitiveKey = (key: string) => /(?:passwords?|passwd|pwds?|secrets?|tokens?|apikeys?|authorization|cookies?|databaseurl|postgresurl|connectionstring|credentials?|privatekeys?|accesskeyid|signature|sig|sas|sessionids?|csrf|xsrf)$/.test(key.replace(/[^a-z\d]/gi, '').toLowerCase()) || /^(?:auth|key)$/i.test(key);

@@ -1,5 +1,5 @@
-import { isAiRuleNews, mentionsAi } from '../../src/lib/aiTopics.js';
-import { mentionsPrivacy } from '../../src/lib/privacyTopics.js';
+import { isAiRuleNews, mentionsAi } from '../../shared/aiTopics.js';
+import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { rssItems } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { plainText, toIso, lastPathPart } from '../text.js';

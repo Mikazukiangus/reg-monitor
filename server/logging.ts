@@ -1,7 +1,7 @@
 // Server-only logger. Never import the configuration or these secret literals
-// into browser code; the pure logger in src/lib/logging.ts is safe to share.
-import { config } from './runtime-config.js';
-import { createLogger } from './src/lib/logging.js';
+// into browser code; the pure logger in shared/logging.ts is safe to share.
+import { config } from '../runtime-config.js';
+import { createLogger } from '../shared/logging.js';
 
 const secrets = [config.digest.cronSecret, config.digest.apiKey, ...config.digest.to];
 const senderAddress = config.digest.from.match(/<([^<>]+)>/)?.[1] ?? config.digest.from;

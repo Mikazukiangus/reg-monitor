@@ -2,7 +2,7 @@
 // the page of notices it shows
 import React, { useState } from 'react';
 import { readFeedLayout, writeFeedLayout, type FeedLayout } from '../lib/preferences';
-import { RegulatoryNotice } from '../types/regulatory';
+import { RegulatoryNotice } from '../../shared/regulatory';
 
 const perPage = (layout: FeedLayout) => (layout === 'list' ? 20 : 5);
 

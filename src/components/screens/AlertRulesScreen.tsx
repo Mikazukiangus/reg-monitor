@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
-import { CustomAlertRule, RegulatoryNotice } from '../../types/regulatory';
-import { DEFAULT_RULES, ruleFromForm, ruleMatches } from '../../lib/alertRules';
+import { CustomAlertRule, RegulatoryNotice } from '../../../shared/regulatory';
+import { DEFAULT_RULES, ruleFromForm, ruleMatches } from '../../../shared/alertRules';
 import { readAlertRules, writeAlertRules } from '../../lib/preferences';
 import { copyText } from '../../lib/urlState';
 import { useDigestInfo } from '../../hooks/useDigestInfo';

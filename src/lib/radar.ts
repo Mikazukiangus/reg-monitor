@@ -1,9 +1,9 @@
 // The Regulatory Radar grid: live notices by sector and jurisdiction, newest
 // first. A notice with several sectors is in each of its rows. Pure, so it is
 // tested without the page.
-import type { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../types/regulatory';
-import { sortNewestFirst } from './derived';
-import { SECTORS } from './tagging';
+import type { JurisdictionCode, RegulatoryNotice, SectorDomain } from '../../shared/regulatory';
+import { sortNewestFirst } from '../../shared/derived';
+import { SECTORS } from '../../shared/tagging';
 
 export const RADAR_JURISDICTIONS: { code: JurisdictionCode; name: string; sources: string }[] = [
   { code: 'SG', name: 'Singapore', sources: 'MAS, SGX RegCo; PDPC privacy' },
