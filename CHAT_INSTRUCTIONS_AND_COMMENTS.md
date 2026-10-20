@@ -1077,6 +1077,19 @@ This document records the full chronological instructions, technical requirement
   * Both listed tokens carry very broad scopes, including `delete_repo`, `admin:org` and `admin:enterprise`, and neither has been used. Deleting them, or replacing them with a fine-grained token limited to this repository when one is needed, is the user's decision.
 * The token in the alert was not displayed or tested.
 
+### Request 83: Minimal Token Permissions for Git Push (Claude Code, 2026-10-20)
+
+**User:** "when creating a token for git push for a new repo, what are the minimal permission should i give"
+
+* **Answer (nothing changed):** use a fine-grained personal access token with these settings:
+  * access to only the one repository;
+  * **Contents: Read and write** (GitHub adds **Metadata: Read-only** automatically);
+  * **Workflows: Read and write** only if the pushes change files in `.github/workflows/`;
+  * a short expiry.
+* **Create the repository first in the web page.** Creating one with a token would need far broader rights.
+* **Keep the token out of commands, URLs and chat** (the Request 3 leak came from a token in a `git push` URL). Let the credential helper or the macOS Keychain store it.
+* **Alternatives with no token to manage:** `gh auth login`, an SSH key, or a per-repository deploy key with write access.
+
 ---
 
 ## 3. Key Files & Modifications Summary
