@@ -1060,6 +1060,23 @@ This document records the full chronological instructions, technical requirement
 * **Alert 1** (the historical token revoked on 2026-10-06) is still open, waiting for the user to confirm the token is gone and close it as "Revoked".
 * **Effect on this work:** pushes now pass through push protection. The branches here contain no secrets: the token in alert 1 is in old history that is already pushed, so it does not block new pushes.
 
+### Request 82: Which Token Is the Leaked One? (Claude Code, 2026-10-20)
+
+**User:** shared a screenshot of the GitHub "Personal access tokens (classic)" page and asked "which token is this?"
+
+* **Answer (nothing changed):** the screenshot shows two classic tokens:
+  * "for project", which expires on 23 October 2026;
+  * "new RAG-PAT", which expired on 13 October 2026.
+* **Neither matches secret scanning alert 1:**
+  * Both show "Never used". The leaked token was used for the `git push` in Request 3 (commit `fb3e002`, 6 October).
+  * A token that has been revoked or deleted no longer appears on that page, and the log records that this one was revoked on 6 October.
+* **Suggested for the user:**
+  * Check the fine-grained tokens tab too.
+  * Turn on validity checks, so GitHub tests the token itself and marks the alert active or inactive.
+  * If GitHub marks it inactive, close the alert as "Revoked".
+  * Both listed tokens carry very broad scopes, including `delete_repo`, `admin:org` and `admin:enterprise`, and neither has been used. Deleting them, or replacing them with a fine-grained token limited to this repository when one is needed, is the user's decision.
+* The token in the alert was not displayed or tested.
+
 ---
 
 ## 3. Key Files & Modifications Summary
