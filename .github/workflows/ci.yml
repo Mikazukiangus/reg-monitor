@@ -24,9 +24,9 @@ jobs:
       - run: npm test
       - run: npx vite build
 
-  # Known vulnerabilities rated high or critical in package.json's dependencies
-  # (devDependencies such as the test tools are left out), read from the
-  # lockfile. A separate job, so
+  # Known vulnerabilities rated high or critical in package.json's dependencies,
+  # the packages the site runs on; devDependencies (the build, type-checking
+  # and test tools) are left out. Read from the lockfile. A separate job, so
   # a new advisory shows as its own failure and never hides the test results.
   # Vercel deploys on its own, so this warns; it does not stop a deploy.
   audit:
