@@ -14,7 +14,11 @@ export const GOV_UK_AI = 'https://www.gov.uk/api/search.json?filter_organisation
 
 export async function fetchUkAiPolicy(limit = 4): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow(`${GOV_UK_AI}&count=${limit <= 4 ? 100 : 300}`);
-  const results: any[] = (await res.json()).results || [];
+  return parseUkAiPolicy(await res.json(), limit);
+}
+
+export function parseUkAiPolicy(data: any, limit = 4): NormalizedNotice[] {
+  const results: any[] = data.results || [];
   return results
     .filter(r => isAiRuleNews(String(r.title), String(r.description || '')))
     .slice(0, limit)

@@ -2,10 +2,15 @@ import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
 
-// Fetch BIS media releases (RSS 1.0 / RDF), which include Basel Committee announcements
+// BIS media releases (RSS 1.0 / RDF), which include Basel Committee announcements
+export const BIS_PRESS_RSS = 'https://www.bis.org/doclist/all_pressrels.rss';
+
 export async function fetchBisPressReleases(limit = 4): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow('https://www.bis.org/doclist/all_pressrels.rss');
-  const parsed = xmlParser.parse(await res.text());
+  return parseBisPressReleases(await (await fetchOrThrow(BIS_PRESS_RSS)).text(), limit);
+}
+
+export function parseBisPressReleases(xml: string, limit = 4): NormalizedNotice[] {
+  const parsed = xmlParser.parse(xml);
   const items = parsed['rdf:RDF']?.item;
   if (!items) {
     throw new Error('Response was not an RSS feed');

@@ -9,8 +9,11 @@ export const JFSA_RSS = 'https://www.fsa.go.jp/fsaEnNewsList_rss2.xml';
 const JFSA_SKIPPED = /^(press conferences|international)$/i;
 
 export async function fetchJfsaNews(limit = 4): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow(JFSA_RSS);
-  const parsed = xmlParser.parse(await res.text());
+  return parseJfsaNews(await (await fetchOrThrow(JFSA_RSS)).text(), limit);
+}
+
+export function parseJfsaNews(xml: string, limit = 4): NormalizedNotice[] {
+  const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
     throw new Error('Response was not an RSS feed');
   }

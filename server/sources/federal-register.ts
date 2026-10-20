@@ -10,11 +10,16 @@ const FEDERAL_REGISTER_FIELDS = ['title', 'type', 'abstract', 'agencies', 'docum
   .map((f) => `&fields[]=${f}`)
   .join('');
 
-// Fetch US Federal Register API notices (SEC & CFTC)
+// US Federal Register API notices (SEC & CFTC)
+export const FEDERAL_REGISTER_SEC_CFTC = 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest';
+
 export async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[]> {
-  const url = `https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=securities-and-exchange-commission&conditions[agencies][]=commodity-futures-trading-commission&order=newest&per_page=${limit}${FEDERAL_REGISTER_FIELDS}`;
-  const res = await fetchOrThrow(url);
-  const data = await res.json();
+  const res = await fetchOrThrow(`${FEDERAL_REGISTER_SEC_CFTC}&per_page=${limit}${FEDERAL_REGISTER_FIELDS}`);
+  return parseFederalRegister(await res.json());
+}
+
+// Every document in the reply (the API returns as many as were asked for)
+export function parseFederalRegister(data: any): NormalizedNotice[] {
   const results = data.results || [];
 
   return results.map((doc: any, idx: number) => {
@@ -93,7 +98,11 @@ const FEDERAL_AGENCIES: Record<string, string> = {
 
 export async function fetchFederalRegisterAi(limit = 4): Promise<NormalizedNotice[]> {
   const res = await fetchOrThrow(`${FEDERAL_REGISTER_AI}&per_page=${limit <= 4 ? 100 : 300}${FEDERAL_REGISTER_FIELDS}`);
-  const docs: any[] = (await res.json()).results || [];
+  return parseFederalRegisterAi(await res.json(), limit);
+}
+
+export function parseFederalRegisterAi(data: any, limit = 4): NormalizedNotice[] {
+  const docs: any[] = data.results || [];
   return docs
     .filter(doc => mentionsAi(doc.title || '') && !NOT_A_RULE.test(doc.title || ''))
     .slice(0, limit)

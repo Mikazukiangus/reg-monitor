@@ -2,11 +2,15 @@ import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
 
-// Fetch UK FCA RSS feed. The FCA site sits behind a Cloudflare bot challenge,
-// so this usually fails with HTTP 403 from server environments.
+// UK FCA RSS feed. The FCA site sits behind a Cloudflare bot challenge, so
+// this usually fails with HTTP 403 from server environments.
+export const FCA_RSS = 'https://www.fca.org.uk/news/rss.xml';
+
 export async function fetchFcaFeed(limit = 3): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow('https://www.fca.org.uk/news/rss.xml');
-  const xml = await res.text();
+  return parseFcaFeed(await (await fetchOrThrow(FCA_RSS)).text(), limit);
+}
+
+export function parseFcaFeed(xml: string, limit = 3): NormalizedNotice[] {
   const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
     throw new Error('Response was not an RSS feed');

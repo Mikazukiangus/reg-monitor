@@ -2,10 +2,15 @@ import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
 
-// Fetch Bank of England Prudential Regulation Authority publications (RSS 2.0)
+// Bank of England Prudential Regulation Authority publications (RSS 2.0)
+export const PRA_RSS = 'https://www.bankofengland.co.uk/rss/prudential-regulation-publications';
+
 export async function fetchPraPublications(limit = 4): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow('https://www.bankofengland.co.uk/rss/prudential-regulation-publications');
-  const parsed = xmlParser.parse(await res.text());
+  return parsePraPublications(await (await fetchOrThrow(PRA_RSS)).text(), limit);
+}
+
+export function parsePraPublications(xml: string, limit = 4): NormalizedNotice[] {
+  const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
     throw new Error('Response was not an RSS feed');
   }

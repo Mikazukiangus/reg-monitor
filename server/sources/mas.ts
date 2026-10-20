@@ -5,7 +5,7 @@ import { zonedToIso, stripHtml, closingDateFields } from '../text.js';
 // Search the MAS website's search API (behind mas.gov.sg/news). It is
 // undocumented, and MAS serves a "Maintenance" page to non-browser user
 // agents, so this relies on REG_USER_AGENT.
-async function searchMas(contentTypes: string[], limit: number): Promise<any[]> {
+async function searchMas(contentTypes: string[], limit: number): Promise<any> {
   const params = new URLSearchParams();
   params.append('q', '*:*');
   params.append('fq', `mas_contenttype_s:(${contentTypes.map(t => `"${t}"`).join(' OR ')})`);
@@ -16,8 +16,7 @@ async function searchMas(contentTypes: string[], limit: number): Promise<any[]> 
   if (!res.headers.get('content-type')?.includes('json')) {
     throw new Error('MAS returned a non-JSON page (possibly maintenance or bot filtering)');
   }
-  const data = await res.json();
-  return data.response?.docs || [];
+  return res.json();
 }
 
 // MAS dates are Singapore local time even though they end in "Z"
@@ -52,10 +51,16 @@ function masNotice(doc: any, type: string, format: NormalizedNotice['format']): 
   };
 }
 
+// The documents in a reply from MAS's search API
+export const masDocs = (data: any): any[] => data.response?.docs || [];
+
 // MAS media releases and enforcement actions
 export async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
-  const docs = await searchMas(['Media Releases', 'Enforcement Actions Media Releases'], limit);
-  return docs.map((doc) => {
+  return parseMasMediaReleases(await searchMas(['Media Releases', 'Enforcement Actions Media Releases'], limit));
+}
+
+export function parseMasMediaReleases(data: any): NormalizedNotice[] {
+  return masDocs(data).map((doc) => {
     const title = stripHtml(String(doc.document_title_string_s));
     const isEnforcement = doc.mas_contenttype_s === 'Enforcement Actions Media Releases';
     return masNotice(doc, isEnforcement ? 'ENFORCEMENT ACTION' : 'MEDIA RELEASE', isEnforcement ? 'Enforcement' : formatOf('', title));
@@ -64,8 +69,11 @@ export async function fetchMasMediaReleases(limit = 4): Promise<NormalizedNotice
 
 // MAS consultation papers, with the closing date MAS publishes for each
 export async function fetchMasConsultations(limit = 3): Promise<NormalizedNotice[]> {
-  const docs = await searchMas(['Consultations'], limit);
-  return docs.map((doc) => {
+  return parseMasConsultations(await searchMas(['Consultations'], limit));
+}
+
+export function parseMasConsultations(data: any): NormalizedNotice[] {
+  return masDocs(data).map((doc) => {
     const notice = masNotice(doc, 'CONSULTATION', 'Consultations');
     const closes = masDate(doc.masconsultation_closingdate_tdt);
     if (!closes) return notice;
@@ -76,8 +84,11 @@ export async function fetchMasConsultations(limit = 3): Promise<NormalizedNotice
 
 // MAS circulars and guidelines
 export async function fetchMasRegulatoryPublications(limit = 3): Promise<NormalizedNotice[]> {
-  const docs = await searchMas(['Circulars', 'Guidelines'], limit);
-  return docs.map((doc) =>
+  return parseMasRegulatoryPublications(await searchMas(['Circulars', 'Guidelines'], limit));
+}
+
+export function parseMasRegulatoryPublications(data: any): NormalizedNotice[] {
+  return masDocs(data).map((doc) =>
     masNotice(doc, doc.mas_contenttype_s === 'Guidelines' ? 'GUIDELINES' : 'CIRCULAR', doc.mas_contenttype_s === 'Guidelines' ? 'Guidelines' : 'Circulars')
   );
 }

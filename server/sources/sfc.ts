@@ -5,7 +5,7 @@ import { stripHtml, toIso } from '../text.js';
 // Hong Kong Securities and Futures Commission official RSS feeds (RSS 2.0)
 export const SFC_RSS = 'https://www.sfc.hk/en/RSS-Feeds';
 
-interface SfcFeed {
+export interface SfcFeed {
   path: string;
   idPrefix: string;
   type: string;
@@ -14,8 +14,12 @@ interface SfcFeed {
 }
 
 async function fetchSfcRss(feed: SfcFeed, limit = feed.limit): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow(`${SFC_RSS}/${feed.path}`);
-  const parsed = xmlParser.parse(await res.text());
+  return parseSfcRss(await (await fetchOrThrow(`${SFC_RSS}/${feed.path}`)).text(), feed, limit);
+}
+
+// The newest `limit` notices of one of the SFC's feeds
+export function parseSfcRss(xml: string, feed: SfcFeed, limit = feed.limit): NormalizedNotice[] {
+  const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
     throw new Error('Response was not an RSS feed');
   }
@@ -53,9 +57,12 @@ async function fetchSfcRss(feed: SfcFeed, limit = feed.limit): Promise<Normalize
   });
 }
 
-export const fetchSfcPressReleases = (limit?: number) =>
-  fetchSfcRss({ path: 'Press-releases', idPrefix: 'sfc-pr', type: 'PRESS RELEASE', limit: 4 }, limit);
-export const fetchSfcCirculars = (limit?: number) =>
-  fetchSfcRss({ path: 'Circulars', idPrefix: 'sfc-cir', type: 'CIRCULAR', limit: 3 }, limit);
-export const fetchSfcConsultations = (limit?: number) =>
-  fetchSfcRss({ path: 'Consultations-and-Conclusions', idPrefix: 'sfc-con', type: 'CONSULTATION', format: 'Consultations', limit: 3 }, limit);
+export const SFC_FEEDS = {
+  pressReleases: { path: 'Press-releases', idPrefix: 'sfc-pr', type: 'PRESS RELEASE', limit: 4 },
+  circulars: { path: 'Circulars', idPrefix: 'sfc-cir', type: 'CIRCULAR', limit: 3 },
+  consultations: { path: 'Consultations-and-Conclusions', idPrefix: 'sfc-con', type: 'CONSULTATION', format: 'Consultations', limit: 3 }
+} satisfies Record<string, SfcFeed>;
+
+export const fetchSfcPressReleases = (limit?: number) => fetchSfcRss(SFC_FEEDS.pressReleases, limit);
+export const fetchSfcCirculars = (limit?: number) => fetchSfcRss(SFC_FEEDS.circulars, limit);
+export const fetchSfcConsultations = (limit?: number) => fetchSfcRss(SFC_FEEDS.consultations, limit);

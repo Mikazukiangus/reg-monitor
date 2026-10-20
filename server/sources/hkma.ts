@@ -10,7 +10,7 @@ const HKMA_ROUTINE_RELEASE = /tender (results|information)|exchange fund (bills|
 // requests from cloud hosts such as Vercel, so notices come from RSS.
 const HKMA_RSS = 'https://www.hkma.gov.hk/eng/other-information/rss';
 
-interface HkmaFeed {
+export interface HkmaFeed {
   file: string;
   idPrefix: string;
   refLabel: string;
@@ -21,8 +21,12 @@ interface HkmaFeed {
 }
 
 async function fetchHkmaRss(feed: HkmaFeed, limit = feed.limit): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow(`${HKMA_RSS}/${feed.file}`);
-  const parsed = xmlParser.parse(await res.text());
+  return parseHkmaRss(await (await fetchOrThrow(`${HKMA_RSS}/${feed.file}`)).text(), feed, limit);
+}
+
+// The newest `limit` notices of one of HKMA's feeds, less routine market releases
+export function parseHkmaRss(xml: string, feed: HkmaFeed, limit = feed.limit): NormalizedNotice[] {
+  const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
     throw new Error('Response was not an RSS feed');
   }
@@ -61,9 +65,12 @@ async function fetchHkmaRss(feed: HkmaFeed, limit = feed.limit): Promise<Normali
     });
 }
 
-export const fetchHkmaPressReleases = (limit?: number) =>
-  fetchHkmaRss({ file: 'rss_press-release.xml', idPrefix: 'hkma-pr', refLabel: 'HKMA Press Release', type: 'PRESS RELEASE', limit: 4 }, limit);
-export const fetchHkmaCirculars = (limit?: number) =>
-  fetchHkmaRss({ file: 'rss_circulars.xml', idPrefix: 'hkma-cir', refLabel: 'HKMA Circular', type: 'CIRCULAR', limit: 3 }, limit);
-export const fetchHkmaConsultations = (limit?: number) =>
-  fetchHkmaRss({ file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 }, limit);
+export const HKMA_FEEDS = {
+  pressReleases: { file: 'rss_press-release.xml', idPrefix: 'hkma-pr', refLabel: 'HKMA Press Release', type: 'PRESS RELEASE', limit: 4 },
+  circulars: { file: 'rss_circulars.xml', idPrefix: 'hkma-cir', refLabel: 'HKMA Circular', type: 'CIRCULAR', limit: 3 },
+  consultations: { file: 'rss_consultations.xml', idPrefix: 'hkma-con', refLabel: 'HKMA Consultation', type: 'CONSULTATION', format: 'Consultations', limit: 3 }
+} satisfies Record<string, HkmaFeed>;
+
+export const fetchHkmaPressReleases = (limit?: number) => fetchHkmaRss(HKMA_FEEDS.pressReleases, limit);
+export const fetchHkmaCirculars = (limit?: number) => fetchHkmaRss(HKMA_FEEDS.circulars, limit);
+export const fetchHkmaConsultations = (limit?: number) => fetchHkmaRss(HKMA_FEEDS.consultations, limit);

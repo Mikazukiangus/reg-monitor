@@ -7,8 +7,11 @@ import { zonedToIso, stripHtml } from '../text.js';
 export const ASIC_MEDIA_RELEASES = 'https://download.asic.gov.au/asic-nga/data/newsroom/newsroom-mr-latest.json';
 
 export async function fetchAsicMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
-  const res = await fetchOrThrow(ASIC_MEDIA_RELEASES);
-  const items = await res.json();
+  return parseAsicMediaReleases(await (await fetchOrThrow(ASIC_MEDIA_RELEASES)).json(), limit);
+}
+
+// The newest `limit` releases in ASIC's JSON file
+export function parseAsicMediaReleases(items: unknown, limit = 4): NormalizedNotice[] {
   if (!Array.isArray(items)) {
     throw new Error('ASIC media releases file was not a list');
   }

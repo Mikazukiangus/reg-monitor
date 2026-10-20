@@ -19,10 +19,12 @@ async function sgxQuery(name: string, variables: Record<string, unknown>): Promi
   return body.data;
 }
 
-async function sgxList(name: string, limit: number): Promise<any[]> {
-  const data = await sgxQuery(name, { limit, offset: 0 });
-  return (data?.list?.results || []).map((r: any) => r.data);
+async function sgxList(name: string, limit: number): Promise<any> {
+  return sgxQuery(name, { limit, offset: 0 });
 }
+
+// The rows of a list in the content API's `data`
+export const sgxRows = (data: any): any[] => (data?.list?.results || []).map((r: any) => r.data);
 
 // Content API paths start with the site name: /regco/... is on regco.sgx.com,
 // /sgxgroup/... on www.sgxgroup.com
@@ -60,16 +62,22 @@ function sgxNotice(item: any, opts: { idPrefix: string; type: string; format: No
 }
 
 export async function fetchSgxConsultations(limit = 3): Promise<NormalizedNotice[]> {
-  const items = await sgxList('public_consultations_list', limit);
-  return items.map(item => {
+  return parseSgxConsultations(await sgxList('public_consultations_list', limit));
+}
+
+export function parseSgxConsultations(data: any): NormalizedNotice[] {
+  return sgxRows(data).map(item => {
     const notice = sgxNotice(item, { idPrefix: 'sgx-con', type: 'CONSULTATION', format: 'Consultations', unixDate: item.dateIssue });
     return item.dateClosed ? { ...notice, ...closingDateFields(singaporeDay(item.dateClosed)) } : notice;
   });
 }
 
 export async function fetchSgxDisciplinaryActions(limit = 3): Promise<NormalizedNotice[]> {
-  const items = await sgxList('public_disciplinary_actions_list', limit);
-  return items.map(item => sgxNotice(item, { idPrefix: 'sgx-disc', type: 'DISCIPLINARY ACTION', format: 'Enforcement', unixDate: item.dateAnnounced }));
+  return parseSgxDisciplinaryActions(await sgxList('public_disciplinary_actions_list', limit));
+}
+
+export function parseSgxDisciplinaryActions(data: any): NormalizedNotice[] {
+  return sgxRows(data).map(item => sgxNotice(item, { idPrefix: 'sgx-disc', type: 'DISCIPLINARY ACTION', format: 'Enforcement', unixDate: item.dateAnnounced }));
 }
 
 const sgxNames = (field: any[] | null | undefined): string[] =>
@@ -81,8 +89,11 @@ const SGX_REGCO_SPEAKER = /SGX RegCo|Singapore Exchange Regulation/i;
 export async function fetchSgxRegulatoryNews(limit = 3): Promise<NormalizedNotice[]> {
   // Most of the media list is listings, awards and results; regulatory items
   // are a few a month, so a wider page is read and filtered
-  const items = await sgxList('media_centre_list', Math.min(400, Math.max(100, limit * 12)));
-  return items
+  return parseSgxRegulatoryNews(await sgxList('media_centre_list', Math.min(400, Math.max(100, limit * 12))), limit);
+}
+
+export function parseSgxRegulatoryNews(data: any, limit = 3): NormalizedNotice[] {
+  return sgxRows(data)
     .filter(item => {
       const types = sgxNames(item.mediaCentreType);
       return types.some(t => SGX_REGULATORY_MEDIA.has(t))
