@@ -15,7 +15,7 @@ const example = parse(await readFile(path.join(root, '.env.example')));
 const runtimeUrl = pathToFileURL(path.join(root, 'runtime-config.ts')).href;
 const serverUrl = pathToFileURL(path.join(root, 'server.ts')).href;
 const dbUrl = pathToFileURL(path.join(root, 'db.ts')).href;
-const digestUrl = pathToFileURL(path.join(root, 'digest.ts')).href;
+const mailerUrl = pathToFileURL(path.join(root, 'server', 'mailer.ts')).href;
 const tsxUrl = import.meta.resolve('tsx');
 const isolatedEnv = (overrides: Record<string, string> = {}): Record<string, string | undefined> => ({ ...process.env, ...example, NODE_ENV: 'test', ...overrides });
 const child = (source: string, env: Record<string, string | undefined>, cwd = root) =>
@@ -159,7 +159,7 @@ test('the API uses configured cache headers, keeps optional jobs off, and expose
 test('the email sender uses the configured timeout', async () => {
   const { stdout } = await child(`
     import assert from 'node:assert/strict';
-    const { sendWithResend } = await import(${JSON.stringify(digestUrl)});
+    const { sendWithResend } = await import(${JSON.stringify(mailerUrl)});
     globalThis.fetch = async (url, options) => {
       assert.equal(url, 'https://api.resend.com/emails');
       await new Promise(resolve => setTimeout(resolve, 40));

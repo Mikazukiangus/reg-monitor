@@ -103,6 +103,6 @@ test('only server/store.ts reads the database module', async () => {
   const { readFileSync, readdirSync } = await import('node:fs');
   const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
     .flatMap(e => (e.isDirectory() ? files(`${dir}/${e.name}`) : e.name.endsWith('.ts') ? [`${dir}/${e.name}`] : []));
-  const importers = [...files('server'), 'server.ts', 'digest.ts'].filter(f => /from '(\.\.\/)+db\.js'|from '\.\/db\.js'/.test(readFileSync(f, 'utf8')));
+  const importers = [...files('server'), 'server.ts'].filter(f => /from '(\.\.\/)+db\.js'|from '\.\/db\.js'/.test(readFileSync(f, 'utf8')));
   assert.deepEqual(importers, ['server/store.ts']);
 });

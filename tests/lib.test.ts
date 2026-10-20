@@ -12,7 +12,7 @@ import { noticeTimeline } from '../src/lib/timeline.ts';
 import { publishedDay } from '../src/lib/derived.ts';
 import { buildIcs } from '../src/lib/ics.ts';
 import { defaultViewState, parseViewState, serializeViewState } from '../src/lib/urlState.ts';
-import { matchDigest, singaporeDate } from '../digest.ts';
+import { matchDigest, singaporeDate } from '../server/digest/match.ts';
 
 test('closing dates are found only in sentences that state one', () => {
   assert.equal(extractClosingDate(['Comments should be submitted on or before 9 December 2026.'])?.date, '2026-12-09');

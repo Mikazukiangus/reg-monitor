@@ -1,30 +1,6 @@
-// Daily email digest: notices published on the previous Singapore day that
-// match the rules in digest-rules.ts, sent to the site owner through Resend.
-import { ruleMatches, MatchableNotice } from './src/lib/alertRules.js';
-import type { CustomAlertRule } from './src/types/regulatory.js';
-import { config } from './runtime-config.js';
-import { logger } from './logging.js';
-
-export interface DigestNotice extends MatchableNotice {
-  id: string;
-  ref: string;
-  dossierUrl?: string;
-  publishedAt?: string;
-  statutoryDeadline?: string;
-  deadlineDate?: string;
-}
-
-export interface DigestMatch {
-  notice: DigestNotice;
-  rules: string[];
-}
-
-const SGT = 'Asia/Singapore';
-
-// The Singapore calendar date (YYYY-MM-DD) the given number of days before now
-export function singaporeDate(now: Date, daysBefore = 0): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: SGT }).format(new Date(now.getTime() - daysBefore * 86_400_000));
-}
+// The daily digest as an email: subject, HTML and plain text. Colours are
+// written out because email clients ignore the site's stylesheet.
+import { SGT, type DigestMatch } from './match.js';
 
 function longDate(day: string): string {
   return new Date(`${day}T12:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -33,16 +9,6 @@ function longDate(day: string): string {
 // Date only: several sources publish a date without a time
 function sgtDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: SGT });
-}
-
-// Notices published on `day` (Singapore time) that match at least one enabled rule
-export function matchDigest(notices: DigestNotice[], rules: CustomAlertRule[], day: string): DigestMatch[] {
-  const enabled = rules.filter(r => r.enabled);
-  return notices
-    .filter(n => n.publishedAt && singaporeDate(new Date(n.publishedAt)) === day)
-    .map(notice => ({ notice, rules: enabled.filter(r => ruleMatches(r, notice)).map(r => r.name) }))
-    .filter(m => m.rules.length > 0)
-    .sort((a, b) => String(b.notice.publishedAt).localeCompare(String(a.notice.publishedAt)));
 }
 
 const escapeHtml = (text: string) =>
@@ -101,16 +67,4 @@ export function renderDigest(matches: DigestMatch[], day: string, siteUrl: strin
   </td></tr></table></body></html>`;
 
   return { subject, html, text };
-}
-
-export async function sendWithResend(options: { apiKey: string; from: string; to: readonly string[]; subject: string; html: string; text: string }) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: options.from, to: options.to, subject: options.subject, html: options.html, text: options.text }),
-    signal: AbortSignal.timeout(config.digest.sendTimeoutMs)
-  });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`Resend returned HTTP ${res.status}${body?.message ? `: ${logger.errorMessage(body)}` : ''}`);
-  return body as { id?: string };
 }

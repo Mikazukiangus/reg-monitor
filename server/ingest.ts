@@ -1,9 +1,8 @@
-// Reading the sources: the live feed's cached reads, the scheduled check that
-// fills the history, and the notices the email digest checks.
+// Reading the sources: the live feed's cached reads, and the scheduled check
+// that fills the history.
 import { logger } from '../logging.js';
 import { config } from '../runtime-config.js';
 import { openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
-import { dedupeByDocument } from '../src/lib/dedupe.js';
 import { randomUUID } from 'crypto';
 import { describeError } from './http.js';
 import type { NormalizedNotice } from './notice.js';
@@ -164,15 +163,4 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
       summary: { sources: [], failed: [{ name: 'Scheduled check', error: describeError(error) }], pageDatesFound: 0 } });
     throw error;
   }
-}
-
-export async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
-  // The feed's own refresh first, so the check reuses its key points instead
-  // of reading the same documents again
-  const states = await Promise.all(SOURCES.map(refreshSource));
-  const { results, failed } = await pollSources();
-  const byId = new Map<string, NormalizedNotice>();
-  results.forEach(r => r.notices.forEach(n => byId.set(n.id, n)));
-  states.forEach(st => st.notices.forEach(n => { if (n.keyPoints || !byId.has(n.id)) byId.set(n.id, n); }));
-  return { notices: dedupeByDocument([...byId.values()]), failed: failed.map(f => f.name) };
 }

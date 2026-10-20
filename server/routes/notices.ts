@@ -2,9 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import { logger } from '../../logging.js';
 import { config } from '../../runtime-config.js';
 import { cdnCacheControl } from '../../config.js';
-import { openStore } from '../store.js';
-import { dedupeByDocument } from '../../src/lib/dedupe.js';
-import { fromArchive } from '../history.js';
+import { noticesByIds, searchNotices } from '../services/notices.js';
 
 // Notices from the history: search, and lookup by id
 export function noticeRoutes(): Router {
@@ -18,14 +16,9 @@ export function noticeRoutes(): Router {
       return;
     }
     try {
-      const store = await openStore();
-      if (!store) {
-        res.json({ success: true, enabled: false, notices: [] });
-        return;
-      }
-      const found = dedupeByDocument((await store.search(q, 40)).map(fromArchive));
-      res.set('Cache-Control', cdnCacheControl(config.cdn.search));
-      res.json({ success: true, enabled: true, notices: found });
+      const result = await searchNotices(q);
+      if (result.enabled) res.set('Cache-Control', cdnCacheControl(config.cdn.search));
+      res.json({ success: true, ...result });
     } catch (error: any) {
       logger.error('[RegSonar History] Search failed', error);
       res.status(500).json({ success: false, error: 'Search failed' });
@@ -43,9 +36,7 @@ export function noticeRoutes(): Router {
       return;
     }
     try {
-      const store = await openStore();
-      const found = store ? await store.byIds(ids) : new Map();
-      res.json({ success: true, enabled: !!store, notices: [...found.values()].map(fromArchive) });
+      res.json({ success: true, ...await noticesByIds(ids) });
     } catch (error) {
       logger.error('[RegSonar History] Notice lookup failed', error);
       res.status(503).json({ success: false, error: 'Notice history is unavailable' });
