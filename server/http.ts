@@ -62,6 +62,36 @@ export async function fetchOrThrow(url: string, post?: PostRequest): Promise<glo
   return res;
 }
 
+// The body of a response, refused as soon as it is larger than maxBytes: at
+// once when the size it declares is too big, otherwise while it downloads, so
+// an oversized file is never held in memory in full
+export async function readLimitedBytes(res: globalThis.Response, maxBytes: number): Promise<Uint8Array> {
+  const tooLarge = (bytes: number) => new Error(`File too large (over ${maxBytes} bytes; ${bytes} or more)`);
+  const declared = Number(res.headers.get('content-length'));
+  if (declared > maxBytes) {
+    await res.body?.cancel().catch(() => {});
+    throw tooLarge(declared);
+  }
+  if (!res.body) return new Uint8Array(await res.arrayBuffer());
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      await reader.cancel().catch(() => {});
+      throw tooLarge(total);
+    }
+    chunks.push(value);
+  }
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { body.set(chunk, offset); offset += chunk.byteLength; }
+  return body;
+}
+
 // Items of an RSS 2.0 feed, or an error if the response is not one
 export async function rssItems(url: string): Promise<any[]> {
   const parsed = xmlParser.parse(await (await fetchOrThrow(url)).text());

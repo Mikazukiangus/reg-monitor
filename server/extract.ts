@@ -178,14 +178,26 @@ async function ocrPdfPages(pdf: Awaited<ReturnType<typeof getDocumentProxy>>): P
   }
 }
 
+// Limits on reading a PDF, so one unusual document cannot use up the
+// function's time or memory. Both are well above what the sources publish (in
+// October 2026 the longest was 471 pages, and scanned HKMA pages are 8.7
+// megapixel images). A longer PDF gets no key points rather than key points
+// from part of it; a larger image is skipped, so OCR finds no text on it.
+export const PDF_LIMITS = { maxPages: 1000, maxImagePixels: 40_000_000 };
+
 // Plain text of a PDF document, as paragraphs. Falls back to OCR when the PDF
-// has no text layer.
-export async function extractPdfText(data: Uint8Array): Promise<{ text: string; ocr: boolean }> {
-  const pdf = await getDocumentProxy(data);
-  const { text } = await extractText(pdf, { mergePages: false });
-  const pages = text as string[];
-  if (pages.join('').trim().length >= 200) {
-    return { text: pdfLinesToText(pages), ocr: false };
+// has no text layer. The document is closed once reading has finished.
+export async function extractPdfText(data: Uint8Array, limits = PDF_LIMITS): Promise<{ text: string; ocr: boolean }> {
+  const pdf = await getDocumentProxy(data, { maxImageSize: limits.maxImagePixels });
+  try {
+    if (pdf.numPages > limits.maxPages) throw new Error(`PDF too long (${pdf.numPages} pages, limit ${limits.maxPages})`);
+    const { text } = await extractText(pdf, { mergePages: false });
+    const pages = text as string[];
+    if (pages.join('').trim().length >= 200) {
+      return { text: pdfLinesToText(pages), ocr: false };
+    }
+    return { text: pdfLinesToText(await ocrPdfPages(pdf)), ocr: true };
+  } finally {
+    await pdf.loadingTask.destroy();
   }
-  return { text: pdfLinesToText(await ocrPdfPages(pdf)), ocr: true };
 }

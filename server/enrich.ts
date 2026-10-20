@@ -5,7 +5,7 @@ import { summarize } from './summarize.js';
 import { extractArticleText, pagePublishedDate, extractPdfText, htmlToText } from './extract.js';
 import type { KeyPoints } from '../shared/regulatory.js';
 import { openStore, type StoreArg } from './store.js';
-import { fetchOrThrow, describeError } from './http.js';
+import { fetchOrThrow, describeError, readLimitedBytes } from './http.js';
 import { type NormalizedNotice, tagNotice } from './notice.js';
 import { fetchSgxDocText } from './sources/sgx.js';
 import { withKeyPointsUntagged } from './dates.js';
@@ -26,8 +26,7 @@ async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; ocr: b
   const href = page.match(BRDR_PDF_LINK)?.[1];
   if (!href) throw new Error('No PDF link on BRDR page');
   const pdfUrl = new URL(href, pageUrl).toString();
-  const data = new Uint8Array(await (await fetchOrThrow(pdfUrl)).arrayBuffer());
-  if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
+  const data = await readLimitedBytes(await fetchOrThrow(pdfUrl), MAX_PDF_BYTES);
   return { ...(await extractPdfText(data)), pdfUrl };
 }
 
@@ -60,9 +59,7 @@ export async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints 
       const res = await fetchOrThrow(sourceUrl);
       // A PDF by its address or, for links without ".pdf" (PDPC reports), by its type
       if (/\.pdf$/i.test(new URL(sourceUrl).pathname) || /^application\/pdf\b/i.test(res.headers.get('content-type') ?? '')) {
-        const data = new Uint8Array(await res.arrayBuffer());
-        if (data.byteLength > MAX_PDF_BYTES) throw new Error(`PDF too large (${data.byteLength} bytes)`);
-        ({ text, ocr } = await extractPdfText(data));
+        ({ text, ocr } = await extractPdfText(await readLimitedBytes(res, MAX_PDF_BYTES)));
       } else {
         const html = await res.text();
         text = extractArticleText(html, sourceUrl);
