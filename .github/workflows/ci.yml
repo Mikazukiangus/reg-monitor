@@ -6,6 +6,10 @@ on:
   push:
   pull_request:
 
+# The jobs only read the repository
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -19,3 +23,17 @@ jobs:
       - run: npx tsc --noEmit
       - run: npm test
       - run: npx vite build
+
+  # Known vulnerabilities rated high or critical in package.json's dependencies
+  # (devDependencies such as the test tools are left out), read from the
+  # lockfile. A separate job, so
+  # a new advisory shows as its own failure and never hides the test results.
+  # Vercel deploys on its own, so this warns; it does not stop a deploy.
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm audit --omit=dev --audit-level=high --package-lock-only
