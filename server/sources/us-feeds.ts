@@ -1,7 +1,6 @@
 import { isAiRuleNews, mentionsAi } from '../../shared/aiTopics.js';
 import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { fetchOrThrow, rssItems } from '../http.js';
-import { config } from '../../runtime-config.js';
 import type { NormalizedNotice } from '../notice.js';
 import { plainText, toIso, lastPathPart } from '../text.js';
 import { aiNotice, topicNotice } from './topics.js';
@@ -10,12 +9,10 @@ import { aiNotice, topicNotice } from './topics.js';
 // their work, so only items about AI rules are kept (a regulator whose every
 // item is a rule matter needs only an AI mention). privacy: 'mentions' also
 // keeps items whose title concerns privacy; 'all' keeps every item, from a
-// privacy regulator. relayUrl, when set, is where the feed is read from
-// instead (server/relay.ts); url stays the feed's own address.
+// privacy regulator.
 interface AiFeed {
   id: string;
   url: string;
-  relayUrl?: string;
   regulator: string;
   jurisdiction: string;
   type: string;
@@ -24,9 +21,8 @@ interface AiFeed {
 }
 
 // The FTC: inquiries, enforcement and policy statements on AI, and its
-// enforcement of privacy and data security. ftc.gov refuses requests from
-// outside the US, so on Vercel the feed is read through api/ftc-feed.ts.
-export const FTC: AiFeed = { id: 'ftc', url: 'https://www.ftc.gov/feeds/press-release.xml', relayUrl: config.relay.ftcFeedUrl, regulator: 'US FTC', jurisdiction: 'UNITED STATES', type: 'PRESS RELEASE', privacy: 'mentions' };
+// enforcement of privacy and data security
+export const FTC: AiFeed = { id: 'ftc', url: 'https://www.ftc.gov/feeds/press-release.xml', regulator: 'US FTC', jurisdiction: 'UNITED STATES', type: 'PRESS RELEASE', privacy: 'mentions' };
 // California's governor signs the state's AI laws (such as SB 53 on frontier
 // AI); the office's site search for "artificial intelligence", as a feed
 export const CALIFORNIA_GOVERNOR_AI: AiFeed = { id: 'ca-gov', url: 'https://www.gov.ca.gov/?s=artificial+intelligence&feed=rss2', regulator: 'California Governor', jurisdiction: 'UNITED STATES (CALIFORNIA)', type: 'NEWS' };
@@ -86,7 +82,7 @@ function wholeSentences(excerpt: string): string | undefined {
 export const LINK_ONLY = /^(?:source|read more|continue reading|more|link)\W*$/i;
 
 export async function fetchAiFeed(feed: AiFeed, limit: number): Promise<NormalizedNotice[]> {
-  const items = await rssItems(feed.relayUrl ?? feed.url);
+  const items = await rssItems(feed.url);
   return items
     .map((item: any) => ({
       title: plainText(String(item.title)),

@@ -51,7 +51,7 @@ const PROBE_URLS: Record<EndpointId, string> = {
   'ec-ai': EC_AI_NEWS,
   'govuk-ai': `${GOV_UK_AI}&count=1`,
   'fedreg-ai': `${FEDERAL_REGISTER_AI}&per_page=1`,
-  'ftc-rss': FTC.relayUrl ?? FTC.url,
+  'ftc-rss': FTC.url,
   'fedreg-ftc': `${FEDERAL_REGISTER_FTC}&per_page=1`,
   'ca-gov': CALIFORNIA_GOVERNOR_AI.url,
   calprivacy: CALPRIVACY.url,

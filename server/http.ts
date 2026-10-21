@@ -62,16 +62,15 @@ export async function fetchOrThrow(url: string, post?: PostRequest): Promise<glo
   return res;
 }
 
-// Sites that refuse requests from outside their country, and what to say when they do
-const REGION_LOCKED_HOSTS: Record<string, string> = { 'www.ftc.gov': 'ftc.gov refuses requests from outside the US' };
-// A reply passed on by the US relay (server/relay.ts) names the site it came from
-export const RELAYED_FROM_HEADER = 'x-regsonar-relayed-from';
+// Sites that have been down for a long time, and what they say about it, so a
+// failure is not taken for a fault of the app. ftc.gov has answered every
+// request with "Page Not Found" since at least 10 October 2026, from Hong Kong,
+// from the US and in a browser, where it says its website is unavailable.
+const KNOWN_OUTAGES: Record<string, string> = { 'www.ftc.gov': 'ftc.gov says "The FTC website is currently unavailable"' };
 
 // What a failed reply's status says: "HTTP 404", with the reason when it is known
 export function httpStatusText(url: string, res: globalThis.Response): string {
-  const relayedFrom = res.headers.get(RELAYED_FROM_HEADER);
-  if (relayedFrom) return `HTTP ${res.status} from ${relayedFrom} through the US relay`;
-  const reason = REGION_LOCKED_HOSTS[new URL(url).host];
+  const reason = KNOWN_OUTAGES[new URL(url).host];
   return reason ? `HTTP ${res.status}: ${reason}` : `HTTP ${res.status}`;
 }
 

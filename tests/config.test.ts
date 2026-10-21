@@ -71,13 +71,6 @@ test('database aliases and site URLs follow documented precedence', () => {
   assert.equal(createConfig({ DIGEST_SITE_URL: 'https://custom.example.com/app/', VERCEL_PROJECT_PRODUCTION_URL: 'regsonar.example.com' }).digest.siteUrl, 'https://custom.example.com/app');
 });
 
-test('the FTC feed is read through the US relay at the production address, or the one named', () => {
-  assert.equal(createConfig({}).relay.ftcFeedUrl, undefined);
-  assert.equal(createConfig({ VERCEL_PROJECT_PRODUCTION_URL: 'regsonar.example.com' }).relay.ftcFeedUrl, 'https://regsonar.example.com/api/ftc-feed');
-  assert.equal(createConfig({ FTC_RELAY_URL: 'https://relay.example.com/ftc/', VERCEL_PROJECT_PRODUCTION_URL: 'regsonar.example.com' }).relay.ftcFeedUrl, 'https://relay.example.com/ftc');
-  assert.throws(() => createConfig({ FTC_RELAY_URL: 'https://relay.example.com/ftc?token=1' }), /FTC_RELAY_URL/);
-});
-
 test('email is configured only when the optional sending settings are complete', () => {
   assert.equal(createConfig({ CRON_SECRET: 'test-secret' }).digest.configured, false);
   const config = createConfig({ CRON_SECRET: 'test-secret', RESEND_API_KEY: 're_test', DIGEST_TO: ' owner@example.com, team@example.com, ', DIGEST_FROM: 'RegSonar <sender@example.com>' });

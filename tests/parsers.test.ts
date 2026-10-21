@@ -13,6 +13,7 @@ import { GOV_UK_AI, parseUkAiPolicy } from '../server/sources/gov-uk.ts';
 import { COLORADO_AG_AI_RULEMAKING, parseColoradoAiRulemaking } from '../server/sources/us-feeds.ts';
 import { documentDates } from '../server/document-dates.ts';
 import { withKeyPoints } from '../server/enrich.ts';
+import { httpStatusText } from '../server/http.ts';
 import { keyDate } from '../shared/keyDate.ts';
 import { HKMA_FEEDS, parseHkmaRss } from '../server/sources/hkma.ts';
 import { JFSA_RSS, parseJfsaNews } from '../server/sources/jfsa.ts';
@@ -101,6 +102,12 @@ test('Federal Register: the FTC\'s documents on AI or privacy, less notices of i
   assert.deepEqual(one('Agency Information Collection Activities; Proposed Collection; Comment Request', 'Health Breach Notification Rule privacy'), []);
   assert.deepEqual(one('Telemarketing Sales Rule Fees'), []);
   assert.deepEqual(parseFederalRegisterFtc({}), []);
+});
+
+test('a failed reply from a site that is known to be down says what the site says', () => {
+  const refused = new Response('', { status: 404 });
+  assert.equal(httpStatusText('https://www.ftc.gov/feeds/press-release.xml', refused), 'HTTP 404: ftc.gov says "The FTC website is currently unavailable"');
+  assert.equal(httpStatusText('https://www.sec.gov/rss', refused), 'HTTP 404');
 });
 
 test('Federal Register AI documents are named by the most specific agency the Federal Register knows', () => {
