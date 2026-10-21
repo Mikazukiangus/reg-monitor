@@ -6,7 +6,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import { extractClosingDate } from '../server/document-dates.ts';
 import { dedupeByDocument } from '../shared/dedupe.ts';
-import { regulatorMatches, ruleMatches } from '../shared/alertRules.ts';
+import { DEFAULT_RULES, regulatorMatches, ruleMatches } from '../shared/alertRules.ts';
 import { linkPairs, relatedOf } from '../shared/related.ts';
 import { noticeTimeline } from '../src/lib/timeline.ts';
 import { publishedDay } from '../shared/derived.ts';
@@ -32,6 +32,19 @@ test('rules match regulator, impact and keywords at word starts', () => {
   assert.ok(!ruleMatches(rule, { regulator: 'MAS', impactScore: 8, title: 'MAS fines a bank' }));
   assert.ok(!ruleMatches(rule, { regulator: 'SFC', impactScore: 6, title: 'SFC fines a broker' }));
   assert.ok(ruleMatches(rule, { regulator: 'SFC', impactScore: 8, title: 'Update', keyPoints: { points: ['The fine was HK$7 million.'] } }));
+});
+
+test("the default consultations rule matches the Colorado AG's AI rulemaking, from its key points", () => {
+  // As production had it on 2026-10-21 (coag-ai-rulemaking-20261008155835)
+  const notice = {
+    regulator: 'Colorado AG', impactScore: 8.5,
+    title: 'Colorado Automated Decision-Making Technology & Chatbot Safety Rulemaking',
+    keyPoints: { points: ['The Colorado Attorney General’s Office now invites formal rulemaking comments from all members of the public regarding the proposed draft ADMT and Chatbot Safety Rules.'] }
+  };
+  const [consultations] = DEFAULT_RULES;
+  assert.equal(consultations.name, 'Consultations & Deadlines');
+  assert.ok(ruleMatches(consultations, notice));
+  assert.ok(!ruleMatches(consultations, { ...notice, keyPoints: undefined }));
 });
 
 test("a rule's regulator matches whole words of the notice's regulator, not part of a word", () => {
