@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "[ -n \"$VERCEL_GIT_PREVIOUS_SHA\" ] && [ \"$(git rev-parse HEAD)\" != \"$VERCEL_GIT_PREVIOUS_SHA\" ] && git cat-file -e \"$VERCEL_GIT_PREVIOUS_SHA^{commit}\" 2>/dev/null && git diff --quiet \"$VERCEL_GIT_PREVIOUS_SHA\" HEAD -- . ':(exclude)*.md'",
   "regions": [
     "hkg1"
   ],
@@ -39,7 +40,7 @@
   "functions": {
     "api/index.ts": {
       "maxDuration": 120,
-      "includeFiles": "node_modules/{tesseract.js,tesseract.js-core,@tesseract.js-data/eng,bmp-js,idb-keyval,is-url,node-fetch,whatwg-url,tr46,webidl-conversions,regenerator-runtime,wasm-feature-detect,zlibjs}/**"
+      "includeFiles": "node_modules/{{tesseract.js,bmp-js,idb-keyval,is-url,node-fetch,whatwg-url,tr46,webidl-conversions,regenerator-runtime,wasm-feature-detect,zlibjs}/**,tesseract.js-core/{package.json,{*[de],*lstm}.{js,wasm}},@tesseract.js-data/eng/{package.json,*_int/*}}"
     }
   },
   "crons": [

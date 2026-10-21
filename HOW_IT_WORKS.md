@@ -170,6 +170,15 @@ The score does not know how much a notice matters to a particular firm, and is n
 - Requests are spaced out to stay polite to the regulators' sites.
 - There is no sample or made-up data. If a source fails, the last good data is kept and the error is shown.
 
+## Deployments and storage
+
+Every push builds a deployment (a preview for a branch, production for `main`), and Vercel keeps each one's copy of the API function until its retention period ends. Their total is the project's Functions Storage, which on the Hobby plan has a 10 GB allowance; in October 2026 it reached 9.1 GB, from 236 kept deployments of about 41 MB each, two thirds of them for commits that changed only the project log. Two settings in `vercel.json` keep it down:
+
+- **`includeFiles`** adds the OCR files Vercel's tracing misses, and only those OCR loads: the English model `4.0.0_best_int` and the Tesseract engine builds for Node, as `.js` and `.wasm` (not the `.wasm.js` copies made for browsers, nor the larger `4.0.0` model). tesseract.js 7 loads the builds without "-lstm" in Node even in LSTM mode (it compares a true/false flag with the mode numbers), so both kinds are kept. This brings the OCR files from 31 MB to 12 MB compressed, about 22 MB a deployment in all. `npm test` checks that every build tesseract.js can load and the model are included, and reads a sample image by OCR.
+- **`ignoreCommand`** skips the build when nothing but Markdown files (`*.md`) has changed since the branch's last successful deployment (`VERCEL_GIT_PREVIOUS_SHA`). A merge that brings code and ends with a log update is still built, as are a redeploy of the same commit, a branch's first deployment, and any case where the last deployment's commit is not in Vercel's clone. `npm test` runs the command in a scratch repository for each case.
+
+Old deployments are deleted by the project's deployment retention policy (Project → Settings → Security). Vercel always keeps the deployment serving the site and the last three production deployments, and a deleted deployment can be restored for 30 days (Settings → Security → Recently Deleted).
+
 ## Security headers
 
 `vercel.json` sends a Content Security Policy with every response: scripts only from the site itself (plus the one inline script in `index.html` that sets the theme before the page draws, allowed by its hash), styles and fonts only from the site and Google Fonts, no framing by other sites, and no plugins. It also sends `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, a `Referrer-Policy` that sends other sites only the origin, and a `Permissions-Policy` that turns off camera, microphone and location. A test fails if the inline script changes without its hash. The server does not send `X-Powered-By`.

@@ -152,11 +152,17 @@ function pdfLinesToText(pages: string[]): string {
 // using the English data bundled in @tesseract.js-data/eng (no download).
 const OCR_MAX_PAGES = 4;
 const require = createRequire(import.meta.url);
-const OCR_LANG_PATH = path.join(path.dirname(require.resolve('@tesseract.js-data/eng/package.json')), '4.0.0_best_int');
+export const OCR_LANG_PATH = path.join(path.dirname(require.resolve('@tesseract.js-data/eng/package.json')), '4.0.0_best_int');
+
+// A Tesseract worker for English. The engine and model files it loads are
+// listed in vercel.json's includeFiles (tests/bundle.test.ts checks them).
+export async function createOcrWorker() {
+  const { createWorker } = (await import('tesseract.js')).default;
+  return createWorker('eng', 1, { langPath: OCR_LANG_PATH, cacheMethod: 'none', gzip: true });
+}
 
 async function ocrPdfPages(pdf: Awaited<ReturnType<typeof getDocumentProxy>>): Promise<string[]> {
-  const { createWorker } = (await import('tesseract.js')).default;
-  const worker = await createWorker('eng', 1, { langPath: OCR_LANG_PATH, cacheMethod: 'none', gzip: true });
+  const worker = await createOcrWorker();
   try {
     const pages: string[] = [];
     for (let p = 1; p <= Math.min(pdf.numPages, OCR_MAX_PAGES); p++) {
