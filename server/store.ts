@@ -26,7 +26,8 @@ export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
 export type { ScheduledCheck };
 
 export interface NoticeStore {
-  save(notices: (NormalizedNotice & { pageDateTried?: boolean })[]): Promise<void>;
+  // sourceId: the source that read them (left out when re-saving a stored copy)
+  save(notices: (NormalizedNotice & { pageDateTried?: boolean })[], sourceId?: string): Promise<void>;
   // Stored copies by id
   byIds(ids: string[]): Promise<Map<string, StoredNotice>>;
   // Published in the last `days` days, newest first
@@ -44,7 +45,7 @@ export interface NoticeStore {
 
 export function noticeStore(db: Db): NoticeStore {
   return {
-    save: notices => saveNotices(db, notices.map(toStored)),
+    save: (notices, sourceId) => saveNotices(db, notices.map(toStored), sourceId),
     byIds: async ids => new Map([...(await storedNotices(db, ids))].map(([id, row]) => [id, fromRow(row)])),
     recent: async (days, limit) => (await recentNotices(db, days, limit)).map(fromRow),
     search: async (query, limit) => (await searchNotices(db, query, limit)).map(fromRow),

@@ -25,10 +25,10 @@ const sourceState = new Map<string, SourceState>();
 
 // Store notices in the history database, if there is one. Failures are logged
 // and never affect the live feed.
-async function archiveNotices(notices: NormalizedNotice[], store: StoreArg = openStore()) {
+async function archiveNotices(notices: NormalizedNotice[], sourceId: string, store: StoreArg = openStore()) {
   if (notices.length === 0) return;
   try {
-    await (await store)?.save(notices);
+    await (await store)?.save(notices, sourceId);
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not save notices', err);
   }
@@ -53,7 +53,7 @@ export async function refreshSource(source: (typeof SOURCES)[number]): Promise<S
         s.notices = notices;
         s.lastSuccessAt = new Date().toISOString();
         s.error = undefined;
-        await archiveNotices(notices);
+        await archiveNotices(notices, source.id);
       })
       .catch((err) => {
         s.error = describeError(err);
@@ -80,6 +80,7 @@ const POLL_KEY_POINT_FETCHES = config.polling.keyPointFetches;
 const POLL_FETCH_WINDOW_MS = config.polling.fetchWindowMs;
 
 interface PollResult {
+  id: string;
   name: string;
   read: number;
   added: number;
@@ -115,8 +116,9 @@ async function pollSource(source: (typeof SOURCES)[number], until: number, store
     logger.warn('[RegSonar History] Notice id already names another document', { source: source.name, ...conflict });
   }
   const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until }, store);
-  await archiveNotices(enriched, store);
+  await archiveNotices(enriched, source.id, store);
   return {
+    id: source.id,
     name: source.name,
     read: notices.length,
     added: notices.filter(n => !stored.has(n.id)).length,

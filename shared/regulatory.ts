@@ -96,6 +96,8 @@ export interface RegulatoryNotice {
   ref: string;
   title: string;
   regulator: string;
+  // Stable id of the regulator (shared/regulators.ts), set by the server
+  regulatorId?: string;
   jurisdiction: string;
   jurisdictionCode: JurisdictionCode;
   type: string;
@@ -193,7 +195,8 @@ export interface EndpointMetric {
 
 // What a scheduled source check read (stored by the server, shown on the feed)
 export interface CheckSummary {
-  sources: { name: string; read: number; added: number; withoutKeyPoints: number }[];
+  // id: the source's stable id (checks recorded from October 2026)
+  sources: { id?: string; name: string; read: number; added: number; withoutKeyPoints: number }[];
   failed: { name: string; error: string }[];
   pageDatesFound: number;
 }

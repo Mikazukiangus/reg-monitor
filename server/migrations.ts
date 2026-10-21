@@ -10,6 +10,8 @@ export interface Migration {
   version: number;
   name: string;
   sql: string;
+  // A query run after the migration, whose one row of counts is logged
+  report?: string;
 }
 
 // One connection to the database. A migration runs on a single connection,
@@ -19,6 +21,28 @@ export interface Session {
   exec(sql: string): Promise<void>;
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
 }
+
+// The id prefix of each source's notices that no other source uses, as of
+// October 2026, for linking notices saved before migration 2 to the source
+// that read them. Left out, because two or more sources use them: fedreg-
+// (the Federal Register and its AI search), mas- (three MAS searches) and
+// govcn- (China's AI and personal-information searches). Part of migration 2:
+// don't edit.
+export const SOURCE_PREFIXES_2026_10: [prefix: string, sourceId: string][] = [
+  ['fca-', 'uk-fca-news'], ['pra-', 'uk-pra-publications'],
+  ['hkma-pr-', 'hkma-press-releases'], ['hkma-cir-', 'hkma-circulars'], ['hkma-con-', 'hkma-consultations'],
+  ['sfc-pr-', 'sfc-press-releases'], ['sfc-cir-', 'sfc-circulars'], ['sfc-con-', 'sfc-consultations'],
+  ['hkex-', 'hkex-regulatory-announcements'], ['asic-', 'asic-media-releases'], ['jfsa-', 'jfsa-news'],
+  ['esma-', 'esma-news'], ['fsb-', 'fsb-publications'],
+  ['sgx-con-', 'sgx-regco-consultations'], ['sgx-disc-', 'sgx-regco-disciplinary-actions'], ['sgx-news-', 'sgx-regco-announcements'],
+  ['asx-con-', 'asx-public-consultations'], ['jpx-', 'jpx-rule-revisions'], ['finra-', 'finra-notices'],
+  ['bnm-', 'bnm-press-releases'], ['sc-my-', 'sc-malaysia-media-releases'], ['bis-', 'bis-media-releases'],
+  ['ec-', 'ec-ai-news'], ['govuk-', 'uk-dsit-ai-security-institute'], ['ftc-', 'ftc-ai-privacy'],
+  ['ca-gov-', 'california-governor-ai'], ['calprivacy-', 'calprivacy-news'], ['co-ag-', 'colorado-ag-ai'],
+  ['msit-', 'korea-msit-ai'], ['cao-ai-', 'japan-cabinet-office-ai'], ['ico-', 'uk-ico-news'], ['edpb-', 'edpb-news'],
+  ['pdpc-', 'singapore-pdpc-news'], ['jpdp-', 'malaysia-jpdp-announcements'], ['oaic-', 'australia-oaic-privacy'],
+  ['ppc-', 'japan-ppc-news'], ['pipc-', 'korea-pipc-notices']
+];
 
 export const MIGRATIONS: Migration[] = [
   {
@@ -52,6 +76,38 @@ CREATE TABLE IF NOT EXISTS scheduled_checks (
 );
 CREATE INDEX IF NOT EXISTS scheduled_checks_started_idx ON scheduled_checks (started_at DESC);
 `
+  },
+  {
+    version: 2,
+    name: 'regulator ids and notice sources',
+    // regulator_id: the regulator's stable id (shared/regulators.ts), made
+    // from the name for notices already saved, as regulatorSlug does.
+    // notice_sources: each source that has read a notice, with when it first
+    // and last did; a notice can come from more than one. Notices already
+    // saved are linked where their id prefix belongs to one source.
+    sql: `
+ALTER TABLE notices ADD COLUMN regulator_id text;
+UPDATE notices SET regulator_id = NULLIF(trim(both '-' from regexp_replace(lower(regulator), '[^a-z0-9]+', '-', 'g')), '');
+CREATE INDEX notices_regulator_id_idx ON notices (regulator_id);
+CREATE TABLE notice_sources (
+  notice_id text NOT NULL REFERENCES notices (id) ON DELETE CASCADE,
+  source_id text NOT NULL,
+  first_seen_at timestamptz NOT NULL DEFAULT now(),
+  last_seen_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (notice_id, source_id)
+);
+CREATE INDEX notice_sources_source_idx ON notice_sources (source_id);
+INSERT INTO notice_sources (notice_id, source_id, first_seen_at, last_seen_at)
+SELECT n.id, p.source_id, n.first_seen_at, n.last_seen_at
+FROM notices n JOIN (VALUES
+${SOURCE_PREFIXES_2026_10.map(([prefix, sourceId]) => `  ('${prefix}', '${sourceId}')`).join(',\n')}
+) AS p (prefix, source_id) ON starts_with(n.id, p.prefix);
+`,
+    report: `SELECT
+  (SELECT count(*) FROM notices)::int AS notices,
+  (SELECT count(*) FROM notices WHERE regulator_id IS NOT NULL)::int AS "with regulator id",
+  (SELECT count(DISTINCT notice_id) FROM notice_sources)::int AS "linked to a source",
+  (SELECT count(*) FROM notices n WHERE NOT EXISTS (SELECT 1 FROM notice_sources s WHERE s.notice_id = n.id))::int AS "not linked"`
   }
 ];
 
@@ -67,7 +123,8 @@ const checksum = (sql: string) => createHash('sha256').update(sql).digest('hex')
 export async function migrate(
   session: Session,
   migrations: Migration[] = MIGRATIONS,
-  warn: (message: string) => void = message => logger.warn(`[RegSonar History] ${message}`)
+  warn: (message: string) => void = message => logger.warn(`[RegSonar History] ${message}`),
+  info: (message: string) => void = message => logger.info(`[RegSonar History] ${message}`)
 ): Promise<number[]> {
   await session.exec('BEGIN');
   try {
@@ -95,6 +152,10 @@ export async function migrate(
       await session.exec(m.sql);
       await session.query('INSERT INTO schema_migrations (version, name, checksum) VALUES ($1, $2, $3)', [m.version, m.name, sum]);
       ran.push(m.version);
+      if (m.report) {
+        const [counts] = await session.query(m.report);
+        info(`Migration ${m.version} (${m.name}): ${Object.entries(counts ?? {}).map(([k, v]) => `${k} ${v}`).join(', ')}`);
+      }
     }
     await session.exec('COMMIT');
     return ran;

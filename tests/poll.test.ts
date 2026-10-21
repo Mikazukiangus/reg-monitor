@@ -47,6 +47,11 @@ test('the first check fills the history, reading further back where the list was
   assert.deepEqual(status.latest?.summary.failed, failed);
   assert.equal(status.latest?.summary.sources.length, results.length);
   assert.ok(status.latest?.summary.sources.every((r: any) => !('notices' in r)), 'the public check log has counts, not whole documents');
+  // Each source is named in the log by its stable id, and its notices are linked to it
+  assert.deepEqual(status.latest?.summary.sources.map((r: any) => r.id), results.map(r => r.id));
+  const linked = await (await getDb())!.query<{ source_id: string; n: number }>('SELECT source_id, count(*)::int AS n FROM notice_sources GROUP BY source_id');
+  const bySource = new Map(linked.map(r => [r.source_id, r.n]));
+  for (const r of results) assert.equal(bySource.get(r.id) ?? 0, new Set(r.notices.map(n => n.id)).size, r.name);
 });
 
 test('a second check adds nothing and does not read further back', async () => {

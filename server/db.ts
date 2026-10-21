@@ -64,6 +64,7 @@ export function getDb(): Promise<Db | null> {
 export interface StoredRow {
   id: string;
   regulator: string;
+  regulatorId?: string;
   jurisdictionCode: string;
   format: string;
   title: string;
@@ -74,7 +75,8 @@ export interface StoredRow {
 
 // Insert or refresh notices. Key points already stored are kept when the
 // new copy has none (for example when a document fetch failed this time).
-export async function saveNotices(db: Db, notices: StoredRow[]): Promise<void> {
+// sourceId: the source that read them, recorded in notice_sources.
+export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: string): Promise<void> {
   // Postgres refuses an INSERT ... ON CONFLICT that changes one row twice, so
   // an id listed twice would lose its whole batch: the first copy is kept
   const seen = new Set<string>();
@@ -83,15 +85,16 @@ export async function saveNotices(db: Db, notices: StoredRow[]): Promise<void> {
     const batch = notices.slice(i, i + 50);
     const values: unknown[] = [];
     const rows = batch.map((n, j) => {
-      values.push(n.id, n.regulator, n.jurisdictionCode, n.format, n.title, n.publishedAt || null, JSON.stringify(n));
-      const k = j * 7;
-      return `($${k + 1}, $${k + 2}, $${k + 3}, $${k + 4}, $${k + 5}, $${k + 6}, $${k + 7}::jsonb)`;
+      values.push(n.id, n.regulator, n.regulatorId || null, n.jurisdictionCode, n.format, n.title, n.publishedAt || null, JSON.stringify(n));
+      const k = j * 8;
+      return `($${k + 1}, $${k + 2}, $${k + 3}, $${k + 4}, $${k + 5}, $${k + 6}, $${k + 7}, $${k + 8}::jsonb)`;
     });
     await db.query(
-      `INSERT INTO notices (id, regulator, jurisdiction_code, format, title, published_at, data)
+      `INSERT INTO notices (id, regulator, regulator_id, jurisdiction_code, format, title, published_at, data)
        VALUES ${rows.join(', ')}
        ON CONFLICT (id) DO UPDATE SET
          regulator = EXCLUDED.regulator,
+         regulator_id = COALESCE(EXCLUDED.regulator_id, notices.regulator_id),
          jurisdiction_code = EXCLUDED.jurisdiction_code,
          format = EXCLUDED.format,
          title = EXCLUDED.title,
@@ -107,6 +110,13 @@ export async function saveNotices(db: Db, notices: StoredRow[]): Promise<void> {
          END`,
       values
     );
+    if (sourceId) {
+      await db.query(
+        `INSERT INTO notice_sources (notice_id, source_id) SELECT unnest($1::text[]), $2
+         ON CONFLICT (notice_id, source_id) DO UPDATE SET last_seen_at = now()`,
+        [batch.map(n => n.id), sourceId]
+      );
+    }
   }
 }
 

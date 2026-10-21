@@ -419,3 +419,47 @@ test('every source gives the same notice ids as before', async () => {
   const recorded: string[] = JSON.parse(readFileSync('tests/fixtures/notice-ids.json', 'utf8'));
   assert.deepEqual([...ids].sort(), recorded);
 });
+
+test('every source has its own stable id', () => {
+  const ids = SOURCES.map(s => s.id);
+  assert.equal(new Set(ids).size, SOURCES.length);
+  assert.ok(ids.every(id => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)), ids.join(' '));
+});
+
+test('every regulator is listed with an id made from its name', async () => {
+  const { REGULATORS, regulatorSlug, regulatorIdOf } = await import('../shared/regulators.ts');
+  assert.equal(new Set(REGULATORS.map(r => r.id)).size, REGULATORS.length, 'duplicate ids');
+  assert.equal(new Set(REGULATORS.map(r => r.name)).size, REGULATORS.length, 'duplicate names');
+  for (const r of REGULATORS) assert.equal(r.id, regulatorSlug(r.name), r.name);
+  const listed = new Set(REGULATORS.map(r => r.name));
+  for (const source of SOURCES) {
+    if (source.name === 'UK FCA News RSS') continue;
+    for (const n of await source.fetch(1000)) {
+      assert.ok(listed.has(n.regulator), `${source.name}: ${n.regulator} is not in shared/regulators.ts`);
+      assert.equal(n.regulatorId, regulatorIdOf(n.regulator));
+    }
+  }
+});
+
+// Migration 2 links notices saved before it to a source by their id prefix
+test('migration 2 links each recorded notice only to the source that read it', async () => {
+  const { SOURCE_PREFIXES_2026_10 } = await import('../server/migrations.ts');
+  const ids = new Set(SOURCES.map(s => s.id));
+  assert.ok(SOURCE_PREFIXES_2026_10.every(([, sourceId]) => ids.has(sourceId)));
+  const prefixed = new Set<string>();
+  for (const source of SOURCES) {
+    if (source.name === 'UK FCA News RSS') continue;
+    for (const n of await source.fetch(1000)) {
+      const matches = SOURCE_PREFIXES_2026_10.filter(([prefix]) => n.id.startsWith(prefix)).map(([, sourceId]) => sourceId);
+      assert.ok(matches.length === 0 || (matches.length === 1 && matches[0] === source.id), `${n.id}: ${matches.join(', ')} for ${source.id}`);
+      if (matches.length) prefixed.add(source.id);
+    }
+  }
+  // Every source's notices are linked except those whose prefix another source
+  // shares; the FCA (recorded while blocked) and the FTC (no notice on AI or
+  // privacy in its recorded reply) have no recorded notices to link
+  assert.deepEqual([...ids].filter(id => !prefixed.has(id)).sort(), [
+    'china-policy-library-ai', 'china-policy-library-personal-information', 'ftc-ai-privacy', 'mas-circulars-guidelines', 'mas-consultations',
+    'mas-media-releases', 'uk-fca-news', 'us-federal-register', 'us-federal-register-ai'
+  ]);
+});
