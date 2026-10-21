@@ -1,7 +1,6 @@
-import { createHash } from 'crypto';
 import { fetchOrThrow } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
-import { plainText, newestFirst, zonedToIso } from '../text.js';
+import { plainText, newestFirst, zonedToIso, shortHash } from '../text.js';
 import { aiNotice } from './topics.js';
 
 // Japan's AI policy under the AI Promotion Act: the topics list of the Cabinet
@@ -20,7 +19,7 @@ export function parseCaoAiTopics(html: string, pageUrl: string): { date: string;
 export async function fetchCaoAiTopics(limit = 4): Promise<NormalizedNotice[]> {
   const rows = parseCaoAiTopics(await (await fetchOrThrow(CAO_AI_TOPICS)).text(), CAO_AI_TOPICS);
   return newestFirst(rows).slice(0, limit).map(r => aiNotice({
-    id: `cao-ai-${r.date}-${createHash('sha1').update(r.title).digest('hex').slice(0, 8)}`,
+    id: `cao-ai-${r.date}-${shortHash(r.title)}`,
     ref: `Cabinet Office AI Strategy ${r.date}`,
     title: r.title,
     regulator: 'Cabinet Office',

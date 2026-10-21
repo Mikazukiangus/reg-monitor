@@ -88,6 +88,20 @@ interface PollResult {
   notices: NormalizedNotice[];
 }
 
+// Notices whose id already names a different document: one saved under that
+// id with another link, or another notice read with the same id. Only one
+// copy is kept under an id, so these are reported rather than passed over.
+export function idConflicts(notices: NormalizedNotice[], stored: Map<string, { dossierUrl?: string }>) {
+  const conflicts: { id: string; saved: string; read: string }[] = [];
+  const read = new Map<string, string | undefined>();
+  for (const n of notices) {
+    const saved = read.has(n.id) ? read.get(n.id) : stored.get(n.id)?.dossierUrl;
+    if (saved && n.dossierUrl && saved !== n.dossierUrl) conflicts.push({ id: n.id, saved, read: n.dossierUrl });
+    if (!read.has(n.id)) read.set(n.id, n.dossierUrl);
+  }
+  return conflicts;
+}
+
 async function pollSource(source: (typeof SOURCES)[number], until: number, store: NoticeStore | null): Promise<PollResult> {
   let notices = await source.fetch(POLL_LIMIT);
   let stored = store ? await store.byIds(notices.map(n => n.id)) : new Map();
@@ -96,6 +110,9 @@ async function pollSource(source: (typeof SOURCES)[number], until: number, store
     notices = await source.fetch(BACKFILL_LIMIT);
     stored = await store.byIds(notices.map(n => n.id));
     backfilled = true;
+  }
+  for (const conflict of idConflicts(notices, stored)) {
+    logger.warn('[RegSonar History] Notice id already names another document', { source: source.name, ...conflict });
   }
   const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until }, store);
   await archiveNotices(enriched, store);

@@ -1,7 +1,6 @@
-import { createHash } from 'crypto';
 import { fetchOrThrow } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
-import { plainText, newestFirst, zonedToIso } from '../text.js';
+import { plainText, newestFirst, zonedToIso, shortHash } from '../text.js';
 import { privacyNotice } from './topics.js';
 
 // Japan's Personal Information Protection Commission: its news list (HTML, in
@@ -39,7 +38,7 @@ export async function fetchPpcNews(limit = 4): Promise<NormalizedNotice[]> {
   const rows = parsePpcNews(await (await fetchOrThrow(PPC_NEWS)).text());
   return newestFirst(rows).slice(0, limit).map(r => privacyNotice({
     // A page can be listed more than once as it is updated, so the title is part of the id
-    id: `ppc-${r.date}-${createHash('sha1').update(r.title).digest('hex').slice(0, 8)}`,
+    id: `ppc-${r.date}-${shortHash(r.title)}`,
     ref: `PPC ${r.date}`,
     title: r.title,
     regulator: 'PPC',

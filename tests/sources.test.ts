@@ -404,3 +404,18 @@ test('CalPrivacy: every item is kept, as data privacy', async () => {
   const notices = await byName('CalPrivacy News').fetch(20);
   assert.equal(notices.length, 10);
 });
+
+// A notice's id is its key in the history and in saved and shared links, so a
+// change to how ids are made must not rename notices already saved. Every
+// source, read as far back as the recorded replies go, gives exactly the ids
+// recorded in tests/fixtures/notice-ids.json. New recorded replies bring new
+// ids: add those to the list, but an id that disappears means a renamed notice.
+test('every source gives the same notice ids as before', async () => {
+  const ids = new Set<string>();
+  for (const source of SOURCES) {
+    if (source.name === 'UK FCA News RSS') continue;
+    for (const n of await source.fetch(1000)) ids.add(n.id);
+  }
+  const recorded: string[] = JSON.parse(readFileSync('tests/fixtures/notice-ids.json', 'utf8'));
+  assert.deepEqual([...ids].sort(), recorded);
+});

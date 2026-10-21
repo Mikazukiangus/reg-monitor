@@ -2,7 +2,7 @@ import { summarize } from '../summarize.js';
 import { mentionsAi } from '../../shared/aiTopics.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
-import { toIso } from '../text.js';
+import { shortHash, toIso } from '../text.js';
 import { NO_DATE, withKeyPointsUntagged } from '../dates.js';
 
 // Date fields are only returned when requested by name
@@ -22,14 +22,14 @@ export async function fetchFederalRegister(limit = 4): Promise<NormalizedNotice[
 export function parseFederalRegister(data: any): NormalizedNotice[] {
   const results = data.results || [];
 
-  return results.map((doc: any, idx: number) => {
+  return results.map((doc: any) => {
     const agencies = doc.agencies?.map((a: any) => a.raw_name || a.name).join(' & ') || 'US SEC & CFTC';
     const isSec = agencies.toLowerCase().includes('securities');
-    return federalRegisterNotice(doc, idx, isSec ? 'US SEC' : 'US CFTC');
+    return federalRegisterNotice(doc, isSec ? 'US SEC' : 'US CFTC');
   });
 }
 
-function federalRegisterNotice(doc: any, idx: number, reg: string, extraTags: string[] = []): NormalizedNotice {
+function federalRegisterNotice(doc: any, reg: string, extraTags: string[] = []): NormalizedNotice {
   const format = formatOf(doc.type || '', doc.title || '');
   const sector = sectorOf((doc.title || '') + ' ' + (doc.abstract || ''));
   const commentsClose: string | undefined = doc.comments_close_on || undefined;
@@ -48,7 +48,8 @@ function federalRegisterNotice(doc: any, idx: number, reg: string, extraTags: st
   }
 
   const notice: NormalizedNotice = {
-    id: `fedreg-${doc.document_number || idx}`,
+    // Without a document number, the link names the notice: a place in the list could name another
+    id: `fedreg-${doc.document_number || shortHash(doc.html_url || doc.title || '')}`,
     ref: `FedReg: ${doc.citation || doc.document_number}`,
     title: doc.title,
     regulator: reg,
@@ -106,10 +107,10 @@ export function parseFederalRegisterAi(data: any, limit = 4): NormalizedNotice[]
   return docs
     .filter(doc => mentionsAi(doc.title || '') && !NOT_A_RULE.test(doc.title || ''))
     .slice(0, limit)
-    .map((doc, idx) => {
+    .map(doc => {
       // The most specific agency: "National Institute of Standards and Technology" rather than "Commerce Department"
       const agency = doc.agencies?.at(-1);
       const name: string = agency?.name || agency?.raw_name || '';
-      return federalRegisterNotice(doc, idx, FEDERAL_AGENCIES[name] || (name ? `US ${name}` : 'US Federal Register'), ['AI rules']);
+      return federalRegisterNotice(doc, FEDERAL_AGENCIES[name] || (name ? `US ${name}` : 'US Federal Register'), ['AI rules']);
     });
 }

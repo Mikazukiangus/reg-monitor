@@ -2,7 +2,7 @@ import { extractClosingDate } from '../document-dates.js';
 import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
-import { stripHtml, zonedToIso, lastPathPart, closingDateFields } from '../text.js';
+import { stripHtml, zonedToIso, lastPathPart, closingDateFields, shortHash } from '../text.js';
 
 // ASX public consultations: a dated table on ASX's consultations page. Each
 // entry says what ASX published and, for consultations, when submissions close.
@@ -33,7 +33,7 @@ export async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice
   return rows
     .filter(row => !/^On \w+day[^,]*,[^.]*\b(recording|webinar|briefing|forum)\b|^ASX has made available a recording/i.test(row.text))
     .slice(0, limit)
-    .map((row, i) => {
+    .map(row => {
     // "On Wednesday 30 September 2026, ASX published a consultation paper on ..."
     const first = row.text.split(/(?<=\.)\s+(?=[A-Z])/)[0].replace(/^On \w+day,? \d{1,2} \w+ \d{4},\s*/i, '');
     const title = first.charAt(0).toUpperCase() + first.slice(1);
@@ -43,7 +43,8 @@ export async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice
     const publishedAt = zonedToIso(`${row.date}T00:00:00`, 'Australia/Sydney');
     const closing = /response|feedback received/i.test(title) ? undefined : extractClosingDate(row.text.split(/(?<=[.;])\s+/));
     return {
-      id: `asx-con-${row.date}-${row.links[0] ? lastPathPart(row.links[0]).slice(0, 60) : i}`,
+      // A row without a PDF is named by its title: a place in the table could name another
+      id: `asx-con-${row.date}-${row.links[0] ? lastPathPart(row.links[0]).slice(0, 60) : shortHash(title)}`,
       ref: `ASX Consultation ${row.date}`,
       title: title.length > 220 ? `${title.slice(0, 217)}...` : title,
       regulator: 'ASX',

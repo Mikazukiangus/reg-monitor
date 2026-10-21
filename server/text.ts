@@ -1,5 +1,6 @@
 // Text and date helpers shared by the source adapters: HTML to plain text,
 // local dates to ISO timestamps, and sorting and de-duplicating list rows.
+import { createHash } from 'crypto';
 import { htmlToText } from './extract.js';
 import type { NormalizedNotice } from './notice.js';
 
@@ -25,7 +26,18 @@ export function zonedToIso(local: string, timeZone: string): string | undefined 
   return new Date(asUtc - offsetMs).toISOString();
 }
 
-export const lastPathPart = (url: string) => new URL(url).pathname.split('/').filter(Boolean).pop()!.replace(/\.\w+$/, '');
+// The last part of a link's path, without its extension, for a notice id. A
+// link with no path ("https://example.gov/?p=123") gives its query instead.
+export function lastPathPart(url: string): string {
+  const { pathname, search } = new URL(url);
+  const part = pathname.split('/').filter(Boolean).pop()?.replace(/\.\w+$/, '') || search.slice(1).replace(/[^\w-]+/g, '-');
+  if (!part) throw new Error(`No path or query to name a notice by in ${url}`);
+  return part;
+}
+
+// Eight hex characters of the SHA-1 of a text, for an id when the source gives
+// none: the same text always gives the same id, whatever its place in a list
+export const shortHash = (text: string) => createHash('sha1').update(text).digest('hex').slice(0, 8);
 
 // "Comments close" or "Comments closed" fields for a closing date (YYYY-MM-DD)
 // that the source publishes

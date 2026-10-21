@@ -75,6 +75,10 @@ export interface StoredRow {
 // Insert or refresh notices. Key points already stored are kept when the
 // new copy has none (for example when a document fetch failed this time).
 export async function saveNotices(db: Db, notices: StoredRow[]): Promise<void> {
+  // Postgres refuses an INSERT ... ON CONFLICT that changes one row twice, so
+  // an id listed twice would lose its whole batch: the first copy is kept
+  const seen = new Set<string>();
+  notices = notices.filter(n => !seen.has(n.id) && !!seen.add(n.id));
   for (let i = 0; i < notices.length; i += 50) {
     const batch = notices.slice(i, i + 50);
     const values: unknown[] = [];
