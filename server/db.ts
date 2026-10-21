@@ -122,11 +122,13 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
 
 const rowToNotice = (row: { data: any }) => (typeof row.data === 'string' ? JSON.parse(row.data) : row.data);
 
-// Notices published in the last `days` days, newest first
-export async function recentNotices(db: Db, days: number, limit: number): Promise<StoredRow[]> {
+// Notices published in the last `days` days, newest first, leaving out
+// `excludeIds` (those the caller already has, so they don't count against the limit)
+export async function recentNotices(db: Db, days: number, limit: number, excludeIds: string[] = []): Promise<StoredRow[]> {
   const rows = await db.query(
-    `SELECT data FROM notices WHERE published_at >= now() - make_interval(days => $1) ORDER BY published_at DESC LIMIT $2`,
-    [days, limit]
+    `SELECT data FROM notices WHERE published_at >= now() - make_interval(days => $1) AND NOT (id = ANY($3::text[]))
+     ORDER BY published_at DESC LIMIT $2`,
+    [days, limit, excludeIds]
   );
   return rows.map(rowToNotice);
 }
