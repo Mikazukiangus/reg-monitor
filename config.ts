@@ -98,7 +98,7 @@ export function createConfig(env: Environment) {
       dateBackfillLimit: integer('POLL_DATE_BACKFILL_LIMIT', 5, 0, 1000),
       warmTimeoutMs: integer('FEED_WARM_TIMEOUT_MS', 30_000)
     }),
-    archive: Object.freeze({ days: integer('ARCHIVE_FEED_DAYS', 30, 1, 3650), limit: integer('ARCHIVE_FEED_LIMIT', 300, 1, 10_000) }),
+    archive: Object.freeze({ days: integer('ARCHIVE_FEED_DAYS', 30, 1, 3650), limit: integer('ARCHIVE_FEED_LIMIT', 1000, 1, 10_000) }),
     refresh: Object.freeze({ limit: integer('REFRESH_LIMIT', 6, 1, 1000), windowMs: integer('REFRESH_WINDOW_MS', 60_000) }),
     digest: Object.freeze({
       cronSecret, apiKey, to: Object.freeze(to), from,

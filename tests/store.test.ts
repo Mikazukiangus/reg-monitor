@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 
 process.env.VERCEL = '1';
 process.env.DATABASE_URL = 'pglite';
+// A small cap, so the test below can fill it with live notices
+process.env.ARCHIVE_FEED_LIMIT = '2';
 const { openStore, toStored } = await import('../server/store.ts');
 const { withHistory } = await import('../server/history.ts');
 const { enrichWithKeyPoints } = await import('../server/enrich.ts');
@@ -108,4 +110,17 @@ test('only server/store.ts reads the database module', async () => {
     .flatMap(e => (e.isDirectory() ? files(`${dir}/${e.name}`) : e.name.endsWith('.ts') ? [`${dir}/${e.name}`] : []));
   const importers = [...files('server'), 'server.ts'].filter(f => /from '(\.\.\/)+db\.js'|from '\.\/db\.js'/.test(readFileSync(f, 'utf8')));
   assert.deepEqual(importers, ['server/store.ts']);
+});
+
+test('notices also in the live feed do not use up the history limit', async () => {
+  const store = (await openStore())!;
+  const hoursAgo = (hours: number) => new Date(Date.now() - hours * 3_600_000).toISOString();
+  // Two live notices, newer than the history one: before, they took both of
+  // the limit's two places and the history notice was left out. (The earlier
+  // test's notice is in the database too, and older than these.)
+  const live = [notice('cap-live-1', { publishedAt: hoursAgo(1) }), notice('cap-live-2', { publishedAt: hoursAgo(2) })];
+  await store.save([...live, notice('cap-history', { publishedAt: hoursAgo(3) })]);
+  assert.deepEqual((await store.recent(30, 1, live.map(n => n.id))).map(n => n.id), ['cap-history']);
+  const { notices } = await withHistory(live, store);
+  assert.deepEqual(notices.slice(0, 3).map(n => [n.id, !!n.archived]), [['cap-live-1', false], ['cap-live-2', false], ['cap-history', true]]);
 });

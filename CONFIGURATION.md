@@ -32,6 +32,14 @@ The refactor preserves all previous operational defaults. Important precedence:
   requires `RESEND_API_KEY` and a nonempty, valid comma-separated `DIGEST_TO`.
 - `DIGEST_FROM` defaults to Resend's test sender. Real delivery may require a
   verified sender domain and recipients allowed by your Resend account.
+- `ARCHIVE_FEED_DAYS` (default 30) and `ARCHIVE_FEED_LIMIT` (default 1,000 since
+  21 October 2026; 300 before) set how far back the feed reaches into the history
+  and how many history notices it adds at most. Notices also in the live feed are
+  not counted. The limit is a safety cap, not the normal stop: when it is reached,
+  older notices of the window are left out and the server logs a warning naming the
+  limit. Each notice adds about 2.2 KB to the feed reply (about 0.35 KB after
+  compression), and Vercel refuses function replies over 4.5 MB, so keep the limit
+  below about 1,800.
 - `DISABLE_HMR` and `VERCEL` accept `true`, `false`, `1` and `0`.
 - Leave `NODE_ENV` blank in `.env` so Vite selects production for builds; the
   local server defaults to development. A standalone production host should set
