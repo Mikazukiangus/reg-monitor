@@ -89,8 +89,11 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
       const k = j * 8;
       return `($${k + 1}, $${k + 2}, $${k + 3}, $${k + 4}, $${k + 5}, $${k + 6}, $${k + 7}, $${k + 8}::jsonb)`;
     });
+    // With a source, the notices and their link to it are saved in one
+    // statement: the notice_sources rows are made from the ids just saved
+    if (sourceId) values.push(sourceId);
     await db.query(
-      `INSERT INTO notices (id, regulator, regulator_id, jurisdiction_code, format, title, published_at, data)
+      `${sourceId ? 'WITH saved AS (' : ''}INSERT INTO notices (id, regulator, regulator_id, jurisdiction_code, format, title, published_at, data)
        VALUES ${rows.join(', ')}
        ON CONFLICT (id) DO UPDATE SET
          regulator = EXCLUDED.regulator,
@@ -107,16 +110,12 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
            WHEN EXCLUDED.published_at IS NULL AND notices.published_at IS NOT NULL
              THEN jsonb_build_object('publishedAt', notices.data->>'publishedAt')
            ELSE '{}'::jsonb
-         END`,
+         END${sourceId ? `
+       RETURNING id)
+       INSERT INTO notice_sources (notice_id, source_id) SELECT id, $${values.length} FROM saved
+       ON CONFLICT (notice_id, source_id) DO UPDATE SET last_seen_at = now()` : ''}`,
       values
     );
-    if (sourceId) {
-      await db.query(
-        `INSERT INTO notice_sources (notice_id, source_id) SELECT unnest($1::text[]), $2
-         ON CONFLICT (notice_id, source_id) DO UPDATE SET last_seen_at = now()`,
-        [batch.map(n => n.id), sourceId]
-      );
-    }
   }
 }
 

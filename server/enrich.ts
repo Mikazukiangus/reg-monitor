@@ -97,12 +97,16 @@ export function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): N
 }
 
 // Key points already in the history, so documents are read once rather than
-// again by every new server instance
-async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg): Promise<Map<string, KeyPoints>> {
+// again by every new server instance. `known`: the stored copies, when the
+// caller has already read them.
+async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg, known?: Map<string, { keyPoints?: KeyPoints }>): Promise<Map<string, KeyPoints>> {
   try {
-    const store = await storeArg;
-    if (!store) return new Map();
-    const stored = await store.byIds(notices.map(n => n.id));
+    let stored = known;
+    if (!stored) {
+      const store = await storeArg;
+      if (!store) return new Map();
+      stored = await store.byIds(notices.map(n => n.id));
+    }
     return new Map([...stored].flatMap(([id, n]) => (n.keyPoints ? [[id, n.keyPoints] as const] : [])));
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not read stored key points', err);
@@ -116,9 +120,10 @@ async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg):
 export async function enrichWithKeyPoints(
   notices: NormalizedNotice[],
   budget: { maxFetches: number; until: number } = { maxFetches: Infinity, until: Infinity },
-  store: StoreArg = openStore()
+  store: StoreArg = openStore(),
+  known?: Map<string, { keyPoints?: KeyPoints }>
 ): Promise<NormalizedNotice[]> {
-  const stored = await storedKeyPoints(notices, store);
+  const stored = await storedKeyPoints(notices, store, known);
   const enriched: NormalizedNotice[] = [];
   let fetches = 0;
   for (const notice of notices) {

@@ -27,13 +27,15 @@ const sourceState = new Map<string, SourceState>();
 
 // Store notices in the history database, if there is one, with their dates,
 // and link them to the consultations or outcomes they match. Failures are logged and never
-// affect the live feed.
-async function archiveNotices(notices: NormalizedNotice[], sourceId: string, storeArg: StoreArg = openStore()) {
+// affect the live feed. A scheduled check leaves out the dates and links
+// (`relate: false`): it works them out for the whole history once at the end.
+async function archiveNotices(notices: NormalizedNotice[], sourceId: string, storeArg: StoreArg = openStore(), { relate = true } = {}) {
   if (notices.length === 0) return;
   try {
     const store = await storeArg;
     if (!store) return;
     await store.save(notices, sourceId);
+    if (!relate) return;
     await saveDates(notices, store);
     await linkSaved(notices, store);
   } catch (err: any) {
@@ -122,8 +124,9 @@ async function pollSource(source: (typeof SOURCES)[number], until: number, store
   for (const conflict of idConflicts(notices, stored)) {
     logger.warn('[RegSonar History] Notice id already names another document', { source: source.name, ...conflict });
   }
-  const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until }, store);
-  await archiveNotices(enriched, source.id, store);
+  // The stored copies just read give the key points already in the history
+  const enriched = await enrichWithKeyPoints(notices, { maxFetches: POLL_KEY_POINT_FETCHES, until }, store, stored);
+  await archiveNotices(enriched, source.id, store, { relate: false });
   return {
     id: source.id,
     name: source.name,

@@ -35,7 +35,16 @@ const { pollSources } = await import('../server/ingest.ts');
 test('the first check fills the history, reading further back where the list was full', async () => {
   const { results, failed } = await pollSources();
   assert.deepEqual(failed.map(f => f.name), ['UK FCA News RSS']);
-  assert.ok(results.every(r => r.added === r.read), 'everything is new to an empty history');
+  // Everything is new to an empty history. Sources that list some of the same
+  // notices (BaFin's news and its measures) are read at the same time, so a
+  // shared notice counts as new for whichever source reads the history first
+  const readBy = new Map<string, number>();
+  for (const r of results) for (const id of new Set(r.notices.map(n => n.id))) readBy.set(id, (readBy.get(id) ?? 0) + 1);
+  for (const r of results) {
+    const own = new Set(r.notices.map(n => n.id).filter(id => readBy.get(id) === 1)).size;
+    assert.ok(r.added >= own && r.added <= r.read, `${r.name}: ${r.added} added of ${r.read}, ${own} its own`);
+  }
+  assert.ok(results.reduce((sum, r) => sum + r.added, 0) >= readBy.size, 'every notice read is counted as new once');
   const full = results.filter(r => r.backfilled);
   assert.ok(full.length > 0, 'some list had 20 or more items');
   assert.ok(full.every(r => r.read > 0));
@@ -60,6 +69,27 @@ test('the first check fills the history, reading further back where the list was
 test('a second check adds nothing and does not read further back', async () => {
   const { results } = await pollSources();
   assert.ok(results.every(r => r.added === 0 && !r.backfilled), JSON.stringify(results.map(({ notices, ...r }) => r)));
+});
+
+test('a check reads each source\'s stored copies once, and works out dates and links once for the whole history', async () => {
+  const { getDb } = await import('../server/db.ts');
+  const db: any = (await getDb())!;
+  const sent: string[] = [];
+  const query = db.query;
+  db.query = (sql: string, params?: unknown[]) => { sent.push(sql.replace(/\s+/g, ' ').trim()); return query(sql, params); };
+  let results;
+  try { ({ results } = await pollSources()); } finally { db.query = query; }
+  const count = (pattern: RegExp) => sent.filter(sql => pattern.test(sql)).length;
+  // Sources with nothing listed ask nothing; none reads further back now
+  const listing = results.filter(r => r.read > 0).length;
+  assert.equal(count(/^SELECT data FROM notices WHERE id = ANY/), listing, 'stored copies read once per source');
+  // Each source's notices and which source read them, in one statement
+  assert.equal(count(/^WITH saved AS \(INSERT INTO notices /), listing);
+  assert.equal(count(/^INSERT INTO notice_sources/), 0);
+  // Dates and links are worked out once, over the whole history, not per source
+  assert.equal(count(/^WITH found \(notice_id/), 1, 'dates');
+  assert.equal(count(/WHERE regulator = ANY/), 0, 'links matched per regulator');
+  assert.equal(count(/^WITH found \(consultation_id/), 1, 'links');
 });
 
 test('after an HTTP 429 the site is not asked again for a while', async () => {

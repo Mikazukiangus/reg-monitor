@@ -1,8 +1,9 @@
 // Links between consultations and their outcomes, stored in the history
-// (notice_links) so every notice the site serves can show them. Notices are
-// matched (shared/related.ts) against the whole history of their regulator
-// when they are saved, and each scheduled check rebuilds every link, so a
-// change to the matching reaches the whole history.
+// (notice_links) so every notice the site serves can show them. Notices the
+// feed reads are matched (shared/related.ts) against the whole history of
+// their regulator when they are saved, and each scheduled check rebuilds every
+// link once it has saved what it read, so a change to the matching reaches
+// the whole history.
 import { linkPairs, isConclusion, isConsultation } from '../shared/related.js';
 import type { NoticeStore } from './store.js';
 import type { NormalizedNotice } from './notice.js';
