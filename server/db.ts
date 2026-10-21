@@ -209,6 +209,38 @@ export async function linksOf(db: Db, ids: string[]): Promise<{ links: LinkRow[]
   return { links: [...links.values()], notices: [...notices.values()] };
 }
 
+// What working out a notice's dates needs of each stored notice
+// (server/dates.ts), without the rest of its key points
+export async function dateFields(db: Db): Promise<StoredRow[]> {
+  const rows = await db.query(
+    `SELECT jsonb_strip_nulls(jsonb_build_object('id', id, 'type', data->'type', 'title', title,
+       'sourceDates', data->'sourceDates', 'statutoryDeadline', data->'statutoryDeadline', 'deadlineQuote', data->'deadlineQuote',
+       'keyPoints', jsonb_strip_nulls(jsonb_build_object(
+         'dates', data->'keyPoints'->'dates', 'closingDate', data->'keyPoints'->'closingDate', 'facts', data->'keyPoints'->'facts')))) AS data
+     FROM notices`
+  );
+  return rows.map(rowToNotice);
+}
+
+export interface DateRow { noticeId: string; source: 'regulator' | 'document'; kind: string; date: string; general: boolean; quote?: string }
+
+// Make the stored dates of these notices (of every notice, without ids)
+// exactly these, in one statement
+export async function replaceDates(db: Db, dates: DateRow[], ids?: string[]): Promise<void> {
+  await db.query(
+    `WITH found (notice_id, source, kind, date, general, quote) AS (
+       SELECT * FROM unnest($1::text[], $2::text[], $3::text[], $4::date[], $5::boolean[], $6::text[])),
+     gone AS (
+       DELETE FROM notice_dates d WHERE ($7::text[] IS NULL OR d.notice_id = ANY($7::text[])) AND NOT EXISTS (
+         SELECT 1 FROM found f WHERE (f.notice_id, f.source, f.kind, f.date) = (d.notice_id, d.source, d.kind, d.date))
+     )
+     INSERT INTO notice_dates (notice_id, source, kind, date, general, quote) SELECT * FROM found
+     ON CONFLICT (notice_id, source, kind, date) DO UPDATE SET general = EXCLUDED.general, quote = EXCLUDED.quote`,
+    [dates.map(d => d.noticeId), dates.map(d => d.source), dates.map(d => d.kind), dates.map(d => d.date),
+      dates.map(d => d.general), dates.map(d => d.quote ?? null), ids ?? null]
+  );
+}
+
 // Stored notices with no date whose page has not yet been checked for one
 // (the FCA's feed gives none), oldest seen first
 export async function undatedNotices(db: Db, limit: number): Promise<StoredRow[]> {

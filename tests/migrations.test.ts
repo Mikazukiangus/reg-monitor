@@ -23,7 +23,7 @@ test('the migrations are numbered 1, 2, 3 ... in order, with names and SQL', () 
 test('a new database gets every migration once', async () => {
   const lite = new PGlite();
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), MIGRATIONS.map(m => m.version));
-  assert.deepEqual(await tables(lite), ['notice_links', 'notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
+  assert.deepEqual(await tables(lite), ['notice_dates', 'notice_links', 'notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), []);
   assert.deepEqual(await versions(lite), MIGRATIONS.map(m => m.version));
 });
@@ -144,4 +144,14 @@ test('a consultation link goes when either notice does', async () => {
   assert.deepEqual((await lite.query('SELECT consultation_id FROM notice_links')).rows, [{ consultation_id: 'mas-other' }]);
   await lite.query(`DELETE FROM notices WHERE id = 'mas-response'`);
   assert.equal((await lite.query('SELECT * FROM notice_links')).rows.length, 0);
+});
+
+test('a notice\'s dates go when the notice does, and only known kinds and sources are stored', async () => {
+  const lite = await beforeMigration2([{ id: 'mas-cp', regulator: 'MAS' }]);
+  await migrate(session(lite), MIGRATIONS, quiet, quiet);
+  await lite.query(`INSERT INTO notice_dates (notice_id, source, kind, date) VALUES ('mas-cp', 'regulator', 'closes', '2026-12-01')`);
+  await assert.rejects(lite.query(`INSERT INTO notice_dates (notice_id, source, kind, date) VALUES ('mas-cp', 'regulator', 'effective', '2026-12-01')`));
+  await assert.rejects(lite.query(`INSERT INTO notice_dates (notice_id, source, kind, date) VALUES ('mas-cp', 'feed', 'closes', '2026-12-02')`));
+  await lite.query(`DELETE FROM notices WHERE id = 'mas-cp'`);
+  assert.equal((await lite.query('SELECT * FROM notice_dates')).rows.length, 0);
 });

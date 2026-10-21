@@ -126,6 +126,30 @@ CREATE TABLE notice_links (
 );
 CREATE INDEX notice_links_conclusion_idx ON notice_links (conclusion_id);
 `
+  },
+  {
+    version: 4,
+    name: 'notice dates',
+    // Every date a notice has, for queries in SQL: those its regulator
+    // publishes with it and those its document states (server/dates.ts),
+    // with the sentence that states it. Filled when notices are saved, and
+    // rebuilt by each scheduled check; empty until the first. Which date a
+    // notice shows depends on today, so it is worked out when read
+    // (shared/keyDate.ts; sql/upcoming-deadlines.sql in SQL).
+    sql: `
+CREATE TABLE notice_dates (
+  notice_id text NOT NULL REFERENCES notices (id) ON DELETE CASCADE,
+  source text NOT NULL CHECK (source IN ('regulator', 'document')),
+  kind text NOT NULL CHECK (kind IN ('closes', 'takesEffect', 'complyBy')),
+  date date NOT NULL,
+  -- A closing date stated generally ("The consultation closes on ..."),
+  -- which belongs to the notice only if it is a consultation
+  general boolean NOT NULL DEFAULT false,
+  quote text,
+  PRIMARY KEY (notice_id, source, kind, date)
+);
+CREATE INDEX notice_dates_date_idx ON notice_dates (date);
+`
   }
 ];
 

@@ -205,4 +205,6 @@ export interface CheckSummary {
   pageDatesFound: number;
   // Consultation links in the history after the check (checks from October 2026)
   links?: number;
+  // Dates in the history's notice_dates after the check (checks from 21 October 2026)
+  dates?: number;
 }

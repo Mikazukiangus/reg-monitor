@@ -4,7 +4,8 @@
 // shown in the feed (dates worked out again, tags) is server/history.ts's job.
 import {
   getDb, databaseUrl, saveNotices, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
-  archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck
+  dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
+  type DateRow
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
@@ -23,7 +24,7 @@ export function toStored(notice: NormalizedNotice & { pageDateTried?: boolean })
 const fromRow = (row: unknown) => row as StoredNotice;
 
 export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
-export type { ScheduledCheck };
+export type { ScheduledCheck, DateRow };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
@@ -41,6 +42,10 @@ export interface NoticeStore {
   replaceLinks(links: LinkPair[]): Promise<void>;
   // The stored links of these notices, and the notices at either end
   links(ids: string[]): Promise<{ links: LinkPair[]; notices: RelatedCandidate[] }>;
+  // Every notice, as working out its dates needs it (server/dates.ts)
+  dateFields(): Promise<StoredNotice[]>;
+  // Make the stored dates of these notices, or of every notice, exactly these
+  replaceDates(dates: DateRow[], ids?: string[]): Promise<void>;
   // Without a date and whose page has not been checked for one, oldest seen first
   undated(limit: number): Promise<StoredNotice[]>;
   stats(): Promise<{ count: number; since: string | null }>;
@@ -58,6 +63,8 @@ export function noticeStore(db: Db): NoticeStore {
     addLinks: links => addLinks(db, links),
     replaceLinks: links => replaceLinks(db, links),
     links: async ids => (await linksOf(db, ids)) as unknown as { links: LinkPair[]; notices: RelatedCandidate[] },
+    dateFields: async () => (await dateFields(db)).map(fromRow),
+    replaceDates: (dates, ids) => replaceDates(db, dates, ids),
     undated: async limit => (await undatedNotices(db, limit)).map(fromRow),
     stats: () => archiveStats(db),
     saveCheck: check => saveScheduledCheck(db, check),
