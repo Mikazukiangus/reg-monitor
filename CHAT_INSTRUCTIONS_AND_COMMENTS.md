@@ -1386,7 +1386,7 @@ This document records the full chronological instructions, technical requirement
 
 **User:** "proceed with your recommendations" (Request 105's plan: better matching and stored links; "SFC to proceed with" titles count as outcomes; no matching on every read).
 
-* **Branch:** `claude/keen-lamport-5gmps1`, `e030001` (matching) and `47f1fb2` (stored links), pushed, not merged (merging runs migration 3 on Neon and waits for the user).
+* **Branch:** `claude/keen-lamport-5gmps1`, `e030001` (matching) and `47f1fb2` (stored links), pushed, not merged (merging runs migration 3 on Neon and waits for the user). CI run 39548189618 passed `check` and `audit`; preview `dpl_AqPQ99xVPAVfFARMELTp9SBieQN4` is READY (no database, so it matches the notices at hand; behind a Vercel login, not opened).
 * **Matching** (`shared/related.ts`):
   * **Labelled sample:** `tests/fixtures/related-sample.json`, 727 production notices (617 from 48 history searches, the live feed, and 3 from topic searches) with 13 pairs that should link and 3 that must not, labelled by reading the titles. The test requires the rule to make exactly the 13.
   * **Before:** 10 links, 1 wrong (HKMA Clearing Rules conclusions to a Banking (Capital) Rules proposal). **After:** 13 links, all labelled right; added ASX (Third Party Clearing response paper), HKEX's Listing Competitiveness pair (in history; the sample before missed its consultation), PRA CP6/26 → PS19/26 and CP7/26 → PS17/26, and SFC's joint OTC Clearing Rules consultation → conclusions.
