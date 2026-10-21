@@ -6,7 +6,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import { extractClosingDate } from '../server/document-dates.ts';
 import { dedupeByDocument } from '../shared/dedupe.ts';
-import { ruleMatches } from '../shared/alertRules.ts';
+import { regulatorMatches, ruleMatches } from '../shared/alertRules.ts';
 import { findRelated } from '../shared/related.ts';
 import { noticeTimeline } from '../src/lib/timeline.ts';
 import { publishedDay } from '../shared/derived.ts';
@@ -32,6 +32,26 @@ test('rules match regulator, impact and keywords at word starts', () => {
   assert.ok(!ruleMatches(rule, { regulator: 'MAS', impactScore: 8, title: 'MAS fines a bank' }));
   assert.ok(!ruleMatches(rule, { regulator: 'SFC', impactScore: 6, title: 'SFC fines a broker' }));
   assert.ok(ruleMatches(rule, { regulator: 'SFC', impactScore: 8, title: 'Update', keyPoints: { points: ['The fine was HK$7 million.'] } }));
+});
+
+test("a rule's regulator matches whole words of the notice's regulator, not part of a word", () => {
+  assert.ok(regulatorMatches('SEC', 'US SEC'));
+  assert.ok(regulatorMatches('sgx', 'SGX RegCo'));
+  assert.ok(regulatorMatches('PRA', 'UK PRA'));
+  assert.ok(regulatorMatches('SC Malaysia', 'SC Malaysia'));
+  assert.ok(regulatorMatches(' sc  malaysia ', 'SC Malaysia'));
+  assert.ok(regulatorMatches('CPPA', 'CalPrivacy (CPPA)'));
+  assert.ok(regulatorMatches('AI Security Institute', 'UK AI Security Institute'));
+  // Part of a word is not a match
+  assert.ok(!regulatorMatches('SEC', 'UK AI Security Institute'));
+  assert.ok(!regulatorMatches('EC', 'US SEC'));
+  assert.ok(!regulatorMatches('FTC', 'US CFTC'));
+  assert.ok(!regulatorMatches('SC', 'ASIC'));
+  // Names with regular-expression characters are taken literally
+  assert.ok(regulatorMatches('CalPrivacy (CPPA)', 'CalPrivacy (CPPA)'));
+  assert.ok(!regulatorMatches('C.TC', 'US CFTC'));
+  assert.ok(!regulatorMatches('', 'US SEC'));
+  assert.ok(!ruleMatches(rule, { regulator: 'UK AI Security Institute', impactScore: 8, title: 'Institute fines a lab' }));
 });
 
 test('a conclusion is linked to its consultation by regulator and title', () => {

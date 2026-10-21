@@ -44,11 +44,18 @@ function keywordPattern(keyword: string): RegExp {
   return new RegExp(`\\b${keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
 }
 
+// A regulator named in a rule matches whole words of the notice's regulator,
+// so "SEC" finds "US SEC" and "SGX" finds "SGX RegCo", but "SEC" does not find
+// "UK AI Security Institute" and "EC" does not find "US SEC"
+export function regulatorMatches(name: string, regulator: string): boolean {
+  const words = name.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+  return !!words && new RegExp(`(?<![\\p{L}\\p{N}])${words}(?![\\p{L}\\p{N}])`, 'iu').test(regulator);
+}
+
 // A notice matches when it is from a listed regulator, meets the impact
 // threshold, and mentions at least one keyword (if any are set).
 export function ruleMatches(rule: CustomAlertRule, notice: MatchableNotice): boolean {
-  const regulator = notice.regulator.toLowerCase();
-  if (rule.jurisdictions.length > 0 && !rule.jurisdictions.some(j => regulator.includes(j.toLowerCase()))) return false;
+  if (rule.jurisdictions.length > 0 && !rule.jurisdictions.some(j => regulatorMatches(j, notice.regulator))) return false;
   if (notice.impactScore < rule.minImpact) return false;
   const keywords = rule.keywords.filter(k => k.trim());
   if (keywords.length === 0) return true;
