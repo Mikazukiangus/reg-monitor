@@ -1430,6 +1430,15 @@ This document records the full chronological instructions, technical requirement
 * **The 06:00 check** started at 06:14:21 UTC and completed at 06:14:30 on `dpl_EZZZkC9ZoXvfXv2dGdh1VtDmYGpZ` (the production deployment of the log commit `fc65507`, same code as `004cd86`). It logged "[RegSonar History] 13 consultation links" and recorded `links: 13`; all 43 sources in its log carry their ids (step 4); only FTC failed (HTTP 404).
 * **The 13 stored links are exactly the 13 labelled pairs** of `tests/fixtures/related-sample.json`: the 24 notices at their ends, looked up by id, show all 13 and no others. The whole history (1,091 notices) therefore has no link outside the labelled sample.
 
+### Request 110: A Scheduled Check Run by Hand (Claude Code, 2026-10-21)
+
+**User:** "i have just run the cron job on vercel."
+
+* **The check** (started 07:36:42 UTC, completed 07:36:51, on `dpl_B5KzVuDoKGDVC9tdPMneRXCRtQxx`, the production deployment of `0ca7037`, same code): 43 sources, all with their ids; 614 items read, 0 new notices; 13 consultation links (unchanged); only FTC on AI and Privacy failed (HTTP 404). Logged "[RegSonar Poll] 0 new notices from 43 sources".
+* **Six regulators not in `shared/regulators.ts`**, logged once each (step 4's warning, working as designed); all from the Federal Register's AI search, which the check reads further back than the feed (20 to 50 items): US Food and Drug Administration, US Education Department, US International Trade Administration, US Office of the Secretary, US Energy Department, US Patent and Trademark Office. Each got the id made from its name (such as `us-food-and-drug-administration`), so adding them to the catalog later changes no id. "US Office of the Secretary" names no department: the source takes the most specific agency (`agencies.at(-1)`), and several departments have an Office of the Secretary, so different departments' documents share one regulator and one id. Not changed; raised with the user.
+* Also logged: the Cabinet Office page `260210_forms.html` gave HTTP 404 when its key points were read (one document; the notice is kept without key points).
+* No code changed.
+
 ---
 
 ## 3. Key Files & Modifications Summary
