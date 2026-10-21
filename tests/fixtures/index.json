@@ -194,5 +194,9 @@
   "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary&q=%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF&searchfield=title&sort=pubtime&sortType=1&type=gwyzcwjk&p=1&n=50": {
     "file": "cf082941338e.txt",
     "contentType": "application/json"
+  },
+  "https://coag.gov/wp-json/wp/v2/pages?slug=ai&_fields=id,date_gmt,modified_gmt,link,title,excerpt": {
+    "file": "7be59dc5e297.txt",
+    "contentType": "application/json; charset=UTF-8"
   }
 }

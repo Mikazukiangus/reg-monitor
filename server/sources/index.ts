@@ -21,7 +21,7 @@ import { ASX_CONSULTATIONS_PAGE, fetchAsxConsultations } from './asx.js';
 import { FINRA_NOTICES_RSS, fetchFinraNotices } from './finra.js';
 import { JPX_REVISIONS_BASE, fetchJpxRuleRevisions } from './jpx.js';
 import { EC_AI_NEWS, fetchEcAiNews } from './ec.js';
-import { FTC, CALIFORNIA_GOVERNOR_AI, CALPRIVACY, COLORADO_AG_AI, fetchAiFeed } from './us-feeds.js';
+import { FTC, CALIFORNIA_GOVERNOR_AI, CALPRIVACY, COLORADO_AG_AI, COLORADO_AG_AI_RULEMAKING, fetchAiFeed, fetchColoradoAiRulemaking } from './us-feeds.js';
 import { MSIT_LIST, fetchMsitPressReleases } from './msit.js';
 import { GOV_CN_POLICY_SEARCH, GOV_CN_AI, GOV_CN_PRIVACY, fetchGovCnAiPolicies, fetchGovCnPrivacyPolicies } from './gov-cn.js';
 import { GOV_UK_AI, fetchUkAiPolicy } from './gov-uk.js';
@@ -52,6 +52,7 @@ const PROBE_URLS: Record<EndpointId, string> = {
   'ca-gov': CALIFORNIA_GOVERNOR_AI.url,
   calprivacy: CALPRIVACY.url,
   'co-ag': COLORADO_AG_AI.url,
+  'co-ag-ai': COLORADO_AG_AI_RULEMAKING,
   'msit-kr': MSIT_LIST,
   'govcn-ai': GOV_CN_POLICY_SEARCH(GOV_CN_AI, 1),
   'cao-ai': CAO_AI_TOPICS,
@@ -124,6 +125,7 @@ const SOURCE_LIST: SourceDefinition[] = [
   { id: 'california-governor-ai', endpointId: 'ca-gov', name: 'California Governor on AI', fetch: (limit = 4) => fetchAiFeed(CALIFORNIA_GOVERNOR_AI, limit), narrowed: true },
   { id: 'calprivacy-news', endpointId: 'calprivacy', name: 'CalPrivacy News', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY, limit) },
   { id: 'colorado-ag-ai', endpointId: 'co-ag', name: 'Colorado AG on AI', fetch: (limit = 4) => fetchAiFeed(COLORADO_AG_AI, limit), narrowed: true },
+  { id: 'colorado-ag-ai-rulemaking', endpointId: 'co-ag-ai', name: 'Colorado AG AI Rulemaking', fetch: fetchColoradoAiRulemaking },
   { id: 'korea-msit-ai', endpointId: 'msit-kr', name: 'Korea MSIT on AI', fetch: fetchMsitPressReleases, narrowed: true },
   { id: 'china-policy-library-ai', endpointId: 'govcn-ai', name: 'China State Council Policy Library: AI', fetch: fetchGovCnAiPolicies, narrowed: true },
   { id: 'japan-cabinet-office-ai', endpointId: 'cao-ai', name: 'Japan Cabinet Office AI Strategy', fetch: fetchCaoAiTopics },

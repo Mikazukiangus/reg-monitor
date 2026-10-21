@@ -10,6 +10,10 @@ import { BIS_PRESS_RSS, parseBisPressReleases } from '../server/sources/bis.ts';
 import { parseFcaFeed } from '../server/sources/fca.ts';
 import { FEDERAL_REGISTER_AI, FEDERAL_REGISTER_SEC_CFTC, parseFederalRegister, parseFederalRegisterAi } from '../server/sources/federal-register.ts';
 import { GOV_UK_AI, parseUkAiPolicy } from '../server/sources/gov-uk.ts';
+import { COLORADO_AG_AI_RULEMAKING, parseColoradoAiRulemaking } from '../server/sources/us-feeds.ts';
+import { documentDates } from '../server/document-dates.ts';
+import { withKeyPoints } from '../server/enrich.ts';
+import { keyDate } from '../shared/keyDate.ts';
 import { HKMA_FEEDS, parseHkmaRss } from '../server/sources/hkma.ts';
 import { JFSA_RSS, parseJfsaNews } from '../server/sources/jfsa.ts';
 import { parseMasConsultations, parseMasMediaReleases, parseMasRegulatoryPublications } from '../server/sources/mas.ts';
@@ -163,4 +167,43 @@ test('SGX RegCo: consultations, disciplinary actions and regulatory news from th
   const news = parseSgxRegulatoryNews(recordedJson(`${api}media_centre_list`).data, 40);
   wellFormed(news, /^SGX RegCo$/);
   assert.deepEqual(parseSgxConsultations(null), []);
+});
+
+test('Colorado AG AI Rulemaking: the rulemaking page, one notice per revision', () => {
+  const pages = recordedJson(COLORADO_AG_AI_RULEMAKING);
+  const [notice] = parseColoradoAiRulemaking(pages);
+  wellFormed([notice], /^Colorado AG$/);
+  assert.equal(notice.id, 'coag-ai-rulemaking-20261008155835');
+  assert.equal(notice.title, 'Colorado Automated Decision-Making Technology & Chatbot Safety Rulemaking');
+  assert.equal(notice.dossierUrl, 'https://coag.gov/ai/');
+  // When the page last changed (WordPress gives GMT without a zone)
+  assert.equal(notice.publishedAt, '2026-10-08T15:58:35.000Z');
+  assert.equal(notice.format, 'Consultations');
+  assert.ok(notice.tags.includes('AI rules'));
+  // The excerpt's last, cut-off sentence is left out
+  assert.match(notice.summary!, /^In 2024, the Colorado General Assembly passed .* high-risk artificial intelligence systems\.$/);
+
+  // A later revision is a new notice; the same revision keeps its id
+  const revised = parseColoradoAiRulemaking([{ ...pages[0], modified_gmt: '2026-10-27T09:00:00' }]);
+  assert.equal(revised[0].id, 'coag-ai-rulemaking-20261027090000');
+  assert.equal(parseColoradoAiRulemaking(pages)[0].id, notice.id);
+
+  // An excerpt WordPress did not cut is kept whole
+  const whole = parseColoradoAiRulemaking([{ ...pages[0], excerpt: { rendered: '<p>Comments are invited on the draft rules.</p>' } }]);
+  assert.equal(whole[0].summary, 'Comments are invited on the draft rules.');
+
+  // A page that moved or went is an error, not a quiet week
+  assert.throws(() => parseColoradoAiRulemaking([]), /Rulemaking page not found/);
+  assert.throws(() => parseColoradoAiRulemaking({ code: 'rest_no_route' }), /Rulemaking page not found/);
+});
+
+test('Colorado AG AI Rulemaking: the page\'s comment deadline is the date the notice shows', () => {
+  const [notice] = parseColoradoAiRulemaking(recordedJson(COLORADO_AG_AI_RULEMAKING));
+  // Sentences from the page (21 October 2026), as its key points quote them
+  const sentence = 'In drafting the final set of rules, the Office will consider all written comments received on or before October 26, 2026 at 11:59 P.M.';
+  const points = ['The ADMT Act requires the Colorado Attorney General’s Office to adopt rules to clarify and implement specific provisions of the law before January 1, 2027.', sentence];
+  const dated = withKeyPoints(notice, { points, facts: points.map(text => ({ text })), refs: [], method: 'extractive', dates: documentDates(points) });
+  assert.equal(keyDate(dated, '2026-10-21')?.text, 'Comments close: 2026-10-26');
+  assert.equal(keyDate(dated, '2026-10-21')?.quote, sentence);
+  assert.equal(keyDate(dated, '2026-10-27')?.text, 'Comments closed: 2026-10-26');
 });
