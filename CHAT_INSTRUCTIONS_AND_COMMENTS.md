@@ -1550,6 +1550,7 @@ This document records the full chronological instructions, technical requirement
   * **Migration 4 through the `pg` driver** on a local Postgres copy (migrations 1–3, 757 production notices): applied; `rebuildDates` stored 251 dates (154 ms; 64 ms again); `sql/upcoming-deadlines.sql` gave the same upcoming date as the site for all 110 notices with one.
   * 576 tests (new: `tests/key-date.test.ts`, `tests/notice-dates.test.ts`, migration 4), type checking and build pass.
 * `HOW_IT_WORKS.md`: the date shown, what is stored, "Dates in SQL", impact days from Hong Kong.
+* **After push (`46ac436`):** CI run 39580524801 passed `check` (576 tests, type checking, build) and `audit`; preview `dpl_5jb6SPgP4JgkJzTd5qRBUHyWuhbY` is READY and `/api/health` is healthy. Previews have no database, so migration 4 first runs on production at the merge; `notice_dates` fills at the first scheduled check after it.
 
 ---
 
