@@ -155,3 +155,24 @@ test('a notice\'s dates go when the notice does, and only known kinds and source
   await lite.query(`DELETE FROM notices WHERE id = 'mas-cp'`);
   assert.equal((await lite.query('SELECT * FROM notice_dates')).rows.length, 0);
 });
+
+test('the undated notices and the last completed check are read through their partial indexes', async () => {
+  const { undatedNotices, scheduledCheckStatus } = await import('../server/db.ts');
+  const lite = new PGlite();
+  await migrate(session(lite), MIGRATIONS, quiet, quiet);
+  // The tables are nearly empty, where a full read is cheapest: plans are
+  // compared as for a large history
+  await lite.exec('SET enable_seqscan = off');
+  // The plans of the app's own queries, so a change to one that stops its
+  // index being used shows up here
+  const plans: string[] = [];
+  const explaining = { query: async (sql: string, params?: unknown[]) => {
+    plans.push((await lite.query<any>(`EXPLAIN (COSTS OFF) ${sql}`, params as any[])).rows.map(r => r['QUERY PLAN']).join('\n'));
+    return [];
+  } };
+  await undatedNotices(explaining, 5);
+  assert.match(plans[0], /Index Scan using notices_undated_idx/);
+  plans.length = 0;
+  await scheduledCheckStatus(explaining);
+  assert.ok(plans.some(p => /scheduled_checks_completed_idx/.test(p)), plans.join('\n\n'));
+});

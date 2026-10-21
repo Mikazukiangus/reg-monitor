@@ -150,6 +150,18 @@ CREATE TABLE notice_dates (
 );
 CREATE INDEX notice_dates_date_idx ON notice_dates (date);
 `
+  },
+  {
+    version: 5,
+    name: 'indexes for undated notices and the last completed check',
+    // Partial indexes for two queries in server/db.ts that otherwise read more
+    // as the history grows: the scheduled check's undated notices, oldest seen
+    // first (undatedNotices), and the last completed check (scheduledCheckStatus).
+    // Each holds only the rows its query asks for.
+    sql: `
+CREATE INDEX notices_undated_idx ON notices (last_seen_at) WHERE published_at IS NULL;
+CREATE INDEX scheduled_checks_completed_idx ON scheduled_checks (completed_at DESC) WHERE status = 'completed';
+`
   }
 ];
 
