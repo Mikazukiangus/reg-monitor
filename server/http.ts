@@ -57,9 +57,22 @@ export async function politeFetch(url: string, post?: PostRequest): Promise<glob
 export async function fetchOrThrow(url: string, post?: PostRequest): Promise<globalThis.Response> {
   const res = await politeFetch(url, post);
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    throw new Error(httpStatusText(url, res));
   }
   return res;
+}
+
+// Sites that refuse requests from outside their country, and what to say when they do
+const REGION_LOCKED_HOSTS: Record<string, string> = { 'www.ftc.gov': 'ftc.gov refuses requests from outside the US' };
+// A reply passed on by the US relay (server/relay.ts) names the site it came from
+export const RELAYED_FROM_HEADER = 'x-regsonar-relayed-from';
+
+// What a failed reply's status says: "HTTP 404", with the reason when it is known
+export function httpStatusText(url: string, res: globalThis.Response): string {
+  const relayedFrom = res.headers.get(RELAYED_FROM_HEADER);
+  if (relayedFrom) return `HTTP ${res.status} from ${relayedFrom} through the US relay`;
+  const reason = REGION_LOCKED_HOSTS[new URL(url).host];
+  return reason ? `HTTP ${res.status}: ${reason}` : `HTTP ${res.status}`;
 }
 
 // The body of a response, refused as soon as it is larger than maxBytes: at

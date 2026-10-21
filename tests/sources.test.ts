@@ -530,12 +530,13 @@ test('migration 2 links each recorded notice only to the source that read it', a
   }
   // Every source's notices are linked except those whose prefix another source
   // shares, and sources added after the migration (Colorado AG AI Rulemaking,
-  // BaFin, RBI and SEBI, whose notices record their source when saved); the
+  // BaFin, RBI and SEBI, the FTC's Federal Register documents, whose notices
+  // record their source when saved); the
   // FCA (recorded while blocked) and the FTC (no notice on AI or privacy in its
   // recorded reply) have no recorded notices to link
   assert.deepEqual([...ids].filter(id => !prefixed.has(id)).sort(), [
     'bafin-measures-sanctions', 'bafin-news', 'china-policy-library-ai', 'china-policy-library-personal-information', 'colorado-ag-ai-rulemaking',
     'ftc-ai-privacy', 'mas-circulars-guidelines', 'mas-consultations', 'mas-media-releases', 'rbi-notifications', 'rbi-press-releases', 'sebi-news',
-    'uk-fca-news', 'us-federal-register', 'us-federal-register-ai'
+    'uk-fca-news', 'us-federal-register', 'us-federal-register-ai', 'us-federal-register-ftc'
   ]);
 });

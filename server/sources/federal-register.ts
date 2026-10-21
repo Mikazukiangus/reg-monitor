@@ -1,5 +1,6 @@
 import { summarize } from '../summarize.js';
-import { mentionsAi } from '../../shared/aiTopics.js';
+import { isAiRuleNews, mentionsAi } from '../../shared/aiTopics.js';
+import { mentionsPrivacy } from '../../shared/privacyTopics.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { shortHash, toIso } from '../text.js';
@@ -108,4 +109,27 @@ export function parseFederalRegisterAi(data: any, limit = 4): NormalizedNotice[]
       const name: string = agency?.name || agency?.raw_name || '';
       return federalRegisterNotice(doc, FEDERAL_AGENCIES[name] || (name ? `US ${name}` : 'US Federal Register'), ['AI rules']);
     });
+}
+
+// The FTC's documents on AI or privacy: its rules, policy statements and
+// proposed consent orders. A way to the FTC's work besides its press releases
+// (us-feeds.ts), which come from ftc.gov. Its notices of its own records
+// systems ("Privacy Act of 1974; System of Records") are left out, as are
+// meeting and paperwork notices.
+export const FEDERAL_REGISTER_FTC = 'https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=federal-trade-commission&order=newest';
+const FTC_RECORDS_NOTICE = /^Privacy Act of 1974\b/i;
+
+export async function fetchFederalRegisterFtc(limit = 4): Promise<NormalizedNotice[]> {
+  const res = await fetchOrThrow(`${FEDERAL_REGISTER_FTC}&per_page=${limit <= 4 ? 100 : 300}${FEDERAL_REGISTER_FIELDS}`);
+  return parseFederalRegisterFtc(await res.json(), limit);
+}
+
+export function parseFederalRegisterFtc(data: any, limit = 4): NormalizedNotice[] {
+  const docs: any[] = data.results || [];
+  return docs
+    .filter(doc => !NOT_A_RULE.test(doc.title || '') && !FTC_RECORDS_NOTICE.test(doc.title || ''))
+    .map(doc => ({ doc, ai: isAiRuleNews(doc.title || '', doc.abstract || ''), privacy: mentionsPrivacy(doc.title || '') }))
+    .filter(x => x.ai || x.privacy)
+    .slice(0, limit)
+    .map(x => federalRegisterNotice(x.doc, 'US FTC', [...(x.privacy ? ['Data privacy'] : []), ...(x.ai ? ['AI rules'] : [])]));
 }

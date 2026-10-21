@@ -61,6 +61,11 @@ export function createConfig(env: Environment) {
     productionUrl = httpUrl('VERCEL_PROJECT_PRODUCTION_URL', `https://${productionHost}`);
     if (productionUrl && new URL(productionUrl).pathname !== '/') invalid('VERCEL_PROJECT_PRODUCTION_URL', 'must be a hostname without a scheme or path');
   }
+  // ftc.gov refuses requests from outside the US, and the app's functions run
+  // in Hong Kong, so the FTC's feed is read through api/ftc-feed.ts, a function
+  // in a US region (vercel.json), at the production address: other deployment
+  // addresses ask for a Vercel login. FTC_RELAY_URL names another address.
+  const ftcRelayUrl = httpUrl('FTC_RELAY_URL', text('FTC_RELAY_URL')) ?? (productionUrl ? `${productionUrl}/api/ftc-feed` : undefined);
   const digestSiteUrl = httpUrl('DIGEST_SITE_URL', text('DIGEST_SITE_URL'));
   const email = (value: string) => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(value);
   const to = (text('DIGEST_TO') ?? '').split(',').map(address => address.trim()).filter(Boolean);
@@ -82,7 +87,7 @@ export function createConfig(env: Environment) {
     staleSeconds: integer(stale, staleDefault, 0, 31_536_000)
   });
   const config = {
-    runtime: Object.freeze({ nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), port, host, disableHmr: boolean('DISABLE_HMR') }),
+    runtime: Object.freeze({ nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), region: text('VERCEL_REGION'), port, host, disableHmr: boolean('DISABLE_HMR') }),
     database: Object.freeze({ url: databaseUrl, poolMax: integer('DB_POOL_MAX', 3, 1, 100), idleTimeoutMs: integer('DB_IDLE_TIMEOUT_MS', 10_000) }),
     ingestion: Object.freeze({
       fetchTimeoutMs: integer('FETCH_TIMEOUT_MS', 8000),
@@ -99,6 +104,7 @@ export function createConfig(env: Environment) {
       warmTimeoutMs: integer('FEED_WARM_TIMEOUT_MS', 30_000)
     }),
     archive: Object.freeze({ days: integer('ARCHIVE_FEED_DAYS', 30, 1, 3650), limit: integer('ARCHIVE_FEED_LIMIT', 1000, 1, 10_000) }),
+    relay: Object.freeze({ ftcFeedUrl: ftcRelayUrl }),
     refresh: Object.freeze({ limit: integer('REFRESH_LIMIT', 6, 1, 1000), windowMs: integer('REFRESH_WINDOW_MS', 60_000) }),
     digest: Object.freeze({
       cronSecret, apiKey, to: Object.freeze(to), from,

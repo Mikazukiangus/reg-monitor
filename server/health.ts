@@ -2,7 +2,7 @@
 // reported as it was (HTTP status, firewall or maintenance pages, timeouts).
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
-import { politeFetch, RateLimitedError, FETCH_TIMEOUT_MS } from './http.js';
+import { politeFetch, httpStatusText, RateLimitedError, FETCH_TIMEOUT_MS } from './http.js';
 import { type EndpointDefinition, ENDPOINTS } from './sources/index.js';
 
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
@@ -24,7 +24,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
     let detail: string;
     if (res.status >= 500) {
       status = 'Down';
-      detail = `HTTP ${res.status}`;
+      detail = httpStatusText(ep.url, res);
     } else if (!res.ok) {
       status = 'Degraded';
       if (FIREWALL_BLOCK_BODY.test(body)) {
@@ -32,7 +32,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
       } else if (pageTitle && UNUSABLE_PAGE_TITLE.test(pageTitle)) {
         detail = `HTTP ${res.status}: blocked ("${pageTitle}")`;
       } else {
-        detail = `HTTP ${res.status}`;
+        detail = httpStatusText(ep.url, res);
       }
     } else if (pageTitle && UNUSABLE_PAGE_TITLE.test(pageTitle)) {
       status = 'Degraded';

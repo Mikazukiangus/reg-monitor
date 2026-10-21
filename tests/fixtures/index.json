@@ -222,5 +222,9 @@
   "https://www.sebi.gov.in/legal/regulations/oct-2026/securities-and-exchange-board-of-india-alternative-investment-funds-third-amendment-regulations-2026_105331.html": {
     "file": "f28fb0a53696.txt",
     "contentType": "text/html; charset=UTF-8"
+  },
+  "https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=federal-trade-commission&order=newest&per_page=100&fields[]=title&fields[]=type&fields[]=abstract&fields[]=agencies&fields[]=document_number&fields[]=citation&fields[]=publication_date&fields[]=comments_close_on&fields[]=effective_on&fields[]=dates&fields[]=html_url&fields[]=pdf_url": {
+    "file": "51fb7284c800.txt",
+    "contentType": "application/json; charset=utf-8"
   }
 }

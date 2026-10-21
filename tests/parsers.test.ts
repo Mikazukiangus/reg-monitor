@@ -8,7 +8,7 @@ import type { NormalizedNotice } from '../server/notice.ts';
 import { ASIC_MEDIA_RELEASES, parseAsicMediaReleases } from '../server/sources/asic.ts';
 import { BIS_PRESS_RSS, parseBisPressReleases } from '../server/sources/bis.ts';
 import { parseFcaFeed } from '../server/sources/fca.ts';
-import { FEDERAL_REGISTER_AI, FEDERAL_REGISTER_SEC_CFTC, parseFederalRegister, parseFederalRegisterAi } from '../server/sources/federal-register.ts';
+import { FEDERAL_REGISTER_AI, FEDERAL_REGISTER_FTC, FEDERAL_REGISTER_SEC_CFTC, parseFederalRegister, parseFederalRegisterAi, parseFederalRegisterFtc } from '../server/sources/federal-register.ts';
 import { GOV_UK_AI, parseUkAiPolicy } from '../server/sources/gov-uk.ts';
 import { COLORADO_AG_AI_RULEMAKING, parseColoradoAiRulemaking } from '../server/sources/us-feeds.ts';
 import { documentDates } from '../server/document-dates.ts';
@@ -85,6 +85,22 @@ test('Federal Register: SEC and CFTC documents, and AI documents by title', () =
   assert.ok(ai.every(n => n.tags.includes('AI rules')));
   assert.equal(parseFederalRegisterAi(recordedJson(FEDERAL_REGISTER_AI), 2).length, 2);
   assert.deepEqual(parseFederalRegister({}), []);
+});
+
+test('Federal Register: the FTC\'s documents on AI or privacy, less notices of its own records', () => {
+  const recorded = recordedJson(FEDERAL_REGISTER_FTC);
+  const notices = parseFederalRegisterFtc(recorded, 100);
+  wellFormed(notices, /^US FTC$/);
+  // Of the 100 recorded documents, the one on AI: the policy statement of 7 July 2026
+  assert.deepEqual(notices.map(n => n.id), ['fedreg-2026-13628']);
+  assert.ok(notices[0].tags.includes('AI rules') && !notices[0].tags.includes('Data privacy'));
+  const doc = (title: string, abstract = '') => ({ title, abstract, type: 'Rule', document_number: '2025-1', publication_date: '2025-04-22', html_url: 'https://www.federalregister.gov/d/2025-1' });
+  const one = (title: string, abstract?: string) => parseFederalRegisterFtc({ results: [doc(title, abstract)] }, 1);
+  assert.deepEqual(one('Children\'s Online Privacy Protection Rule')[0]?.tags.slice(-1), ['Data privacy']);
+  assert.deepEqual(one('Privacy Act of 1974; System of Records'), []);
+  assert.deepEqual(one('Agency Information Collection Activities; Proposed Collection; Comment Request', 'Health Breach Notification Rule privacy'), []);
+  assert.deepEqual(one('Telemarketing Sales Rule Fees'), []);
+  assert.deepEqual(parseFederalRegisterFtc({}), []);
 });
 
 test('Federal Register AI documents are named by the most specific agency the Federal Register knows', () => {

@@ -2,7 +2,7 @@
 // checked at. One file per regulator in this folder holds its adapter.
 import { ENDPOINT_CATALOG, type EndpointId, type EndpointInfo } from '../../shared/endpoints.js';
 import { type NormalizedNotice, tagNotice } from '../notice.js';
-import { FEDERAL_REGISTER_AI, fetchFederalRegister, fetchFederalRegisterAi } from './federal-register.js';
+import { FEDERAL_REGISTER_AI, FEDERAL_REGISTER_FTC, fetchFederalRegister, fetchFederalRegisterAi, fetchFederalRegisterFtc } from './federal-register.js';
 import { fetchFcaFeed } from './fca.js';
 import { fetchPraPublications } from './pra.js';
 import { fetchHkmaPressReleases, fetchHkmaCirculars, fetchHkmaConsultations } from './hkma.js';
@@ -51,7 +51,8 @@ const PROBE_URLS: Record<EndpointId, string> = {
   'ec-ai': EC_AI_NEWS,
   'govuk-ai': `${GOV_UK_AI}&count=1`,
   'fedreg-ai': `${FEDERAL_REGISTER_AI}&per_page=1`,
-  'ftc-rss': FTC.url,
+  'ftc-rss': FTC.relayUrl ?? FTC.url,
+  'fedreg-ftc': `${FEDERAL_REGISTER_FTC}&per_page=1`,
   'ca-gov': CALIFORNIA_GOVERNOR_AI.url,
   calprivacy: CALPRIVACY.url,
   'co-ag': COLORADO_AG_AI.url,
@@ -133,6 +134,7 @@ const SOURCE_LIST: SourceDefinition[] = [
   { id: 'uk-dsit-ai-security-institute', endpointId: 'govuk-ai', name: 'UK DSIT & AI Security Institute', fetch: fetchUkAiPolicy, narrowed: true },
   { id: 'us-federal-register-ai', endpointId: 'fedreg-ai', name: 'US Federal Register: AI', fetch: fetchFederalRegisterAi, narrowed: true },
   { id: 'ftc-ai-privacy', endpointId: 'ftc-rss', name: 'FTC on AI and Privacy', fetch: (limit = 4) => fetchAiFeed(FTC, limit), narrowed: true },
+  { id: 'us-federal-register-ftc', endpointId: 'fedreg-ftc', name: 'US Federal Register: FTC on AI and Privacy', fetch: fetchFederalRegisterFtc, narrowed: true },
   { id: 'california-governor-ai', endpointId: 'ca-gov', name: 'California Governor on AI', fetch: (limit = 4) => fetchAiFeed(CALIFORNIA_GOVERNOR_AI, limit), narrowed: true },
   { id: 'calprivacy-news', endpointId: 'calprivacy', name: 'CalPrivacy News', fetch: (limit = 4) => fetchAiFeed(CALPRIVACY, limit) },
   { id: 'colorado-ag-ai', endpointId: 'co-ag', name: 'Colorado AG on AI', fetch: (limit = 4) => fetchAiFeed(COLORADO_AG_AI, limit), narrowed: true },

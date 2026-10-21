@@ -27,6 +27,10 @@ The refactor preserves all previous operational defaults. Important precedence:
 - `DIGEST_SITE_URL` wins over `https://VERCEL_PROJECT_PRODUCTION_URL`, which
   wins over `http://localhost:PORT`. This URL also receives the poll's feed-warming
   request, so set it explicitly when hosting outside Vercel.
+- `FTC_RELAY_URL` wins over `https://VERCEL_PROJECT_PRODUCTION_URL/api/ftc-feed`.
+  ftc.gov refuses requests from outside the US, so the FTC's feed is read through
+  `api/ftc-feed.ts`, which runs in a US region (`vercel.json`). With neither set,
+  as locally, the feed is read from ftc.gov directly.
 - Missing `CRON_SECRET` disables scheduled endpoints. A configured secret permits
   scheduled checks and digest dry runs even when email is not set up. Sending also
   requires `RESEND_API_KEY` and a nonempty, valid comma-separated `DIGEST_TO`.
