@@ -101,8 +101,10 @@ export function parseFederalRegisterAi(data: any, limit = 4): NormalizedNotice[]
     .filter(doc => mentionsAi(doc.title || '') && !NOT_A_RULE.test(doc.title || ''))
     .slice(0, limit)
     .map(doc => {
-      // The most specific agency: "National Institute of Standards and Technology" rather than "Commerce Department"
-      const agency = doc.agencies?.at(-1);
+      // The most specific agency: "National Institute of Standards and Technology" rather than "Commerce Department".
+      // An entry with only a raw name ("Office of the Secretary") is not an agency the Federal Register
+      // knows and names no department, so the last one it knows is taken instead.
+      const agency = doc.agencies?.filter((a: any) => a.name).at(-1) ?? doc.agencies?.at(-1);
       const name: string = agency?.name || agency?.raw_name || '';
       return federalRegisterNotice(doc, FEDERAL_AGENCIES[name] || (name ? `US ${name}` : 'US Federal Register'), ['AI rules']);
     });

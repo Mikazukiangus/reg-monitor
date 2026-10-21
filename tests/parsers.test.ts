@@ -83,6 +83,22 @@ test('Federal Register: SEC and CFTC documents, and AI documents by title', () =
   assert.deepEqual(parseFederalRegister({}), []);
 });
 
+test('Federal Register AI documents are named by the most specific agency the Federal Register knows', () => {
+  const doc = (agencies: object[]) => ({ results: [{
+    title: 'Request for Information: Accelerating the Adoption and Use of Artificial Intelligence as Part of Clinical Care',
+    type: 'Notice', document_number: '2025-23641', publication_date: '2025-12-23',
+    html_url: 'https://www.federalregister.gov/d/2025-23641', agencies
+  }] });
+  const regulator = (agencies: object[]) => parseFederalRegisterAi(doc(agencies), 1)[0]?.regulator;
+  const hhs = { name: 'Health and Human Services Department', raw_name: 'DEPARTMENT OF HEALTH AND HUMAN SERVICES' };
+  // "Office of the Secretary" has only a raw name: the department is named instead
+  assert.equal(regulator([hhs, { raw_name: 'Office of the Secretary' }]), 'US Health and Human Services Department');
+  assert.equal(regulator([hhs, { name: 'Food and Drug Administration', raw_name: 'Food and Drug Administration' }]), 'US Food and Drug Administration');
+  // With no agency the Federal Register knows, the raw name is all there is
+  assert.equal(regulator([{ raw_name: 'Office of the Secretary' }]), 'US Office of the Secretary');
+  assert.equal(regulator([]), 'US Federal Register');
+});
+
 test('GOV.UK: AI policy from DSIT and the AI Security Institute', () => {
   const notices = parseUkAiPolicy(recordedJson(GOV_UK_AI), 40);
   wellFormed(notices, /^UK (DSIT|AI Security Institute)$/);

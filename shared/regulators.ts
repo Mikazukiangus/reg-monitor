@@ -50,6 +50,13 @@ export const REGULATORS: readonly Regulator[] = [
   { id: 'us-ostp', name: 'US OSTP', fullName: 'Office of Science and Technology Policy', jurisdictionCode: 'US' },
   { id: 'us-omb', name: 'US OMB', fullName: 'Office of Management and Budget', jurisdictionCode: 'US' },
   { id: 'us-federal-register', name: 'US Federal Register', fullName: 'US Federal Register (agency not given)', jurisdictionCode: 'US' },
+  // Named by the Federal Register's AI search as "US " and the agency's name there
+  { id: 'us-food-and-drug-administration', name: 'US Food and Drug Administration', fullName: 'US Food and Drug Administration (Department of Health and Human Services)', jurisdictionCode: 'US' },
+  { id: 'us-health-and-human-services-department', name: 'US Health and Human Services Department', fullName: 'US Department of Health and Human Services', jurisdictionCode: 'US' },
+  { id: 'us-education-department', name: 'US Education Department', fullName: 'US Department of Education', jurisdictionCode: 'US' },
+  { id: 'us-energy-department', name: 'US Energy Department', fullName: 'US Department of Energy', jurisdictionCode: 'US' },
+  { id: 'us-international-trade-administration', name: 'US International Trade Administration', fullName: 'International Trade Administration, US Department of Commerce', jurisdictionCode: 'US' },
+  { id: 'us-patent-and-trademark-office', name: 'US Patent and Trademark Office', fullName: 'US Patent and Trademark Office (Department of Commerce)', jurisdictionCode: 'US' },
   { id: 'california-governor', name: 'California Governor', fullName: 'Governor of California', jurisdictionCode: 'US' },
   { id: 'colorado-ag', name: 'Colorado AG', fullName: 'Colorado Attorney General', jurisdictionCode: 'US' },
   { id: 'msit', name: 'MSIT', fullName: 'Ministry of Science and ICT (South Korea)', jurisdictionCode: 'KR' },
