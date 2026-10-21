@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
+<channel>
+<title>All news</title>
+<link>https://www.bafin.de</link>
+<description>RSS feed from Bafin</description>
+<language>en</language>
+<copyright>Copyright by Bafin. All rights reserved.</copyright>
+<managingEditor>editor@bafin.de</managingEditor>
+<webMaster>webmaster@bafin.de</webMaster>
+<category>Newspapers</category>
+<generator>Government Site Builder</generator>
+<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+<ttl>60</ttl>
+<item>
+     <title>Kalyptowave(.)net: Bafin warns consumers about website</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_21_kalyptowave_en.html</link>
+     <pubDate>Wed, 21 Oct 2026 14:25:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website kalyptowave(.)net. According to information available to Bafin, the operators are offering financial services on the website without the required authorisation. The operators are not supervised by Bafin.</description>
+</item>
+<item>
+     <title>Greenchild LLC: evidence indicates no prospectus published</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/weitere/2026/meldung_2026_10_19_greenchild_llc_en.html</link>
+     <pubDate>Wed, 21 Oct 2026 12:37:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) has evidence indicating that Greenchild LLC, which claims to be based in Ferizaj, Kosovo, is offering an investment product to the public in Germany in the form of cultivation and utilisation of Paulownia trees.</description>
+</item>
+<item>
+     <title>captrader(.)group: Bafin warns about website and identity theft</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_21_captrader_group_en.html</link>
+     <pubDate>Wed, 21 Oct 2026 08:37:00 +0200</pubDate>
+     <description>The German Financial Supervisory Authority (Bafin) warns about offers on the website captrader(.)group. It is suspected that the unknown operators are offering financial services on the website without the required authorisation. Contrary to the website operators&#8217; claims, the website is not operated by CapTrader GmbH, who has no connection whatsoever to the website and the offered services. This is a case of identity theft.&#160;</description>
+</item>
+<item>
+     <title>graziamanagement(.)com:&#160;Bafin warns consumers about website and identity fraud</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_19_graziamanagement_en.html</link>
+     <pubDate>Tue, 20 Oct 2026 14:10:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website graziamanagement(.)com. Bafin suspects the unknown operators of the website of offering consumers financial and investment services without the required authorisation.</description>
+</item>
+<item>
+     <title>Primefincompany(.)com:&#160;Bafin&#160;warns consumers about website</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_19_primefincompany_en.html</link>
+     <pubDate>Tue, 20 Oct 2026 14:07:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website primefincompany(.)com. Bafin suspects the unknown operators of offering financial, investment and cryptoasset services in Germany without the required authorisation.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Wild Bunch AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_16_wild_bunch_ag_konzernrechnungslegungsunterlagen_en.html</link>
+     <pubDate>Fri, 16 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 10 march 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a further disciplinary fine amounting to &#8364;2,500 on Wild Bunch AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Wild Bunch AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_16_wild_bunch_ag_rechnungslegungsunterlagen_en.html</link>
+     <pubDate>Fri, 16 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 10 march 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a further disciplinary fine amounting to &#8364;2,500 on Wild Bunch AG.</description>
+</item>
+<item>
+     <title>euramcoassets.ltd:&#160;Bafin warns consumers about website and identity fraud</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_15_euramcoassets_en.html</link>
+     <pubDate>Thu, 15 Oct 2026 10:12:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website euramcoassets.ltd. Bafin suspects the unknown operators of the website of offering cryptoasset services without the required authorisation.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Asset-Backed European Securitisation Transaction Nineteen UG &#160;</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_15_assetbacked_european_securitisation_transaction_en.html</link>
+     <pubDate>Thu, 15 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 18 August 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;2,500 on Asset-Backed European Securitisation Transaction Nineteen UG.</description>
+</item>
+<item>
+     <title>Calendar of Nikolas Speer - July 2026</title>
+     <link>https://www.bafin.de/SharedDocs/Downloads/EN/Termine_SSM_EDBA/2026/2607_calendar_ssm_speer_en.html</link>
+     <pubDate>Thu, 15 Oct 2026 00:00:00 +0200</pubDate>
+     <description>SSM Supervisory Board Alternate</description>
+</item>
+<item>
+     <title>Calendar of Mark Branson - July 2026</title>
+     <link>https://www.bafin.de/SharedDocs/Downloads/EN/Termine_SSM_P/2026/2607_calendar_ssm_branson_en.html</link>
+     <pubDate>Thu, 15 Oct 2026 00:00:00 +0200</pubDate>
+     <description>Member of the Supervisory Board of the SSM</description>
+</item>
+<item>
+     <title>leo-invest.de: Bafin warns consumers about website and identity fraud</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_14_leo_invest_en.html</link>
+     <pubDate>Wed, 14 Oct 2026 10:12:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website leo-invest.de. Bafin suspects the unknown operators of the website of offering consumers financial and investment services without the required authorisation.</description>
+</item>
+<item>
+     <title>GainLiteX (.)co: Bafin warns about website and other platforms</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_14_gainlitex_en.html</link>
+     <pubDate>Wed, 14 Oct 2026 10:12:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) warns consumers about a series of almost identical websites, which frequently use the following phrases: &#8216;Comprehensive financial advice and investment services that are tailored to your individual needs&#8217; and &#8216;Join the global leader of financial investments&#8217;.</description>
+</item>
+<item>
+     <title>Fake bank: Bafin warns against offers on the websites vantex-bank(.)com and vantex-bank(.)net.</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_09_vantex_bank_en.html</link>
+     <pubDate>Fri, 9 Oct 2026 10:12:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) warns against offers on the websites vantex-bank(.)com and vantex-bank(.)net. Contrary to what is stated on the websites, there is no credit institution operating under the name Vantex Bank in either Germany or France.</description>
+</item>
+<item>
+     <title>Vaulttrades(.)co: Bafin warns consumers about website</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_09_vaulttrades_co_en.html</link>
+     <pubDate>Fri, 9 Oct 2026 10:12:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website vaulttrades(.)co. According to information available to Bafin, the operators are offering cryptoasset services on these websites without the required authorisation. The operators of the website are not supervised by Bafin.</description>
+</item>
+<item>
+     <title>Deutsche Bank&#160;AG: Bafin sets new deadlines for remedying shortcomings</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/60b_KWG_84_WpIG_und_57_GwG/meldung_2026_10_09_deutsche_bank_ag_en.html</link>
+     <pubDate>Fri, 9 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 15&#160;September 2026, Bafin set new deadlines for Deutsche Bank&#160;AG to remedy shortcomings in its data processing systems. These systems are used to monitor transactions for the purpose of preventing money laundering and terrorist financing.</description>
+</item>
+<item>
+     <title>VW AG: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_09_vw_ag_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 9 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 1 October 2026, Bafin imposed an administrative fine amounting to &#8364;1.2 million on VW&#160;AG on the grounds that the company had violated the Market Abuse Regulation (MAR).</description>
+</item>
+<item>
+     <title>Uniox Gold LLC: evidence indicates no prospectus published</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/weitere/2026/meldung_2026_10_08_uniox_gold_llc_en.html</link>
+     <pubDate>Thu, 8 Oct 2026 14:38:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) has evidence indicating that Uniox Gold LLC, which has its registered office in Wyoming, USA, is offering capital investments referred to as &#8222;Goldinvestment 2.000 EUR&#8220;, &#8222;Goldinvestment 5.000 EUR&#8220;, &#8222;Goldinvestment 10.000 EUR&#8220; and &#8222;Goldinvestment 20.000 EUR&#8220; to the public in Germany.</description>
+</item>
+<item>
+     <title>algocorefx(.)com: Bafin warns consumers about website</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_09_24_algocorefx_en.html</link>
+     <pubDate>Thu, 8 Oct 2026 13:59:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) warns consumers about the services offered on the website algocorefx(.)com. Bafin has information that the operators are offering banking business and/or financial services on this website without the required authorisation.</description>
+</item>
+<item>
+     <title>gervestcapitalclub(.)com:&#160;Bafin&#160;warns consumers about website&#160;</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2026/meldung_2026_10_06_gervestcapitalclub_com_en.html</link>
+     <pubDate>Thu, 8 Oct 2026 12:42:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority&#160;(Bafin)&#160;warns consumers about the services offered on the website gervestcapitalclub(.)com. According to information available to Bafin, financial services are being offered on this website without the required authorisation.</description>
+</item>
+</channel>
+</rss>

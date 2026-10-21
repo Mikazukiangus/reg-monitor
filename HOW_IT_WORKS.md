@@ -34,6 +34,9 @@ RegSonar has no special access or data agreements. Every notice and figure comes
 | **JPX** (Tokyo Stock Exchange, Osaka Exchange, Tokyo Commodity Exchange, Japan Exchange Regulation) | The English rule-revision tables on jpx.co.jp (HTML), one per exchange | Key points come from the English outline of each revision (PDF). Dates are Japan time |
 | **FINRA** | Official notices RSS feed | Board election notices are left out. Feed titles are only the notice number, so the title adds the opening sentence of FINRA's own summary. FINRA's Cloudflare challenges clients that pose as a browser, so the server identifies itself plainly as "RegSonar-Feed-Gateway/2.0" there. FINRA rate-limits quickly, so notice pages are fetched only once each, for key points |
 | **ESMA** | Official news RSS feed | The publication date is read from the item's description |
+| **BaFin** (Germany) | Official English RSS feeds: all news, and measures and sanctions | Warnings to consumers (websites offering services without authorisation, offers without a prospectus) and officials' calendars are left out of the news; they are most of it. The measures feed lists some measures the news feed doesn't. Measures (fines, orders, prohibitions) are classed as enforcement. Shown under UK & EU |
+| **Reserve Bank of India** | Official RSS feeds of notifications and press releases | Notifications are the circulars and directions RBI sends to regulated entities; the reference is their number ("RBI/2026-27/296"). Daily market operations are left out of the press releases: auctions and their results, money market operations, and the weekly money and reserve figures. Dates are India time |
+| **SEBI** (India) | Official RSS feed | Appeals filed by individuals and recovery proceedings are left out: they are most of the feed, and recovery notices give defaulters' names and tax numbers. Orders are classed as enforcement. Dates are Indian days |
 | **BIS & Basel Committee** | Official BIS media-release feed (RSS, older RDF format) | Basel Committee items are tagged BCBS |
 | **FSB** | Official publications RSS feed | Regional consultative group meetings and auditor reports are left out |
 
@@ -154,7 +157,7 @@ What the document does (the first that applies):
 | Guidance | 6.5 |
 | Enforcement action | 7 |
 | Consultation open for comment | 7 |
-| Rules made: final rules, amendments, policy statements, consultation conclusions, requirements taking effect | 7.5 |
+| Rules made: final rules, amendments (including amendment regulations and directions), policy statements, consultation conclusions, requirements taking effect | 7.5 |
 
 Dates move it, by the date the notice shows: +1.5 when comments close within 14 days or rules take effect within 30 days (a date the regulator publishes, such as the Federal Register's effective date, or a "Takes effect" date from the document's text; a "Comply by" date does not move the score); a consultation whose closing date has passed scores 4. Days are counted from today in Hong Kong, as the dates shown are. Severity follows the score: Critical from 8.5 (so only something with a date close at hand), High from 6.5, Info below. The steps are shown on each notice under "Why these tags and score?". Because dates move scores, they are worked out each time notices are served, not stored.
 

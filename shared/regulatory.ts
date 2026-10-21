@@ -8,6 +8,7 @@ export type JurisdictionCode =
   | 'JP'
   | 'KR'
   | 'CN'
+  | 'IN'
   | 'UK_EU'
   | 'US'
   | 'GLOBAL';

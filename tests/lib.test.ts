@@ -47,6 +47,15 @@ test("the default consultations rule matches the Colorado AG's AI rulemaking, fr
   assert.ok(!ruleMatches(consultations, { ...notice, keyPoints: undefined }));
 });
 
+test('the default consultations and enforcement rules cover BaFin, RBI and SEBI', () => {
+  const [consultations, , enforcement] = DEFAULT_RULES;
+  assert.equal(enforcement.name, 'Enforcement Actions');
+  for (const regulator of ['BaFin', 'RBI', 'SEBI']) {
+    assert.ok(ruleMatches(consultations, { regulator, impactScore: 7, title: 'Consultation paper on draft rules' }), regulator);
+    assert.ok(ruleMatches(enforcement, { regulator, impactScore: 7, title: 'Nomura Holdings Inc.: Bafin imposes administrative fine' }), regulator);
+  }
+});
+
 test("a rule's regulator matches whole words of the notice's regulator, not part of a word", () => {
   assert.ok(regulatorMatches('SEC', 'US SEC'));
   assert.ok(regulatorMatches('sgx', 'SGX RegCo'));

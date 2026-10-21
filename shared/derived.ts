@@ -102,7 +102,7 @@ export function sgtTime(iso: string): string {
 
 // Each source's own time zone, for the calendar day it published on
 const SOURCE_ZONE: Record<JurisdictionCode, string> = {
-  SG: 'Asia/Singapore', MY: 'Asia/Kuala_Lumpur', HK: 'Asia/Hong_Kong', CN: 'Asia/Shanghai',
+  SG: 'Asia/Singapore', MY: 'Asia/Kuala_Lumpur', HK: 'Asia/Hong_Kong', CN: 'Asia/Shanghai', IN: 'Asia/Kolkata',
   JP: 'Asia/Tokyo', KR: 'Asia/Seoul', AU: 'Australia/Sydney', US: 'America/New_York',
   UK_EU: 'Europe/London', GLOBAL: 'Europe/Zurich'
 };

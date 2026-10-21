@@ -44,7 +44,7 @@ const GENERIC = new Set(
     'amendments amendment annex revised changes released summarising received relation titled other ' +
     'january february march april may june july august september october november december ' +
     'monday tuesday wednesday thursday friday ' +
-    'mas sfc hkma hkex exchange pra fca esma fsb bis bcbs asic asx jfsa sec cftc fstb').split(' ')
+    'mas sfc hkma hkex exchange pra fca esma fsb bis bcbs asic asx jfsa sec cftc fstb bafin rbi sebi').split(' ')
 );
 // Document numbers that differ between a consultation and its outcome (CP6/26, PS19/26)
 const DOCUMENT_NUMBER = /^(?:cp|ps|ss|dp|id)\d+$/;

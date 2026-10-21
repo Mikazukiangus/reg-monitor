@@ -5,11 +5,11 @@ import { JurisdictionCode, SectorDomain, UrgencySeverity } from '../../shared/re
 
 export type SortOption = 'Highest Impact Score' | 'Most Recent First' | 'Consultation Deadline';
 export type TabId = 'feed' | 'radar' | 'horizon' | 'enforcement' | 'alert-rules';
-export const HEADER_JURISDICTIONS = ['All', 'Singapore MAS', 'Malaysia', 'Hong Kong HKMA', 'Australia Japan', 'Korea China', 'UK US Global'] as const;
+export const HEADER_JURISDICTIONS = ['All', 'Singapore MAS', 'Malaysia', 'Hong Kong HKMA', 'Australia Japan', 'Korea China', 'India', 'UK US Global'] as const;
 export type HeaderJurisdiction = typeof HEADER_JURISDICTIONS[number];
 
 export const ALL_SEVERITIES: UrgencySeverity[] = ['critical', 'high', 'info'];
-export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
+export const ALL_JURISDICTIONS: JurisdictionCode[] = ['SG', 'MY', 'HK', 'AU', 'JP', 'KR', 'CN', 'IN', 'UK_EU', 'US', 'GLOBAL'];
 export const SECTOR_KEYS: Record<SectorDomain, string> = {
   'Banking & Prudential': 'banking',
   'Capital Markets & Listings': 'markets',

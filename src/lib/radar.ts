@@ -10,11 +10,12 @@ export const RADAR_JURISDICTIONS: { code: JurisdictionCode; name: string; source
   { code: 'MY', name: 'Malaysia', sources: 'BNM, SC; JPDP privacy' },
   { code: 'HK', name: 'Hong Kong', sources: 'HKMA, SFC, HKEX' },
   { code: 'US', name: 'United States', sources: 'SEC/CFTC, FINRA; AI rules, privacy' },
-  { code: 'UK_EU', name: 'UK & EU', sources: 'PRA, FCA, ESMA; AI rules; ICO, EDPB privacy' },
+  { code: 'UK_EU', name: 'UK & EU', sources: 'PRA, FCA, ESMA, BaFin; AI rules; ICO, EDPB privacy' },
   { code: 'AU', name: 'Australia', sources: 'ASIC, ASX; OAIC privacy' },
   { code: 'JP', name: 'Japan', sources: 'JFSA, JPX; AI strategy; PPC privacy' },
   { code: 'KR', name: 'South Korea', sources: 'MSIT AI rules; PIPC privacy' },
   { code: 'CN', name: 'China', sources: 'State Council policy library: AI rules, privacy' },
+  { code: 'IN', name: 'India', sources: 'RBI, SEBI' },
   { code: 'GLOBAL', name: 'Global', sources: 'BIS/BCBS, FSB' }
 ];
 

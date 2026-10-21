@@ -198,5 +198,29 @@
   "https://coag.gov/wp-json/wp/v2/pages?slug=ai&_fields=id,date_gmt,modified_gmt,link,title,excerpt": {
     "file": "7be59dc5e297.txt",
     "contentType": "application/json; charset=UTF-8"
+  },
+  "https://www.bafin.de/EN/service/rss/_function/rssnewsfeed.xml?nn=187494": {
+    "file": "a6cafcf798e2.txt",
+    "contentType": "text/xml;charset=utf-8"
+  },
+  "https://www.bafin.de/EN/service/rss/_function/RSS_Massnahmen.xml?nn=187494": {
+    "file": "cc3bbb6e7ec8.txt",
+    "contentType": "text/xml;charset=utf-8"
+  },
+  "https://www.rbi.org.in/notifications_rss.xml": {
+    "file": "9ba5ac610d0b.txt",
+    "contentType": "text/xml"
+  },
+  "https://www.rbi.org.in/pressreleases_rss.xml": {
+    "file": "ead44a3a015c.txt",
+    "contentType": "text/xml"
+  },
+  "https://www.sebi.gov.in/sebirss.xml": {
+    "file": "a3cc3dc2b89b.txt",
+    "contentType": "text/xml"
+  },
+  "https://www.sebi.gov.in/legal/regulations/oct-2026/securities-and-exchange-board-of-india-alternative-investment-funds-third-amendment-regulations-2026_105331.html": {
+    "file": "f28fb0a53696.txt",
+    "contentType": "text/html; charset=UTF-8"
   }
 }

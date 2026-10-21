@@ -30,6 +30,7 @@ export function filterNotices(notices: RegulatoryNotice[], filters: FeedFilters,
     if (headerJurisdiction === 'Hong Kong HKMA' && notice.jurisdictionCode !== 'HK') return false;
     if (headerJurisdiction === 'Australia Japan' && !['AU', 'JP'].includes(notice.jurisdictionCode)) return false;
     if (headerJurisdiction === 'Korea China' && !['KR', 'CN'].includes(notice.jurisdictionCode)) return false;
+    if (headerJurisdiction === 'India' && notice.jurisdictionCode !== 'IN') return false;
     if (headerJurisdiction === 'UK US Global' && !['UK_EU', 'US', 'GLOBAL'].includes(notice.jurisdictionCode)) return false;
 
     // Severity check
@@ -102,7 +103,7 @@ export interface FacetCounts {
 
 // Notices under each filter choice, counting every sector a notice has
 export function countFacets(notices: RegulatoryNotice[]): FacetCounts {
-  const jurisdiction: Record<JurisdictionCode, number> = { SG: 0, MY: 0, HK: 0, AU: 0, JP: 0, KR: 0, CN: 0, UK_EU: 0, US: 0, GLOBAL: 0 };
+  const jurisdiction: Record<JurisdictionCode, number> = { SG: 0, MY: 0, HK: 0, AU: 0, JP: 0, KR: 0, CN: 0, IN: 0, UK_EU: 0, US: 0, GLOBAL: 0 };
   const sector = Object.fromEntries(SECTORS.map(s => [s, 0])) as Record<SectorDomain, number>;
   const severity: Record<UrgencySeverity, number> = { critical: 0, high: 0, info: 0 };
   const format: Record<string, number> = {};

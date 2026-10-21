@@ -26,9 +26,11 @@ test('the default filters keep every notice', () => {
 });
 
 test('the header choice keeps its jurisdictions only', () => {
-  const notices = [notice('sg'), notice('us', { jurisdictionCode: 'US' }), notice('eu', { jurisdictionCode: 'UK_EU' }), notice('jp', { jurisdictionCode: 'JP' })];
+  const notices = [notice('sg'), notice('us', { jurisdictionCode: 'US' }), notice('eu', { jurisdictionCode: 'UK_EU' }), notice('jp', { jurisdictionCode: 'JP' }), notice('in', { jurisdictionCode: 'IN' })];
   assert.deepEqual(ids(filterNotices(notices, { ...all, headerJurisdiction: 'UK US Global' }, context)), ['us', 'eu']);
   assert.deepEqual(ids(filterNotices(notices, { ...all, headerJurisdiction: 'Australia Japan' }, context)), ['jp']);
+  assert.deepEqual(ids(filterNotices(notices, { ...all, headerJurisdiction: 'India' }, context)), ['in']);
+  assert.deepEqual(ids(filterNotices(notices, { ...all, jurisdictions: { ...all.jurisdictions, IN: false } }, context)), ['sg', 'us', 'eu', 'jp']);
 });
 
 test('a notice shows if any of its sectors is selected', () => {

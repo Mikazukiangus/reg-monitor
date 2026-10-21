@@ -19,6 +19,9 @@ import { ESMA_RSS, fetchEsmaNews } from './esma.js';
 import { SGX_CONTENT_API, SGX_QUERY_ID, fetchSgxConsultations, fetchSgxDisciplinaryActions, fetchSgxRegulatoryNews } from './sgx.js';
 import { ASX_CONSULTATIONS_PAGE, fetchAsxConsultations } from './asx.js';
 import { FINRA_NOTICES_RSS, fetchFinraNotices } from './finra.js';
+import { BAFIN_NEWS_RSS, fetchBafinNews, fetchBafinMeasures } from './bafin.js';
+import { RBI_NOTIFICATIONS_RSS, fetchRbiNotifications, fetchRbiPressReleases } from './rbi.js';
+import { SEBI_RSS, fetchSebiNews } from './sebi.js';
 import { JPX_REVISIONS_BASE, fetchJpxRuleRevisions } from './jpx.js';
 import { EC_AI_NEWS, fetchEcAiNews } from './ec.js';
 import { FTC, CALIFORNIA_GOVERNOR_AI, CALPRIVACY, COLORADO_AG_AI, COLORADO_AG_AI_RULEMAKING, fetchAiFeed, fetchColoradoAiRulemaking } from './us-feeds.js';
@@ -73,6 +76,9 @@ const PROBE_URLS: Record<EndpointId, string> = {
   'bnm-rss': bnmYearPage(new Date().getUTCFullYear()),
   'sc-my': SC_MEDIA_RELEASES,
   'finra-rss': FINRA_NOTICES_RSS,
+  'bafin-rss': BAFIN_NEWS_RSS,
+  'rbi-rss': RBI_NOTIFICATIONS_RSS,
+  'sebi-rss': SEBI_RSS,
   'bis-portal': 'https://www.bis.org/doclist/all_pressrels.rss'
 };
 
@@ -114,6 +120,11 @@ const SOURCE_LIST: SourceDefinition[] = [
   { id: 'bnm-press-releases', endpointId: 'bnm-rss', name: 'BNM Press Releases', fetch: fetchBnmPressReleases },
   { id: 'sc-malaysia-media-releases', endpointId: 'sc-my', name: 'SC Malaysia Media Releases', fetch: fetchScMediaReleases },
   { id: 'bis-media-releases', endpointId: 'bis-portal', name: 'BIS Media Releases', fetch: fetchBisPressReleases },
+  { id: 'bafin-news', endpointId: 'bafin-rss', name: 'BaFin News', fetch: fetchBafinNews },
+  { id: 'bafin-measures-sanctions', endpointId: 'bafin-rss', name: 'BaFin Measures & Sanctions', fetch: fetchBafinMeasures },
+  { id: 'rbi-notifications', endpointId: 'rbi-rss', name: 'RBI Notifications', fetch: fetchRbiNotifications },
+  { id: 'rbi-press-releases', endpointId: 'rbi-rss', name: 'RBI Press Releases', fetch: fetchRbiPressReleases },
+  { id: 'sebi-news', endpointId: 'sebi-rss', name: 'SEBI News', fetch: fetchSebiNews },
   // Rules for artificial intelligence, from the official source in each
   // jurisdiction that makes or enforces them. General government feeds are
   // narrowed to items about AI rules (shared/aiTopics.ts), so a read of one

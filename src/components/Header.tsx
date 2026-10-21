@@ -90,6 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
               <option value="Hong Kong HKMA">Hong Kong (HKMA, SFC, HKEX)</option>
               <option value="Australia Japan">Australia &amp; Japan</option>
               <option value="Korea China">South Korea &amp; China</option>
+              <option value="India">India (RBI, SEBI)</option>
               <option value="UK US Global">UK, EU, US &amp; Global</option>
             </select>
           </div>

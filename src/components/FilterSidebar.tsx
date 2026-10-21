@@ -9,13 +9,14 @@ const JURISDICTION_OPTIONS: { code: JurisdictionCode; label: string; note?: stri
   { code: 'SG', label: 'Singapore (MAS, SGX RegCo; privacy: PDPC)' },
   { code: 'MY', label: 'Malaysia (BNM, SC; privacy: JPDP)' },
   { code: 'HK', label: 'Hong Kong (HKMA, SFC, HKEX)' },
-  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA; AI: European Commission, DSIT; privacy: ICO, EDPB)' },
+  { code: 'UK_EU', label: 'UK & EU (PRA, FCA, ESMA, BaFin; AI: European Commission, DSIT; privacy: ICO, EDPB)' },
   { code: 'US', label: 'United States (SEC, CFTC, FINRA; AI: federal agencies, FTC, California, Colorado; privacy: FTC, CalPrivacy)' },
   { code: 'GLOBAL', label: 'Global (BIS, Basel Committee, FSB)' },
   { code: 'AU', label: 'Australia (ASIC, ASX; privacy: OAIC)' },
   { code: 'JP', label: 'Japan (JFSA, JPX; AI: Cabinet Office; privacy: PPC)' },
   { code: 'KR', label: 'South Korea (AI: MSIT; privacy: PIPC)' },
-  { code: 'CN', label: 'China (AI and privacy: State Council policy library)' }
+  { code: 'CN', label: 'China (AI and privacy: State Council policy library)' },
+  { code: 'IN', label: 'India (RBI, SEBI)' }
 ];
 
 interface FilterSidebarProps {

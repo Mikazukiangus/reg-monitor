@@ -38,8 +38,9 @@ const { finraTitle } = await import('../server/sources/finra.ts');
 const { parseMsitPressReleases } = await import('../server/sources/msit.ts');
 const { severityOf } = await import('../shared/impact.ts');
 const { noticeProblem } = await import('../src/lib/noticeShape.ts');
+const { publishedDay } = await import('../shared/derived.ts');
 
-const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'UK_EU', 'US', 'GLOBAL'];
+const JURISDICTIONS = ['SG', 'HK', 'MY', 'AU', 'JP', 'KR', 'CN', 'IN', 'UK_EU', 'US', 'GLOBAL'];
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 
 for (const source of SOURCES) {
@@ -116,6 +117,73 @@ test('HKEX disciplinary actions are classed as enforcement', async () => {
   const disciplinary = notices.filter(n => /Disciplinary Action/i.test(n.title));
   assert.ok(disciplinary.length > 0);
   assert.ok(disciplinary.every(n => n.format === 'Enforcement'));
+});
+
+test('BaFin news leaves out warnings to consumers and calendars, which are most of it', async () => {
+  const notices = await byName('BaFin News').fetch(100);
+  // 5 of the 20 recorded items: the rest warn about websites or offers, or are officials' calendars
+  assert.equal(notices.length, 5);
+  assert.ok(notices.every(n => !/Verbrauchermitteilung|Termine_/.test(String(n.dossierUrl)) && !/\bwarns\b|calendar/i.test(n.title)));
+  assert.ok(notices.every(n => n.regulator === 'BaFin' && n.jurisdictionCode === 'UK_EU' && n.jurisdiction === 'GERMANY'));
+  // Entities in titles are decoded
+  assert.ok(notices.some(n => n.title === 'Deutsche Bank AG: Bafin sets new deadlines for remedying shortcomings'));
+});
+
+test('BaFin measures and sanctions are classed as enforcement, and include measures the news feed leaves out', async () => {
+  const notices = await byName('BaFin Measures & Sanctions').fetch(100);
+  const measures = notices.filter(n => /\/EN\/Massnahmen\//.test(String(n.dossierUrl)));
+  assert.equal(measures.length, 19);
+  assert.ok(measures.every(n => n.format === 'Enforcement' && n.ref === 'BaFin Measures & sanctions'), 'orders and prohibitions too, not only fines');
+  const nomura = notices.find(n => n.id === 'bafin-meldung_2026_10_20_nomura_holdings_en');
+  assert.equal(nomura?.publishedAt, '2026-10-20T04:00:00.000Z');
+  assert.ok(!(await byName('BaFin News').fetch(100)).some(n => n.id === nomura!.id));
+});
+
+test('RBI notifications: referenced by their number, dated in India time, amendment directions as rules made', async () => {
+  const notices = await byName('RBI Notifications').fetch(100);
+  assert.equal(notices.length, 10);
+  const uapa = notices.find(n => n.id === 'rbi-notification-13742');
+  assert.equal(uapa?.ref, 'RBI RBI/2026-27/296');
+  // 17:20 India time
+  assert.equal(uapa?.publishedAt, '2026-10-19T11:50:00.000Z');
+  assert.ok(notices.every(n => n.regulator === 'RBI' && n.jurisdictionCode === 'IN'));
+  const amendment = notices.find(n => n.id === 'rbi-notification-13740');
+  assert.match(amendment!.title, /Second Amendment Directions, 2026$/);
+  assert.equal(amendment?.impactScore, 7.5);
+});
+
+test('RBI press releases leave out daily market operations and auctions', async () => {
+  const notices = await byName('RBI Press Releases').fetch(100);
+  // 3 of the 10 recorded: the rest are auctions, their results and money market operations
+  assert.deepEqual(notices.map(n => n.id), ['rbi-pr-63840', 'rbi-pr-63839', 'rbi-pr-63831']);
+  assert.ok(notices.some(n => /^Minutes of the Monetary Policy Committee/.test(n.title)));
+});
+
+test('SEBI leaves out appeals and recovery proceedings; orders are enforcement and dates are Indian days', async () => {
+  const notices = await byName('SEBI News').fetch(100);
+  // 9 of the 30 recorded
+  assert.equal(notices.length, 9);
+  assert.ok(notices.every(n => !/\/recovery-proceedings\//.test(String(n.dossierUrl)) && !/^Appeal No\b/.test(n.title) && !/\bPAN\b/.test(`${n.title} ${n.summary ?? ''}`)));
+  assert.ok(notices.every(n => n.regulator === 'SEBI' && n.jurisdictionCode === 'IN'));
+  const order = notices.find(n => n.id === 'sebi-105285');
+  assert.equal(order?.format, 'Enforcement');
+  assert.equal(order?.ref, 'SEBI Enforcement orders');
+  const regulations = notices.find(n => n.id === 'sebi-105331');
+  assert.match(regulations!.title, /\(Third Amendment\) Regulations, 2026$/);
+  assert.equal(regulations?.impactScore, 7.5);
+  // "15 Oct, 2026 +0530": the day starts at 18:30 UTC the day before
+  assert.equal(regulations?.publishedAt, '2026-10-14T18:30:00.000Z');
+  assert.equal(publishedDay(regulations?.publishedAt, 'IN'), '2026-10-15');
+});
+
+test("SEBI's pages show the document as a PDF, which key points are read from", async () => {
+  const { sebiPdfUrl } = await import('../server/enrich.ts');
+  const [regulations] = await byName('SEBI News').fetch(1);
+  const page = await (await fetch(String(regulations.dossierUrl))).text();
+  assert.equal(sebiPdfUrl(String(regulations.dossierUrl), page), 'https://www.sebi.gov.in/sebi_data/attachdocs/oct-2026/1792391666668.pdf');
+  // Only on SEBI's site, and only a PDF of SEBI's own
+  assert.equal(sebiPdfUrl('https://www.example.org/page.html', page), undefined);
+  assert.equal(sebiPdfUrl(String(regulations.dossierUrl), `<iframe src='../web/?file=https://evil.example/x.pdf'>`), undefined);
 });
 
 test('SFC circular titles drop the audience line', async () => {
@@ -462,10 +530,12 @@ test('migration 2 links each recorded notice only to the source that read it', a
   }
   // Every source's notices are linked except those whose prefix another source
   // shares, and sources added after the migration (Colorado AG AI Rulemaking,
-  // whose notices record their source when saved); the FCA (recorded while blocked) and the FTC (no notice on AI or
-  // privacy in its recorded reply) have no recorded notices to link
+  // BaFin, RBI and SEBI, whose notices record their source when saved); the
+  // FCA (recorded while blocked) and the FTC (no notice on AI or privacy in its
+  // recorded reply) have no recorded notices to link
   assert.deepEqual([...ids].filter(id => !prefixed.has(id)).sort(), [
-    'china-policy-library-ai', 'china-policy-library-personal-information', 'colorado-ag-ai-rulemaking', 'ftc-ai-privacy', 'mas-circulars-guidelines', 'mas-consultations',
-    'mas-media-releases', 'uk-fca-news', 'us-federal-register', 'us-federal-register-ai'
+    'bafin-measures-sanctions', 'bafin-news', 'china-policy-library-ai', 'china-policy-library-personal-information', 'colorado-ag-ai-rulemaking',
+    'ftc-ai-privacy', 'mas-circulars-guidelines', 'mas-consultations', 'mas-media-releases', 'rbi-notifications', 'rbi-press-releases', 'sebi-news',
+    'uk-fca-news', 'us-federal-register', 'us-federal-register-ai'
   ]);
 });

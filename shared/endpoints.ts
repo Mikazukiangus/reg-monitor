@@ -51,6 +51,9 @@ export const ENDPOINT_CATALOG = [
   { id: 'bnm-rss', name: 'BNM Press Releases', agency: 'BNM (Malaysia)', jurisdiction: 'Malaysia', protocol: 'HTML', auth: 'Public / None', ingests: true },
   { id: 'sc-my', name: 'SC Malaysia Media Releases', agency: 'SC Malaysia', jurisdiction: 'Malaysia', protocol: 'HTML (list data in page)', auth: 'Public / None', ingests: true },
   { id: 'finra-rss', name: 'FINRA Notices RSS', agency: 'FINRA (United States)', jurisdiction: 'US', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
+  { id: 'bafin-rss', name: 'BaFin English RSS Feeds', agency: 'BaFin (Germany)', jurisdiction: 'Germany', protocol: 'RSS XML (news; measures and sanctions)', auth: 'Public / None', ingests: true },
+  { id: 'rbi-rss', name: 'RBI RSS Feeds', agency: 'Reserve Bank of India', jurisdiction: 'India', protocol: 'RSS XML (notifications; press releases)', auth: 'Public / None', ingests: true },
+  { id: 'sebi-rss', name: 'SEBI RSS Feed', agency: 'SEBI (India)', jurisdiction: 'India', protocol: 'RSS XML', auth: 'Public / None', ingests: true },
   { id: 'bis-portal', name: 'BIS Media Releases RSS', agency: 'BIS & Basel Committee', jurisdiction: 'Global', protocol: 'RSS 1.0 (RDF)', auth: 'Public / None', ingests: true }
 ] as const satisfies readonly EndpointInfo[];
 

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
+<channel>
+<title>Measures & sanctions</title>
+<link>https://www.bafin.de/</link>
+<description>Measures & sanctions</description>
+<language>en</language>
+<copyright>Copyright by Bafin. All rights reserved.</copyright>
+<managingEditor>editor@bafin.de</managingEditor>
+<webMaster>webmaster@bafin.de</webMaster>
+<category>Newspapers</category>
+<generator>Government Site Builder</generator>
+<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+<ttl>60</ttl>
+<item>
+     <title>Nomura Holdings Inc.: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_20_nomura_holdings_en.html?cms_expanded=true</link>
+     <pubDate>Tue, 20 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 15 October 2026, the Federal Financial Supervisory Authority (Bafin) imposed an administrative fine amounting to &#8364;320,000 on Nomura Holdings Inc. The reason for this fine was a breach of supervisory duties in connection with contraventions of the German Securities Trading Act (WpHG). During the period of UniCredit&#160;S.p.A.&#8217;s takeover bid for Commerzbank&#160;AG - specifically in May and June 2026 - Nomura Holdings Inc. failed to submit voting rights notifications relating to Commerzbank&#160;AG within the prescribed period.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Wild Bunch AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_16_wild_bunch_ag_konzernrechnungslegungsunterlagen_en.html</link>
+     <pubDate>Fri, 16 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 10 march 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a further disciplinary fine amounting to &#8364;2,500 on Wild Bunch AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Wild Bunch AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_16_wild_bunch_ag_rechnungslegungsunterlagen_en.html</link>
+     <pubDate>Fri, 16 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 10 march 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a further disciplinary fine amounting to &#8364;2,500 on Wild Bunch AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Asset-Backed European Securitisation Transaction Nineteen UG &#160;</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_15_assetbacked_european_securitisation_transaction_en.html</link>
+     <pubDate>Thu, 15 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 18 August 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;2,500 on Asset-Backed European Securitisation Transaction Nineteen UG.</description>
+</item>
+<item>
+     <title>Deutsche Bank&#160;AG: Bafin sets new deadlines for remedying shortcomings</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/60b_KWG_84_WpIG_und_57_GwG/meldung_2026_10_09_deutsche_bank_ag_en.html</link>
+     <pubDate>Fri, 9 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 15&#160;September 2026, Bafin set new deadlines for Deutsche Bank&#160;AG to remedy shortcomings in its data processing systems. These systems are used to monitor transactions for the purpose of preventing money laundering and terrorist financing.</description>
+</item>
+<item>
+     <title>VW AG: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_10_09_vw_ag_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 9 Oct 2026 06:00:00 +0200</pubDate>
+     <description>On 1 October 2026, Bafin imposed an administrative fine amounting to &#8364;1.2 million on VW&#160;AG on the grounds that the company had violated the Market Abuse Regulation (MAR).</description>
+</item>
+<item>
+     <title>Significant benchmarks notified under Article 24(2) of Regulation (EU) 2016/1011 (Benchmarks Regulation, BMR)</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Mitteilungen_nach_BMR/meldung_2026_09_25_eex_phelix-de_en.html</link>
+     <pubDate>Fri, 25 Sep 2026 10:00:00 +0200</pubDate>
+     <description>The Federal Financial Supervisory Authority (Bafin) has received a notification from the administrator European Energy Exchange AG pursuant to Article 24(2) BMR stating that the below benchmark has reached the threshold of EUR 50 billion referred to in Article 24(1) BMR.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Accentro Real Estate AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_14_accentro_real_estate_ag_4_en.html</link>
+     <pubDate>Mon, 14 Sep 2026 06:03:00 +0200</pubDate>
+     <description>On 31 March 2025, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;50.000 on Accentro Real Estate AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Accentro Real Estate AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_14_accentro_real_estate_ag_3_en.html</link>
+     <pubDate>Mon, 14 Sep 2026 06:02:00 +0200</pubDate>
+     <description>On 31 March 2025, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;50.000 on Accentro Real Estate AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Accentro Real Estate AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_14_accentro_real_estate_ag_2_en.html</link>
+     <pubDate>Mon, 14 Sep 2026 06:01:00 +0200</pubDate>
+     <description>On 14 April 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;50.000 on Accentro Real Estate AG.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on Accentro Real Estate AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_14_accentro_real_estate_ag_1_en.html</link>
+     <pubDate>Mon, 14 Sep 2026 06:00:00 +0200</pubDate>
+     <description>On 14 April 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to &#8364;50.000 on Accentro Real Estate AG.</description>
+</item>
+<item>
+     <title>Cadence Growth Capital GmbH: Bafin orders the submission of documents regarding business relationships with placement agents</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/60b_KWG_84_WpIG_und_57_GwG/meldung_2026_09_11_cadence_growth_capital_gmbh_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 11 Sep 2026 10:21:00 +0200</pubDate>
+     <description>Cadence Growth Capital GmbH must submit to Bafin contracts with placement agents and other documents required to fulfil its customer due diligence requirements under the German Money Laundering Act (Geldw&#228;schegesetz - GwG). This is an order from Bafin. It is intended to ensure that, in future, Cadence Growth Capital GmbH complies with its customer due diligence requirements regarding its business relationships with placement agents.</description>
+</item>
+<item>
+     <title>Publication of financial reports: Federal Office of Justice imposes disciplinary fine on H2 Core AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_08_h2_core_ag_en.html</link>
+     <pubDate>Tue, 8 Sep 2026 06:00:00 +0200</pubDate>
+     <description>On 17 June 2026, the Federal Office of Justice (Bundesamt f&#252;r Justiz) imposed a disciplinary fine amounting to 50.000 euros on H2 Core AG.</description>
+</item>
+<item>
+     <title>Violation of the Market Abuse Regulation: Bafin imposes administrative fines for market manipulation</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG_anonym/meldung_2026_09_04_geldbusse_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 4 Sep 2026 06:00:00 +0200</pubDate>
+     <description>On 24 August 2026, the Federal Financial Supervisory Authority (Bafin) imposed an administrative fine of &#8364;1,900 on a natural person and an administrative fine of &#8364;1,650 on another natural person.</description>
+</item>
+<item>
+     <title>a.i.s. AG: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_09_01_a_i_s_ag_en.html?cms_expanded=true</link>
+     <pubDate>Tue, 1 Sep 2026 06:00:00 +0200</pubDate>
+     <description>On 19 August 2026, Bafin imposed an administrative fine amounting to &#8364;15,000 on a.i.s. AG. a.i.s. AG failed to publish an announcement stating the date and website on which its annual financial information for the financial year 2025 was made publicly available. The company has therefore contravened an obligation under the German Securities Trading Act (Wertpapierhandelsgesetz - WpHG).</description>
+</item>
+<item>
+     <title>pferdewetten.de AG: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_08_28_pferdewetten_de_ag_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 28 Aug 2026 06:00:00 +0200</pubDate>
+     <description>On August 24, 2026, Bafin imposed an administrative fine totalling &#8364;250,000 on pferdewetten.de AG. The company had contravened obligations under the German Securities Trading Act (Wertpapierhandelsgesetz - WpHG). pferdewetten.de AG had failed to publish its half-yearly financial report for the financial year 2025 within the prescribed period.</description>
+</item>
+<item>
+     <title>Effecta GmbH: Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_08_20_effecta_gmbh_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 21 Aug 2026 13:38:00 +0200</pubDate>
+     <description>On 30 July 2026, the Federal Financial Supervisory Authority (Bafin) imposed an administrative fine amounting to &#8364;15,000 on Effecta GmbH. The reason for this fine was a breach of supervisory duties in connection with a contravention of Article 13(1) in conjunction with Article 14 of Regulation (EU) No 1286/2014 (PRIIPs Regulation). The company had offered the profit participation certificate &#8220;Companisto Green City Solutions Pre-Series B_2025_PPC.&#8221; for subscription to retail investors via a website in July 2025 without having published a key information document on the website beforehand.</description>
+</item>
+<item>
+     <title>Companisto Trust Service XXXV UG (haftungsbeschr&#228;nkt): Bafin imposes administrative fine</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_08_20_companisto_trust_service_xxxv_ug_en.html?cms_expanded=true</link>
+     <pubDate>Fri, 21 Aug 2026 13:37:00 +0200</pubDate>
+     <description>On 30 July 2026, the Federal Financial Supervisory Authority (Bafin) imposed an administrative fine amounting to &#8364;9,000 on Companisto Trust Service XXXV UG (haftungsbeschr&#228;nkt). The reason for this fine was a breach of supervisory duties in connection with a contravention of Article 5(1) of Regulation (EU) No 1286/2014 (PRIIPs Regulation). Companisto Trust Service XXXV UG (haftungsbeschr&#228;nkt), acting as a PRIIP manufacturer, had offered the profit participation certificate &#8220;Companisto Green City Solutions Pre-Series B_2025_PPC.&#8221; to retail investors for subscription via a website in July 2025 without having published a key information document on the website beforehand.</description>
+</item>
+<item>
+     <title>Galldium Immobilien F&#252;nfte GmbH: Bafin prohibits the public offering of participation certificates issued by AMAGVIK Int. AG</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/Untersagung/meldung_2026_07_22_galldium_fuenfte_gmbh_en.html</link>
+     <pubDate>Thu, 30 Jul 2026 10:15:00 +0200</pubDate>
+     <description>In a letter dated 10&#160;July&#160;2026, Bafin prohibited Galldium Immobilien F&#252;nfte&#160;GmbH, based in Konstanz, Germany, from offering participation certificates in AMAGVIK&#160;Int.&#160;AG to the public. Bafin imposed the prohibition because the company had infringed the German Capital Investment Act (VermAnlG). Galldium Immobilien F&#252;nfte GmbH is therefore not authorised to offer participation certificates in AMAGVIK&#160;Int.&#160;AG in Germany.</description>
+</item>
+<item>
+     <title>Leo International Precision Health AG: Bafin imposes administrative fines</title>
+     <link>https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Massnahmen/40c_neu_124_WpHG/meldung_2026_07_30_leo_international_precision_health_ag_en.html?cms_expanded=true</link>
+     <pubDate>Thu, 30 Jul 2026 06:00:00 +0200</pubDate>
+     <description>On 8 July 2026, Bafin imposed an administrative fine amounting to &#8364;20,000 on Leo International Precision Health AG. The company had contravened obligations under the German Securities Trading Act (WpHG). Leo International Precision Health AG had failed to publish an announcement stating from which date and at which web address its annual financial information for the financial year 2023 was made publicly available. It had also failed to publish its half-yearly financial report for the financial year 2024 within the prescribed period.</description>
+</item>
+</channel>
+</rss>

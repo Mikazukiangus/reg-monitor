@@ -1,5 +1,6 @@
 // Key points for notices: each document is read (HTML, SFC and SGX document
-// text, HKMA BRDR PDFs) and summarised once, or taken from the history.
+// text, HKMA BRDR PDFs, the PDFs SEBI's pages show) and summarised once, or
+// taken from the history.
 import { logger } from './logging.js';
 import { summarize } from './summarize.js';
 import { extractArticleText, pagePublishedDate, extractPdfText, htmlToText } from './extract.js';
@@ -29,6 +30,15 @@ async function fetchBrdrPdfText(pageUrl: string): Promise<{ text: string; ocr: b
   const data = await readLimitedBytes(await fetchOrThrow(pdfUrl), MAX_PDF_BYTES);
   return { ...(await extractPdfText(data)), pdfUrl };
 }
+
+// SEBI's pages show the document in a PDF viewer ("../../../web/?file=https://
+// www.sebi.gov.in/sebi_data/attachdocs/....pdf"); the page holds only its title
+const SEBI_PAGE = /^https:\/\/www\.sebi\.gov\.in\//;
+const SEBI_PDF_VIEWER = /<iframe[^>]+src=['"][^'"]*[?&]file=(https:\/\/www\.sebi\.gov\.in\/[^'"&#]+\.pdf)['"&#]/i;
+
+// The PDF a SEBI page shows, if any
+export const sebiPdfUrl = (pageUrl: string, html: string): string | undefined =>
+  SEBI_PAGE.test(pageUrl) ? html.match(SEBI_PDF_VIEWER)?.[1] : undefined;
 
 // SFC document pages are an empty shell filled in from a JSON API on the same
 // site; the document's HTML is read from that API instead
@@ -62,8 +72,14 @@ export async function keyPointsFor(notice: NormalizedNotice): Promise<KeyPoints 
         ({ text, ocr } = await extractPdfText(await readLimitedBytes(res, MAX_PDF_BYTES)));
       } else {
         const html = await res.text();
-        text = extractArticleText(html, sourceUrl);
-        published = pagePublishedDate(html) ?? null;
+        const pdfUrl = sebiPdfUrl(sourceUrl, html);
+        if (pdfUrl) {
+          ({ text, ocr } = await extractPdfText(await readLimitedBytes(await fetchOrThrow(pdfUrl), MAX_PDF_BYTES)));
+          sourceUrl = pdfUrl;
+        } else {
+          text = extractArticleText(html, sourceUrl);
+          published = pagePublishedDate(html) ?? null;
+        }
       }
     }
     const result = text.length > 200 ? { ...summarize(text, { sourceUrl }), ...(ocr ? { ocr } : {}), published } : null;
