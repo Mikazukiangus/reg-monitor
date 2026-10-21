@@ -1452,6 +1452,16 @@ This document records the full chronological instructions, technical requirement
   * `sql/upcoming-deadlines.sql` (Request 92) was never committed and is gone with an earlier container.
 * **Plan offered** (waiting for sign-off): every date a notice has, from the regulator or its document, as one list of `{kind, date, quote, from}`; the date shown worked out from it and today by one shared function; the four fields no longer stored or sent (older copies read through the same function); a `notice_dates` table (migration 4) for SQL, rebuilt by each scheduled check; checked on the live notices before and after, in the browser.
 
+### Request 112: Vercel Functions Storage at 9.1 of 10 GB (Claude Code, 2026-10-21)
+
+**User:** shared the Vercel usage chart (Functions Storage 9.11 GB of 10 GB, reg-monitor 9.08 GB, rising from about 6 October) and asked what causes it and how to reduce it. Step 6 is paused.
+
+* **What the figure counts:** the function of every deployment Vercel keeps. reg-monitor keeps **236 ready deployments** (every one since the project began on 5 October; no retention policy is set), about 219 of them made since OCR was added on 7 October. 9.08 GB over about 219 is about 41 MB each.
+* **Why each deployment is about 41 MB:** `vercel.json` `includeFiles` copies all of `tesseract.js-core` (44 MB: twelve engine builds) and `@tesseract.js-data/eng` (14 MB: two English models) into every function, 31.2 MB compressed. OCR uses one model (`4.0.0_best_int`, 2.9 MB) and, in Node, only the three LSTM builds (`tesseract-core{,-simd,-relaxedsimd}-lstm.js` and `.wasm`, about 9 MB, whichever the processor supports); the `.wasm.js` builds are for browsers. Trimmed to those files, the OCR files compress to 7.8 MB.
+* **Why there are so many deployments:** of the latest 200, **134 (67%) were for commits that change only `.md` files** (64 previews, 70 production), mostly this log; 58 changed code or settings, 8 could not be classified. Every push builds a preview, and every push to `main` a production deployment, each with a full copy of the function. Today's separate log pushes (36 deployments on 21 October) are part of this.
+* **Fixes offered** (waiting for the user): trim `includeFiles` (about 41 → 18 MB a deployment); `ignoreCommand` skipping builds when nothing but `.md` files changed since the branch's last successful deployment (`VERCEL_GIT_PREVIOUS_SHA`; a merge whose last commit is a log update still deploys); a deployment retention policy and deleting old deployments (the user's, in the Vercel dashboard; deletion cannot be undone).
+* Also seen in the build log: `error TS2688: Cannot find type definition file for 'vite/client'` from Vercel's type check of the function; the build completes. No code changed.
+
 ---
 
 ## 3. Key Files & Modifications Summary
