@@ -1439,6 +1439,19 @@ This document records the full chronological instructions, technical requirement
 * Also logged: the Cabinet Office page `260210_forms.html` gave HTTP 404 when its key points were read (one document; the notice is kept without key points).
 * No code changed.
 
+### Request 111: Step 6 Plan, One Structured Key Date (Claude Code, 2026-10-21)
+
+**User:** "step 6" (review step 6: one structured deadline instead of four fields).
+
+* **Findings** (production feed of 358 notices at 05:18 UTC; no code changed):
+  * One date is spread over `statutoryDeadline` (label text, "Comments close: 2026-11-05"), `deadlineDate`, `deadlineQuote` and `statusBadge` (text and colour), plus the document dates in `keyPoints.dates` and the legacy `keyPoints.closingDate`. 100 notices have a `deadlineDate`, 81 of them taken from the document's text.
+  * Nine readers parse the label text (`replace(/:.*$/, '')` for the kind on cards, the list, Horizon, the timeline, calendar files and exports; regexes in `shared/impact.ts` and `server/history.ts`).
+  * **Federal Register dates skip the shared rule:** "Effective:" where every other source says "Takes effect:"; past dates kept as if ahead (3 live: "Comments close: 2026-10-13", "Effective: 2026-10-06" and "2026-10-02"); and the placeholder "No date published" stored as the date label on 62 notices (badge "Published"), shown on their cards and exported as the CSV's date kind.
+  * The `immediate` badge type is never set.
+  * Which date a notice shows depends on today (comments close until they pass, then the next date it takes effect), so a stored "deadline" column would go stale as days pass.
+  * `sql/upcoming-deadlines.sql` (Request 92) was never committed and is gone with an earlier container.
+* **Plan offered** (waiting for sign-off): every date a notice has, from the regulator or its document, as one list of `{kind, date, quote, from}`; the date shown worked out from it and today by one shared function; the four fields no longer stored or sent (older copies read through the same function); a `notice_dates` table (migration 4) for SQL, rebuilt by each scheduled check; checked on the live notices before and after, in the browser.
+
 ---
 
 ## 3. Key Files & Modifications Summary
