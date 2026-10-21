@@ -5,6 +5,7 @@ import { rateLimit } from '../throttle.js';
 import { cdnCacheControl } from '../../config.js';
 import { currentFeed, endpointStatus, runScheduledCheck, scheduledCheckStatus } from '../services/feed.js';
 import { cronAuthorized } from './cron.js';
+import { accepts } from '../validate.js';
 
 // Refreshes each visitor may ask for per minute
 export const refreshLimit = rateLimit(config.refresh.limit, config.refresh.windowMs);
@@ -21,7 +22,7 @@ export function feedRoutes(): Router {
   const router = express.Router();
 
   // API Route: Get connected endpoint status and latencies
-  router.get('/api/feeds/status', async (_req: Request, res: Response) => {
+  router.all('/api/feeds/status', accepts(['GET']), async (_req: Request, res: Response) => {
     try {
       res.json({ success: true, ...await endpointStatus() });
     } catch (error: any) {
@@ -34,7 +35,7 @@ export function feedRoutes(): Router {
   // may be served from Vercel's CDN cache (up to 5 minutes old, or older while
   // a fresh copy is fetched in the background), so a cold function never makes
   // a visitor wait; lastSync says how old the data is. POST always runs.
-  router.all('/api/feeds/sync', async (req: Request, res: Response) => {
+  router.all('/api/feeds/sync', accepts(['GET', 'POST']), async (req: Request, res: Response) => {
     // A refresh (POST) skips the CDN cache, so each visitor may ask for only a few a minute
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       const wait = refreshLimit(visitorIp(req));
@@ -55,7 +56,7 @@ export function feedRoutes(): Router {
   });
 
   // Persisted scheduled-check metadata; reading this never triggers a poll.
-  router.get('/api/feeds/checks', async (_req: Request, res: Response) => {
+  router.all('/api/feeds/checks', accepts(['GET']), async (_req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
     try {
       res.json(logger.redact({ success: true, ...await scheduledCheckStatus() }));
@@ -69,7 +70,7 @@ export function feedRoutes(): Router {
   // several times a day (needs CRON_SECRET, like the digest). It stores up to
   // 20 items per source in the history, reading further back when there is a
   // gap, adds key points a few documents at a time, and refreshes the cached feed.
-  router.get('/api/feeds/poll', async (req: Request, res: Response) => {
+  router.all('/api/feeds/poll', accepts(['GET']), async (req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
     if (!cronAuthorized(req, res, 'scheduled checks are')) return;
     try {

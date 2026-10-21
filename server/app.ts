@@ -3,6 +3,7 @@ import { logger } from './logging.js';
 import { feedRoutes } from './routes/feeds.js';
 import { digestRoutes } from './routes/digest.js';
 import { noticeRoutes } from './routes/notices.js';
+import { accepts } from './validate.js';
 
 // API routes only. Used by the local server (server.ts) and by the Vercel
 // function in api/index.ts, where the frontend is served as static files.
@@ -10,11 +11,13 @@ export function createApp() {
   const app = express();
   // Don't announce the server software
   app.disable('x-powered-by');
-
-  app.use(express.json());
+  // Query values are text, or a list when a name is repeated; never objects
+  // built from names such as a[b]=c. No route reads a request body, so none is
+  // parsed (server/validate.ts refuses one).
+  app.set('query parser', 'simple');
 
   // Health probe route
-  app.get('/api/health', (_req: Request, res: Response) => {
+  app.all('/api/health', accepts(['GET']), (_req: Request, res: Response) => {
     res.json({
       status: 'healthy',
       service: 'RegSonar Ingestion Gateway & Sentinel',
@@ -26,6 +29,11 @@ export function createApp() {
   app.use(feedRoutes());
   app.use(digestRoutes());
   app.use(noticeRoutes());
+
+  // Any other API address
+  app.use('/api', (_req: Request, res: Response) => {
+    res.status(404).json({ success: false, error: 'Not found' });
+  });
 
   // Express's default development error handler can echo parser messages and
   // stacks (including request content). Always return a controlled JSON error.

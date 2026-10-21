@@ -150,7 +150,8 @@ test('the API and captured logs do not expose configured secrets or malformed re
       db.query = originalQuery;
       const invalid = await fetch(base + '/api/feeds/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"secret": "' + config.digest.cronSecret + '", not-valid-json}' });
       assert.equal(invalid.status, 400);
-      assert.deepEqual(await invalid.json(), { success: false, error: 'Invalid request body' });
+      // Refused before it is read: no route takes a body
+      assert.deepEqual(await invalid.json(), { success: false, error: 'This request takes no body' });
       const serialized = JSON.stringify(entries);
       for (const secret of [config.digest.apiKey, config.digest.cronSecret, config.digest.to[0]]) assert.ok(!serialized.includes(secret));
       assert.ok(serialized.includes('[REDACTED]'));

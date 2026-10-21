@@ -40,14 +40,22 @@ export function readSavedViews(storage?: StorageLike): SavedView[] {
 }
 export const writeSavedViews = (views: SavedView[], storage?: StorageLike) => write(VIEWS_KEY, views, storage);
 
-// Rules made on the Alert Rules tab; the default rules until any are saved
+// A saved rule with every field the matching reads; storage can be edited,
+// or left by an older version
+const strings = (v: unknown): v is string[] => Array.isArray(v) && v.every(s => typeof s === 'string');
+export const isAlertRule = (v: any): v is CustomAlertRule =>
+  !!v && typeof v.id === 'string' && typeof v.name === 'string' && strings(v.jurisdictions) && strings(v.keywords) &&
+  typeof v.minImpact === 'number' && Number.isFinite(v.minImpact) && typeof v.enabled === 'boolean';
+
+// Rules made on the Alert Rules tab; the default rules until any are saved.
+// Saved rules that are not well formed are left out.
 const ALERT_RULES_KEY = 'regsonar.alertRules';
 export function readAlertRules(storage?: StorageLike): CustomAlertRule[] {
   try {
     const saved = (storage ?? localStorage).getItem(ALERT_RULES_KEY);
     if (saved) {
       const rules = JSON.parse(saved);
-      if (Array.isArray(rules)) return rules;
+      if (Array.isArray(rules)) return rules.filter(isAlertRule).slice(0, 100);
     }
   } catch {
     // Private windows and blocked storage: start from the default rules

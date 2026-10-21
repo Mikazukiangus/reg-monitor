@@ -63,9 +63,12 @@ export async function fetchEndpointStatus(): Promise<EndpointMetric[] | null> {
   return Array.isArray(data.endpoints) ? data.endpoints : null;
 }
 
+// The server searches at most this many characters
+export const MAX_SEARCH_LENGTH = 200;
+
 // Stored notices matching the search text; null when the server gave none
 export async function searchHistory(query: string, signal?: AbortSignal): Promise<RegulatoryNotice[] | null> {
-  const res = await fetch(`/api/notices/search?q=${encodeURIComponent(query)}`, { signal });
+  const res = await fetch(`/api/notices/search?q=${encodeURIComponent(query.trim().slice(0, MAX_SEARCH_LENGTH))}`, { signal });
   if (!res.ok) return null;
   const data = await res.json();
   return Array.isArray(data.notices) ? data.notices : null;

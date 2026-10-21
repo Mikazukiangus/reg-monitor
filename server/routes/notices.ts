@@ -3,20 +3,20 @@ import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
 import { cdnCacheControl } from '../../config.js';
 import { noticesByIds, searchNotices } from '../services/notices.js';
+import { accepts, idList, queryOf, text } from '../validate.js';
+
+const SEARCH = { q: text(2, 200, true) };
+const BY_ID = { ids: idList(50, true) };
 
 // Notices from the history: search, and lookup by id
 export function noticeRoutes(): Router {
   const router = express.Router();
 
   // Search the history: titles, summaries and key points
-  router.get('/api/notices/search', async (req: Request, res: Response) => {
-    const q = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 200) : '';
-    if (q.length < 2) {
-      res.status(400).json({ success: false, error: 'Search needs at least 2 characters' });
-      return;
-    }
+  router.all('/api/notices/search', accepts(['GET'], SEARCH), async (_req: Request, res: Response) => {
+    const { q } = queryOf(res, SEARCH);
     try {
-      const result = await searchNotices(q);
+      const result = await searchNotices(q!);
       if (result.enabled) res.set('Cache-Control', cdnCacheControl(config.cdn.search));
       res.json({ success: true, ...result });
     } catch (error: any) {
@@ -26,17 +26,10 @@ export function noticeRoutes(): Router {
   });
 
   // Look up exact archived IDs for shared links and saved notices.
-  router.get('/api/notices/by-id', async (req: Request, res: Response) => {
+  router.all('/api/notices/by-id', accepts(['GET'], BY_ID), async (_req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
-    let ids: unknown;
-    try { ids = JSON.parse(typeof req.query.ids === 'string' ? req.query.ids : 'null'); } catch { ids = null; }
-    if (!Array.isArray(ids) || ids.length === 0 || ids.length > 50 ||
-        !ids.every(id => typeof id === 'string' && id.length > 0 && id.length <= 240)) {
-      res.status(400).json({ success: false, error: 'Provide 1 to 50 notice IDs' });
-      return;
-    }
     try {
-      res.json({ success: true, ...await noticesByIds(ids) });
+      res.json({ success: true, ...await noticesByIds(queryOf(res, BY_ID).ids!) });
     } catch (error) {
       logger.error('[RegSonar History] Notice lookup failed', error);
       res.status(503).json({ success: false, error: 'Notice history is unavailable' });

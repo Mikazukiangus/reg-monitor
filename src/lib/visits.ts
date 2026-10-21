@@ -9,12 +9,20 @@ export interface PreviousVisit {
   at: string | null;
 }
 
+// The stored list of seen ids, less anything that is not one (storage can be
+// edited, or left by an older version)
+function seenIds(stored: string | null): string[] {
+  const ids: unknown = JSON.parse(stored || '[]');
+  return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : [];
+}
+
 // Read once at page load: notices not in this set are new to the viewer
 export function readPreviousVisit(): PreviousVisit | null {
   try {
     const ids = localStorage.getItem(SEEN_KEY);
     if (!ids) return null;
-    return { seenIds: new Set(JSON.parse(ids) as string[]), at: localStorage.getItem(VISIT_KEY) };
+    const at = localStorage.getItem(VISIT_KEY);
+    return { seenIds: new Set(seenIds(ids)), at: at && !isNaN(Date.parse(at)) ? at : null };
   } catch {
     return null;
   }
@@ -22,7 +30,7 @@ export function readPreviousVisit(): PreviousVisit | null {
 
 export function recordVisit(noticeIds: string[]) {
   try {
-    const previous = JSON.parse(localStorage.getItem(SEEN_KEY) || '[]') as string[];
+    const previous = seenIds(localStorage.getItem(SEEN_KEY));
     const merged = [...new Set([...noticeIds, ...previous])].slice(0, MAX_SEEN);
     localStorage.setItem(SEEN_KEY, JSON.stringify(merged));
     localStorage.setItem(VISIT_KEY, new Date().toISOString());
