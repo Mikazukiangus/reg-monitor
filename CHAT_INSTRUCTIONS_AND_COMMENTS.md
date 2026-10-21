@@ -1348,7 +1348,7 @@ This document records the full chronological instructions, technical requirement
 
 **User:** "proceed with your recommendations" (Request 102's plan: the regulator catalog in code only, no database table; history notices whose id prefix is shared left unlinked until read again; regulators not in the catalog get an id made from the name and a logged warning).
 
-* **Branch:** `claude/keen-lamport-5gmps1`, code in `bb9d2f4`, pushed, not merged (merging runs migration 2 on Neon and waits for the user).
+* **Branch:** `claude/keen-lamport-5gmps1`, code in `bb9d2f4`, pushed, not merged (merging runs migration 2 on Neon and waits for the user). CI run 39545655663 passed `check` and `audit`; preview `dpl_EUKxkXW2C611g9z7ed2TpLZqJeZ3` is READY (previews have no database, so it does not run the migration; behind a Vercel login, not opened).
 * **Changes:**
   * `server/sources/index.ts`: every source has a stable `id` (44, such as `hkma-circulars`); scheduled-check results and their stored log carry it.
   * `shared/regulators.ts` (new): 68 regulators with id, name, full name and jurisdiction. Each id is made from the October 2026 name (`regulatorSlug`: lower case, other characters as one hyphen), so a later rename keeps the id. `tagNotice` sets `regulatorId` on every notice, live and from history; an unlisted name gets the id made from it (none for a name with no a–z or 0–9 letters, such as an unknown Chinese issuer) and is logged once.
