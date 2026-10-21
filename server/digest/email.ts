@@ -1,6 +1,13 @@
 // The daily digest as an email: subject, HTML and plain text. Colours are
 // written out because email clients ignore the site's stylesheet.
-import { SGT, type DigestMatch } from './match.js';
+import { SGT, type DigestMatch, type DigestNotice } from './match.js';
+import { keyDate } from '../../shared/keyDate.js';
+
+// The date a notice shows, when it is still ahead
+const upcomingDate = (n: DigestNotice) => {
+  const shown = keyDate(n);
+  return shown?.upcoming ? shown.text : undefined;
+};
 
 function longDate(day: string): string {
   return new Date(`${day}T12:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -30,7 +37,7 @@ export function renderDigest(matches: DigestMatch[], day: string, siteUrl: strin
     ...matches.flatMap(({ notice: n, rules }) => [
       `${n.regulator}: ${n.title}`,
       `${n.ref} · published ${sgtDate(n.publishedAt!)} · matched: ${rules.join(', ')}`,
-      ...(n.deadlineDate ? [`${n.statutoryDeadline || 'Date'} (as stated in the source)`] : []),
+      ...(upcomingDate(n) ? [`${upcomingDate(n)} (as stated in the source)`] : []),
       ...(n.keyPoints?.points[0] ? [`"${n.keyPoints.points[0]}"`] : []),
       n.dossierUrl || '',
       ''
@@ -47,7 +54,7 @@ export function renderDigest(matches: DigestMatch[], day: string, siteUrl: strin
       </div>
       <div style="font:13px/1.5 Helvetica,Arial,sans-serif;color:#3C4852">
         Published ${escapeHtml(sgtDate(n.publishedAt!))} · Matched: ${escapeHtml(rules.join(', '))}
-        ${n.deadlineDate ? `<br><strong style="color:#A8432F">${escapeHtml(n.statutoryDeadline || `Date: ${n.deadlineDate}`)}</strong> (as stated in the source)` : ''}
+        ${upcomingDate(n) ? `<br><strong style="color:#A8432F">${escapeHtml(upcomingDate(n)!)}</strong> (as stated in the source)` : ''}
       </div>
       ${n.keyPoints?.points[0] ? `<blockquote style="margin:8px 0 0;padding:6px 10px;border-left:3px solid #1F4E79;background:#E3EBE6;font:13px/1.5 Helvetica,Arial,sans-serif;color:#1D2630">“${escapeHtml(n.keyPoints.points[0])}”</blockquote>` : ''}
     </td></tr>`).join('');

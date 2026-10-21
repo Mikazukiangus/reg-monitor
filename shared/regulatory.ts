@@ -82,6 +82,13 @@ export interface DocumentDate {
   general?: boolean;
 }
 
+// A date the regulator publishes with a notice
+export interface SourceDate {
+  kind: DateKind;
+  // ISO date (YYYY-MM-DD)
+  date: string;
+}
+
 // A consultation and its conclusions, matched by regulator and title words
 export interface RelatedLink {
   id: string;
@@ -107,14 +114,11 @@ export interface RegulatoryNotice {
   };
   impactScore: number;
   issuedTimeAgo: string;
-  statutoryDeadline?: string;
-  deadlineDate?: string;
-  // The sentence the date was taken from, when it comes from the document's text
-  deadlineQuote?: string;
-  statusBadge?: {
-    text: string;
-    type: 'deadline' | 'immediate' | 'action' | 'standard';
-  };
+  // Dates the regulator publishes with the notice (the Federal Register's
+  // comment and effective dates; MAS, SGX and ASX closing dates). The dates
+  // the document states are in keyPoints.dates. The date a notice shows is
+  // worked out from both and today (shared/keyDate.ts).
+  sourceDates?: SourceDate[];
   summary?: string;
   // Sentences quoted from the source document (extractive, selected by TextRank)
   keyPoints?: KeyPoints;

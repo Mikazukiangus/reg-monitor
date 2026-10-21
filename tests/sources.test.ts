@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'fs';
+import { keyDate } from '../shared/keyDate.ts';
 
 process.env.VERCEL = '1';
 delete process.env.DATABASE_URL;
@@ -91,7 +92,8 @@ test('MAS times are Singapore local time, not UTC', async () => {
 
 test('MAS consultations carry the closing date MAS publishes', async () => {
   const notices = await byName('MAS Consultations').fetch();
-  assert.ok(notices.every(n => /^Comments clos(e|ed): \d{4}-\d{2}-\d{2}$/.test(n.statutoryDeadline || '')));
+  assert.ok(notices.length > 0);
+  assert.ok(notices.every(n => n.sourceDates?.length === 1 && n.sourceDates[0].kind === 'closes' && /^\d{4}-\d{2}-\d{2}$/.test(n.sourceDates[0].date)));
 });
 
 test('ASIC times are Sydney local time, not UTC', async () => {
@@ -183,7 +185,8 @@ test('zonedToIso converts local times, including daylight saving', () => {
 test('SGX RegCo consultations carry the closing date SGX publishes, as a Singapore date', async () => {
   const notices = await byName('SGX RegCo Consultations').fetch();
   const value = notices.find(n => /Value Creation and Investor Engagement/.test(n.title));
-  assert.equal(value?.statutoryDeadline, 'Comments closed: 2026-05-22');
+  assert.deepEqual(value?.sourceDates, [{ kind: 'closes', date: '2026-05-22' }]);
+  assert.equal(value && keyDate(value)?.text, 'Comments closed: 2026-05-22');
   assert.equal(value?.publishedAt, '2026-04-21T16:00:00.000Z');
   assert.match(String(value?.dossierUrl), /^https:\/\/regco\.sgx\.com\/public-consultations\//);
 });
@@ -209,7 +212,7 @@ test('ASX consultations: title from the entry, closing date from its text', asyn
   const clearing = notices.find(n => /ASX Clear \(Futures\) Operating Rules/.test(n.title));
   assert.ok(clearing, notices.map(n => n.title).join(' | '));
   assert.match(clearing!.title, /^ASX published a consultation paper/);
-  assert.equal(clearing!.deadlineDate, '2026-10-30');
+  assert.deepEqual(clearing!.sourceDates, [{ kind: 'closes', date: '2026-10-30' }]);
   assert.equal(clearing!.publishedAt, '2026-09-29T14:00:00.000Z');
   assert.match(String(clearing!.dossierUrl), /\.pdf$/);
   assert.ok(notices.every(n => !/recording/i.test(n.title)));
@@ -272,7 +275,9 @@ test('Federal Register AI documents are those whose title is about AI, less meet
   ].map(t => notices.find(n => n.title.startsWith(t.slice(0, 60)))?.title));
   assert.equal(notices[0].regulator, 'US President');
   assert.equal(notices[1].regulator, 'NIST');
-  assert.equal(notices[1].statutoryDeadline, 'Comments close: 2026-10-13');
+  assert.deepEqual(notices[1].sourceDates, [{ kind: 'closes', date: '2026-10-13' }]);
+  // No date field: no date, rather than a placeholder
+  assert.equal(notices[0].sourceDates, undefined);
 });
 
 test('Korea MSIT press releases: titles and dates from the list script, linked to the release', async () => {

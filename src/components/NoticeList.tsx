@@ -1,6 +1,7 @@
 import React from 'react';
 import { InstrumentFormat, RegulatoryNotice } from '../../shared/regulatory';
 import { daysUntil, formatDate, publishedDay } from '../../shared/derived';
+import { upcomingDate } from '../../shared/keyDate';
 import { CRITICAL_SCORE, HIGH_SCORE } from '../../shared/impact';
 import { Highlight } from './Highlight';
 
@@ -36,7 +37,8 @@ const shortDate = (notice: RegulatoryNotice) => {
 export const NoticeList: React.FC<NoticeListProps> = ({ notices, isNew, bookmarkedIds, onOpen, onToggleBookmark, highlight }) => (
   <ul aria-label="Notices" className="bg-panel border border-line rounded-lg shadow-xs divide-y divide-line overflow-hidden">
     {notices.map(n => {
-      const days = n.deadlineDate ? daysUntil(n.deadlineDate) : -1;
+      const shown = upcomingDate(n);
+      const days = shown ? daysUntil(shown.date) : -1;
       const tone = days <= 14 ? 'text-orange' : days <= 60 ? 'text-cream' : 'text-accent';
       const saved = bookmarkedIds.has(n.id);
       const date = shortDate(n);
@@ -54,7 +56,7 @@ export const NoticeList: React.FC<NoticeListProps> = ({ notices, isNew, bookmark
               <span className={`uppercase tracking-wider ${FORMAT_TEXT[n.format] ?? 'text-ink-soft'}`}>{n.format}</span>
               {days >= 0 && (
                 <span className={`font-bold ${tone}`}>
-                  {n.statutoryDeadline?.replace(/:.*$/, '') || 'Key date'} {days === 0 ? 'today' : `in ${days}d`}
+                  {shown?.label} {days === 0 ? 'today' : `in ${days}d`}
                 </span>
               )}
               <span className="sm:hidden text-muted">{date || n.issuedTimeAgo}</span>

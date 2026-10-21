@@ -1,7 +1,7 @@
 import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor, formatOf } from '../notice.js';
-import { stripHtml, closingDateFields, singaporeDay } from '../text.js';
+import { stripHtml, sourceClosingDate, singaporeDay } from '../text.js';
 
 // Singapore Exchange Regulation (SGX RegCo). Its pages are filled in from SGX's
 // own content API, which the server reads directly: the lists of public
@@ -68,7 +68,7 @@ export async function fetchSgxConsultations(limit = 3): Promise<NormalizedNotice
 export function parseSgxConsultations(data: any): NormalizedNotice[] {
   return sgxRows(data).map(item => {
     const notice = sgxNotice(item, { idPrefix: 'sgx-con', type: 'CONSULTATION', format: 'Consultations', unixDate: item.dateIssue });
-    return item.dateClosed ? { ...notice, ...closingDateFields(singaporeDay(item.dateClosed)) } : notice;
+    return item.dateClosed ? { ...notice, ...sourceClosingDate(singaporeDay(item.dateClosed)) } : notice;
   });
 }
 

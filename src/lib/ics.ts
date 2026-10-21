@@ -2,6 +2,7 @@
 // Outlook, Google Calendar and Apple Calendar can import.
 import { RegulatoryNotice } from '../../shared/regulatory';
 import { daysUntil } from '../../shared/derived';
+import { upcomingDate } from '../../shared/keyDate';
 
 function escapeText(text: string): string {
   return text.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
@@ -37,15 +38,18 @@ function nextDay(iso: string): string {
 
 // Notices with a date today or later
 export function calendarNotices(notices: RegulatoryNotice[]): RegulatoryNotice[] {
-  return notices.filter(n => n.deadlineDate && daysUntil(n.deadlineDate) >= 0);
+  return notices.filter(n => {
+    const shown = upcomingDate(n);
+    return !!shown && daysUntil(shown.date) >= 0;
+  });
 }
 
 export function buildIcs(notices: RegulatoryNotice[], now = new Date()): string {
   const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const events = calendarNotices(notices).map(n => {
-    const what = n.statutoryDeadline?.replace(/:\s*\d{4}-\d{2}-\d{2}$/, '') || 'Key date';
+    const { label: what, date } = upcomingDate(n)!;
     const description = [
-      `${what}: ${n.deadlineDate} (as stated in the source; check the document before relying on it).`,
+      `${what}: ${date} (as stated in the source; check the document before relying on it).`,
       `${n.regulator} · ${n.ref}`,
       n.dossierUrl ? `Source: ${n.dossierUrl}` : ''
     ].filter(Boolean).join('\n');
@@ -53,8 +57,8 @@ export function buildIcs(notices: RegulatoryNotice[], now = new Date()): string 
       'BEGIN:VEVENT',
       `UID:${n.id}@regsonar`,
       `DTSTAMP:${stamp}`,
-      `DTSTART;VALUE=DATE:${compactDate(n.deadlineDate!)}`,
-      `DTEND;VALUE=DATE:${compactDate(nextDay(n.deadlineDate!))}`,
+      `DTSTART;VALUE=DATE:${compactDate(date)}`,
+      `DTEND;VALUE=DATE:${compactDate(nextDay(date))}`,
       `SUMMARY:${escapeText(`${n.regulator}: ${what} – ${n.title}`)}`,
       `DESCRIPTION:${escapeText(description)}`,
       ...(n.dossierUrl ? [`URL:${n.dossierUrl}`] : []),

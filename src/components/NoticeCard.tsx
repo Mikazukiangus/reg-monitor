@@ -1,6 +1,7 @@
 import React from 'react';
 import { InstrumentFormat, RegulatoryNotice } from '../../shared/regulatory';
 import { daysUntil, formatDate, publishedDay } from '../../shared/derived';
+import { keyDate } from '../../shared/keyDate';
 import { CRITICAL_SCORE, HIGH_SCORE } from '../../shared/impact';
 import { Highlight } from './Highlight';
 
@@ -48,11 +49,14 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
   highlight,
   onOpenRelated
 }) => {
-  const hasUpcomingDate = !!notice.deadlineDate && daysUntil(notice.deadlineDate) >= 0;
+  // The date the notice shows, worked out from its dates and today (shared/keyDate.ts)
+  const shown = keyDate(notice);
+  const hasUpcomingDate = !!shown?.upcoming && daysUntil(shown.date) >= 0;
   // Dated sentences from the document, led by the one the notice's date comes from
   const facts = notice.keyPoints?.facts.map(f => f.text) || [];
-  const datedSentences = notice.deadlineQuote && !facts.includes(notice.deadlineQuote) ? [notice.deadlineQuote, ...facts] : facts;
-  const dateLabel = notice.statutoryDeadline?.replace(/:.*$/, '');
+  const quote = shown?.quote;
+  const datedSentences = quote && !facts.includes(quote) ? [quote, ...facts] : facts;
+  const dateLabel = shown?.label;
   // Phones show the first key point and the actions; the rest opens with "Show more"
   const [expanded, setExpanded] = React.useState(false);
   const more = expanded ? '' : 'max-md:hidden';
@@ -154,29 +158,19 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
           Issued {notice.issuedTimeAgo}
         </span>
 
-        {notice.statutoryDeadline && <span>•</span>}
+        {shown && <span>•</span>}
 
-        {notice.statutoryDeadline && (
+        {shown && (
           <span
-            title={notice.deadlineQuote ? `From the document: “${notice.deadlineQuote}”` : undefined}
+            title={quote ? `From the document: “${quote}”` : undefined}
             className={`flex items-center gap-1 font-semibold ${
-              notice.statusBadge?.type === 'deadline'
-                ? 'text-accent'
-                : notice.statusBadge?.type === 'immediate'
-                ? 'text-green'
-                : notice.statusBadge?.type === 'action'
-                ? 'text-orange'
-                : 'text-ink-soft'
+              shown.badge === 'deadline' ? 'text-accent' : shown.badge === 'action' ? 'text-orange' : 'text-ink-soft'
             }`}
           >
             <span className="material-symbols-outlined text-sm" aria-hidden="true">
-              {notice.statusBadge?.type === 'immediate'
-                ? 'check_circle'
-                : notice.statusBadge?.type === 'action'
-                ? 'gavel'
-                : 'event_upcoming'}
+              {shown.badge === 'action' ? 'gavel' : 'event_upcoming'}
             </span>
-            {notice.statutoryDeadline}
+            {shown.text}
           </span>
         )}
       </div>
@@ -223,7 +217,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
                 <div key={idx} className="flex items-start gap-2 font-['Inter'] text-[12px] text-ink-soft">
                   <span className="material-symbols-outlined text-sm text-cream shrink-0" aria-hidden="true">event</span>
                   <span className="leading-relaxed">
-                    {text === notice.deadlineQuote && dateLabel && (
+                    {text === quote && dateLabel && (
                       <span className="font-['JetBrains_Mono'] text-[11px] font-semibold text-accent mr-1.5">{dateLabel}:</span>
                     )}
                     {text}
@@ -343,7 +337,7 @@ export const NoticeCard: React.FC<NoticeCardProps> = ({
             <button
               onClick={() => onAddToCalendar(notice)}
               className="w-10 h-10 md:w-auto md:h-auto md:p-1.5 flex items-center justify-center rounded text-muted hover:text-ink hover:bg-wash transition-colors"
-              title={`Add ${notice.deadlineDate} to your calendar (.ics)`}
+              title={`Add ${shown?.date} to your calendar (.ics)`}
               aria-label="Add this date to your calendar"
             >
               <span className="material-symbols-outlined text-lg" aria-hidden="true">calendar_add_on</span>

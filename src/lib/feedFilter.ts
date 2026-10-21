@@ -1,6 +1,7 @@
 // Which notices the feed shows, and in what order, for the filters chosen,
 // and how many notices fall under each filter choice. Pure, so it is tested
 // without the page.
+import { upcomingDate } from '../../shared/keyDate';
 import { JurisdictionCode, RegulatoryNotice, SectorDomain, UrgencySeverity } from '../../shared/regulatory';
 import { publishedDay } from '../../shared/derived';
 import { SECTORS } from '../../shared/tagging';
@@ -86,7 +87,7 @@ export function filterNotices(notices: RegulatoryNotice[], filters: FeedFilters,
       return (b.publishedAt || '').localeCompare(a.publishedAt || '');
     }
     if (sort === 'Consultation Deadline') {
-      return (a.deadlineDate || '9999').localeCompare(b.deadlineDate || '9999');
+      return (upcomingDate(a)?.date || '9999').localeCompare(upcomingDate(b)?.date || '9999');
     }
     return 0;
   });

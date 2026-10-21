@@ -1,5 +1,6 @@
 // The feed's headline figures and source status, worked out from the notices
 // and endpoints loaded. Pure, so the rules are tested without the page.
+import { hongKongDate, upcomingDate } from '../../shared/keyDate';
 import type { EndpointMetric, EndpointStatus, RegulatoryNotice } from '../../shared/regulatory';
 import { daysUntil, publishedInLastDays } from '../../shared/derived';
 import { commentsClosed } from '../../shared/impact';
@@ -22,7 +23,7 @@ export interface FeedFigures {
 
 export function feedFigures(notices: RegulatoryNotice[], now = new Date()): FeedFigures {
   const consultations = notices.filter(n => n.format === 'Consultations');
-  const openConsultations = consultations.filter(n => !commentsClosed(n.statutoryDeadline, now)).length;
+  const openConsultations = consultations.filter(n => !commentsClosed(n, now)).length;
   return {
     total: notices.length,
     critical: notices.filter(n => n.severity === 'critical').length,
@@ -30,8 +31,9 @@ export function feedFigures(notices: RegulatoryNotice[], now = new Date()): Feed
     openConsultations,
     closedConsultations: consultations.length - openConsultations,
     closingSoon: consultations.filter(n => {
-      if (!n.deadlineDate) return false;
-      const d = daysUntil(n.deadlineDate, now);
+      const shown = upcomingDate(n, hongKongDate(now));
+      if (!shown) return false;
+      const d = daysUntil(shown.date, now);
       return d >= 0 && d <= CLOSING_SOON_DAYS;
     }).length
   };

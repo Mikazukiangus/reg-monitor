@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { checkFeedReply } from '../src/api/feedReply.ts';
 import { noticeProblem } from '../src/lib/noticeShape.ts';
+import { keyDate } from '../shared/keyDate.ts';
 
 // A notice as the server sends it, with the optional parts it may carry
 const notice = (id: string, extra: Record<string, unknown> = {}) => ({
@@ -21,7 +22,7 @@ const endpoint = (id: string, extra: Record<string, unknown> = {}) => ({
 });
 const reply = (extra: Record<string, unknown> = {}) => ({
   success: true, count: 2, lastSync: '2026-10-20T06:16:32.424Z',
-  notices: [notice('a'), notice('b', { archived: true, language: 'zh', deadlineQuote: 'Comments close on 1 December 2026.' })],
+  notices: [notice('a'), notice('b', { archived: true, language: 'zh', sourceDates: [{ kind: 'closes', date: '2026-12-01' }] })],
   archive: { enabled: true, count: 1073, since: '2013-08-30T15:59:59.000Z' },
   sources: [{ endpointId: 'mas', name: 'MAS Consultations', ok: true, count: 2, lastSuccessAt: '2026-10-20T06:00:00.000Z' },
     { endpointId: 'ftc', name: 'FTC on AI and Privacy', ok: false, count: 0, lastSuccessAt: null, error: 'HTTP 404' }],
@@ -50,7 +51,7 @@ test('a reply that is not a feed is refused, saying why', () => {
 
 test('a malformed notice, endpoint or source result is left out and listed; the rest is shown', () => {
   const r = checkFeedReply(reply({
-    notices: [notice('a'), notice('b', { jurisdictionCode: 'FR' }), notice('c', { impactScore: '7' }), { title: 'no id' }],
+    notices: [notice('a'), notice('b', { jurisdictionCode: 'FR' }), notice('c', { impactScore: '7' }), { title: 'no id' }, notice('d', { sourceDates: [{ kind: 'closes', date: '1 December 2026' }] })],
     endpoints: [endpoint('mas'), endpoint('x', { status: 'Fine' })],
     sources: [{ endpointId: 'mas', ok: true, count: 2 }, { endpointId: 'y', ok: 'yes', count: 1 }]
   }));
@@ -62,6 +63,7 @@ test('a malformed notice, endpoint or source result is left out and listed; the 
     'notice b: unknown jurisdictionCode "FR"',
     'notice c: impactScore is not a number',
     'notice #3: id is not text',
+    'notice d: sourceDates is malformed',
     'endpoint x: unknown status "Fine"',
     'source y: ok is not true or false'
   ]);
@@ -83,4 +85,11 @@ test('a copy saved under an old sector name (offline) passes, under the current 
   assert.ok(r.ok);
   assert.equal(r.data.notices![0].sector, 'AI, Cyber & Tech Risk');
   assert.deepEqual(r.data.notices![0].tags, ['MAS', 'AI, Cyber & Tech Risk']);
+});
+
+test('a copy saved before dates were stored as sourceDates (offline) still shows its date', () => {
+  const old = notice('a', { format: 'Consultations', statutoryDeadline: 'Comments close: 2099-12-01', deadlineDate: '2099-12-01' });
+  const r = checkFeedReply(reply({ notices: [old] }));
+  assert.ok(r.ok);
+  assert.equal(keyDate(r.data.notices![0])?.text, 'Comments close: 2099-12-01');
 });

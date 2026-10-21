@@ -6,7 +6,7 @@ import { historyConfigured, openStore, type NoticeStore, type StoredNotice, type
 import { linkPairs, relatedOf, type LinkPair, type RelatedCandidate } from '../shared/related.js';
 import { dedupeByDocument } from '../shared/dedupe.js';
 import { type NormalizedNotice, tagNotice, formatOf, getRelativeTime } from './notice.js';
-import { closingDateFields } from './text.js';
+import { withoutLegacyDateFields } from '../shared/keyDate.js';
 import { LINK_ONLY } from './sources/us-feeds.js';
 import { withKeyPoints } from './enrich.js';
 
@@ -15,31 +15,21 @@ import { withKeyPoints } from './enrich.js';
 const ARCHIVE_FEED_DAYS = config.archive.days;
 const ARCHIVE_FEED_LIMIT = config.archive.limit;
 
-// Dates taken from a document's text are worked out again whenever a stored
-// notice is read, so a rule change reaches the whole history. Copies stored
-// before October 2026 mark them "Date in source", or have a closing date from
-// the text on a notice that is not a consultation.
-function withoutTextDates(n: NormalizedNotice): NormalizedNotice {
-  const legacyClosing = n.keyPoints?.closingDate?.date;
-  const fromText = !!n.deadlineQuote || /^Date in source: /.test(n.statutoryDeadline || '') ||
-    (!!legacyClosing && n.statutoryDeadline?.match(/^Comments closed?: (.*)$/)?.[1] === legacyClosing && formatOf(n.type, n.title) !== 'Consultations');
-  if (!fromText) return n;
-  const { deadlineDate: _d, statutoryDeadline: _s, statusBadge: _b, deadlineQuote: _q, ...rest } = n;
-  return rest;
-}
-
+// A stored notice as the site serves it. Document dates are worked out again
+// from the key points, so a rule change reaches the whole history; copies
+// stored before 21 October 2026 keep the regulator's date only as the label
+// they showed, which becomes sourceDates (shared/keyDate.ts).
 export const fromArchive = (stored: StoredNotice): NormalizedNotice => {
-  let n = withoutTextDates({
+  const n: NormalizedNotice = withoutLegacyDateFields({
     ...stored,
+    // The current format, which tells a legacy closing date from the text from the regulator's
+    format: formatOf(stored.type, stored.title),
     // Copies stored before link-only descriptions were dropped
     summary: LINK_ONLY.test(stored.summary || '') ? undefined : stored.summary,
     archived: true,
     isLiveFeed: false,
     issuedTimeAgo: stored.publishedAt ? getRelativeTime(stored.publishedAt) : 'Earlier'
   });
-  // A source's closing date stored while it was still ahead
-  const closes = n.statutoryDeadline?.match(/^Comments close: (\d{4}-\d{2}-\d{2})$/)?.[1];
-  if (closes) n = { ...n, deadlineDate: undefined, ...closingDateFields(closes) };
   return n.keyPoints ? withKeyPoints(n, n.keyPoints) : tagNotice(n);
 };
 

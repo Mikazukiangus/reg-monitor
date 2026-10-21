@@ -13,7 +13,6 @@ const notice: RegulatoryNotice = {
   jurisdictionCode: 'UK_EU', type: 'ANNOUNCEMENT', typeColorClass: { bg: 'x', text: 'y' }, impactScore: 7,
   issuedTimeAgo: 'Earlier', tags: ['test'], sector: 'Banking & Prudential', sectors: ['Banking & Prudential', 'AI, Cyber & Tech Risk'],
   format: 'Announcements', severity: 'high', dossierUrl: 'https://www.fca.org.uk/older', publishedAt: '2026-09-01T00:00:00Z',
-  statutoryDeadline: 'Takes effect: 2099-01-01', deadlineDate: '2099-01-01', deadlineQuote: 'The rules take effect on 1 January 2099.',
   keyPoints: { points: ['Quoted "text", with a comma.\nSecond line.'], facts: [], refs: [], method: 'extractive',
     dates: [{ kind: 'takesEffect', date: '2099-01-01', text: 'The rules take effect on 1 January 2099.' }] },
   tagging: { sectors: {}, format: 'Source format', impact: ['Base score 7', 'Source date adjustment'] }
@@ -53,7 +52,8 @@ test('exports preserve quotes, all sectors, date meanings and score reasons, wit
   const exported = exportNotice(notice, true);
   assert.deepEqual(exported.sectors, notice.sectors);
   assert.equal(exported.dateKind, 'Takes effect');
-  assert.equal(exported.deadlineQuote, notice.deadlineQuote);
+  assert.equal(exported.deadlineDate, '2099-01-01');
+  assert.equal(exported.deadlineQuote, 'The rules take effect on 1 January 2099.');
   assert.deepEqual(exported.scoreReasons, notice.tagging!.impact);
   assert.ok(!('keyPoints' in exportNotice(notice, false)));
   const csv = buildNoticeCsv([notice], true);

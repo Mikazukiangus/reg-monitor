@@ -101,8 +101,8 @@ export const HorizonScreen: React.FC<HorizonScreenProps> = ({ notices, onSelectN
                           {e.notice.regulator}
                         </span>
                         {/* The date itself is in the block on phones, so only its kind is repeated */}
-                        <span className="md:hidden font-['JetBrains_Mono'] text-[11px] text-muted">{e.notice.statutoryDeadline?.replace(/:.*$/, '')}</span>
-                        <span className="max-md:hidden font-['JetBrains_Mono'] text-[11px] text-muted">{e.notice.statutoryDeadline}</span>
+                        <span className="md:hidden font-['JetBrains_Mono'] text-[11px] text-muted">{e.label}</span>
+                        <span className="max-md:hidden font-['JetBrains_Mono'] text-[11px] text-muted">{e.text}</span>
                         {e.notice.dossierUrl && (
                           <a
                             href={e.notice.dossierUrl}

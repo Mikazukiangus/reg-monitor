@@ -1,6 +1,6 @@
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor, formatOf } from '../notice.js';
-import { zonedToIso, stripHtml, closingDateFields } from '../text.js';
+import { zonedToIso, stripHtml, sourceClosingDate } from '../text.js';
 
 // Search the MAS website's search API (behind mas.gov.sg/news). It is
 // undocumented, and MAS serves a "Maintenance" page to non-browser user
@@ -78,7 +78,7 @@ export function parseMasConsultations(data: any): NormalizedNotice[] {
     const closes = masDate(doc.masconsultation_closingdate_tdt);
     if (!closes) return notice;
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date(closes));
-    return { ...notice, ...closingDateFields(date) };
+    return { ...notice, ...sourceClosingDate(date) };
   });
 }
 

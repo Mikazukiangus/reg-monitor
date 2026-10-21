@@ -1,15 +1,15 @@
 // Which notices go in the daily email digest: those published on the previous
 // Singapore day that match the rules in digest-rules.ts.
 import { ruleMatches, MatchableNotice } from '../../shared/alertRules.js';
-import type { CustomAlertRule } from '../../shared/regulatory.js';
+import type { CustomAlertRule, KeyPoints } from '../../shared/regulatory.js';
+import type { DatedNotice } from '../../shared/keyDate.js';
 
-export interface DigestNotice extends MatchableNotice {
+export interface DigestNotice extends MatchableNotice, Omit<DatedNotice, 'keyPoints'> {
   id: string;
   ref: string;
   dossierUrl?: string;
   publishedAt?: string;
-  statutoryDeadline?: string;
-  deadlineDate?: string;
+  keyPoints?: KeyPoints;
 }
 
 export interface DigestMatch {

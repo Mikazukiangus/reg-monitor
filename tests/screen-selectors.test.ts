@@ -24,10 +24,10 @@ test('headline figures: last 7 days, critical, open and closed consultations, cl
   const figures = feedFigures([
     notice('recent', { publishedAt: new Date(2026, 9, 15).toISOString(), severity: 'critical' }),
     notice('old', { publishedAt: new Date(2026, 8, 1).toISOString() }),
-    notice('open-soon', { format: 'Consultations', deadlineDate: '2026-11-02' }),
-    notice('open-later', { format: 'Consultations', deadlineDate: '2026-11-03' }),
-    notice('closed', { format: 'Consultations', statutoryDeadline: 'Comments closed: 2026-10-01', deadlineDate: '2026-10-01' }),
-    notice('dated-circular', { deadlineDate: '2026-10-20' })
+    notice('open-soon', { format: 'Consultations', sourceDates: [{ kind: 'closes', date: '2026-11-02' }] }),
+    notice('open-later', { format: 'Consultations', sourceDates: [{ kind: 'closes', date: '2026-11-03' }] }),
+    notice('closed', { format: 'Consultations', sourceDates: [{ kind: 'closes', date: '2026-10-01' }] }),
+    notice('dated-circular', { sourceDates: [{ kind: 'takesEffect', date: '2026-10-20' }] })
   ], now);
   assert.deepEqual(figures, { total: 6, critical: 1, recent: 1, openConsultations: 2, closedConsultations: 1, closingSoon: 1 });
 });
@@ -61,12 +61,13 @@ test('agencies read in the latest sync, without the "(via …)" part', () => {
 
 test('the horizon: dates from today on, soonest first, by quarter and month, with the sentence that names the date', () => {
   const events = horizonEvents([
-    notice('past', { deadlineDate: '2026-10-18' }),
-    notice('jan', { deadlineDate: '2027-01-05', deadlineQuote: 'Comments close on 5 January 2027.' }),
-    notice('today', { deadlineDate: '2026-10-19' }),
-    notice('nov', { deadlineDate: '2026-11-30', keyPoints: { points: [], facts: [{ text: 'Takes effect on 30 November 2026.', date: '2026-11-30' }] } as any })
+    notice('past', { sourceDates: [{ kind: 'takesEffect', date: '2026-10-18' }] }),
+    notice('jan', { format: 'Consultations', keyPoints: { points: [], facts: [], dates: [{ kind: 'closes', date: '2027-01-05', text: 'Comments close on 5 January 2027.' }] } as any }),
+    notice('today', { sourceDates: [{ kind: 'complyBy', date: '2026-10-19' }] }),
+    notice('nov', { sourceDates: [{ kind: 'takesEffect', date: '2026-11-30' }], keyPoints: { points: [], facts: [{ text: 'Takes effect on 30 November 2026.', date: '2026-11-30' }] } as any })
   ], now);
   assert.deepEqual(events.map(e => [e.notice.id, e.days, e.quarter]), [['today', 0, 'Q4 2026'], ['nov', 42, 'Q4 2026'], ['jan', 78, 'Q1 2027']]);
+  assert.deepEqual(events.map(e => e.text), ['Comply by: 2026-10-19', 'Takes effect: 2026-11-30', 'Comments close: 2027-01-05']);
   assert.equal(events[1].quote, 'Takes effect on 30 November 2026.');
   assert.equal(events[2].quote, 'Comments close on 5 January 2027.');
   assert.deepEqual(byMonth(events).map(m => [m.month, m.events.length]), [['October 2026', 1], ['November 2026', 1], ['January 2027', 1]]);

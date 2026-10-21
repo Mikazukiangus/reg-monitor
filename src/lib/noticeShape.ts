@@ -6,6 +6,7 @@ import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
 
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 const SEVERITIES = ['critical', 'high', 'info'];
+const DATE_KINDS = ['closes', 'takesEffect', 'complyBy'];
 const isString = (v: unknown): v is string => typeof v === 'string';
 const allStrings = (v: unknown) => Array.isArray(v) && v.every(isString);
 
@@ -27,6 +28,9 @@ export function noticeProblem(n: any): string | null {
     return 'keyPoints is incomplete';
   }
   if (!SEVERITIES.includes(n.severity)) return `unknown severity ${JSON.stringify(n.severity)}`;
+  if (n.sourceDates !== undefined && !(Array.isArray(n.sourceDates) && n.sourceDates.every((d: any) => DATE_KINDS.includes(d?.kind) && /^\d{4}-\d{2}-\d{2}$/.test(d?.date)))) {
+    return 'sourceDates is malformed';
+  }
   return null;
 }
 

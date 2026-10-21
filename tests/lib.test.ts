@@ -118,8 +118,8 @@ test('the timeline lists only dates the feed or the document gives, in order', (
   const steps = noticeTimeline({
     jurisdictionCode: 'SG',
     publishedAt: '2026-10-02T03:00:00Z',
-    statutoryDeadline: 'Comments close: 2026-11-15',
-    deadlineDate: '2026-11-15',
+    type: 'CONSULTATION', title: 'Consultation on Y', format: 'Consultations',
+    sourceDates: [{ kind: 'closes', date: '2026-11-15' }],
     keyPoints: {
       points: [], facts: [], refs: [], method: 'extractive',
       dates: [
@@ -139,15 +139,18 @@ test('the timeline lists only dates the feed or the document gives, in order', (
   assert.equal(steps[1].quote, 'Responses are invited by 15 November 2026.');
   assert.equal(steps[3].relatedId, 'c');
   // Only a publication date: nothing else is invented
-  assert.deepEqual(noticeTimeline({ jurisdictionCode: 'SG', publishedAt: '2026-10-02T03:00:00Z' }).map(s => s.label), ['Published']);
-  // A key date without a document sentence keeps the feed's label
-  assert.deepEqual(noticeTimeline({ jurisdictionCode: 'SG', deadlineDate: '2026-12-01', statutoryDeadline: 'Effective: 2026-12-01' }).map(s => s.label), ['Effective']);
+  const circular = { type: 'RULE', title: 'Final rule', format: 'Circulars' } as const;
+  assert.deepEqual(noticeTimeline({ ...circular, jurisdictionCode: 'SG', publishedAt: '2026-10-02T03:00:00Z' }).map(s => s.label), ['Published']);
+  // A date the regulator publishes without a document sentence, and one
+  // still stored as the label an older copy showed
+  assert.deepEqual(noticeTimeline({ ...circular, jurisdictionCode: 'US', sourceDates: [{ kind: 'takesEffect', date: '2026-12-01' }] }).map(s => [s.label, s.date]), [['Takes effect', '2026-12-01']]);
+  assert.deepEqual(noticeTimeline({ ...circular, jurisdictionCode: 'US', statutoryDeadline: 'Effective: 2026-12-01' }).map(s => [s.label, s.date]), [['Takes effect', '2026-12-01']]);
 });
 
 test('calendar files fold long lines at 75 octets', () => {
   const notice: any = {
     id: 'x', regulator: 'MAS', ref: 'MAS Consultations', title: 'A very long title '.repeat(10),
-    deadlineDate: '2099-01-31', statutoryDeadline: 'Comments close: 2099-01-31', dossierUrl: 'https://www.mas.gov.sg/x'
+    type: 'CONSULTATION', format: 'Consultations', sourceDates: [{ kind: 'closes', date: '2099-01-31' }], dossierUrl: 'https://www.mas.gov.sg/x'
   };
   const ics = buildIcs([notice], new Date('2026-10-07T00:00:00Z'));
   assert.ok(ics.split('\r\n').every(line => new TextEncoder().encode(line).length <= 75));
@@ -165,8 +168,8 @@ test('view state survives a round trip through the URL', () => {
 test('the digest covers one Singapore day', () => {
   assert.equal(singaporeDate(new Date('2026-10-06T16:30:00Z')), '2026-10-07');
   const notices = [
-    { id: 'a', ref: 'a', regulator: 'SFC', impactScore: 8, title: 'SFC fines a broker', publishedAt: '2026-10-06T15:00:00Z' },
-    { id: 'b', ref: 'b', regulator: 'SFC', impactScore: 8, title: 'SFC fines another broker', publishedAt: '2026-10-06T16:30:00Z' }
+    { id: 'a', ref: 'a', regulator: 'SFC', type: 'PRESS RELEASE', format: 'Enforcement' as const, impactScore: 8, title: 'SFC fines a broker', publishedAt: '2026-10-06T15:00:00Z' },
+    { id: 'b', ref: 'b', regulator: 'SFC', type: 'PRESS RELEASE', format: 'Enforcement' as const, impactScore: 8, title: 'SFC fines another broker', publishedAt: '2026-10-06T16:30:00Z' }
   ];
   assert.deepEqual(matchDigest(notices, [rule], '2026-10-06').map(m => m.notice.id), ['a']);
 });

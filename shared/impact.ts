@@ -27,6 +27,7 @@
 // hand: a consultation about to close, or rules about to take effect.
 import type { InstrumentFormat, UrgencySeverity } from './regulatory';
 import { CONCLUSION, SRO_FILING } from './tagging.js';
+import { keyDate, hongKongDate, type DatedNotice, type KeyDate } from './keyDate.js';
 
 export const CRITICAL_SCORE = 8.5;
 export const HIGH_SCORE = 6.5;
@@ -38,7 +39,8 @@ export interface ImpactInput {
   format: InstrumentFormat;
   type: string;
   title: string;
-  statutoryDeadline?: string;
+  // The date the notice shows (shared/keyDate.ts)
+  keyDate?: Pick<KeyDate, 'kind' | 'date'>;
 }
 
 export interface ImpactAssessment {
@@ -72,22 +74,21 @@ const BASE: Record<InstrumentFormat, [number, string]> = {
 
 const DAY = 86_400_000;
 
-// Whole days from today (UTC) to a YYYY-MM-DD date
+// Whole days from today in Hong Kong, the day the dates shown turn on
+// (shared/keyDate.ts), to a YYYY-MM-DD date
 function daysFrom(today: Date, date: string): number {
-  const start = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-  return Math.round((Date.parse(`${date}T00:00:00Z`) - start) / DAY);
+  return Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${hongKongDate(today)}T00:00:00Z`)) / DAY);
 }
 
 // Whether a consultation's comment period has ended, by the closing date it
-// states (a consultation without one is treated as open)
-export function commentsClosed(statutoryDeadline: string | undefined, today = new Date()): boolean {
-  const m = statutoryDeadline?.match(/^Comments closed?: (\d{4}-\d{2}-\d{2})/);
-  return !!m && daysFrom(today, m[1]) < 0;
+// shows (a consultation without one is treated as open)
+export function commentsClosed(n: DatedNotice, today = new Date()): boolean {
+  const shown = keyDate(n, hongKongDate(today));
+  return shown?.kind === 'closes' && !shown.upcoming;
 }
 
 export function assessImpact(n: ImpactInput, today = new Date()): ImpactAssessment {
   const text = `${n.type} ${n.title}`;
-  const deadline = n.statutoryDeadline?.match(/^(Comments close|Comments closed|Effective|Takes effect): (\d{4}-\d{2}-\d{2})/);
   const result = (score: number, reasons: string[]): ImpactAssessment => ({ score, severity: severityOf(score), reasons });
 
   for (const [pattern, label, forConsultations] of ROUTINE) {
@@ -114,10 +115,10 @@ export function assessImpact(n: ImpactInput, today = new Date()): ImpactAssessme
     reasons.push(`${label}: ${base}`);
   }
 
-  if (deadline) {
-    const [, kind, date] = deadline;
+  if (n.keyDate) {
+    const { kind, date } = n.keyDate;
     const days = daysFrom(today, date);
-    if (kind.startsWith('Comments') && n.format === 'Consultations') {
+    if (kind === 'closes' && n.format === 'Consultations') {
       if (days < 0) {
         score = 4;
         reasons.push(`comments closed on ${date}: 4`);
@@ -125,7 +126,7 @@ export function assessImpact(n: ImpactInput, today = new Date()): ImpactAssessme
         score += 1.5;
         reasons.push(`comments close ${days === 0 ? 'today' : `in ${days} day${days === 1 ? '' : 's'}`}: +1.5`);
       }
-    } else if ((kind === 'Effective' || kind === 'Takes effect') && days >= 0 && days <= 30) {
+    } else if (kind === 'takesEffect' && days >= 0 && days <= 30) {
       score += 1.5;
       reasons.push(`takes effect ${days === 0 ? 'today' : `in ${days} day${days === 1 ? '' : 's'}`}: +1.5`);
     }

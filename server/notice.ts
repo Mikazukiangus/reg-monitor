@@ -5,6 +5,7 @@ import { assessImpact, severityOf } from '../shared/impact.js';
 import type { SectorDomain, InstrumentFormat, RegulatoryNotice } from '../shared/regulatory.js';
 import { publicationTime } from '../shared/derived.js';
 import { regulatorIdOf, regulatorNamed } from '../shared/regulators.js';
+import { keyDate } from '../shared/keyDate.js';
 import { logger } from './logging.js';
 
 // A notice as the server builds it: the browser's notice without the fields
@@ -48,7 +49,7 @@ export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   const text = [notice.summary, ...(notice.keyPoints?.points || [])].filter(Boolean).join(' ');
   const tagged = classifySectors({ title: notice.title, text, regulator: notice.regulator });
   const { format, reason: formatReason } = classifyFormat(notice.type, notice.title);
-  const impact = assessImpact({ format, type: notice.type, title: notice.title, statutoryDeadline: notice.statutoryDeadline });
+  const impact = assessImpact({ format, type: notice.type, title: notice.title, keyDate: keyDate({ ...notice, format }) });
   return {
     ...notice,
     regulatorId: regulatorIdFor(notice.regulator),

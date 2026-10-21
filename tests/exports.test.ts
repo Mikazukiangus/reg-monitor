@@ -10,8 +10,10 @@ const notice = {
   id: 'mas-1', ref: 'MAS-1', title: 'Consultation on stablecoin reserves', regulator: 'MAS', jurisdiction: 'SINGAPORE', jurisdictionCode: 'SG',
   type: 'CONSULTATION', typeColorClass: { bg: '', text: '' }, impactScore: 7, issuedTimeAgo: '', tags: [],
   sector: 'Banking & Prudential', sectors: ['Banking & Prudential'], format: 'Consultations', severity: 'high',
-  dossierUrl: 'https://www.mas.gov.sg/c1', statutoryDeadline: 'Comments close: 2026-11-30', deadlineQuote: 'Please submit comments by 30 November 2026.',
-  keyPoints: { points: ['Issuers must hold reserves.'], facts: [{ text: 'Comments close on 30 November 2026.', date: '2026-11-30' }], refs: ['CP 1/2026'], ocr: true }
+  dossierUrl: 'https://www.mas.gov.sg/c1', keyPoints: {
+    points: ['Issuers must hold reserves.'], facts: [{ text: 'Comments close on 30 November 2026.', date: '2026-11-30' }], refs: ['CP 1/2026'], ocr: true,
+    dates: [{ kind: 'closes', date: '2099-11-30', text: 'Please submit comments by 30 November 2099.' }]
+  }
 } as unknown as RegulatoryNotice;
 
 test('the gap checklist CSV: BOM, the notice on comment lines, quoted cells, and typed formulas kept as text', () => {
@@ -27,7 +29,7 @@ test('the dossier text: the details, then only what is quoted, with the OCR note
   const text = buildDossierText(notice, '19 Oct 2026', new Date('2026-10-19T09:00:00Z'));
   const lines = text.split('\n');
   assert.equal(lines[0], 'REGSONAR NOTICE DOSSIER');
-  assert.ok(lines.includes('Key date: Comments close: 2026-11-30 (from: "Please submit comments by 30 November 2026.")'));
+  assert.ok(lines.includes('Key date: Comments close: 2099-11-30 (from: "Please submit comments by 30 November 2099.")'));
   assert.ok(lines.includes('Impact score (rubric by document kind and dates): 7.0/10'));
   assert.ok(lines.includes('NOTE: the source is a scanned PDF read by OCR; quotes may contain recognition errors.'));
   assert.ok(lines.includes('- "Issuers must hold reserves."'));

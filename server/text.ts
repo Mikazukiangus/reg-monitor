@@ -39,18 +39,9 @@ export function lastPathPart(url: string): string {
 // none: the same text always gives the same id, whatever its place in a list
 export const shortHash = (text: string) => createHash('sha1').update(text).digest('hex').slice(0, 8);
 
-// "Comments close" or "Comments closed" fields for a closing date (YYYY-MM-DD)
-// that the source publishes
-export function closingDateFields(date: string): Partial<NormalizedNotice> {
-  if (date < hongKongDate()) {
-    return { statutoryDeadline: `Comments closed: ${date}`, statusBadge: { text: `Comments closed: ${date}`, type: 'standard' } };
-  }
-  return {
-    deadlineDate: date,
-    statutoryDeadline: `Comments close: ${date}`,
-    statusBadge: { text: `Comments close: ${date}`, type: 'deadline' }
-  };
-}
+// A closing date (YYYY-MM-DD) the source publishes; whether it has passed is
+// worked out when the notice is read (shared/keyDate.ts)
+export const sourceClosingDate = (date: string): Pick<NormalizedNotice, 'sourceDates'> => ({ sourceDates: [{ kind: 'closes', date }] });
 
 export const singaporeDay = (unixSeconds: number) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date(unixSeconds * 1000));
@@ -72,6 +63,4 @@ export const uniqueBy = <T>(rows: T[], key: (row: T) => string) => {
 };
 
 // Today's date in Hong Kong, YYYY-MM-DD
-export function hongKongDate(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Hong_Kong' }).format(new Date());
-}
+export { hongKongDate } from '../shared/keyDate.js';

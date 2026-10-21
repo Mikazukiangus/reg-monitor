@@ -66,9 +66,9 @@ test('only saved keeps bookmarked notices', () => {
 
 test('sorting: by impact, newest first, or soonest deadline with undated last', () => {
   const notices = [
-    notice('a', { impactScore: 3, publishedAt: '2026-10-01T00:00:00Z', deadlineDate: '2026-12-01' }),
+    notice('a', { impactScore: 3, publishedAt: '2026-10-01T00:00:00Z', sourceDates: [{ kind: 'takesEffect', date: '2099-12-01' }] }),
     notice('b', { impactScore: 9, publishedAt: '2026-10-03T00:00:00Z' }),
-    notice('c', { impactScore: 6, publishedAt: '2026-10-02T00:00:00Z', deadlineDate: '2026-11-01' })
+    notice('c', { impactScore: 6, publishedAt: '2026-10-02T00:00:00Z', sourceDates: [{ kind: 'takesEffect', date: '2099-11-01' }] })
   ];
   assert.deepEqual(ids(filterNotices(notices, { ...all, sort: 'Highest Impact Score' }, context)), ['b', 'c', 'a']);
   assert.deepEqual(ids(filterNotices(notices, { ...all, sort: 'Most Recent First' }, context)), ['b', 'c', 'a']);

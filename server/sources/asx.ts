@@ -2,7 +2,7 @@ import { extractClosingDate } from '../document-dates.js';
 import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
-import { stripHtml, zonedToIso, lastPathPart, closingDateFields, shortHash } from '../text.js';
+import { stripHtml, zonedToIso, lastPathPart, sourceClosingDate, shortHash } from '../text.js';
 
 // ASX public consultations: a dated table on ASX's consultations page. Each
 // entry says what ASX published and, for consultations, when submissions close.
@@ -63,7 +63,7 @@ export async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice
       // The paper itself where linked, so key points come from it
       dossierUrl: row.links[0] || ASX_CONSULTATIONS_PAGE,
       isLiveFeed: true,
-      ...(closing?.date ? closingDateFields(closing.date) : {})
+      ...(closing?.date ? sourceClosingDate(closing.date) : {})
     };
   });
 }

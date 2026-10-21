@@ -3,6 +3,7 @@ import { useDialog } from '../useDialog';
 import { buildGapCsv } from '../../lib/exports';
 import { FILE_TYPES, saveFile } from '../../lib/download';
 import { RegulatoryNotice } from '../../../shared/regulatory';
+import { keyDate } from '../../../shared/keyDate';
 
 interface GapAnalysisModalProps {
   notice: RegulatoryNotice;
@@ -70,7 +71,7 @@ export const GapAnalysisModal: React.FC<GapAnalysisModalProps> = ({ notice, onCl
                 Institutional Gap Analysis &amp; Action Matrix
               </h2>
               <p className="font-['JetBrains_Mono'] text-[11px] text-muted">
-                {notice.regulator} • {notice.ref} • Date: {notice.statutoryDeadline || 'None found in source'}
+                {notice.regulator} • {notice.ref} • Date: {keyDate(notice)?.text || 'None found in source'}
               </p>
             </div>
           </div>

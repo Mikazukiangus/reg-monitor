@@ -1,6 +1,7 @@
 // Dashboard data computed from live notices, so every figure traces back to a
 // source document.
 import type { AlertNotification, DeadlineItem, JurisdictionCode, RegulatoryNotice } from './regulatory';
+import { hongKongDate, upcomingDate } from './keyDate.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -45,16 +46,19 @@ export function formatDate(isoDate: string): string {
 // Upcoming dates from notices, soonest first
 export function deriveDeadlines(notices: RegulatoryNotice[], now = new Date()): DeadlineItem[] {
   return notices
-    .filter((n) => n.deadlineDate && daysUntil(n.deadlineDate, now) >= 0)
-    .sort((a, b) => a.deadlineDate!.localeCompare(b.deadlineDate!))
-    .map((n) => {
-      const days = daysUntil(n.deadlineDate!, now);
+    .flatMap((n) => {
+      const shown = upcomingDate(n, hongKongDate(now));
+      return shown && daysUntil(shown.date, now) >= 0 ? [{ n, shown }] : [];
+    })
+    .sort((a, b) => a.shown.date.localeCompare(b.shown.date))
+    .map(({ n, shown }) => {
+      const days = daysUntil(shown.date, now);
       return {
         id: `deadline-${n.id}`,
         title: `${n.regulator}: ${n.title}`,
-        subtitle: n.statutoryDeadline || '',
+        subtitle: shown.text,
         daysRemaining: days,
-        dateStr: formatDate(n.deadlineDate!),
+        dateStr: formatDate(shown.date),
         colorClass: days <= 14 ? 'bg-orange-wash' : 'bg-page',
         textColorClass: days <= 14 ? 'text-orange' : days <= 60 ? 'text-cream' : 'text-accent',
         noticeId: n.id

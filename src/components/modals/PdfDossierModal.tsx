@@ -3,6 +3,7 @@ import { useDialog } from '../useDialog';
 import { buildDossierText } from '../../lib/exports';
 import { FILE_TYPES, saveFile } from '../../lib/download';
 import { RegulatoryNotice } from '../../../shared/regulatory';
+import { keyDate } from '../../../shared/keyDate';
 import { daysUntil, formatDate, localDay, publishedDay } from '../../../shared/derived';
 import { noticeTimeline } from '../../lib/timeline';
 
@@ -58,7 +59,7 @@ export const PdfDossierModal: React.FC<PdfDossierModalProps> = ({
     ['Reference', notice.ref],
     ['Type', notice.type],
     ['Published', published],
-    ['Key Date', notice.statutoryDeadline || 'None found']
+    ['Key Date', keyDate(notice)?.text || 'None found']
   ];
 
   return (

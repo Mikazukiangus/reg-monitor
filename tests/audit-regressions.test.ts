@@ -103,7 +103,7 @@ test('the actual dossier Today marker uses Singapore day after local midnight', 
   try {
     process.env.TZ = 'Asia/Singapore';
     t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-10-15T17:00:00Z') });
-    const notice = { ...archived, publishedAt: '2026-10-14T00:00:00Z', deadlineDate: '2026-10-17', statutoryDeadline: 'Comments close: 2026-10-17' };
+    const notice = { ...archived, publishedAt: '2026-10-14T00:00:00Z', sourceDates: [{ kind: 'closes' as const, date: '2026-10-17' }] };
     const html = renderToStaticMarkup(React.createElement(PdfDossierModal, { notice, onClose() {} }));
     assert.match(html, /Today, 16 Oct 2026/);
     assert.doesNotMatch(html, /Today, 15 Oct 2026/);

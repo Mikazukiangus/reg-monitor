@@ -3,12 +3,16 @@
 // and by month. Pure, so it is tested without the page.
 import type { RegulatoryNotice } from '../../shared/regulatory';
 import { daysUntil } from '../../shared/derived';
+import { hongKongDate, upcomingDate } from '../../shared/keyDate';
 
 export interface HorizonEvent {
   notice: RegulatoryNotice;
   date: string;
   quarter: string;
   days: number;
+  // "Comments close", and "Comments close: 2026-11-05"
+  label: string;
+  text: string;
   // Sentence from the source that names this date, when there is one
   quote?: string;
 }
@@ -32,14 +36,18 @@ export function dateParts(isoDate: string) {
 // Dates from today on, soonest first
 export function horizonEvents(notices: RegulatoryNotice[], now = new Date()): HorizonEvent[] {
   return notices
-    .filter(n => n.deadlineDate && daysUntil(n.deadlineDate, now) >= 0)
-    .map(n => ({
-      notice: n,
-      date: n.deadlineDate!,
-      quarter: quarterOf(n.deadlineDate!),
-      days: daysUntil(n.deadlineDate!, now),
-      quote: n.deadlineQuote ?? n.keyPoints?.facts.find(f => f.date === n.deadlineDate)?.text
-    }))
+    .flatMap(n => {
+      const shown = upcomingDate(n, hongKongDate(now));
+      return shown && daysUntil(shown.date, now) >= 0 ? [{
+        notice: n,
+        date: shown.date,
+        quarter: quarterOf(shown.date),
+        days: daysUntil(shown.date, now),
+        label: shown.label,
+        text: shown.text,
+        quote: shown.quote ?? n.keyPoints?.facts.find(f => f.date === shown.date)?.text
+      }] : [];
+    })
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 

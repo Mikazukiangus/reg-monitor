@@ -4,10 +4,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { assessImpact, commentsClosed, severityOf } from '../shared/impact.ts';
 import { classifyFormat } from '../shared/tagging.ts';
+import type { DateKind } from '../shared/regulatory.ts';
 
 const TODAY = new Date('2026-10-08T05:00:00Z');
 
-// [type, title, statutoryDeadline, score]
+// The date a notice shows, written as it reads ("Comments close: 2026-10-08")
+const KINDS: Record<string, DateKind> = { 'Comments close': 'closes', 'Comments closed': 'closes', 'Takes effect': 'takesEffect', 'Comply by': 'complyBy' };
+const keyDateOf = (shown: string | undefined) => {
+  const [label, date] = shown?.split(': ') ?? [];
+  return label ? { kind: KINDS[label], date } : undefined;
+};
+
+// [type, title, date shown, score]
 const EXAMPLES: [string, string, string | undefined, number][] = [
   // Routine
   ['PRESS RELEASE', 'Hong Kong’s Latest Foreign Currency Reserve Assets Figures Released', undefined, 3],
@@ -35,8 +43,8 @@ const EXAMPLES: [string, string, string | undefined, number][] = [
   ['PRESS RELEASE', 'SC Charges Brothers for Dealing in Securities without Licence', undefined, 7],
   ['DISCIPLINARY ACTION', 'Key Enforcement Actions Taken by MAS in Q3 2026', undefined, 7],
   // Rules made
-  ['RULE', 'Adoption of Updated EDGAR Filer Manual', 'Effective: 2026-12-01', 7.5],
-  ['RULE', 'Commission Quorum Requirement', 'Effective: 2026-10-20', 9],
+  ['RULE', 'Adoption of Updated EDGAR Filer Manual', 'Takes effect: 2026-12-01', 7.5],
+  ['RULE', 'Commission Quorum Requirement', 'Takes effect: 2026-10-20', 9],
   ['CONSULTATION', 'SFC concludes consultation on the investor identification regime for Hong Kong’s exchange-traded derivatives market', undefined, 7.5],
   ['CIRCULAR', 'ID 10/26 MAS Response to the Consultation Paper on Changes to the Group Capital Framework', undefined, 7.5],
   ['REGULATORY NOTICE', 'Regulatory Notice 26-16: FINRA has amended its TRACE rules to expand the scope of the principal transaction indicator', undefined, 7.5],
@@ -54,7 +62,7 @@ const EXAMPLES: [string, string, string | undefined, number][] = [
 for (const [type, title, deadline, expected] of EXAMPLES) {
   test(`impact: ${title.slice(0, 70)}`, () => {
     const { format } = classifyFormat(type, title);
-    const result = assessImpact({ format, type, title, statutoryDeadline: deadline }, TODAY);
+    const result = assessImpact({ format, type, title, keyDate: keyDateOf(deadline) }, TODAY);
     assert.equal(result.score, expected, `${result.score} (${result.reasons.join('; ')})`);
     assert.equal(result.severity, severityOf(expected));
     assert.ok(result.reasons.length > 0 && result.reasons.every(r => /: [+]?\d/.test(r)), 'each reason gives its points');
@@ -64,22 +72,27 @@ for (const [type, title, deadline, expected] of EXAMPLES) {
 test('critical needs a date close at hand', () => {
   for (const [type, title, deadline] of EXAMPLES) {
     const { format } = classifyFormat(type, title);
-    if (assessImpact({ format, type, title, statutoryDeadline: deadline }, TODAY).severity === 'critical') {
-      assert.match(deadline || '', /^(Comments close|Effective|Takes effect): /, title);
+    if (assessImpact({ format, type, title, keyDate: keyDateOf(deadline) }, TODAY).severity === 'critical') {
+      assert.match(deadline || '', /^(Comments close|Takes effect): /, title);
     }
   }
 });
 
 test('a consultation is closed only once its closing date has passed', () => {
-  assert.equal(commentsClosed('Comments close: 2026-10-08', TODAY), false);
-  assert.equal(commentsClosed('Comments close: 2026-10-07', TODAY), true);
-  assert.equal(commentsClosed('Comments closed: 2026-05-22', TODAY), true);
-  assert.equal(commentsClosed('No date published', TODAY), false);
-  assert.equal(commentsClosed(undefined, TODAY), false);
+  const consultation = (date?: string) => ({
+    type: 'CONSULTATION', title: 'Consultation on X', format: 'Consultations' as const,
+    ...(date ? { sourceDates: [{ kind: 'closes' as const, date }] } : {})
+  });
+  assert.equal(commentsClosed(consultation('2026-10-08'), TODAY), false);
+  assert.equal(commentsClosed(consultation('2026-10-07'), TODAY), true);
+  assert.equal(commentsClosed(consultation('2026-05-22'), TODAY), true);
+  assert.equal(commentsClosed(consultation(), TODAY), false);
+  // Today is the day in Hong Kong: 23:00 UTC on 7 October is already 8 October there
+  assert.equal(commentsClosed(consultation('2026-10-07'), new Date('2026-10-07T23:00:00Z')), true);
 });
 
 test('comments closing today still count as open, and say so', () => {
-  const r = assessImpact({ format: 'Consultations', type: 'CONSULTATION', title: 'Consultation on X', statutoryDeadline: 'Comments close: 2026-10-08' }, TODAY);
+  const r = assessImpact({ format: 'Consultations', type: 'CONSULTATION', title: 'Consultation on X', keyDate: { kind: 'closes', date: '2026-10-08' } }, TODAY);
   assert.equal(r.score, 8.5);
   assert.match(r.reasons.join(' '), /comments close today/);
 });

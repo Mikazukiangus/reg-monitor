@@ -3,7 +3,7 @@ import { mentionsAi } from '../../shared/aiTopics.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { shortHash, toIso } from '../text.js';
-import { NO_DATE, withKeyPointsUntagged } from '../dates.js';
+import { withKeyPointsUntagged } from '../dates.js';
 
 // Date fields are only returned when requested by name
 const FEDERAL_REGISTER_FIELDS = ['title', 'type', 'abstract', 'agencies', 'document_number', 'citation', 'publication_date', 'comments_close_on', 'effective_on', 'dates', 'html_url', 'pdf_url']
@@ -36,16 +36,11 @@ function federalRegisterNotice(doc: any, reg: string, extraTags: string[] = []):
   const effectiveOn: string | undefined = doc.effective_on || undefined;
 
   const score = estimateImpact(format);
-
-  let statutoryDeadline = NO_DATE;
-  let statusBadge: NormalizedNotice['statusBadge'] = { text: 'Published', type: 'standard' };
-  if (commentsClose) {
-    statutoryDeadline = `Comments close: ${commentsClose}`;
-    statusBadge = { text: `Comments close: ${commentsClose}`, type: 'deadline' };
-  } else if (effectiveOn) {
-    statutoryDeadline = `Effective: ${effectiveOn}`;
-    statusBadge = { text: `Effective: ${effectiveOn}`, type: 'action' };
-  }
+  // The date shown is chosen from these like any other (shared/keyDate.ts)
+  const sourceDates: NormalizedNotice['sourceDates'] = [
+    ...(commentsClose ? [{ kind: 'closes' as const, date: commentsClose }] : []),
+    ...(effectiveOn ? [{ kind: 'takesEffect' as const, date: effectiveOn }] : [])
+  ];
 
   const notice: NormalizedNotice = {
     // Without a document number, the link names the notice: a place in the list could name another
@@ -60,9 +55,7 @@ function federalRegisterNotice(doc: any, reg: string, extraTags: string[] = []):
     impactScore: score,
     issuedTimeAgo: getRelativeTime(doc.publication_date),
     publishedAt: toIso(doc.publication_date),
-    statutoryDeadline,
-    deadlineDate: commentsClose || effectiveOn,
-    statusBadge,
+    ...(sourceDates.length ? { sourceDates } : {}),
     summary: doc.abstract || 'No abstract published in the Federal Register for this document.',
     keyPoints: doc.abstract
       ? summarize(doc.abstract, { datesText: doc.dates, sourceUrl: doc.html_url })

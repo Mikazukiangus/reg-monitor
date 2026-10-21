@@ -7,10 +7,11 @@ import { documentDates, extractClosingDate } from '../server/document-dates.ts';
 import { pagePublishedDate } from '../server/extract.ts';
 import type { DateKind } from '../shared/regulatory.ts';
 import { assessImpact } from '../shared/impact.ts';
+import { keyDate } from '../shared/keyDate.ts';
+import { formatOf } from '../server/notice.ts';
 
 process.env.VERCEL = '1';
 delete process.env.DATABASE_URL;
-const { noticeDate } = await import('../server/dates.ts');
 const history = await import('../server/history.ts');
 // Copies stored by older versions lack fields a new notice has
 const fromArchive = (row: object) => history.fromArchive(row as Parameters<typeof history.fromArchive>[0]);
@@ -82,7 +83,10 @@ test('the first closing date in a list of sentences, for ASX entries', () => {
 
 const TODAY = '2026-10-08';
 const dates = (...sentences: string[]) => documentDates(sentences);
-const shown = (type: string, title: string, sentences: string[]) => noticeDate({ type, title }, dates(...sentences), TODAY)?.statutoryDeadline;
+// The date a notice shows, from the dates its document states
+const fromText = (type: string, title: string, sentences: string[]) =>
+  keyDate({ type, title, format: formatOf(type, title), keyPoints: { dates: dates(...sentences) } }, TODAY);
+const shown = (type: string, title: string, sentences: string[]) => fromText(type, title, sentences)?.text;
 
 test('a closing date stated generally counts only on a consultation', () => {
   // The PRA roundtable notice quotes the closing date of the paper it discussed
@@ -102,20 +106,22 @@ test('a round-up shows none of the dates of the papers it lists', () => {
 test('a consultation shows when comments close, never a proposed effective date', () => {
   assert.equal(shown('CONSULTATIONS', 'CP13/26 – The Prudential Regulation Authority’s automatic thresholds indexation framework', ['The new framework will take effect on 1 July 2027.']), undefined);
   // Closed: the date stays, but not as an upcoming deadline
-  const closed = noticeDate({ type: 'REGULATORY NOTICE', title: 'Regulatory Notice 26-14: FINRA seeks comment on a proposal to modernize Rule 2210' }, dates('Comments must be received by September 11, 2026.'), TODAY);
-  assert.equal(closed?.statutoryDeadline, 'Comments closed: 2026-09-11');
-  assert.equal(closed?.deadlineDate, undefined);
+  const closed = fromText('REGULATORY NOTICE', 'Regulatory Notice 26-14: FINRA seeks comment on a proposal to modernize Rule 2210', ['Comments must be received by September 11, 2026.']);
+  assert.equal(closed?.text, 'Comments closed: 2026-09-11');
+  assert.equal(closed?.upcoming, false);
+  assert.equal(closed?.badge, 'standard');
 });
 
 test('otherwise the soonest date it takes effect or must be met, labelled by kind', () => {
-  const guidelines = noticeDate({ type: 'MEDIA RELEASE', title: 'MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions' }, dates(
+  const guidelines = fromText('MEDIA RELEASE', 'MAS Sets Out Supervisory Expectations on Responsible AI Adoption by Financial Institutions', [
     'FIs may implement the Guidelines in phases: they should meet the expectations set out in Sections 3 to 4 from 07 October 2027, and Sections 5 and 6 by 07 October 2028.',
     'The Guidelines will take effect on 07 October 2027.'
-  ), TODAY);
-  assert.equal(guidelines?.statutoryDeadline, 'Takes effect: 2027-10-07');
-  assert.equal(guidelines?.deadlineDate, '2027-10-07');
-  assert.equal(guidelines?.deadlineQuote, 'The Guidelines will take effect on 07 October 2027.');
-  assert.equal(guidelines?.statusBadge?.type, 'action');
+  ]);
+  assert.equal(guidelines?.text, 'Takes effect: 2027-10-07');
+  assert.equal(guidelines?.date, '2027-10-07');
+  assert.equal(guidelines?.quote, 'The Guidelines will take effect on 07 October 2027.');
+  assert.equal(guidelines?.badge, 'action');
+  assert.equal(guidelines?.from, 'document');
   assert.equal(shown('MEDIA RELEASE', 'ACSR’s Mandatory Sustainability Assurance Requirement to Take Effect in 2028', [
     'The requirement for Group 1 applicable entities will now take effect for annual reporting periods beginning on or after 1 January 2028, instead of 1 January 2027.'
   ]), 'Takes effect: 2028-01-01');
@@ -129,12 +135,13 @@ test('enforcement actions and responses to feedback get no date from their text'
 
 test('rules stated in the text to take effect within 30 days score as Federal Register ones do', () => {
   const today = new Date(`${TODAY}T05:00:00Z`);
-  const text = assessImpact({ format: 'Circulars', type: 'RULE REVISION', title: 'Revisions to the Business Regulations', statutoryDeadline: 'Takes effect: 2026-10-20' }, today);
-  const fedreg = assessImpact({ format: 'Circulars', type: 'RULE REVISION', title: 'Revisions to the Business Regulations', statutoryDeadline: 'Effective: 2026-10-20' }, today);
+  const rule = { format: 'Circulars', type: 'RULE REVISION', title: 'Revisions to the Business Regulations' } as const;
+  const text = assessImpact({ ...rule, keyDate: keyDate({ ...rule, keyPoints: { dates: dates('This revision will take effect on October 20, 2026.') } }, TODAY) }, today);
+  const fedreg = assessImpact({ ...rule, keyDate: keyDate({ ...rule, sourceDates: [{ kind: 'takesEffect', date: '2026-10-20' }] }, TODAY) }, today);
   assert.equal(text.score, 9);
   assert.deepEqual(text.reasons, fedreg.reasons);
   // A date to comply by does not move the score
-  assert.equal(assessImpact({ format: 'Circulars', type: 'CIRCULAR', title: 'GS-2 Transition Planning', statutoryDeadline: 'Comply by: 2026-10-20' }, today).score, 5);
+  assert.equal(assessImpact({ format: 'Circulars', type: 'CIRCULAR', title: 'GS-2 Transition Planning', keyDate: { kind: 'complyBy', date: '2026-10-20' } }, today).score, 5);
 });
 
 // Stored copies are re-dated when read. These use dates far ahead, so the
@@ -152,17 +159,18 @@ test('stored notices drop dates the old rules took from the wrong sentence', () 
     statusBadge: { text: 'Comments close: 2099-10-14', type: 'deadline' },
     keyPoints: { points: [], refs: [], method: 'extractive', facts: [{ text: 'The consultation closes on 14 October 2099.', date: '2099-10-14' }], closingDate: { text: 'The consultation closes on 14 October 2099.', date: '2099-10-14' } }
   }));
-  assert.equal(roundtable.statutoryDeadline, undefined);
-  assert.equal(roundtable.deadlineDate, undefined);
+  assert.equal(keyDate(roundtable), undefined);
+  assert.equal(roundtable.sourceDates, undefined);
   assert.equal(roundtable.keyPoints?.closingDate, undefined);
+  for (const field of ['statutoryDeadline', 'deadlineDate', 'deadlineQuote', 'statusBadge']) assert.ok(!(field in roundtable), field);
 
   const acsr = fromArchive(stored({
     regulator: 'SC Malaysia', type: 'MEDIA RELEASE', title: 'ACSR’s Mandatory Sustainability Assurance Requirement to Take Effect in 2098',
     statutoryDeadline: 'Date in source: 2098-01-01', deadlineDate: '2098-01-01',
     keyPoints: { points: [], refs: [], method: 'extractive', facts: [{ text: 'The requirement for Group 1 applicable entities will now take effect for annual reporting periods beginning on or after 1 January 2099, instead of 1 January 2098.', date: '2098-01-01' }] }
   }));
-  assert.equal(acsr.statutoryDeadline, 'Takes effect: 2099-01-01');
-  assert.equal(acsr.deadlineDate, '2099-01-01');
+  assert.equal(keyDate(acsr)?.text, 'Takes effect: 2099-01-01');
+  assert.equal(acsr.sourceDates, undefined);
   assert.equal(acsr.keyPoints?.dates?.[0].kind, 'takesEffect');
 });
 
@@ -172,14 +180,15 @@ test('stored notices keep the dates their source gave', () => {
     statutoryDeadline: 'Comments close: 2099-12-09', deadlineDate: '2099-12-09',
     keyPoints: { points: [], refs: [], method: 'extractive', facts: [] }
   }));
-  assert.equal(mas.statutoryDeadline, 'Comments close: 2099-12-09');
+  assert.deepEqual(mas.sourceDates, [{ kind: 'closes', date: '2099-12-09' }]);
+  assert.equal(keyDate(mas)?.text, 'Comments close: 2099-12-09');
   // A source's closing date stored while it was still ahead reads as closed once passed
   const past = fromArchive(stored({
     regulator: 'MAS', type: 'CONSULTATION', title: 'Consultation Paper on Changes to the Group Capital Framework',
     statutoryDeadline: 'Comments close: 2026-01-09', deadlineDate: '2026-01-09'
   }));
-  assert.equal(past.statutoryDeadline, 'Comments closed: 2026-01-09');
-  assert.equal(past.deadlineDate, undefined);
+  assert.equal(keyDate(past)?.text, 'Comments closed: 2026-01-09');
+  assert.equal(keyDate(past)?.upcoming, false);
 });
 
 test('a Federal Register notice without a date field takes the one its text states', () => {
@@ -188,8 +197,9 @@ test('a Federal Register notice without a date field takes the one its text stat
     statutoryDeadline: 'No date published', statusBadge: { text: 'Published', type: 'standard' },
     keyPoints: { points: [], refs: [], method: 'extractive', facts: [{ text: 'All submissions should refer to file number SR-NASDAQ-2099-080 and should be submitted on or before October 29, 2099.', date: '2099-10-29' }] }
   }));
-  assert.equal(filing.statutoryDeadline, 'Comments close: 2099-10-29');
-  assert.equal(filing.statusBadge?.type, 'deadline');
+  assert.equal(filing.sourceDates, undefined);
+  assert.equal(keyDate(filing)?.text, 'Comments close: 2099-10-29');
+  assert.equal(keyDate(filing)?.badge, 'deadline');
 });
 
 test('a page states when it was published', () => {

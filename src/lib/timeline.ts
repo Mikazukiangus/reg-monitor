@@ -1,9 +1,11 @@
 // A notice's dates in order, for the dossier's timeline: when it and any
 // linked consultation or conclusions were published, and the dates its own
-// text states (comments close, takes effect, comply by). Nothing is
-// estimated; a date appears only when the feed or the document gives it.
+// text states or the regulator publishes with it (comments close, takes
+// effect, comply by). Nothing is estimated; a date appears only when the feed
+// or the document gives it.
 import type { DocumentDate, RegulatoryNotice } from '../../shared/regulatory';
 import { publishedDay } from '../../shared/derived';
+import { sourceDatesOf, type DatedNotice } from '../../shared/keyDate';
 
 export interface TimelineStep {
   label: string;
@@ -23,9 +25,7 @@ const KIND_LABEL: Record<DocumentDate['kind'], string> = {
   complyBy: 'Comply by'
 };
 
-const isoDay = (value?: string) => (value && /^\d{4}-\d{2}-\d{2}/.test(value) ? value.slice(0, 10) : undefined);
-
-type TimelineNotice = Pick<RegulatoryNotice, 'publishedAt' | 'jurisdictionCode' | 'keyPoints' | 'deadlineDate' | 'deadlineQuote' | 'statutoryDeadline' | 'related'>;
+type TimelineNotice = Pick<RegulatoryNotice, 'publishedAt' | 'jurisdictionCode' | 'keyPoints' | 'related'> & DatedNotice;
 
 export function noticeTimeline(notice: TimelineNotice): TimelineStep[] {
   const steps: TimelineStep[] = [];
@@ -47,9 +47,9 @@ export function noticeTimeline(notice: TimelineNotice): TimelineStep[] {
   for (const d of notice.keyPoints?.dates ?? []) {
     if (!d.general) add({ label: KIND_LABEL[d.kind], date: d.date, quote: d.text });
   }
-  const deadline = isoDay(notice.deadlineDate);
-  if (deadline && !steps.some(s => s.date === deadline && s.label !== 'Published')) {
-    add({ label: notice.statutoryDeadline?.replace(/:.*$/, '').trim() || 'Key date', date: deadline, quote: notice.deadlineQuote });
+  // Dates the regulator publishes with the notice
+  for (const d of sourceDatesOf(notice)) {
+    if (!steps.some(s => s.date === d.date && s.label !== 'Published')) add({ label: KIND_LABEL[d.kind], date: d.date });
   }
   related('conclusion', 'Conclusions published');
 

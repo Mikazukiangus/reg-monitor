@@ -1,15 +1,18 @@
 // The files the page offers: notices as CSV, JSON or a dossier text file,
 // and a notice's gap checklist as CSV. Pure text; src/lib/download.ts saves it.
 import type { RegulatoryNotice } from '../../shared/regulatory';
+import { keyDate } from '../../shared/keyDate';
 
+// The date the notice shows keeps the field names exports had before (dateKind, deadlineDate, deadlineQuote)
 export function exportNotice(n: RegulatoryNotice, includeKeyPoints: boolean) {
+  const shown = keyDate(n);
   return {
     id: n.id, ref: n.ref, title: n.title, regulator: n.regulator,
     jurisdiction: n.jurisdiction, jurisdictionCode: n.jurisdictionCode,
     type: n.type, format: n.format, impactScore: n.impactScore, severity: n.severity,
-    publishedAt: n.publishedAt, dateKind: n.statutoryDeadline?.split(':')[0],
-    deadlineDate: n.deadlineDate ?? n.statutoryDeadline?.match(/\d{4}-\d{2}-\d{2}/)?.[0],
-    deadlineQuote: n.deadlineQuote, sourceUrl: n.dossierUrl,
+    publishedAt: n.publishedAt, dateKind: shown?.label,
+    deadlineDate: shown?.date,
+    deadlineQuote: shown?.quote, sourceUrl: n.dossierUrl,
     sector: n.sector, sectors: n.sectors ?? [n.sector], tags: n.tags,
     scoreReasons: n.tagging?.impact ?? [], tagging: n.tagging,
     summary: n.summary,
@@ -64,6 +67,7 @@ export function buildGapCsv(notice: Pick<RegulatoryNotice, 'regulator' | 'title'
 // The dossier as a text file: details, then only what is quoted from the source
 export function buildDossierText(notice: RegulatoryNotice, published: string, generatedAt = new Date()): string {
   const keyPoints = notice.keyPoints;
+  const shown = keyDate(notice);
   return [
     `REGSONAR NOTICE DOSSIER`,
     ``,
@@ -72,7 +76,7 @@ export function buildDossierText(notice: RegulatoryNotice, published: string, ge
     `Reference: ${notice.ref}`,
     `Type: ${notice.type}`,
     `Published: ${published}`,
-    `Key date: ${notice.statutoryDeadline || 'None found'}${notice.deadlineQuote ? ` (from: "${notice.deadlineQuote}")` : ''}`,
+    `Key date: ${shown?.text || 'None found'}${shown?.quote ? ` (from: "${shown.quote}")` : ''}`,
     `Impact score (rubric by document kind and dates): ${notice.impactScore.toFixed(1)}/10${notice.tagging?.impact ? ` (${notice.tagging.impact.join('; ')})` : ''}`,
     `Source: ${notice.dossierUrl || 'n/a'}`,
     ``,
