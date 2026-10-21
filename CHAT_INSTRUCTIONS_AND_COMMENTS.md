@@ -5,7 +5,7 @@ This document records the full chronological instructions, technical requirement
 ## Standing Instructions
 
 * **Keep this file current:** the user instructed on 2026-10-10, "always save current status into CHAT_INSTRUCTIONS_AND_COMMENTS.md". After every project task, update the request log and current verification status before reporting completion. Record what changed, validation results, the branch/PR/merge and deployment state, remaining issues, and any required next action. Date live observations and distinguish verified results from pending work.
-* **Push this file to GitHub (2026-10-21):** the user instructed, "always update CHAT_INSTRUCTIONS_AND_COMMENTS.md in the github repo". Every update to this file is committed and pushed with the request it records (on the working branch, which reaches `main` when the branch is merged), never left only in the local checkout.
+* **Push this file to GitHub (2026-10-21):** the user instructed, "always update CHAT_INSTRUCTIONS_AND_COMMENTS.md in the github repo", and repeated it: "always update CHAT_INSTRUCTIONS_AND_COMMENTS.md in the github repo when there are changes to the code." Every code change gets its entry here, committed and pushed together with the code or straight after it (on the working branch, which reaches `main` when the branch is merged; after a merge the log is pushed to `main` too), never left only in the local checkout. Requests without code changes (plans, reviews, questions) are still recorded, under the 2026-10-10 instruction above.
 * **Dependency recommendations are deferred (2026-10-16):** record the findings and compatibility risks in Requests 48–49, but do not implement them until the user asks to proceed. This covers dependency upgrades/removals/overrides, lockfile consolidation, Node/npm version settings, CI/update automation and PDF/OCR hardening. This deferral concerns the dependency recommendations, not the separately prepared Request 47 bug fixes.
 
 ---
@@ -1415,6 +1415,12 @@ This document records the full chronological instructions, technical requirement
   * "stablecoin" gives 13; `/api/health` healthy; only FTC fails (HTTP 404).
   * **Logs:** only pg's SSL-mode notice (5); no "Could not" warnings.
 * **Next:** the 06:00 UTC scheduled check rebuilds links for the whole history and records the count.
+
+### Request 108: Log Every Code Change on GitHub (Claude Code, 2026-10-21)
+
+**User:** "always update CHAT_INSTRUCTIONS_AND_COMMENTS.md in the github repo when there are changes to the code."
+
+* Recorded in Standing Instructions (it restates the instruction given with Request 98). No code changed. Every code change since then (Requests 98, 103, 106 and their merges) has its entry here, pushed to `claude/keen-lamport-5gmps1` and `main`.
 
 ---
 
