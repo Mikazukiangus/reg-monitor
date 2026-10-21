@@ -1462,6 +1462,18 @@ This document records the full chronological instructions, technical requirement
 * **Fixes offered** (waiting for the user): trim `includeFiles` (about 41 → 18 MB a deployment); `ignoreCommand` skipping builds when nothing but `.md` files changed since the branch's last successful deployment (`VERCEL_GIT_PREVIOUS_SHA`; a merge whose last commit is a log update still deploys); a deployment retention policy and deleting old deployments (the user's, in the Vercel dashboard; deletion cannot be undone).
 * Also seen in the build log: `error TS2688: Cannot find type definition file for 'vite/client'` from Vercel's type check of the function; the build completes. No code changed.
 
+### Request 113: Old Vercel Deployments Deleted (Claude Code, 2026-10-21)
+
+**User:** asked how to set a deployment retention policy and delete old deployments (Request 112's steps 3 and 4), then chose to have them run from this session ("option 1"), allowed `api.vercel.com` and `vercel.com` in the session's network settings, approved a Vercel CLI device login (code BMDC-XZRV, account carbonfibre-6744), and said "proceed".
+
+* **Step 3 (retention policy):** instructions given (Project → Settings → Security → Deployment Retention Policy). On Hobby the default is 30 days for every kind, and Vercel always keeps the last 3 deployments and the last 3 ready production deployments; the project was 16 days old, so nothing had expired yet. Whether the user changed the setting is not recorded here.
+* **Step 4 (deletion), run here with the Vercel CLI 65.0.0** (`NODE_USE_ENV_PROXY=1` so Node's fetch uses the proxy): the list of 237 ready deployments was rebuilt from the API and checked against `vercel list` just before; **235 deleted**, 2 kept: `dpl_EZkJjoyyRV1XVm6jaxAMaqGTXdpL` (live production, `606834d`, serving `reg-monitor-beta.vercel.app`, checked with `vercel inspect`) and `dpl_336EEq48BZdckCfgQhLLR245X83u` (previous production, `aa9fcce`, for rollback). Errored deployments (no stored function) were left.
+  * Batches of 20: 10 completed; the 11th hung after removing 10 of its 20 and was stopped after 4.5 minutes; the remaining 35 were then removed one at a time with a 60-second limit each (25 removed, 10 already gone).
+  * After: `vercel list --status READY` shows exactly the 2 kept deployments; the site and `/api/health` answer 200 throughout.
+  * Deleted deployments can be restored for 30 days (Settings → Security → Recently Deleted); after that it is permanent.
+* **Logged out** (`vercel logout`; the CLI's saved login file is gone). The CLI was installed in the scratchpad only.
+* Functions Storage should fall from about 9.1 GB as Vercel's usage figures catch up (billed by the GB stored each day). Fixes 1 and 2 of Request 112 (smaller OCR files, no builds for `.md`-only changes) are not made yet; until then each push still stores about 41 MB.
+
 ---
 
 ## 3. Key Files & Modifications Summary
