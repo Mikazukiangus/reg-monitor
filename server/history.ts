@@ -3,7 +3,7 @@
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { historyConfigured, openStore, type StoredNotice, type StoreArg } from './store.js';
-import { findRelated, RelatedCandidate } from '../shared/related.js';
+import { linkPairs, relatedOf, type RelatedCandidate } from '../shared/related.js';
 import { dedupeByDocument } from '../shared/dedupe.js';
 import { type NormalizedNotice, tagNotice, formatOf, getRelativeTime } from './notice.js';
 import { closingDateFields } from './text.js';
@@ -67,8 +67,11 @@ export async function withHistory(live: NormalizedNotice[], storeArg: StoreArg =
   } else if (historyConfigured()) {
     archive = { enabled: true, error: 'The history database could not be reached' };
   }
-  notices = dedupeByDocument(notices).map(n => {
-    const related = findRelated(n, candidates);
+  notices = dedupeByDocument(notices);
+  const pairs = linkPairs(candidates, new Set(notices.map(n => n.id)));
+  const byId = new Map(candidates.map(c => [c.id, c]));
+  notices = notices.map(n => {
+    const related = relatedOf(n.id, pairs, byId);
     return related.length ? { ...n, related } : n;
   });
   return { notices, archive };

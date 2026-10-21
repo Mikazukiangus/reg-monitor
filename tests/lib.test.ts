@@ -7,7 +7,7 @@ import path from 'path';
 import { extractClosingDate } from '../server/document-dates.ts';
 import { dedupeByDocument } from '../shared/dedupe.ts';
 import { regulatorMatches, ruleMatches } from '../shared/alertRules.ts';
-import { findRelated } from '../shared/related.ts';
+import { linkPairs, relatedOf } from '../shared/related.ts';
 import { noticeTimeline } from '../src/lib/timeline.ts';
 import { publishedDay } from '../shared/derived.ts';
 import { buildIcs } from '../src/lib/ics.ts';
@@ -59,11 +59,44 @@ test('a conclusion is linked to its consultation by regulator and title', () => 
   const other = { id: 'o', regulator: 'MAS', format: 'Consultations', title: 'Consultation on Stablecoin Reserve Requirements', publishedAt: '2026-03-01T00:00:00Z' };
   const elsewhere = { id: 'e', regulator: 'SFC', format: 'Consultations', title: 'Consultation on Changes to the Group Capital Framework for Insurers', publishedAt: '2026-03-01T00:00:00Z' };
   const response = { id: 'r', regulator: 'MAS', format: 'Circulars', title: 'MAS Response to the Consultation Paper on Changes to the Group Capital Framework for Insurers', publishedAt: '2026-09-04T00:00:00Z' };
-  const links = findRelated(response, [consultation, other, elsewhere]);
-  assert.deepEqual(links.map(l => [l.id, l.relation]), [['c', 'consultation']]);
-  assert.deepEqual(findRelated(consultation, [response]).map(l => [l.id, l.relation]), [['r', 'conclusion']]);
+  const notices = [consultation, other, elsewhere, response];
+  const pairs = linkPairs(notices);
+  assert.deepEqual(pairs.map(p => [p.consultationId, p.conclusionId]), [['c', 'r']]);
+  const byId = new Map(notices.map(n => [n.id, n]));
+  assert.deepEqual(relatedOf('r', pairs, byId).map(l => [l.id, l.relation]), [['c', 'consultation']]);
+  assert.deepEqual(relatedOf('c', pairs, byId).map(l => [l.id, l.relation]), [['r', 'conclusion']]);
+  assert.deepEqual(relatedOf('o', pairs, byId), []);
   // A conclusion published before the consultation is not its conclusion
-  assert.deepEqual(findRelated({ ...consultation, publishedAt: '2026-12-01T00:00:00Z' }, [response]), []);
+  assert.deepEqual(linkPairs([{ ...consultation, publishedAt: '2026-12-01T00:00:00Z' }, response]), []);
+  // Only the pairs that include given notices
+  assert.deepEqual(linkPairs(notices, new Set(['o'])), []);
+});
+
+test('outcomes are read from the ways regulators word them, and events are not outcomes', () => {
+  const consultation = (id: string, regulator: string, title: string) => ({ id, regulator, format: 'Consultations', title, publishedAt: '2026-01-01T00:00:00Z' });
+  const outcome = (id: string, regulator: string, title: string) => ({ id, regulator, format: 'Announcements', title, publishedAt: '2026-06-01T00:00:00Z' });
+  const pairs = linkPairs([
+    consultation('pra-cp', 'UK PRA', 'CP6/26 – High loan to income lending'),
+    outcome('pra-ps', 'UK PRA', 'PS19/26 – High loan to income lending'),
+    consultation('sfc-c', 'SFC', 'SFC and HKMA jointly consult on standard calculation periods under OTC derivative Clearing Rules'),
+    outcome('sfc-o', 'SFC', 'SFC and HKMA conclude joint consultation on amendments to Clearing Rules for over-the-counter derivative transactions'),
+    consultation('asx-c', 'ASX', 'ASX released a consultation paper titled ASX Clear Third Party Clearing Capital Requirements and Other Proposed Amendments'),
+    outcome('asx-o', 'ASX', 'ASX released its response paper on the January 2026 ASX Clear Third Party Clearing Capital Requirements and Other Proposed Amendments consultation paper'),
+    consultation('jc3-c', 'BNM', 'Consultation on the Journey to Zero climate commitment'),
+    outcome('jc3-o', 'BNM', 'JC3 Journey to Zero Conference 2026 concludes with shared commitment to translate climate ambition')
+  ]);
+  assert.deepEqual(pairs.map(p => p.conclusionId).sort(), ['asx-o', 'pra-ps', 'sfc-o']);
+});
+
+// Pairs labelled by reading the titles of 727 production notices
+// (tests/fixtures/related-sample.json). Every link made must be labelled:
+// when a rule change finds a new one, check it and add it to the fixture.
+test('on production notices, every labelled pair links and nothing else does', () => {
+  const sample: { linked: [string, string][]; notLinked: { consultationId: string; conclusionId: string }[]; notices: any[] } =
+    JSON.parse(readFileSync('tests/fixtures/related-sample.json', 'utf8'));
+  const made = linkPairs(sample.notices).map(p => `${p.consultationId} <- ${p.conclusionId}`).sort();
+  assert.deepEqual(made, sample.linked.map(([c, k]) => `${c} <- ${k}`).sort());
+  for (const n of sample.notLinked) assert.ok(!made.includes(`${n.consultationId} <- ${n.conclusionId}`));
 });
 
 test('publication days are the days the regulators give', () => {
