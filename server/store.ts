@@ -30,8 +30,8 @@ export interface NoticeStore {
   save(notices: (NormalizedNotice & { pageDateTried?: boolean })[], sourceId?: string): Promise<void>;
   // Stored copies by id
   byIds(ids: string[]): Promise<Map<string, StoredNotice>>;
-  // Published in the last `days` days, newest first
-  recent(days: number, limit: number): Promise<StoredNotice[]>;
+  // Published in the last `days` days, newest first, other than excludeIds
+  recent(days: number, limit: number, excludeIds?: string[]): Promise<StoredNotice[]>;
   // Full-text search over titles, summaries and key points, best matches first
   search(query: string, limit: number): Promise<StoredNotice[]>;
   // Every notice, or a few regulators', as matching consultations to outcomes needs them
@@ -52,7 +52,7 @@ export function noticeStore(db: Db): NoticeStore {
   return {
     save: (notices, sourceId) => saveNotices(db, notices.map(toStored), sourceId),
     byIds: async ids => new Map([...(await storedNotices(db, ids))].map(([id, row]) => [id, fromRow(row)])),
-    recent: async (days, limit) => (await recentNotices(db, days, limit)).map(fromRow),
+    recent: async (days, limit, excludeIds) => (await recentNotices(db, days, limit, excludeIds)).map(fromRow),
     search: async (query, limit) => (await searchNotices(db, query, limit)).map(fromRow),
     linkCandidates: async regulators => (await linkCandidates(db, regulators)) as unknown as RelatedCandidate[],
     addLinks: links => addLinks(db, links),

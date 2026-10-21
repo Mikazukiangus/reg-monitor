@@ -11,6 +11,7 @@ import { LINK_ONLY } from './sources/us-feeds.js';
 import { withKeyPoints } from './enrich.js';
 
 // How far back the feed reaches into the history, and how many notices at most
+// it adds (notices also in the live feed are not counted)
 const ARCHIVE_FEED_DAYS = config.archive.days;
 const ARCHIVE_FEED_LIMIT = config.archive.limit;
 
@@ -75,9 +76,13 @@ export async function withHistory(live: NormalizedNotice[], storeArg: StoreArg =
     try {
       const liveIds = new Set(live.map(n => n.id));
       const [recent, stats] = await Promise.all([
-        store.recent(ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT),
+        store.recent(ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT, [...liveIds]),
         store.stats()
       ]);
+      // A full limit means older notices of the window were left out
+      if (recent.length >= ARCHIVE_FEED_LIMIT) {
+        logger.warn(`[RegSonar History] The feed reached ARCHIVE_FEED_LIMIT (${ARCHIVE_FEED_LIMIT}); history notices older than ${recent.at(-1)?.publishedAt} were left out`);
+      }
       notices = [...live, ...recent.filter(n => !liveIds.has(n.id)).map(fromArchive)];
       archive = { enabled: true, ...stats };
     } catch (err: any) {
