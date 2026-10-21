@@ -108,6 +108,24 @@ ${SOURCE_PREFIXES_2026_10.map(([prefix, sourceId]) => `  ('${prefix}', '${source
   (SELECT count(*) FROM notices WHERE regulator_id IS NOT NULL)::int AS "with regulator id",
   (SELECT count(DISTINCT notice_id) FROM notice_sources)::int AS "linked to a source",
   (SELECT count(*) FROM notices n WHERE NOT EXISTS (SELECT 1 FROM notice_sources s WHERE s.notice_id = n.id))::int AS "not linked"`
+  },
+  {
+    version: 3,
+    name: 'consultation links',
+    // Each consultation and outcome (conclusions, a response, a policy
+    // statement) matched by shared/related.ts, with the share of topic words
+    // they have in common. Filled when notices are saved, and rebuilt by each
+    // scheduled check; deleted with either notice.
+    sql: `
+CREATE TABLE notice_links (
+  consultation_id text NOT NULL REFERENCES notices (id) ON DELETE CASCADE,
+  conclusion_id text NOT NULL REFERENCES notices (id) ON DELETE CASCADE,
+  score real NOT NULL,
+  found_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (consultation_id, conclusion_id)
+);
+CREATE INDEX notice_links_conclusion_idx ON notice_links (conclusion_id);
+`
   }
 ];
 

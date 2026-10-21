@@ -3,10 +3,10 @@
 // that turns a notice into a stored row and back. How a stored notice is
 // shown in the feed (dates worked out again, tags) is server/history.ts's job.
 import {
-  getDb, databaseUrl, saveNotices, recentNotices, searchNotices, consultationCandidates, undatedNotices,
+  getDb, databaseUrl, saveNotices, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck
 } from './db.js';
-import type { RelatedCandidate } from '../shared/related.js';
+import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
 
 // A notice as stored: without what is worked out when it is read back (the
@@ -34,8 +34,13 @@ export interface NoticeStore {
   recent(days: number, limit: number): Promise<StoredNotice[]>;
   // Full-text search over titles, summaries and key points, best matches first
   search(query: string, limit: number): Promise<StoredNotice[]>;
-  // Consultations and conclusions, for linking the two (titles and dates only)
-  consultationCandidates(limit?: number): Promise<RelatedCandidate[]>;
+  // Every notice, or a few regulators', as matching consultations to outcomes needs them
+  linkCandidates(regulators?: string[]): Promise<RelatedCandidate[]>;
+  // Store links between consultations and outcomes: add these, or make the stored ones exactly these
+  addLinks(links: LinkPair[]): Promise<void>;
+  replaceLinks(links: LinkPair[]): Promise<void>;
+  // The stored links of these notices, and the notices at either end
+  links(ids: string[]): Promise<{ links: LinkPair[]; notices: RelatedCandidate[] }>;
   // Without a date and whose page has not been checked for one, oldest seen first
   undated(limit: number): Promise<StoredNotice[]>;
   stats(): Promise<{ count: number; since: string | null }>;
@@ -49,7 +54,10 @@ export function noticeStore(db: Db): NoticeStore {
     byIds: async ids => new Map([...(await storedNotices(db, ids))].map(([id, row]) => [id, fromRow(row)])),
     recent: async (days, limit) => (await recentNotices(db, days, limit)).map(fromRow),
     search: async (query, limit) => (await searchNotices(db, query, limit)).map(fromRow),
-    consultationCandidates: async limit => (await consultationCandidates(db, limit)) as unknown as RelatedCandidate[],
+    linkCandidates: async regulators => (await linkCandidates(db, regulators)) as unknown as RelatedCandidate[],
+    addLinks: links => addLinks(db, links),
+    replaceLinks: links => replaceLinks(db, links),
+    links: async ids => (await linksOf(db, ids)) as unknown as { links: LinkPair[]; notices: RelatedCandidate[] },
     undated: async limit => (await undatedNotices(db, limit)).map(fromRow),
     stats: () => archiveStats(db),
     saveCheck: check => saveScheduledCheck(db, check),

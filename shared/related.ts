@@ -1,6 +1,8 @@
 // Links a consultation to the conclusions or response published later, and
 // back. Regulators don't publish this link in a machine-readable form, so it
 // is matched by regulator and title words, and labelled as such on the site.
+// The server stores the pairs (server/links.ts); without a history, the
+// notices at hand are matched with each other.
 import type { RelatedLink } from './regulatory';
 
 export interface RelatedCandidate {

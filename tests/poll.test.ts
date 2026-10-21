@@ -52,6 +52,9 @@ test('the first check fills the history, reading further back where the list was
   const linked = await (await getDb())!.query<{ source_id: string; n: number }>('SELECT source_id, count(*)::int AS n FROM notice_sources GROUP BY source_id');
   const bySource = new Map(linked.map(r => [r.source_id, r.n]));
   for (const r of results) assert.equal(bySource.get(r.id) ?? 0, new Set(r.notices.map(n => n.id)).size, r.name);
+  // The check rebuilds the consultation links and logs how many there are
+  const [{ n: links }] = await (await getDb())!.query<{ n: number }>('SELECT count(*)::int AS n FROM notice_links');
+  assert.equal(status.latest?.summary.links, links);
 });
 
 test('a second check adds nothing and does not read further back', async () => {

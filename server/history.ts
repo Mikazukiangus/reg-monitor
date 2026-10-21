@@ -1,9 +1,9 @@
 // Notices read back from the history database, and the live feed with recent
-// notices from the history added and related notices linked.
+// notices from the history added, and each notice's consultation links.
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
-import { historyConfigured, openStore, type StoredNotice, type StoreArg } from './store.js';
-import { linkPairs, relatedOf, type RelatedCandidate } from '../shared/related.js';
+import { historyConfigured, openStore, type NoticeStore, type StoredNotice, type StoreArg } from './store.js';
+import { linkPairs, relatedOf, type LinkPair, type RelatedCandidate } from '../shared/related.js';
 import { dedupeByDocument } from '../shared/dedupe.js';
 import { type NormalizedNotice, tagNotice, formatOf, getRelativeTime } from './notice.js';
 import { closingDateFields } from './text.js';
@@ -42,24 +42,44 @@ export const fromArchive = (stored: StoredNotice): NormalizedNotice => {
   return n.keyPoints ? withKeyPoints(n, n.keyPoints) : tagNotice(n);
 };
 
-// Add the last 30 days from the history to the live notices, and link
-// consultations to their conclusions
+// The consultation links each notice shows: those stored in the history
+// (server/links.ts), or without a history, those among the notices themselves
+export async function withLinks(notices: NormalizedNotice[], store: NoticeStore | null): Promise<NormalizedNotice[]> {
+  const byId = new Map<string, RelatedCandidate>(notices.map(n => [n.id, n]));
+  let pairs: LinkPair[];
+  if (store) {
+    try {
+      const stored = await store.links(notices.map(n => n.id));
+      pairs = stored.links;
+      for (const n of stored.notices) if (!byId.has(n.id)) byId.set(n.id, n);
+    } catch (err: any) {
+      logger.warn('[RegSonar History] Could not read consultation links', err);
+      return notices;
+    }
+  } else {
+    pairs = linkPairs(notices);
+  }
+  return notices.map(n => {
+    const related = relatedOf(n.id, pairs, byId);
+    return related.length ? { ...n, related } : n;
+  });
+}
+
+// Add the last 30 days from the history to the live notices, and each
+// notice's consultation links
 export async function withHistory(live: NormalizedNotice[], storeArg: StoreArg = openStore()) {
   const store = await storeArg;
   let notices = live;
   let archive: { enabled: boolean; count?: number; since?: string | null; error?: string } = { enabled: false };
-  let candidates: RelatedCandidate[] = live;
   if (store) {
     try {
       const liveIds = new Set(live.map(n => n.id));
-      const [recent, stats, linkable] = await Promise.all([
+      const [recent, stats] = await Promise.all([
         store.recent(ARCHIVE_FEED_DAYS, ARCHIVE_FEED_LIMIT),
-        store.stats(),
-        store.consultationCandidates()
+        store.stats()
       ]);
       notices = [...live, ...recent.filter(n => !liveIds.has(n.id)).map(fromArchive)];
       archive = { enabled: true, ...stats };
-      candidates = [...linkable, ...live.filter(n => !linkable.some(c => c.id === n.id))] as RelatedCandidate[];
     } catch (err: any) {
       logger.warn('[RegSonar History] Could not read history', err);
       archive = { enabled: true, error: 'The history database could not be read' };
@@ -67,12 +87,5 @@ export async function withHistory(live: NormalizedNotice[], storeArg: StoreArg =
   } else if (historyConfigured()) {
     archive = { enabled: true, error: 'The history database could not be reached' };
   }
-  notices = dedupeByDocument(notices);
-  const pairs = linkPairs(candidates, new Set(notices.map(n => n.id)));
-  const byId = new Map(candidates.map(c => [c.id, c]));
-  notices = notices.map(n => {
-    const related = relatedOf(n.id, pairs, byId);
-    return related.length ? { ...n, related } : n;
-  });
-  return { notices, archive };
+  return { notices: await withLinks(dedupeByDocument(notices), store), archive };
 }

@@ -144,16 +144,67 @@ export async function searchNotices(db: Db, query: string, limit: number): Promi
 }
 
 // Consultations and conclusions, for linking the two (titles and dates only)
-export async function consultationCandidates(db: Db, limit = 2000): Promise<StoredRow[]> {
+// What matching consultations to outcomes needs of each notice
+// (shared/related.ts): all of them, or a few regulators'
+export async function linkCandidates(db: Db, regulators?: string[]): Promise<StoredRow[]> {
   const rows = await db.query(
     `SELECT jsonb_build_object('id', id, 'regulator', regulator, 'jurisdictionCode', jurisdiction_code, 'format', format,
-       'title', title, 'publishedAt', published_at, 'dossierUrl', data->>'dossierUrl') AS data
-     FROM notices
-     WHERE format = 'Consultations' OR title ~* '(conclu|response to (the )?consultation)'
-     ORDER BY published_at DESC NULLS LAST LIMIT $1`,
-    [limit]
+       'title', title, 'publishedAt', data->>'publishedAt', 'dossierUrl', data->>'dossierUrl') AS data
+     FROM notices ${regulators ? 'WHERE regulator = ANY($1::text[])' : ''}`,
+    regulators ? [regulators] : []
   );
   return rows.map(rowToNotice);
+}
+
+export interface LinkRow { consultationId: string; conclusionId: string; score: number }
+
+const linkColumns = (links: LinkRow[]) =>
+  [links.map(l => l.consultationId), links.map(l => l.conclusionId), links.map(l => l.score)];
+
+// Add links (a link found again keeps when it was first found)
+export async function addLinks(db: Db, links: LinkRow[]): Promise<void> {
+  if (links.length === 0) return;
+  await db.query(
+    `INSERT INTO notice_links (consultation_id, conclusion_id, score)
+     SELECT * FROM unnest($1::text[], $2::text[], $3::real[])
+     ON CONFLICT (consultation_id, conclusion_id) DO UPDATE SET score = EXCLUDED.score`,
+    linkColumns(links)
+  );
+}
+
+// Make the stored links exactly these, in one statement
+export async function replaceLinks(db: Db, links: LinkRow[]): Promise<void> {
+  await db.query(
+    `WITH found (consultation_id, conclusion_id, score) AS (SELECT * FROM unnest($1::text[], $2::text[], $3::real[])),
+     gone AS (
+       DELETE FROM notice_links l WHERE NOT EXISTS (
+         SELECT 1 FROM found f WHERE f.consultation_id = l.consultation_id AND f.conclusion_id = l.conclusion_id)
+     )
+     INSERT INTO notice_links (consultation_id, conclusion_id, score) SELECT * FROM found
+     ON CONFLICT (consultation_id, conclusion_id) DO UPDATE SET score = EXCLUDED.score`,
+    linkColumns(links)
+  );
+}
+
+// The stored links of these notices, with what is shown of the notices at
+// either end
+export async function linksOf(db: Db, ids: string[]): Promise<{ links: LinkRow[]; notices: StoredRow[] }> {
+  if (ids.length === 0) return { links: [], notices: [] };
+  const rows = await db.query(
+    `SELECT l.consultation_id, l.conclusion_id, l.score, n.id, n.regulator, n.format, n.title,
+       n.data->>'publishedAt' AS published_at, n.data->>'dossierUrl' AS dossier_url
+     FROM notice_links l JOIN notices n ON n.id IN (l.consultation_id, l.conclusion_id)
+     WHERE l.consultation_id = ANY($1::text[]) OR l.conclusion_id = ANY($1::text[])`,
+    [ids]
+  );
+  const links = new Map<string, LinkRow>();
+  const notices = new Map<string, StoredRow>();
+  for (const r of rows) {
+    links.set(`${r.consultation_id} ${r.conclusion_id}`, { consultationId: r.consultation_id, conclusionId: r.conclusion_id, score: Number(r.score) });
+    notices.set(r.id, { id: r.id, regulator: r.regulator, jurisdictionCode: '', format: r.format, title: r.title,
+      publishedAt: r.published_at ?? undefined, dossierUrl: r.dossier_url ?? undefined });
+  }
+  return { links: [...links.values()], notices: [...notices.values()] };
 }
 
 // Stored notices with no date whose page has not yet been checked for one

@@ -8,6 +8,7 @@ import { describeError } from './http.js';
 import type { NormalizedNotice } from './notice.js';
 import { SOURCES } from './sources/index.js';
 import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints } from './enrich.js';
+import { linkSaved, relinkAll } from './links.js';
 
 // Government APIs (HKMA in particular) rate-limit aggressively, so each
 // source is read again only once its notices are this old
@@ -23,12 +24,16 @@ interface SourceState {
 
 const sourceState = new Map<string, SourceState>();
 
-// Store notices in the history database, if there is one. Failures are logged
-// and never affect the live feed.
-async function archiveNotices(notices: NormalizedNotice[], sourceId: string, store: StoreArg = openStore()) {
+// Store notices in the history database, if there is one, and link them to
+// the consultations or outcomes they match. Failures are logged and never
+// affect the live feed.
+async function archiveNotices(notices: NormalizedNotice[], sourceId: string, storeArg: StoreArg = openStore()) {
   if (notices.length === 0) return;
   try {
-    await (await store)?.save(notices, sourceId);
+    const store = await storeArg;
+    if (!store) return;
+    await store.save(notices, sourceId);
+    await linkSaved(notices, store);
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not save notices', err);
   }
@@ -149,7 +154,7 @@ async function backfillPageDates(until: number, store: NoticeStore | null): Prom
 }
 
 // Check every source and store what it lists in the history
-export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number }> {
+export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ results: PollResult[]; failed: { name: string; error: string }[]; pageDatesFound: number; links?: number }> {
   const store = await storeArg;
   const check = { id: randomUUID(), startedAt: new Date().toISOString(), completedAt: null as string | null, status: 'running' as const, summary: null };
   const record = async (value: ScheduledCheck) => {
@@ -174,9 +179,20 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
       else failed.push({ name: SOURCES[i].name, error: describeError(r.reason) });
     });
     if (pageDateError) failed.push({ name: 'Publication date backfill', error: pageDateError });
-    const summary = { sources: results.map(({ notices: _notices, ...r }) => r), failed, pageDatesFound };
+    // Every consultation link, matched again over the whole history
+    let links: number | undefined;
+    if (store) {
+      try {
+        links = await relinkAll(store);
+        logger.info(`[RegSonar History] ${links} consultation links`);
+      } catch (err: any) {
+        logger.warn('[RegSonar History] Could not rebuild consultation links', err);
+        failed.push({ name: 'Consultation links', error: describeError(err) });
+      }
+    }
+    const summary = { sources: results.map(({ notices: _notices, ...r }) => r), failed, pageDatesFound, links };
     await record({ ...check, completedAt: new Date().toISOString(), status: 'completed', summary });
-    return { results, failed, pageDatesFound };
+    return { results, failed, pageDatesFound, links };
   } catch (error) {
     await record({ ...check, completedAt: new Date().toISOString(), status: 'failed',
       summary: { sources: [], failed: [{ name: 'Scheduled check', error: describeError(error) }], pageDatesFound: 0 } });

@@ -23,7 +23,7 @@ test('the migrations are numbered 1, 2, 3 ... in order, with names and SQL', () 
 test('a new database gets every migration once', async () => {
   const lite = new PGlite();
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), MIGRATIONS.map(m => m.version));
-  assert.deepEqual(await tables(lite), ['notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
+  assert.deepEqual(await tables(lite), ['notice_links', 'notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), []);
   assert.deepEqual(await versions(lite), MIGRATIONS.map(m => m.version));
 });
@@ -134,4 +134,14 @@ test('a notice\'s sources go when the notice does', async () => {
   await migrate(session(lite), MIGRATIONS, quiet, quiet);
   await lite.query(`DELETE FROM notices WHERE id = 'esma-report'`);
   assert.equal((await lite.query('SELECT * FROM notice_sources')).rows.length, 0);
+});
+
+test('a consultation link goes when either notice does', async () => {
+  const lite = await beforeMigration2([{ id: 'mas-cp', regulator: 'MAS' }, { id: 'mas-response', regulator: 'MAS' }, { id: 'mas-other', regulator: 'MAS' }]);
+  await migrate(session(lite), MIGRATIONS, quiet, quiet);
+  await lite.query(`INSERT INTO notice_links (consultation_id, conclusion_id, score) VALUES ('mas-cp', 'mas-response', 1), ('mas-other', 'mas-response', 0.7)`);
+  await lite.query(`DELETE FROM notices WHERE id = 'mas-cp'`);
+  assert.deepEqual((await lite.query('SELECT consultation_id FROM notice_links')).rows, [{ consultation_id: 'mas-other' }]);
+  await lite.query(`DELETE FROM notices WHERE id = 'mas-response'`);
+  assert.equal((await lite.query('SELECT * FROM notice_links')).rows.length, 0);
 });

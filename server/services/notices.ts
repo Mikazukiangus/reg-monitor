@@ -2,7 +2,7 @@
 // no history database is set up.
 import { openStore, type StoreArg } from '../store.js';
 import { dedupeByDocument } from '../../shared/dedupe.js';
-import { fromArchive } from '../history.js';
+import { fromArchive, withLinks } from '../history.js';
 import type { NormalizedNotice } from '../notice.js';
 
 export interface HistoryResult { enabled: boolean; notices: NormalizedNotice[] }
@@ -11,12 +11,12 @@ export interface HistoryResult { enabled: boolean; notices: NormalizedNotice[] }
 export async function searchNotices(query: string, storeArg: StoreArg = openStore()): Promise<HistoryResult> {
   const store = await storeArg;
   if (!store) return { enabled: false, notices: [] };
-  return { enabled: true, notices: dedupeByDocument((await store.search(query, 40)).map(fromArchive)) };
+  return { enabled: true, notices: await withLinks(dedupeByDocument((await store.search(query, 40)).map(fromArchive)), store) };
 }
 
 // Exact ids, for shared links and saved notices; ids not stored are left out
 export async function noticesByIds(ids: string[], storeArg: StoreArg = openStore()): Promise<HistoryResult> {
   const store = await storeArg;
   const found = store ? await store.byIds(ids) : new Map();
-  return { enabled: !!store, notices: [...found.values()].map(fromArchive) };
+  return { enabled: !!store, notices: await withLinks([...found.values()].map(fromArchive), store) };
 }

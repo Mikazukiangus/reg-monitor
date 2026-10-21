@@ -199,4 +199,6 @@ export interface CheckSummary {
   sources: { id?: string; name: string; read: number; added: number; withoutKeyPoints: number }[];
   failed: { name: string; error: string }[];
   pageDatesFound: number;
+  // Consultation links in the history after the check (checks from October 2026)
+  links?: number;
 }
