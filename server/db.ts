@@ -6,37 +6,11 @@ import pg from 'pg';
 import { config } from '../runtime-config.js';
 import { logger } from './logging.js';
 import type { CheckSummary } from '../shared/regulatory.js';
+import { migrate } from './migrations.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
 }
-
-const SCHEMA = `
-CREATE TABLE IF NOT EXISTS notices (
-  id text PRIMARY KEY,
-  regulator text NOT NULL,
-  jurisdiction_code text NOT NULL,
-  format text NOT NULL,
-  title text NOT NULL,
-  published_at timestamptz,
-  first_seen_at timestamptz NOT NULL DEFAULT now(),
-  last_seen_at timestamptz NOT NULL DEFAULT now(),
-  data jsonb NOT NULL,
-  search tsvector GENERATED ALWAYS AS (
-    to_tsvector('english', title || ' ' || coalesce(data->>'summary', '') || ' ' || coalesce(data->'keyPoints'->>'points', ''))
-  ) STORED
-);
-CREATE INDEX IF NOT EXISTS notices_published_idx ON notices (published_at DESC);
-CREATE INDEX IF NOT EXISTS notices_search_idx ON notices USING gin (search);
-CREATE TABLE IF NOT EXISTS scheduled_checks (
-  id text PRIMARY KEY,
-  started_at timestamptz NOT NULL,
-  completed_at timestamptz,
-  status text NOT NULL,
-  summary jsonb
-);
-CREATE INDEX IF NOT EXISTS scheduled_checks_started_idx ON scheduled_checks (started_at DESC);
-`;
 
 let dbPromise: Promise<Db | null> | null = null;
 
@@ -52,12 +26,21 @@ async function connect(url: string): Promise<Db> {
     const { PGlite } = await import(pgliteModule);
     const lite = new PGlite();
     db = { query: async (sql, params) => (await lite.query(sql, params as any[])).rows };
-    await lite.exec(SCHEMA);
+    await migrate({ exec: async sql => { await lite.exec(sql); }, query: db.query });
   } else {
     // A small pool: each serverless instance handles a few requests at a time
     const pool = new pg.Pool({ connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs });
     db = { query: async (sql, params) => (await pool.query(sql, params as any[])).rows };
-    await pool.query(SCHEMA);
+    // The schema's changes (server/migrations.ts), on one connection of the pool
+    const client = await pool.connect().catch(async err => { await pool.end().catch(() => {}); throw err; });
+    try {
+      await migrate({ exec: async sql => { await client.query(sql); }, query: async (sql, params) => (await client.query(sql, params as any[])).rows });
+    } catch (err) {
+      client.release();
+      await pool.end().catch(() => {});
+      throw err;
+    }
+    client.release();
   }
   return db;
 }
