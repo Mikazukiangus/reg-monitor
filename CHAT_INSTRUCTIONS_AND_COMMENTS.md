@@ -1519,7 +1519,7 @@ This document records the full chronological instructions, technical requirement
 * `server/extract.ts`: `createOcrWorker()` (the worker setup, now shared with the test) and `OCR_LANG_PATH` exported.
 * `tests/bundle.test.ts` (5): `includeFiles` length; every build `getCore` can load is included as `.js` and `.wasm`, and no `.wasm.js` (this test fails on the first, wrong trim); the model used is included and the unused one is not; OCR reads `tests/fixtures/ocr-sample.png` (rendered with Chromium); the `ignoreCommand` in a scratch repository for each case. 561 tests, type checking and build pass.
 * `HOW_IT_WORKS.md`: "Deployments and storage".
-* **To check after push:** the preview builds; the next log-only push is skipped. **After merge:** production OCR only runs on a scanned PDF, so it is checked when one is read.
+* **After push:** CI run 39571572574 passed `check` and `audit`; Vercel ran the `ignoreCommand`, found code changed since the branch's last deployment and built preview `dpl_9BBRQ2nFDRLPjmQtnWJ3fS5UrxCA` (READY; `/api/health` healthy through the Vercel connector). The commit recording this (Markdown only) is the live test that a log-only push is skipped. **After merge:** production OCR only runs on a scanned PDF, so it is checked when one is read.
 
 ---
 
