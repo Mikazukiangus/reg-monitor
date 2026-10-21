@@ -61,7 +61,11 @@ export function createConfig(env: Environment) {
     productionUrl = httpUrl('VERCEL_PROJECT_PRODUCTION_URL', `https://${productionHost}`);
     if (productionUrl && new URL(productionUrl).pathname !== '/') invalid('VERCEL_PROJECT_PRODUCTION_URL', 'must be a hostname without a scheme or path');
   }
-  const digestSiteUrl = httpUrl('DIGEST_SITE_URL', text('DIGEST_SITE_URL'));
+  // The site's address in emails and for the scheduled check's feed request:
+  // a plain-HTTP address is upgraded to HTTPS unless it is this machine
+  const local = (url: string) => ['localhost', '127.0.0.1', '[::1]'].includes(new URL(url).hostname);
+  const configuredSiteUrl = httpUrl('DIGEST_SITE_URL', text('DIGEST_SITE_URL'));
+  const digestSiteUrl = configuredSiteUrl && !local(configuredSiteUrl) ? configuredSiteUrl.replace(/^http:/, 'https:') : configuredSiteUrl;
   const email = (value: string) => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(value);
   const to = (text('DIGEST_TO') ?? '').split(',').map(address => address.trim()).filter(Boolean);
   if (to.some(address => !email(address))) invalid('DIGEST_TO', 'must be a comma-separated list of email addresses');

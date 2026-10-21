@@ -30,7 +30,13 @@ export class RateLimitedError extends Error {}
 // A POST, for the one source (the ICO) whose page asks its search service that way
 type PostRequest = { method: 'POST'; body: string; contentType: string };
 
+// Regulator sites are read over HTTPS only: a plain-HTTP address is refused,
+// and so is a reply that a redirect brought from one, so nothing is read that
+// could have been changed on the way
+export class InsecureUrlError extends Error {}
+
 export async function politeFetch(url: string, post?: PostRequest): Promise<globalThis.Response> {
+  if (new URL(url).protocol !== 'https:') throw new InsecureUrlError(`Refused a plain-HTTP address: ${url}`);
   const host = new URL(url).host;
   const pausedUntil = hostPausedUntil.get(host) ?? 0;
   if (Date.now() < pausedUntil) {
@@ -47,6 +53,10 @@ export async function politeFetch(url: string, post?: PostRequest): Promise<glob
     headers: { 'User-Agent': userAgentFor(url), ...(post ? { 'Content-Type': post.contentType } : {}) },
     ...(post ? { method: post.method, body: post.body } : {})
   });
+  if (res.url && new URL(res.url).protocol !== 'https:') {
+    await res.body?.cancel().catch(() => {});
+    throw new InsecureUrlError(`Refused a redirect to plain HTTP: ${res.url}`);
+  }
   if (res.status === 429) {
     const retryAfter = Number(res.headers.get('retry-after'));
     hostPausedUntil.set(host, Date.now() + (retryAfter > 0 ? retryAfter * 1000 : RATE_LIMIT_PAUSE_MS));

@@ -19,6 +19,10 @@
           "value": "default-src 'self'; script-src 'self' 'sha256-C8L97lXzaqGrYC3cwuvQT3+2zE31DRVjiIPSQtVht4U='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
         },
         {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
           "key": "X-Frame-Options",
           "value": "DENY"
         },

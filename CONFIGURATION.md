@@ -25,7 +25,8 @@ The refactor preserves all previous operational defaults. Important precedence:
 
 - `DATABASE_URL` wins over `POSTGRES_URL`. Empty values are treated as absent.
 - `DIGEST_SITE_URL` wins over `https://VERCEL_PROJECT_PRODUCTION_URL`, which
-  wins over `http://localhost:PORT`. This URL also receives the poll's feed-warming
+  wins over `http://localhost:PORT`. An `http://` address other than localhost is
+  upgraded to `https://`. This URL also receives the poll's feed-warming
   request, so set it explicitly when hosting outside Vercel.
 - Missing `CRON_SECRET` disables scheduled endpoints. A configured secret permits
   scheduled checks and digest dry runs even when email is not set up. Sending also

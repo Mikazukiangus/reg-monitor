@@ -45,6 +45,11 @@ function regulatorIdFor(name: string): string | undefined {
 // notice's type) and the title, the same way for every source and for notices
 // read back from the history, so a rule change applies to all of them.
 // And the regulator's id (shared/regulators.ts).
+// A link shown with a notice, over HTTPS: a regulator's plain-HTTP link is
+// upgraded, as the browser upgrades a page's own requests
+// (upgrade-insecure-requests in vercel.json)
+export const httpsUrl = (url: string) => url.replace(/^http:\/\//i, 'https://');
+
 export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   const text = [notice.summary, ...(notice.keyPoints?.points || [])].filter(Boolean).join(' ');
   const tagged = classifySectors({ title: notice.title, text, regulator: notice.regulator });
@@ -52,6 +57,8 @@ export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   const impact = assessImpact({ format, type: notice.type, title: notice.title, keyDate: keyDate({ ...notice, format }) });
   return {
     ...notice,
+    ...(notice.dossierUrl ? { dossierUrl: httpsUrl(notice.dossierUrl) } : {}),
+    ...(notice.keyPoints?.sourceUrl ? { keyPoints: { ...notice.keyPoints, sourceUrl: httpsUrl(notice.keyPoints.sourceUrl) } } : {}),
     regulatorId: regulatorIdFor(notice.regulator),
     format,
     typeColorClass: getTypeColor(format),
