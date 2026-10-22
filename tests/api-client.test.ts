@@ -15,6 +15,12 @@ function stubFetch(reply: (url: string, init?: RequestInit) => Response) {
   }) as typeof fetch;
   return calls;
 }
+// A notice the page can show (src/lib/noticeShape.ts)
+const notice = (id: string, extra: Record<string, unknown> = {}) => ({
+  id, ref: `MAS ${id}`, title: 'MAS consults on capital rules', regulator: 'MAS', jurisdiction: 'SINGAPORE', jurisdictionCode: 'SG',
+  type: 'CONSULTATION', typeColorClass: { bg: 'bg-x', text: 'text-x' }, impactScore: 7, issuedTimeAgo: '2 days ago', tags: ['MAS'],
+  sector: 'Banking & Prudential', format: 'Consultations', severity: 'high', dossierUrl: 'https://www.mas.gov.sg/x', ...extra
+});
 const json = (body: unknown, init: ResponseInit = {}) => new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json', ...init.headers }, status: init.status });
 
 test('the feed: a forced refresh posts, and the reply says rate limited, failed or ok with the saved copy marker', async () => {
@@ -39,14 +45,14 @@ test('notices by id are asked for 50 at a time, and a failed batch stops after t
   const ids = Array.from({ length: 120 }, (_, i) => `n${i}`);
   const calls = stubFetch(url => {
     const asked: string[] = JSON.parse(new URL(url, 'http://x').searchParams.get('ids')!);
-    return json({ notices: asked.map(id => ({ id })) });
+    return json({ notices: asked.map(id => notice(id)) });
   });
   const found = await noticesById(ids);
   assert.equal(calls.length, 3);
   assert.deepEqual(found.map(n => n.id), ids);
 
   let n = 0;
-  stubFetch(() => (n++ === 0 ? json({ notices: [{ id: 'a' }] }) : new Response('', { status: 500 })));
+  stubFetch(() => (n++ === 0 ? json({ notices: [notice('a')] }) : new Response('', { status: 500 })));
   const batches: string[][] = [];
   await assert.rejects(async () => {
     for await (const batch of noticesByIdBatches(ids)) batches.push(batch.map(b => b.id));
@@ -55,7 +61,7 @@ test('notices by id are asked for 50 at a time, and a failed batch stops after t
 });
 
 test('history search encodes the text and gives null when the server has no answer', async () => {
-  const calls = stubFetch(() => json({ notices: [{ id: 'x' }] }));
+  const calls = stubFetch(() => json({ notices: [notice('x')] }));
   assert.deepEqual((await searchHistory('AI & data'))?.map(n => n.id), ['x']);
   assert.equal(calls[0].url, '/api/notices/search?q=AI%20%26%20data');
   stubFetch(() => new Response('', { status: 503 }));
@@ -67,4 +73,13 @@ test('scheduled checks fail when the server says it could not read them', async 
   await assert.rejects(fetchScheduledChecks());
   stubFetch(() => json({ success: true, enabled: false }));
   assert.equal((await fetchScheduledChecks()).enabled, false);
+});
+
+test('search and by-id replies are checked like the feed: notices that cannot be shown are left out, unsafe links dropped', async () => {
+  const replied = { notices: [notice('ok'), { id: 'bare' }, notice('js', { dossierUrl: 'javascript:alert(1)' })] };
+  stubFetch(() => json(replied));
+  const found = await searchHistory('capital');
+  assert.deepEqual(found?.map(n => [n.id, n.dossierUrl]), [['ok', 'https://www.mas.gov.sg/x'], ['js', undefined]]);
+  stubFetch(() => json(replied));
+  assert.deepEqual((await noticesById(['ok', 'bare', 'js'])).map(n => n.id), ['ok', 'js']);
 });

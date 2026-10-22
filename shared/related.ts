@@ -4,6 +4,7 @@
 // The server stores the pairs (server/links.ts); without a history, the
 // notices at hand are matched with each other.
 import type { RelatedLink } from './regulatory';
+import { safeUrl } from './urls.js';
 
 export interface RelatedCandidate {
   id: string;
@@ -131,7 +132,7 @@ export function relatedOf(id: string, pairs: LinkPair[], notices: Map<string, Re
       .sort((a, b) => b.score - a.score)
       .flatMap(p => {
         const c = notices.get(other(p));
-        return c ? [{ id: c.id, title: c.title, relation, publishedAt: c.publishedAt, dossierUrl: c.dossierUrl }] : [];
+        return c ? [{ id: c.id, title: c.title, relation, publishedAt: c.publishedAt, dossierUrl: safeUrl(c.dossierUrl) }] : [];
       })
       .slice(0, 2);
   return [

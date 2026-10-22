@@ -1,8 +1,7 @@
 // What this browser remembers: saved notices, saved views, alert rules, the
 // feed's layout and the theme. Kept in this browser only; nothing is sent to the server.
 import type { CustomAlertRule, RegulatoryNotice } from '../../shared/regulatory';
-import { isNotice } from './noticeShape';
-import { withCurrentSectorNames } from '../../shared/tagging';
+import { shownNotices } from './noticeShape';
 import { DEFAULT_RULES } from '../../shared/alertRules';
 
 export interface SavedView { id: string; name: string; query: string }
@@ -21,7 +20,7 @@ function write(key: string, value: unknown[], storage?: StorageLike): boolean {
   catch { return false; }
 }
 export function readBookmarks(storage?: StorageLike): RegulatoryNotice[] {
-  return read(BOOKMARKS_KEY, storage).map(withCurrentSectorNames).filter(isNotice).slice(0, 200);
+  return shownNotices(read(BOOKMARKS_KEY, storage)).slice(0, 200);
 }
 export const writeBookmarks = (notices: RegulatoryNotice[], storage?: StorageLike) => write(BOOKMARKS_KEY, notices, storage);
 

@@ -14,7 +14,7 @@
 // the rest is shown; a malformed archive or lastSync is ignored.
 import type { EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
 import { withCurrentSectorNames } from '../../shared/tagging';
-import { noticeProblem } from '../lib/noticeShape';
+import { noticeProblem, withSafeLinks } from '../lib/noticeShape';
 import type { ArchiveStatus, FeedData, SourceSyncResult } from './client';
 
 export type FeedReplyCheck =
@@ -57,8 +57,9 @@ export function checkFeedReply(body: unknown): FeedReplyCheck {
   if (!Array.isArray(body.notices)) return { ok: false, problem: 'the reply has no notices list' };
 
   const leftOut: string[] = [];
-  // Sector names first, so a copy saved under old names still passes
-  const notices = keep<RegulatoryNotice>(body.notices.map(withCurrentSectorNames), 'notice', noticeProblem, leftOut);
+  // Sector names first, so a copy saved under old names still passes; links
+  // that are not HTTPS web links are dropped
+  const notices = keep<RegulatoryNotice>(body.notices.map(n => withSafeLinks(withCurrentSectorNames(n))), 'notice', noticeProblem, leftOut);
   if (body.notices.length > 0 && notices.length === 0) {
     return { ok: false, problem: `none of the ${body.notices.length} notices can be shown (${leftOut[0]})` };
   }

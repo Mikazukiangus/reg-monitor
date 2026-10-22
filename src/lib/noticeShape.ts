@@ -3,6 +3,8 @@
 // names should be brought up to date first (withCurrentSectorNames).
 import type { RegulatoryNotice } from '../../shared/regulatory';
 import { ALL_JURISDICTIONS, SECTOR_KEYS } from './urlState';
+import { withCurrentSectorNames } from '../../shared/tagging';
+import { safeUrl } from '../../shared/urls';
 
 const FORMATS = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];
 const SEVERITIES = ['critical', 'high', 'info'];
@@ -35,3 +37,27 @@ export function noticeProblem(n: any): string | null {
 }
 
 export const isNotice = (n: unknown): n is RegulatoryNotice => noticeProblem(n) === null;
+
+const isObject = (v: unknown): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v);
+const withLink = <T extends Record<string, any>>(value: T, field: string): T => {
+  if (value[field] === undefined) return value;
+  const { [field]: raw, ...rest } = value;
+  const url = safeUrl(raw);
+  return (url ? { ...rest, [field]: url } : rest) as T;
+};
+
+// The notice with only HTTPS web links (shared/urls.ts), as the server sends
+// them; a copy saved in this browser before that, or a reply that is not,
+// keeps the notice and loses the link
+export function withSafeLinks<T>(n: T): T {
+  if (!isObject(n)) return n;
+  let safe: Record<string, any> = withLink(n, 'dossierUrl');
+  if (isObject(safe.keyPoints)) safe = { ...safe, keyPoints: withLink(safe.keyPoints, 'sourceUrl') };
+  if (Array.isArray(safe.related)) safe = { ...safe, related: safe.related.map(r => (isObject(r) ? withLink(r, 'dossierUrl') : r)) };
+  return safe as T;
+}
+
+// Notices from outside the page that can be shown, with sector names brought
+// up to date and only safe links
+export const shownNotices = (list: unknown[]): RegulatoryNotice[] =>
+  list.map(n => withSafeLinks(withCurrentSectorNames(n))).filter(isNotice);

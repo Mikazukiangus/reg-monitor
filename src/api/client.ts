@@ -3,6 +3,7 @@
 // React state or the page.
 import type { CheckSummary, CustomAlertRule, EndpointMetric, RegulatoryNotice } from '../../shared/regulatory';
 import { checkFeedReply } from './feedReply';
+import { shownNotices } from '../lib/noticeShape';
 
 export interface SourceSyncResult {
   endpointId: string;
@@ -66,12 +67,13 @@ export async function fetchEndpointStatus(): Promise<EndpointMetric[] | null> {
 // The server searches at most this many characters
 export const MAX_SEARCH_LENGTH = 200;
 
-// Stored notices matching the search text; null when the server gave none
+// Stored notices matching the search text (those that can be shown, with
+// only safe links); null when the server gave none
 export async function searchHistory(query: string, signal?: AbortSignal): Promise<RegulatoryNotice[] | null> {
   const res = await fetch(`/api/notices/search?q=${encodeURIComponent(query.trim().slice(0, MAX_SEARCH_LENGTH))}`, { signal });
   if (!res.ok) return null;
   const data = await res.json();
-  return Array.isArray(data.notices) ? data.notices : null;
+  return Array.isArray(data.notices) ? shownNotices(data.notices) : null;
 }
 
 // The server looks up at most this many notices per request
@@ -85,7 +87,7 @@ export async function* noticesByIdBatches(ids: string[], signal?: AbortSignal): 
     const res = await fetch(`/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify(batch))}`, { signal });
     if (!res.ok) throw new Error('Unavailable');
     const data = await res.json();
-    if (Array.isArray(data.notices)) yield data.notices;
+    if (Array.isArray(data.notices)) yield shownNotices(data.notices);
   }
 }
 

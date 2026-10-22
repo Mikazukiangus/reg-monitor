@@ -6,6 +6,7 @@ import type { SectorDomain, InstrumentFormat, RegulatoryNotice } from '../shared
 import { publicationTime } from '../shared/derived.js';
 import { regulatorIdOf, regulatorNamed } from '../shared/regulators.js';
 import { keyDate } from '../shared/keyDate.js';
+import { safeUrl } from '../shared/urls.js';
 import { logger } from './logging.js';
 
 // A notice as the server builds it: the browser's notice without the fields
@@ -45,20 +46,26 @@ function regulatorIdFor(name: string): string | undefined {
 // notice's type) and the title, the same way for every source and for notices
 // read back from the history, so a rule change applies to all of them.
 // And the regulator's id (shared/regulators.ts).
-// A link shown with a notice, over HTTPS: a regulator's plain-HTTP link is
-// upgraded, as the browser upgrades a page's own requests
-// (upgrade-insecure-requests in vercel.json)
-export const httpsUrl = (url: string) => url.replace(/^http:\/\//i, 'https://');
+// The links shown with a notice: HTTPS web links only (shared/urls.ts)
+export { httpsUrl } from '../shared/urls.js';
 
 export function tagNotice<T extends NormalizedNotice>(notice: T): T {
   const text = [notice.summary, ...(notice.keyPoints?.points || [])].filter(Boolean).join(' ');
   const tagged = classifySectors({ title: notice.title, text, regulator: notice.regulator });
   const { format, reason: formatReason } = classifyFormat(notice.type, notice.title);
   const impact = assessImpact({ format, type: notice.type, title: notice.title, keyDate: keyDate({ ...notice, format }) });
+  const { dossierUrl: rawDossierUrl, ...rest } = notice;
+  const dossierUrl = safeUrl(rawDossierUrl);
+  let keyPoints = notice.keyPoints;
+  if (keyPoints?.sourceUrl !== undefined) {
+    const { sourceUrl: rawSourceUrl, ...points } = keyPoints;
+    const sourceUrl = safeUrl(rawSourceUrl);
+    keyPoints = sourceUrl ? { ...points, sourceUrl } : points;
+  }
   return {
-    ...notice,
-    ...(notice.dossierUrl ? { dossierUrl: httpsUrl(notice.dossierUrl) } : {}),
-    ...(notice.keyPoints?.sourceUrl ? { keyPoints: { ...notice.keyPoints, sourceUrl: httpsUrl(notice.keyPoints.sourceUrl) } } : {}),
+    ...rest,
+    ...(dossierUrl ? { dossierUrl } : {}),
+    ...(keyPoints ? { keyPoints } : {}),
     regulatorId: regulatorIdFor(notice.regulator),
     format,
     typeColorClass: getTypeColor(format),
@@ -77,7 +84,7 @@ export function tagNotice<T extends NormalizedNotice>(notice: T): T {
       format: formatReason,
       impact: impact.reasons
     }
-  };
+  } as T;
 }
 
 const FORMATS: InstrumentFormat[] = ['Announcements', 'Circulars', 'Consultations', 'Enforcement', 'Guidelines', 'Technical Standards'];

@@ -21,6 +21,7 @@ import { ExportModal } from './components/modals/ExportModal';
 import { LiveEndpointsModal } from './components/modals/LiveEndpointsModal';
 
 import { deriveDeadlines, deriveNotifications, sortNewestFirst } from '../shared/derived';
+import { safeUrl } from '../shared/urls';
 import { buildIcs, calendarNotices } from './lib/ics';
 import { FILE_TYPES, saveFile } from './lib/download';
 import { copyText, noticeLink, parseViewState, serializeViewState, type HeaderJurisdiction, type ViewState } from './lib/urlState';
@@ -153,11 +154,14 @@ export default function App() {
     filters.setCurrentPage(Math.floor((dossierIndex + delta) / pagination.itemsPerPage) + 1);
   };
 
-  // A linked consultation or conclusion: open it here if loaded, else at the source
+  // A linked consultation or conclusion: open it here if loaded, else at the
+  // source (an HTTPS web link only: React's guard on links does not cover
+  // window.open)
   const handleOpenRelated = (id: string, url?: string) => {
     const target = searchableNotices.find(n => n.id === id);
+    const source = safeUrl(url);
     if (target) setActiveNoticeForDossier(target);
-    else if (url) window.open(url, '_blank', 'noopener,noreferrer');
+    else if (source) window.open(source, '_blank', 'noopener,noreferrer');
   };
 
   const handleTabChange = (tab: ActiveTab) => {
