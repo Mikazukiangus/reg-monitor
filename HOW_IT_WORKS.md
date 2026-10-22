@@ -179,7 +179,7 @@ The score does not know how much a notice matters to a particular firm, and is n
 ## Checks
 
 - **Dates:** `tests/dates.test.ts` checks the date rules on sentences from real notices, including ones that used to be given the wrong date.
-- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). The impact rubric is tested the same way (`tests/impact.test.ts`), and every source's notices are checked to carry the rubric's reasons. GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`).
+- **Tests** (`npm test`, in `tests/`): each source's reader is run against saved copies of that source's real responses, so a change that breaks how a source is read fails the test. Tagging rules are tested against hand-labelled notices (see "Sectors and formats"). The impact rubric is tested the same way (`tests/impact.test.ts`), and every source's notices are checked to carry the rubric's reasons. GitHub runs the type check, the tests and the build on every push (`.github/workflows/ci.yml`), except one that changes only Markdown files (the status log, these docs), which Vercel does not build either. A separate job audits the site's dependencies for known high or critical vulnerabilities (`scripts/ci-audit.sh`); when npm's audit service does not answer, it tries again up to three times, a minute apart, and a report of vulnerabilities fails at once. `tests/ci.test.ts` checks both.
 
 ## Ground rules
 

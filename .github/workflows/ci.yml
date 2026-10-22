@@ -2,9 +2,17 @@
 # responses saved in tests/fixtures, so nothing here contacts a regulator.
 name: CI
 
+# Not for a change that only touches Markdown files (the status log, the
+# docs): nothing they hold is built, tested or installed. Vercel skips those
+# too (ignoreCommand in vercel.json). A push or pull request that also
+# changes anything else runs in full.
 on:
   push:
+    paths-ignore:
+      - '**.md'
   pull_request:
+    paths-ignore:
+      - '**.md'
 
 # The jobs only read the repository
 permissions:
@@ -32,11 +40,13 @@ jobs:
   # and test tools) are left out. Read from the lockfile. A separate job, so
   # a new advisory shows as its own failure and never hides the test results.
   # Vercel deploys on its own, so this warns; it does not stop a deploy.
+  # scripts/ci-audit.sh tries again when npm's audit service does not answer.
   audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - run: npm audit --omit=dev --audit-level=high --package-lock-only
+      - run: scripts/ci-audit.sh
