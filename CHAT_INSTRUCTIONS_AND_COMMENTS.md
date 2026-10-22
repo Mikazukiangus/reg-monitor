@@ -1892,7 +1892,7 @@ This document records the full chronological instructions, technical requirement
 
 * **Cause:** the `audit` job's `npm audit` got HTTP 503 "Service Unavailable" from npm's audit endpoint after about 7 minutes; `check` passed. npm answered again by 03:40 UTC (local audit: 0 vulnerabilities) and the re-run passed.
 * **Branch `ci-resilience` (`0a0a622`, pushed, not merged):** `scripts/ci-audit.sh` runs the same audit and tries again up to three times, a minute apart, when npm produced no report (a GitHub warning each time, and an error saying it is not a finding if all fail); a report of vulnerabilities (npm's "# npm audit report" heading or its summary) fails at once. The job has a 30-minute limit. `.github/workflows/ci.yml` skips pushes and pull requests that change only `**.md` files, as Vercel already skips building them.
-* **Tests:** `tests/ci.test.ts` (5) runs the script against a stand-in npm replaying npm's own output: clean, outage then success, three outages, vulnerabilities (mixed and single severity, not retried), and checks the workflow. 629 tests pass, type check passes; the script against the real npm: 0 vulnerabilities. CI run 39718768957 on the branch passed with the new audit step.
+* **Tests:** `tests/ci.test.ts` (5) runs the script against a stand-in npm replaying npm's own output: clean, outage then success, three outages, vulnerabilities (mixed and single severity, not retried), and checks the workflow. 629 tests pass, type check passes; the script against the real npm: 0 vulnerabilities. CI run 39718768957 on the branch passed with the new audit step; the Markdown-only log push after it (`b08e689`) started no CI run.
 * **Docs:** the Tests line in `HOW_IT_WORKS.md`.
 
 ---
