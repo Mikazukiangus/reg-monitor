@@ -42,3 +42,15 @@ test('each visitor gets a few refreshes a minute, counted separately', () => {
   assert.equal(limit('b', t + 3000), 0);
   assert.equal(limit('a', t + 60_001), 0);
 });
+
+test('a flood from many addresses is forgotten oldest first, keeping memory bounded', () => {
+  const limit = rateLimit(1, 60_000, 3);
+  const t = 1_000_000;
+  for (const ip of ['a', 'b', 'c']) assert.equal(limit(ip, t), 0);
+  // 'a' is seen again (still limited), so 'b' is now the least recently seen
+  assert.equal(limit('a', t + 1), 60);
+  assert.equal(limit('d', t + 2), 0);
+  // 'b' was forgotten and starts afresh; 'a' and 'c' are still remembered
+  assert.equal(limit('b', t + 3), 0);
+  assert.equal(limit('a', t + 4), 60);
+});

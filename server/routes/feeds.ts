@@ -1,21 +1,10 @@
 import express, { Request, Response, Router } from 'express';
 import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
-import { rateLimit } from '../throttle.js';
 import { cdnCacheControl } from '../../config.js';
 import { currentFeed, endpointStatus, runScheduledCheck, scheduledCheckStatus } from '../services/feed.js';
 import { cronAuthorized } from './cron.js';
 import { accepts } from '../validate.js';
-
-// Refreshes each visitor may ask for per minute
-export const refreshLimit = rateLimit(config.refresh.limit, config.refresh.windowMs);
-
-// The visitor's IP address. On Vercel, X-Forwarded-For is set by Vercel (a
-// value sent by the client is replaced); elsewhere the connection's address.
-export function visitorIp(req: Request): string {
-  const forwarded = config.runtime.isVercel ? req.get('x-forwarded-for')?.split(',')[0].trim() : undefined;
-  return forwarded || req.socket.remoteAddress || 'unknown';
-}
 
 // The feed, endpoint status and the scheduled check
 export function feedRoutes(): Router {
@@ -34,17 +23,8 @@ export function feedRoutes(): Router {
   // API Route: Trigger live sync across all connected endpoints. GET responses
   // may be served from Vercel's CDN cache (up to 5 minutes old, or older while
   // a fresh copy is fetched in the background), so a cold function never makes
-  // a visitor wait; lastSync says how old the data is. POST always runs.
+  // a visitor wait; lastSync says how old the data is. POST always runs; a visitor may make only a few a minute (server/rate-limits.ts).
   router.all('/api/feeds/sync', accepts(['GET', 'POST']), async (req: Request, res: Response) => {
-    // A refresh (POST) skips the CDN cache, so each visitor may ask for only a few a minute
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      const wait = refreshLimit(visitorIp(req));
-      if (wait) {
-        res.set({ 'Cache-Control': 'no-store', 'Retry-After': String(wait) });
-        res.status(429).json({ success: false, error: `Too many refreshes. Try again in ${wait} seconds.` });
-        return;
-      }
-    }
     try {
       const feed = await currentFeed();
       res.set('Cache-Control', req.method === 'GET' ? cdnCacheControl(config.cdn.sync) : 'no-store');
