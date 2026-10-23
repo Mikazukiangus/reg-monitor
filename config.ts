@@ -78,6 +78,24 @@ export function createConfig(env: Environment) {
     if (value && /\s/.test(value)) invalid(name, 'must not contain whitespace');
   }
 
+  // Other sites' pages that may call the API from a browser, as exact origins
+  // (https://host or https://host:port; http only for this machine). The
+  // site's own page needs no entry; there is no wildcard.
+  const corsOrigins: string[] = [];
+  for (const raw of (text('CORS_ALLOWED_ORIGINS') ?? '').split(',').map(origin => origin.trim().replace(/\/$/, '')).filter(Boolean)) {
+    let origin: string | undefined;
+    try {
+      const url = new URL(raw);
+      // Browsers send the origin in lower case
+      if (url.origin === raw.toLowerCase() && !raw.includes('*') && (url.protocol === 'https:' || (url.protocol === 'http:' && local(raw)))) origin = url.origin;
+    } catch { /* not a URL */ }
+    if (origin) corsOrigins.push(origin);
+    else {
+      invalid('CORS_ALLOWED_ORIGINS', 'must be a comma-separated list of origins such as https://app.example.com (http only for localhost; no paths or wildcards)');
+      break;
+    }
+  }
+
   const pollLimit = integer('POLL_LIMIT', 20, 1, 1000);
   const backfillLimit = integer('POLL_BACKFILL_LIMIT', 50, 1, 1000);
   if (backfillLimit < pollLimit) invalid('POLL_BACKFILL_LIMIT', 'must be greater than or equal to POLL_LIMIT');
@@ -110,6 +128,7 @@ export function createConfig(env: Environment) {
       sendTimeoutMs: integer('RESEND_TIMEOUT_MS', 15_000),
       configured: Boolean(cronSecret && apiKey && to.length)
     }),
+    cors: Object.freeze({ allowedOrigins: Object.freeze([...new Set(corsOrigins)]) }),
     cdn: Object.freeze({
       sync: cachePolicy('SYNC_CDN_TTL_SECONDS', 300, 'SYNC_CDN_STALE_SECONDS', 86_400),
       search: cachePolicy('SEARCH_CDN_TTL_SECONDS', 300, 'SEARCH_CDN_STALE_SECONDS', 3600)

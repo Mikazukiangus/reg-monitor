@@ -4,6 +4,8 @@ import { feedRoutes } from './routes/feeds.js';
 import { digestRoutes } from './routes/digest.js';
 import { noticeRoutes } from './routes/notices.js';
 import { accepts } from './validate.js';
+import { originPolicy } from './cors.js';
+import { config } from '../runtime-config.js';
 
 // API routes only. Used by the local server (server.ts) and by the Vercel
 // function in api/index.ts, where the frontend is served as static files.
@@ -15,6 +17,9 @@ export function createApp() {
   // built from names such as a[b]=c. No route reads a request body, so none is
   // parsed (server/validate.ts refuses one).
   app.set('query parser', 'simple');
+  // Only the site's own page, and origins listed in CORS_ALLOWED_ORIGINS, may
+  // call the API from a browser (server/cors.ts)
+  app.use('/api', originPolicy(config.cors.allowedOrigins));
 
   // Health probe route
   app.all('/api/health', accepts(['GET']), (_req: Request, res: Response) => {
