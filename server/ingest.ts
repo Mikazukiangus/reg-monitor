@@ -2,13 +2,14 @@
 // that fills the history.
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
-import { openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
+import { changedFields, openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
 import { randomUUID } from 'crypto';
 import { describeError } from './http.js';
 import { publicError } from './errors.js';
 import type { NormalizedNotice } from './notice.js';
 import { SOURCES } from './sources/index.js';
-import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints } from './enrich.js';
+import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints, NO_FETCHES } from './enrich.js';
+import { drainAfterResponse, keyPointJobs } from './queue.js';
 import { linkSaved, relinkAll } from './links.js';
 import { rebuildDates, saveDates } from './dates.js';
 
@@ -44,8 +45,23 @@ async function archiveNotices(notices: NormalizedNotice[], sourceId: string, sto
   }
 }
 
+// Queue the documents of these saved notices still to be read for key points,
+// and run the queue once the response has been sent (server/queue.ts)
+async function queueKeyPoints(notices: NormalizedNotice[], store: NoticeStore) {
+  const jobs = keyPointJobs(notices);
+  if (jobs.length === 0) return;
+  try {
+    await store.enqueue(jobs);
+    drainAfterResponse(store);
+  } catch (err: any) {
+    logger.warn('[RegSonar Queue] Could not queue key points', err);
+  }
+}
+
 // Refresh a source if its cache has expired. On failure the last good notices
-// are kept and the error is reported alongside them.
+// are kept and the error is reported alongside them. With a history, the
+// answer does not wait for documents to be read: those not read yet are
+// queued; without one they are read now.
 export async function refreshSource(source: (typeof SOURCES)[number]): Promise<SourceState> {
   let state = sourceState.get(source.name);
   if (!state) {
@@ -58,12 +74,14 @@ export async function refreshSource(source: (typeof SOURCES)[number]): Promise<S
     const s = state;
     s.lastAttemptAt = Date.now();
     s.inFlight = source.fetch()
-      .then(enrichWithKeyPoints)
-      .then(async (notices) => {
+      .then(async read => {
+        const store = await openStore();
+        const notices = await enrichWithKeyPoints(read, store ? NO_FETCHES : undefined, store);
         s.notices = notices;
         s.lastSuccessAt = new Date().toISOString();
         s.error = undefined;
-        await archiveNotices(notices, source.id);
+        await archiveNotices(notices, source.id, store);
+        if (store) await queueKeyPoints(notices, store);
       })
       .catch((err) => {
         // Visitors see only a message written for them; the log has the detail
@@ -86,7 +104,8 @@ const POLL_LIMIT = config.polling.limit;
 const BACKFILL_LIMIT = config.polling.backfillLimit;
 
 // Documents read for key points per source on each check, and for how long a
-// check starts new reads (the function may run for 120s); later checks do the rest
+// check starts new reads (the function may run for 120s); the rest are queued
+// (server/queue.ts)
 const POLL_KEY_POINT_FETCHES = config.polling.keyPointFetches;
 const POLL_FETCH_WINDOW_MS = config.polling.fetchWindowMs;
 
@@ -157,8 +176,7 @@ async function backfillPageDates(until: number, store: NoticeStore | null): Prom
     if (updated.publishedAt) dated++;
     // Only what reading the page changed is written, merged into the stored
     // notice as it is now: a source may have saved it again meanwhile
-    const changed = Object.fromEntries(Object.entries(updated).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify((notice as Record<string, unknown>)[k])));
-    await store.patch(notice.id, changed);
+    await store.patch(notice.id, changedFields(notice, updated));
   }
   return dated;
 }
@@ -213,6 +231,11 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
         logger.warn('[RegSonar History] Could not rebuild notice dates', err);
         failed.push({ name: 'Notice dates', error: publicError(err) });
       }
+    }
+    // Documents this check had no time for are queued, not left to the next check
+    if (store) {
+      await store.enqueue(keyPointJobs(results.flatMap(r => r.notices)))
+        .catch((err: any) => logger.warn('[RegSonar Queue] Could not queue key points', err));
     }
     const summary = { sources: results.map(({ notices: _notices, ...r }) => r), failed, pageDatesFound, links, dates };
     await record({ ...check, completedAt: new Date().toISOString(), status: 'completed', summary });

@@ -32,6 +32,9 @@ export function digestRoutes(): Router {
           return;
         case 'sent':
           res.json({ success: true, sent: true, id: run.id, ...run.summary });
+          return;
+        case 'queued':
+          res.status(202).json({ success: true, sent: false, queued: true, reason: run.error ?? 'Waiting to be sent', ...run.summary });
       }
     } catch (error: any) {
       logger.error('[RegSonar Digest] Failed', error);

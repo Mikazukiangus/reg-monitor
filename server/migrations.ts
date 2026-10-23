@@ -162,6 +162,32 @@ CREATE INDEX notice_dates_date_idx ON notice_dates (date);
 CREATE INDEX notices_undated_idx ON notices (last_seen_at) WHERE published_at IS NULL;
 CREATE INDEX scheduled_checks_completed_idx ON scheduled_checks (completed_at DESC) WHERE status = 'completed';
 `
+  },
+  {
+    version: 6,
+    name: 'background jobs',
+    // Work done after a request has been answered (server/queue.ts): reading a
+    // notice's document for key points, sending the digest. A job waiting to
+    // run is listed once per kind and key; a worker takes it for a while
+    // (locked_until), so a worker that stops part way leaves it to another.
+    sql: `
+CREATE TABLE jobs (
+  id bigserial PRIMARY KEY,
+  kind text NOT NULL,
+  key text NOT NULL,
+  payload jsonb NOT NULL,
+  status text NOT NULL DEFAULT 'queued' CHECK (status IN ('queued', 'done', 'failed')),
+  attempts integer NOT NULL DEFAULT 0,
+  max_attempts integer NOT NULL,
+  run_at timestamptz NOT NULL DEFAULT now(),
+  locked_until timestamptz,
+  last_error text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  finished_at timestamptz
+);
+CREATE UNIQUE INDEX jobs_waiting_key_idx ON jobs (kind, key) WHERE status = 'queued';
+CREATE INDEX jobs_due_idx ON jobs (run_at) WHERE status = 'queued';
+`
   }
 ];
 

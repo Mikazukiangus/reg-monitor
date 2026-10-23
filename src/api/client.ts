@@ -134,6 +134,8 @@ export interface ScheduledChecks {
   latest: { startedAt: string; completedAt: string | null; status: string; summary: CheckSummary | null } | null;
   lastCompletedAt: string | null;
   dateBackfill: { pending: number; unresolved: number };
+  // Background jobs waiting, and those that gave up this week (server/queue.ts)
+  queue?: { waiting: number; failed: number };
 }
 
 // The latest scheduled source check, from the history

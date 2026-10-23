@@ -11,6 +11,8 @@ import { pollSources, refreshSource } from '../ingest.js';
 import { matchDigest, singaporeDate } from '../digest/match.js';
 import { renderDigest } from '../digest/email.js';
 import { sendWithResend } from '../mailer.js';
+import { openStore, type NoticeStore } from '../store.js';
+import { DIGEST, digestJob, drainQueue } from '../queue.js';
 
 export async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
   // The feed's own refresh first, so the check reuses its key points instead
@@ -31,7 +33,9 @@ export type DigestRun =
   | { kind: 'dryRun'; summary: DigestSummary; matches: { id: string; title: string; rules: string[] }[]; html: string; text: string }
   | { kind: 'nothingToSend'; summary: DigestSummary }
   | { kind: 'notConfigured'; summary: DigestSummary }
-  | { kind: 'sent'; summary: DigestSummary; id?: string };
+  | { kind: 'sent'; summary: DigestSummary; id?: string }
+  // Sending failed for now; it is tried again over the next hours (server/queue.ts)
+  | { kind: 'queued'; summary: DigestSummary; error?: string };
 
 export interface DigestDeps {
   collect: () => Promise<{ notices: NormalizedNotice[]; failed: string[] }>;
@@ -39,6 +43,8 @@ export interface DigestDeps {
   rules: CustomAlertRule[];
   siteUrl: string;
   mail: { apiKey?: string; to: readonly string[]; from: string };
+  // The history, whose queue sends the email; without one it is sent directly
+  store?: () => Promise<NoticeStore | null>;
 }
 
 const defaultDeps = (): DigestDeps => ({
@@ -46,8 +52,12 @@ const defaultDeps = (): DigestDeps => ({
   send: sendWithResend,
   rules: DIGEST_RULES,
   siteUrl: config.digest.siteUrl,
-  mail: config.digest
+  mail: config.digest,
+  store: openStore
 });
+
+// How long the digest run waits for the queued send before answering
+const SEND_NOW_MS = 30_000;
 
 // `day` is a Singapore date (YYYY-MM-DD); yesterday's when not given
 export async function runDigest(options: { day?: string | null; dryRun?: boolean }, deps: DigestDeps = defaultDeps()): Promise<DigestRun> {
@@ -64,6 +74,15 @@ export async function runDigest(options: { day?: string | null; dryRun?: boolean
   if (matches.length === 0) return { kind: 'nothingToSend', summary };
   const { apiKey, to, from } = deps.mail;
   if (!apiKey || to.length === 0) return { kind: 'notConfigured', summary };
+  // Queued and sent now; if that fails it is tried again later, and a day's
+  // digest already sent is not queued again (a repeated cron call)
+  const store = await deps.store?.();
+  if (store) {
+    await store.enqueue([digestJob(day, email)]);
+    const outcome = (await drainQueue(store, { until: Date.now() + SEND_NOW_MS, kinds: [DIGEST] })).find(o => o.key === day);
+    if (outcome?.ok) return { kind: 'sent', summary, id: (outcome.result as { id?: string } | undefined)?.id };
+    return { kind: 'queued', summary, error: outcome?.error ?? 'Already sent for this day, or waiting to be tried again' };
+  }
   const result = await deps.send({ apiKey, from, to, ...email });
   logger.info(`[RegSonar Digest] Sent ${day} digest (Resend id ${result.id})`);
   return { kind: 'sent', summary, id: result.id };

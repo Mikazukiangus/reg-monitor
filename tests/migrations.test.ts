@@ -23,7 +23,7 @@ test('the migrations are numbered 1, 2, 3 ... in order, with names and SQL', () 
 test('a new database gets every migration once', async () => {
   const lite = new PGlite();
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), MIGRATIONS.map(m => m.version));
-  assert.deepEqual(await tables(lite), ['notice_dates', 'notice_links', 'notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
+  assert.deepEqual(await tables(lite), ['jobs', 'notice_dates', 'notice_links', 'notice_sources', 'notices', 'scheduled_checks', 'schema_migrations']);
   assert.deepEqual(await migrate(session(lite), MIGRATIONS, quiet, quiet), []);
   assert.deepEqual(await versions(lite), MIGRATIONS.map(m => m.version));
 });

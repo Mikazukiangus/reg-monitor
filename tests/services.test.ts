@@ -94,7 +94,8 @@ test('history search and lookup say when no history is set up, and read stored n
   assert.deepEqual(byId.notices.map(n => n.id), ['b']);
 
   const status = { latest: null, lastCompletedAt: null, dateBackfill: { pending: 0, unresolved: 0 } };
-  assert.deepEqual(await scheduledCheckStatus(store({ checkStatus: async () => status })), { enabled: true, ...status });
+  const queue = { waiting: 3, failed: 1 };
+  assert.deepEqual(await scheduledCheckStatus(store({ checkStatus: async () => status, jobCounts: async () => queue })), { enabled: true, ...status, queue });
 });
 
 test('a failing history is passed on to the route, which answers with its own message', async () => {

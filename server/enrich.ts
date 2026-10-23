@@ -114,6 +114,9 @@ async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg, 
   }
 }
 
+// Only key points already read: kept in this server process or stored
+export const NO_FETCHES = { maxFetches: 0, until: 0 };
+
 // Attach key points to notices that link to a document page. Fetches run one
 // at a time per source to stay polite to regulator sites. A scheduled check
 // limits how many documents it reads (and until when); later checks do the rest.

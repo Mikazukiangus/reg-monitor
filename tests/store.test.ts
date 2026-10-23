@@ -41,6 +41,12 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     stats: async () => ({ count: byId.size, since: '2026-09-01T00:00:00.000Z' }),
     saveCheck: async () => {},
     checkStatus: async () => ({ latest: null, lastCompletedAt: null, dateBackfill: { pending: 0, unresolved: 0 } }),
+    enqueue: async jobs => jobs.length,
+    claim: async () => [],
+    finishJob: async () => {},
+    failJob: async () => {},
+    pruneJobs: async () => {},
+    jobCounts: async () => ({ waiting: 0, failed: 0 }),
     ...overrides
   };
   return store;

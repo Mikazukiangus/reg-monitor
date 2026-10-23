@@ -361,3 +361,69 @@ export async function scheduledCheckStatus(db: Db) {
     dateBackfill: { pending: Number(counts?.pending || 0), unresolved: Number(counts?.unresolved || 0) }
   };
 }
+
+// Background jobs (server/queue.ts)
+export interface JobRow { id: string; kind: string; key: string; payload: any; attempts: number; maxAttempts: number }
+// once: not added when a job of the same kind and key has already been done
+export interface NewJob { kind: string; key: string; payload: unknown; maxAttempts: number; runAt?: Date; once?: boolean }
+
+// Add jobs; one already waiting with the same kind and key is left as it is
+export async function enqueueJobs(db: Db, jobs: NewJob[]): Promise<number> {
+  if (jobs.length === 0) return 0;
+  const rows = await db.query(
+    `INSERT INTO jobs (kind, key, payload, max_attempts, run_at)
+     SELECT kind, key, payload, max_attempts, COALESCE(run_at, now())
+     FROM unnest($1::text[], $2::text[], $3::jsonb[], $4::int[], $5::timestamptz[], $6::boolean[]) AS j(kind, key, payload, max_attempts, run_at, once)
+     WHERE NOT (j.once AND EXISTS (SELECT 1 FROM jobs d WHERE d.kind = j.kind AND d.key = j.key AND d.status = 'done'))
+     ON CONFLICT (kind, key) WHERE status = 'queued' DO NOTHING
+     RETURNING id`,
+    [jobs.map(j => j.kind), jobs.map(j => j.key), jobs.map(j => JSON.stringify(j.payload)), jobs.map(j => j.maxAttempts),
+      jobs.map(j => j.runAt?.toISOString() ?? null), jobs.map(j => j.once ?? false)]
+  );
+  return rows.length;
+}
+
+// Take up to `limit` jobs that are due and not taken, for leaseMs, in one
+// statement: workers on other instances skip the rows taken here
+export async function claimJobs(db: Db, limit: number, leaseMs: number, kinds?: string[]): Promise<JobRow[]> {
+  const rows = await db.query(
+    `UPDATE jobs SET locked_until = now() + make_interval(secs => $2::double precision / 1000), attempts = attempts + 1
+     WHERE id IN (
+       SELECT id FROM jobs
+       WHERE status = 'queued' AND run_at <= now() AND (locked_until IS NULL OR locked_until <= now())
+         AND ($3::text[] IS NULL OR kind = ANY($3::text[]))
+       ORDER BY run_at, id LIMIT $1
+       FOR UPDATE SKIP LOCKED)
+     RETURNING id, kind, key, payload, attempts, max_attempts`,
+    [limit, leaseMs, kinds ?? null]
+  );
+  return rows.map(r => ({ id: String(r.id), kind: r.kind, key: r.key, payload: r.payload, attempts: r.attempts, maxAttempts: r.max_attempts }));
+}
+
+export async function finishJob(db: Db, id: string): Promise<void> {
+  await db.query(`UPDATE jobs SET status = 'done', finished_at = now(), locked_until = NULL WHERE id = $1`, [id]);
+}
+
+// A failed try: run again after retryInMs, or, with null, give up
+export async function failJob(db: Db, id: string, error: string, retryInMs: number | null): Promise<void> {
+  await db.query(
+    `UPDATE jobs SET last_error = $2, locked_until = NULL,
+       status = CASE WHEN $3::double precision IS NULL THEN 'failed' ELSE status END,
+       finished_at = CASE WHEN $3::double precision IS NULL THEN now() ELSE finished_at END,
+       run_at = CASE WHEN $3::double precision IS NULL THEN run_at ELSE now() + make_interval(secs => $3::double precision / 1000) END
+     WHERE id = $1`,
+    [id, error.slice(0, 500), retryInMs]
+  );
+}
+
+// Finished jobs are kept a week, those that gave up a month
+export async function pruneJobs(db: Db): Promise<void> {
+  await db.query(`DELETE FROM jobs WHERE (status = 'done' AND finished_at < now() - interval '7 days')
+    OR (status = 'failed' AND finished_at < now() - interval '30 days')`);
+}
+
+export async function jobCounts(db: Db): Promise<{ waiting: number; failed: number }> {
+  const [row] = await db.query(`SELECT count(*) FILTER (WHERE status = 'queued') AS waiting,
+    count(*) FILTER (WHERE status = 'failed' AND finished_at > now() - interval '7 days') AS failed FROM jobs`);
+  return { waiting: Number(row?.waiting || 0), failed: Number(row?.failed || 0) };
+}

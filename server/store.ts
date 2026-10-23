@@ -5,7 +5,7 @@
 import {
   getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
-  type DateRow
+  type DateRow, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
@@ -20,6 +20,13 @@ export function toStored(notice: NormalizedNotice & { pageDateTried?: boolean })
   return stored;
 }
 
+// The fields of `after` that differ from `before`: what to patch() into a
+// stored notice, leaving what others saved meanwhile as it is
+export function changedFields(before: object, after: object): Record<string, unknown> {
+  const was = before as Record<string, unknown>;
+  return Object.fromEntries(Object.entries(after).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(was[k])));
+}
+
 // Rows hold the notice as JSON written by toStored
 const fromRow = (row: unknown) => row as StoredNotice;
 
@@ -29,7 +36,7 @@ const LOCKS = { dates: 7_301_926_144, links: 7_301_926_145 } as const;
 export type StoreLock = keyof typeof LOCKS;
 
 export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
-export type { ScheduledCheck, DateRow };
+export type { ScheduledCheck, DateRow, JobRow, NewJob };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
@@ -62,6 +69,15 @@ export interface NoticeStore {
   stats(): Promise<{ count: number; since: string | null }>;
   saveCheck(check: ScheduledCheck): Promise<void>;
   checkStatus(): Promise<CheckStatus>;
+  // Background jobs (server/queue.ts): add (one waiting per kind and key),
+  // take due ones for a while, mark done, or failed (to retry after
+  // retryInMs, or with null for good); finished ones are pruned
+  enqueue(jobs: NewJob[]): Promise<number>;
+  claim(limit: number, leaseMs: number, kinds?: string[]): Promise<JobRow[]>;
+  finishJob(id: string): Promise<void>;
+  failJob(id: string, error: string, retryInMs: number | null): Promise<void>;
+  pruneJobs(): Promise<void>;
+  jobCounts(): Promise<{ waiting: number; failed: number }>;
 }
 
 export function noticeStore(db: Db): NoticeStore {
@@ -87,7 +103,13 @@ export function noticeStore(db: Db): NoticeStore {
     undated: async limit => (await undatedNotices(db, limit)).map(fromRow),
     stats: () => archiveStats(db),
     saveCheck: check => saveScheduledCheck(db, check),
-    checkStatus: () => scheduledCheckStatus(db)
+    checkStatus: () => scheduledCheckStatus(db),
+    enqueue: jobs => enqueueJobs(db, jobs),
+    claim: (limit, leaseMs, kinds) => claimJobs(db, limit, leaseMs, kinds),
+    finishJob: id => finishJob(db, id),
+    failJob: (id, error, retryInMs) => failJob(db, id, error, retryInMs),
+    pruneJobs: () => pruneJobs(db),
+    jobCounts: () => jobCounts(db)
   };
   return store;
 }
