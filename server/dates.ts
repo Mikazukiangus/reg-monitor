@@ -48,14 +48,19 @@ export function noticeDates(n: DateFields): DateRow[] {
 }
 
 // Store the dates of notices just saved
+// (under the dates lock, so a rebuild running now does not undo them)
 export async function saveDates(notices: DateFields[], store: NoticeStore): Promise<void> {
-  await store.replaceDates(notices.flatMap(noticeDates), notices.map(n => n.id));
+  await store.exclusive('dates', s => s.replaceDates(notices.flatMap(noticeDates), notices.map(n => n.id)));
 }
 
 // Work out every stored notice's dates again and store exactly those, so a
 // change to the rules reaches the whole history; returns how many
+// The notices are read and their dates replaced under the dates lock, so
+// dates saved for a notice meanwhile wait and are written after, not deleted
 export async function rebuildDates(store: NoticeStore): Promise<number> {
-  const dates = (await store.dateFields()).flatMap(noticeDates);
-  await store.replaceDates(dates);
-  return dates.length;
+  return store.exclusive('dates', async s => {
+    const dates = (await s.dateFields()).flatMap(noticeDates);
+    await s.replaceDates(dates);
+    return dates.length;
+  });
 }

@@ -75,10 +75,14 @@ test('a check reads each source\'s stored copies once, and works out dates and l
   const { getDb } = await import('../server/db.ts');
   const db: any = (await getDb())!;
   const sent: string[] = [];
-  const query = db.query;
-  db.query = (sql: string, params?: unknown[]) => { sent.push(sql.replace(/\s+/g, ' ').trim()); return query(sql, params); };
+  const { query, transaction } = db;
+  const watched = (run: (sql: string, params?: unknown[]) => Promise<unknown[]>) =>
+    (sql: string, params?: unknown[]) => { sent.push(sql.replace(/\s+/g, ' ').trim()); return run(sql, params); };
+  db.query = watched(query);
+  // Rebuilds run their queries inside a transaction
+  db.transaction = (fn: (tx: any) => Promise<unknown>) => transaction((tx: any) => fn({ ...tx, query: watched(tx.query) }));
   let results;
-  try { ({ results } = await pollSources()); } finally { db.query = query; }
+  try { ({ results } = await pollSources()); } finally { Object.assign(db, { query, transaction }); }
   const count = (pattern: RegExp) => sent.filter(sql => pattern.test(sql)).length;
   // Sources with nothing listed ask nothing; none reads further back now
   const listing = results.filter(r => r.read > 0).length;

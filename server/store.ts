@@ -3,7 +3,7 @@
 // that turns a notice into a stored row and back. How a stored notice is
 // shown in the feed (dates worked out again, tags) is server/history.ts's job.
 import {
-  getDb, databaseUrl, saveNotices, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
+  getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
   type DateRow
 } from './db.js';
@@ -23,12 +23,23 @@ export function toStored(notice: NormalizedNotice & { pageDateTried?: boolean })
 // Rows hold the notice as JSON written by toStored
 const fromRow = (row: unknown) => row as StoredNotice;
 
+// Transaction-level advisory locks, one for each set of rows that is worked
+// out again from the whole history (server/migrations.ts has its own)
+const LOCKS = { dates: 7_301_926_144, links: 7_301_926_145 } as const;
+export type StoreLock = keyof typeof LOCKS;
+
 export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
 export type { ScheduledCheck, DateRow };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
   save(notices: (NormalizedNotice & { pageDateTried?: boolean })[], sourceId?: string): Promise<void>;
+  // Merge these fields into a stored notice, keeping the rest as stored now
+  patch(id: string, fields: Partial<StoredNotice>): Promise<void>;
+  // Runs fn in one transaction, after anyone else holding the same lock has
+  // finished: what is read under it and written back is not changed meanwhile
+  // by another holder (server/dates.ts, server/links.ts)
+  exclusive<T>(lock: StoreLock, fn: (store: NoticeStore) => Promise<T>): Promise<T>;
   // Stored copies by id
   byIds(ids: string[]): Promise<Map<string, StoredNotice>>;
   // Published in the last `days` days, newest first, other than excludeIds
@@ -54,8 +65,16 @@ export interface NoticeStore {
 }
 
 export function noticeStore(db: Db): NoticeStore {
-  return {
+  const store: NoticeStore = {
     save: (notices, sourceId) => saveNotices(db, notices.map(toStored), sourceId),
+    patch: (id, fields) => patchNotice(db, id, fields),
+    // A database without transactions (a test's stand-in) runs fn as it is
+    exclusive: (lock, fn) => (db.transaction
+      ? db.transaction(async tx => {
+        await tx.query('SELECT pg_advisory_xact_lock($1)', [LOCKS[lock]]);
+        return fn(noticeStore(tx));
+      })
+      : fn(store)),
     byIds: async ids => new Map([...(await storedNotices(db, ids))].map(([id, row]) => [id, fromRow(row)])),
     recent: async (days, limit, excludeIds) => (await recentNotices(db, days, limit, excludeIds)).map(fromRow),
     search: async (query, limit) => (await searchNotices(db, query, limit)).map(fromRow),
@@ -70,6 +89,7 @@ export function noticeStore(db: Db): NoticeStore {
     saveCheck: check => saveScheduledCheck(db, check),
     checkStatus: () => scheduledCheckStatus(db)
   };
+  return store;
 }
 
 const stores = new WeakMap<Db, NoticeStore>();

@@ -153,9 +153,12 @@ async function backfillPageDates(until: number, store: NoticeStore | null): Prom
     if (Date.now() >= until) break;
     keyPointsCache.delete(notice.id);
     const keyPoints = await keyPointsFor(notice);
-    const updated = keyPoints ? withKeyPoints(notice, keyPoints) : { ...notice, pageDateTried: true };
+    const updated: Record<string, unknown> = keyPoints ? withKeyPoints(notice, keyPoints) : { ...notice, pageDateTried: true };
     if (updated.publishedAt) dated++;
-    await store.save([updated]);
+    // Only what reading the page changed is written, merged into the stored
+    // notice as it is now: a source may have saved it again meanwhile
+    const changed = Object.fromEntries(Object.entries(updated).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify((notice as Record<string, unknown>)[k])));
+    await store.patch(notice.id, changed);
   }
   return dated;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDialog } from '../useDialog';
 import { CustomAlertRule, RegulatoryNotice } from '../../../shared/regulatory';
 import { DEFAULT_RULES, ruleFromForm, ruleMatches } from '../../../shared/alertRules';
-import { readAlertRules, writeAlertRules } from '../../lib/preferences';
+import { onStoredChange, readAlertRules, writeAlertRules } from '../../lib/preferences';
 import { copyText } from '../../lib/urlState';
 import { useDigestInfo } from '../../hooks/useDigestInfo';
 
@@ -12,14 +12,14 @@ interface AlertRulesScreenProps {
 
 export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) => {
   const [rules, setRulesState] = useState<CustomAlertRule[]>(() => readAlertRules());
-  const setRules = (update: CustomAlertRule[] | ((prev: CustomAlertRule[]) => CustomAlertRule[])) => {
-    setRulesState(prev => {
-      const next = typeof update === 'function' ? update(prev) : update;
-      // When not saved, the rules still work until the tab is closed
-      writeAlertRules(next);
-      return next;
-    });
+  // Changes start from the rules stored now, so one changed in another tab is
+  // kept. When not saved, the rules still work until the tab is closed.
+  const setRules = (update: CustomAlertRule[] | ((stored: CustomAlertRule[]) => CustomAlertRule[])) => {
+    const next = typeof update === 'function' ? update(readAlertRules()) : update;
+    writeAlertRules(next);
+    setRulesState(next);
   };
+  React.useEffect(() => onStoredChange(() => setRulesState(readAlertRules())), []);
   const [agencies, setAgencies] = useState('MAS, HKMA');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const createDialogRef = useDialog<HTMLDivElement>(showCreateModal, () => setShowCreateModal(false));
@@ -62,7 +62,7 @@ export const AlertRulesScreen: React.FC<AlertRulesScreenProps> = ({ notices }) =
     const newRule = ruleFromForm({ name: ruleName, agencies, minImpact, keywords });
     if (!newRule) return;
 
-    setRules([newRule, ...rules]);
+    setRules(stored => [newRule, ...stored]);
     setRuleName('');
     setKeywords('');
     setShowCreateModal(false);

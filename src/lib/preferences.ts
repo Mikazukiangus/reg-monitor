@@ -24,11 +24,26 @@ export function readBookmarks(storage?: StorageLike): RegulatoryNotice[] {
 }
 export const writeBookmarks = (notices: RegulatoryNotice[], storage?: StorageLike) => write(BOOKMARKS_KEY, notices, storage);
 
+// Another tab of this site can change the same lists at any time, so every
+// change starts from what is stored now, read and written in one go, rather
+// than from this tab's copy, which would undo the other tab's change. And
+// each tab follows changes made in the others.
+export function onStoredChange(onChange: () => void): () => void {
+  const listener = (e: StorageEvent) => { if (e.key === null || e.key.startsWith('regsonar.')) onChange(); };
+  window.addEventListener('storage', listener);
+  return () => window.removeEventListener('storage', listener);
+}
+
 // A dossier opened by an archived shared link need not be in the loaded feed.
+// `want`: whether the person asked to save or to remove it (what they saw),
+// so applying it to a list another tab has changed does not undo that change
 export function toggleNoticeBookmark(
-  saved: RegulatoryNotice[], id: string, loaded: RegulatoryNotice[], openDossier: RegulatoryNotice | null
+  saved: RegulatoryNotice[], id: string, loaded: RegulatoryNotice[], openDossier: RegulatoryNotice | null,
+  want = !saved.some(n => n.id === id)
 ): RegulatoryNotice[] {
-  if (saved.some(n => n.id === id)) return saved.filter(n => n.id !== id);
+  const isSaved = saved.some(n => n.id === id);
+  if (isSaved === want) return saved;
+  if (isSaved) return saved.filter(n => n.id !== id);
   const notice = loaded.find(n => n.id === id) ?? (openDossier?.id === id ? openDossier : undefined);
   return notice ? [...saved, notice] : saved;
 }

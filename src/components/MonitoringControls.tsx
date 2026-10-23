@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from './useDialog';
-import { readSavedViews, writeSavedViews, type SavedView } from '../lib/preferences';
+import { onStoredChange, readSavedViews, writeSavedViews, type SavedView } from '../lib/preferences';
 
 interface Props {
   query: string;
@@ -22,7 +22,10 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
     if (selected && views.find(v => v.id === selected)?.query !== query) setSelected('');
   }, [query, selected, views]);
   const dialogRef = useDialog<HTMLDivElement>(isOpen, () => setIsOpen(false));
-  const persist = (next: SavedView[]) => {
+  useEffect(() => onStoredChange(() => setViews(readSavedViews())), []);
+  // Changes start from the views stored now, so one saved in another tab is kept
+  const persist = (change: (stored: SavedView[]) => SavedView[]) => {
+    const next = change(readSavedViews());
     if (!writeSavedViews(next)) { onMessage('This browser could not save your views'); return false; }
     setViews(next);
     return true;
@@ -31,9 +34,9 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-    if (views.length >= 30) { onMessage('Remove a saved view before adding another (limit 30)'); return; }
+    if (readSavedViews().length >= 30) { onMessage('Remove a saved view before adding another (limit 30)'); return; }
     const view = { id: crypto.randomUUID(), name: trimmed, query };
-    if (persist([...views, view])) { setSelected(view.id); setIsOpen(false); onMessage('View saved on this device'); }
+    if (persist(stored => [...stored, view])) { setSelected(view.id); setIsOpen(false); onMessage('View saved on this device'); }
   };
   return <>
     <div className="bg-panel border border-line rounded-lg p-3 flex flex-wrap items-end gap-3 max-md:gap-x-2 text-[12px]">
@@ -52,7 +55,7 @@ export function MonitoringControls({ query, dateFrom, dateTo, onDates, onlySaved
         </select>
       </label>
       <button onClick={() => { setName(''); setIsOpen(true); }} className="min-h-9 px-3 border border-line rounded text-accent hover:bg-wash">Save view</button>
-      {selected && <button onClick={() => { if (persist(views.filter(v => v.id !== selected))) setSelected(''); }} className="min-h-9 text-muted hover:text-ink" aria-label="Remove selected saved view">Remove view</button>}
+      {selected && <button onClick={() => { if (persist(stored => stored.filter(v => v.id !== selected))) setSelected(''); }} className="min-h-9 text-muted hover:text-ink" aria-label="Remove selected saved view">Remove view</button>}
       <p className="w-full text-[11px] text-muted">Dates filter the loaded feed and search results. Saved notices and views stay on this device.</p>
     </div>
     {isOpen && <div className="fixed inset-0 z-[80] bg-black/50 p-4 flex items-center justify-center">

@@ -24,8 +24,10 @@ const notice = (id: string, fields: Partial<NormalizedNotice> = {}): NormalizedN
 // A store held in memory; each method can be replaced
 function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {}): NoticeStore {
   const byId = new Map(rows.map(r => [r.id, r]));
-  return {
+  const store: NoticeStore = {
     save: async notices => notices.forEach(n => byId.set(n.id, toStored(n))),
+    patch: async (id, fields) => { if (byId.has(id)) byId.set(id, { ...byId.get(id)!, ...fields }); },
+    exclusive: (_lock, fn) => fn(store),
     byIds: async ids => new Map(ids.flatMap(id => (byId.has(id) ? [[id, byId.get(id)!] as const] : []))),
     recent: async () => [...byId.values()],
     search: async () => [],
@@ -41,6 +43,7 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     checkStatus: async () => ({ latest: null, lastCompletedAt: null, dateBackfill: { pending: 0, unresolved: 0 } }),
     ...overrides
   };
+  return store;
 }
 
 test('a stored notice leaves out what is worked out when it is read back', () => {

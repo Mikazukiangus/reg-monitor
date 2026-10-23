@@ -9,16 +9,23 @@ import type { NoticeStore } from './store.js';
 import type { NormalizedNotice } from './notice.js';
 
 // Link notices just saved to the stored consultations or outcomes they match
+// (under the links lock, so a rebuild running now does not delete them)
 export async function linkSaved(notices: NormalizedNotice[], store: NoticeStore): Promise<void> {
   const linkable = notices.filter(n => isConclusion(n.title) || isConsultation(n));
   if (linkable.length === 0) return;
-  const candidates = await store.linkCandidates([...new Set(linkable.map(n => n.regulator))]);
-  await store.addLinks(linkPairs(candidates, new Set(linkable.map(n => n.id))));
+  await store.exclusive('links', async s => {
+    const candidates = await s.linkCandidates([...new Set(linkable.map(n => n.regulator))]);
+    await s.addLinks(linkPairs(candidates, new Set(linkable.map(n => n.id))));
+  });
 }
 
-// Match the whole history again and store exactly those links; returns how many
+// Match the whole history again and store exactly those links; returns how
+// many. Read and replaced under the links lock, so links added meanwhile for
+// a newly saved notice wait and are written after, not deleted.
 export async function relinkAll(store: NoticeStore): Promise<number> {
-  const links = linkPairs(await store.linkCandidates());
-  await store.replaceLinks(links);
-  return links.length;
+  return store.exclusive('links', async s => {
+    const links = linkPairs(await s.linkCandidates());
+    await s.replaceLinks(links);
+    return links.length;
+  });
 }

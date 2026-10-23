@@ -11,6 +11,8 @@ import { CircuitBreaker, CircuitOpenError } from './breaker.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
+  // Runs fn on one connection inside BEGIN ... COMMIT (ROLLBACK if it throws)
+  transaction?<T>(fn: (tx: Db) => Promise<T>): Promise<T>;
 }
 
 let dbPromise: Promise<Db | null> | null = null;
@@ -39,7 +41,10 @@ async function connect(url: string): Promise<Db> {
     const pgliteModule = '@electric-sql/pglite';
     const { PGlite } = await import(pgliteModule);
     const lite = new PGlite();
-    db = { query: async (sql, params) => (await lite.query(sql, params as any[])).rows };
+    db = {
+      query: async (sql, params) => (await lite.query(sql, params as any[])).rows,
+      transaction: fn => lite.transaction((tx: any) => fn({ query: async (sql, params) => (await tx.query(sql, params as any[])).rows }))
+    };
     await migrate({ exec: async sql => { await lite.exec(sql); }, query: db.query });
   } else {
     // A small pool: each serverless instance handles a few requests at a time.
@@ -53,7 +58,25 @@ async function connect(url: string): Promise<Db> {
       connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs,
       connectionTimeoutMillis: config.database.connectTimeoutMs, query_timeout: config.database.queryTimeoutMs
     });
-    db = { query: (sql, params) => databaseBreaker.run(async () => (await pool.query(sql, params as any[])).rows, databaseJudge) };
+    db = {
+      query: (sql, params) => databaseBreaker.run(async () => (await pool.query(sql, params as any[])).rows, databaseJudge),
+      transaction: fn => databaseBreaker.run(async () => {
+        const client = await pool.connect();
+        let broken = false;
+        try {
+          await client.query('BEGIN');
+          const result = await fn({ query: async (sql, params) => (await client.query(sql, params as any[])).rows });
+          await client.query('COMMIT');
+          return result;
+        } catch (err) {
+          // A connection that cannot even roll back is closed, not reused
+          await client.query('ROLLBACK').catch(() => { broken = true; });
+          throw err;
+        } finally {
+          client.release(broken);
+        }
+      }, databaseJudge)
+    };
     // The schema's changes (server/migrations.ts), on one connection of the pool
     const client = await pool.connect().catch(async err => { await pool.end().catch(() => {}); throw err; });
     try {
@@ -106,6 +129,9 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
   // an id listed twice would lose its whole batch: the first copy is kept
   const seen = new Set<string>();
   notices = notices.filter(n => !seen.has(n.id) && !!seen.add(n.id));
+  // Saved in id order, so two saves at once that share notices lock their
+  // rows in the same order and cannot deadlock
+  notices.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   for (let i = 0; i < notices.length; i += 50) {
     const batch = notices.slice(i, i + 50);
     const values: unknown[] = [];
@@ -142,6 +168,21 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
       values
     );
   }
+}
+
+// Merge fields into a stored notice in one statement, so what others saved
+// meanwhile (its title, its sources) is kept rather than overwritten by an
+// older copy. A date (publishedAt, with issuedTimeAgo) is set only when the
+// notice still has none.
+export async function patchNotice(db: Db, id: string, fields: Record<string, unknown>): Promise<void> {
+  const { publishedAt, issuedTimeAgo, ...rest } = fields;
+  await db.query(
+    `UPDATE notices SET
+       data = data || $2::jsonb || CASE WHEN published_at IS NULL AND $3::timestamptz IS NOT NULL THEN $4::jsonb ELSE '{}'::jsonb END,
+       published_at = COALESCE(published_at, $3::timestamptz)
+     WHERE id = $1`,
+    [id, JSON.stringify(rest), publishedAt ?? null, JSON.stringify({ publishedAt, issuedTimeAgo })]
+  );
 }
 
 const rowToNotice = (row: { data: any }) => (typeof row.data === 'string' ? JSON.parse(row.data) : row.data);
