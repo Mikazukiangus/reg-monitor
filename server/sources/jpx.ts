@@ -2,6 +2,7 @@ import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Japan Exchange Group rule revisions: one dated table per exchange, each
 // row linking to an English outline of the change (PDF)
@@ -40,7 +41,7 @@ export async function fetchJpxRuleRevisions(limit = 4): Promise<NormalizedNotice
     })
   );
   const rows = pages.flatMap(p => (p.status === 'fulfilled' ? p.value : []));
-  if (rows.length === 0) throw new Error('No rule revisions could be read from JPX');
+  if (rows.length === 0) throw new SourceError('No rule revisions could be read from JPX');
   return rows
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, limit)

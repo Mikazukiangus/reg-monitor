@@ -21,7 +21,12 @@ let dbPromise: Promise<Db | null> | null = null;
 // rather than every request waiting out the connection limit. An error the
 // database itself reports (bad SQL, a constraint) shows it is up.
 const databaseBreaker = new CircuitBreaker('The history database', config.breaker.failures, config.breaker.databaseCooldownMs);
-const databaseJudge = { error: (err: any) => (err instanceof pg.DatabaseError ? undefined : String(err?.code ?? err?.message ?? 'failed')) };
+// The reason it names is shown to visitors (a check's summary), so it is an
+// error code or a fixed phrase, never the driver's message
+const databaseJudge = {
+  error: (err: any) => (err instanceof pg.DatabaseError ? undefined
+    : typeof err?.code === 'string' ? err.code : /timeout/i.test(String(err?.message)) ? 'timed out' : 'connection failed')
+};
 
 export function databaseUrl(): string | undefined {
   return config.database.url;

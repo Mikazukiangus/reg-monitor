@@ -1,6 +1,7 @@
 import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Japan Financial Services Agency English "What's New" RSS feed. Titles are
 // "Category,Title". Press conference transcripts and the weekly newsletter
@@ -15,7 +16,7 @@ export async function fetchJfsaNews(limit = 4): Promise<NormalizedNotice[]> {
 export function parseJfsaNews(xml: string, limit = 4): NormalizedNotice[] {
   const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
-    throw new Error('Response was not an RSS feed');
+    throw new SourceError('Response was not an RSS feed');
   }
   const items = parsed.rss.channel.item || [];
 

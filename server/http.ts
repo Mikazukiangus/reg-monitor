@@ -6,6 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { BlockedAddressError, publicOnly } from './ssrf.js';
 import { isPassingNetworkError, retryAfterMs, withRetry } from './retry.js';
 import { CircuitBreaker } from './breaker.js';
+import { SourceError } from './errors.js';
 
 export const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -28,7 +29,7 @@ const RATE_LIMIT_PAUSE_MS = config.ingestion.rateLimitPauseMs;
 const hostQueue = new Map<string, Promise<void>>();
 const hostPausedUntil = new Map<string, number>();
 
-export class RateLimitedError extends Error {}
+export class RateLimitedError extends SourceError {}
 
 // A POST, for the one source (the ICO) whose page asks its search service that
 // way. readOnly marks a POST that only reads, so it may be tried again like a GET.
@@ -37,7 +38,7 @@ type PostRequest = { method: 'POST'; body: string; contentType: string; readOnly
 // Regulator sites are read over HTTPS only: a plain-HTTP address is refused,
 // and so is a reply that a redirect brought from one, so nothing is read that
 // could have been changed on the way
-export class InsecureUrlError extends Error {}
+export class InsecureUrlError extends SourceError {}
 
 // A site's gateway briefly unable to reach the site
 const PASSING_STATUSES = new Set([502, 503, 504]);
@@ -121,7 +122,7 @@ async function fetchOnce(url: string, host: string, post?: PostRequest): Promise
 export async function fetchOrThrow(url: string, post?: PostRequest): Promise<globalThis.Response> {
   const res = await politeFetch(url, post);
   if (!res.ok) {
-    throw new Error(httpStatusText(url, res));
+    throw new SourceError(httpStatusText(url, res));
   }
   return res;
 }
@@ -172,7 +173,7 @@ export async function readLimitedBytes(res: globalThis.Response, maxBytes: numbe
 export async function rssItems(url: string): Promise<any[]> {
   const parsed = xmlParser.parse(await (await fetchOrThrow(url)).text());
   if (!parsed.rss?.channel) {
-    throw new Error('Response was not an RSS feed');
+    throw new SourceError('Response was not an RSS feed');
   }
   const items = parsed.rss.channel.item || [];
   return Array.isArray(items) ? items : [items];

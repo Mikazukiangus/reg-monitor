@@ -5,6 +5,7 @@ import { config } from '../runtime-config.js';
 import { openStore, type NoticeStore, type ScheduledCheck, type StoreArg } from './store.js';
 import { randomUUID } from 'crypto';
 import { describeError } from './http.js';
+import { publicError } from './errors.js';
 import type { NormalizedNotice } from './notice.js';
 import { SOURCES } from './sources/index.js';
 import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints } from './enrich.js';
@@ -65,8 +66,9 @@ export async function refreshSource(source: (typeof SOURCES)[number]): Promise<S
         await archiveNotices(notices, source.id);
       })
       .catch((err) => {
-        s.error = describeError(err);
-        logger.info(`[RegSonar Feed Sentinel] ${source.name} failed: ${s.error}`);
+        // Visitors see only a message written for them; the log has the detail
+        s.error = publicError(err);
+        logger.info(`[RegSonar Feed Sentinel] ${source.name} failed: ${describeError(err)}`);
       })
       .finally(() => {
         s.inFlight = undefined;
@@ -173,7 +175,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
       Promise.allSettled(SOURCES.map(s => pollSource(s, until, store))),
       backfillPageDates(until, store).catch((err: any) => {
         logger.warn('[RegSonar History] Could not backfill page dates', err);
-        pageDateError = describeError(err);
+        pageDateError = publicError(err);
         return 0;
       })
     ]);
@@ -181,7 +183,10 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
     const failed: { name: string; error: string }[] = [];
     settled.forEach((r, i) => {
       if (r.status === 'fulfilled') results.push(r.value);
-      else failed.push({ name: SOURCES[i].name, error: describeError(r.reason) });
+      else {
+        logger.info(`[RegSonar Poll] ${SOURCES[i].name} failed: ${describeError(r.reason)}`);
+        failed.push({ name: SOURCES[i].name, error: publicError(r.reason) });
+      }
     });
     if (pageDateError) failed.push({ name: 'Publication date backfill', error: pageDateError });
     // Every consultation link, matched again over the whole history
@@ -192,7 +197,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
         logger.info(`[RegSonar History] ${links} consultation links`);
       } catch (err: any) {
         logger.warn('[RegSonar History] Could not rebuild consultation links', err);
-        failed.push({ name: 'Consultation links', error: describeError(err) });
+        failed.push({ name: 'Consultation links', error: publicError(err) });
       }
     }
     // Every notice's dates, worked out again over the whole history
@@ -203,7 +208,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
         logger.info(`[RegSonar History] ${dates} notice dates`);
       } catch (err: any) {
         logger.warn('[RegSonar History] Could not rebuild notice dates', err);
-        failed.push({ name: 'Notice dates', error: describeError(err) });
+        failed.push({ name: 'Notice dates', error: publicError(err) });
       }
     }
     const summary = { sources: results.map(({ notices: _notices, ...r }) => r), failed, pageDatesFound, links, dates };
@@ -211,7 +216,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
     return { results, failed, pageDatesFound, links, dates };
   } catch (error) {
     await record({ ...check, completedAt: new Date().toISOString(), status: 'failed',
-      summary: { sources: [], failed: [{ name: 'Scheduled check', error: describeError(error) }], pageDatesFound: 0 } });
+      summary: { sources: [], failed: [{ name: 'Scheduled check', error: publicError(error) }], pageDatesFound: 0 } });
     throw error;
   }
 }

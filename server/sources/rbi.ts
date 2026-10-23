@@ -1,6 +1,7 @@
 import { rssItems } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Reserve Bank of India: its notifications (the circulars and directions it
 // sends to banks and other regulated entities) and its press releases, from
@@ -36,7 +37,7 @@ export async function fetchRbiPressReleases(limit = 4): Promise<NormalizedNotice
 function rbiNotice(item: any, type: string, idPrefix: string, idParam: string, ref: string): NormalizedNotice {
   const link = String(item.link);
   const number = new URL(link).searchParams.get(idParam);
-  if (!number) throw new Error(`No ${idParam} to name a notice by in ${link}`);
+  if (!number) throw new SourceError(`No ${idParam} to name a notice by in ${link}`);
   const title = stripHtml(String(item.title));
   const format = formatOf(type, title);
   const sector = sectorOf(title);

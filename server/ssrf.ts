@@ -9,13 +9,9 @@
 import { BlockList, isIP } from 'node:net';
 import { lookup } from 'node:dns/promises';
 import { Agent, buildConnector } from 'undici';
+import { SourceError } from './errors.js';
 
-export class BlockedAddressError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'BlockedAddressError';
-  }
-}
+export class BlockedAddressError extends SourceError {}
 
 // Ranges that are not on the public internet (IANA special-purpose registries)
 const IPV4_BLOCKED: [string, number][] = [

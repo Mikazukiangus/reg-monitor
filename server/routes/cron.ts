@@ -23,8 +23,12 @@ export function cronRefusal(secret: string | undefined, authorization: string, w
 export function cronAuthorized(req: Request, res: Response, what: string): boolean {
   const refusal = cronRefusal(config.digest.cronSecret, req.get('authorization') ?? '', what);
   if (!refusal) return true;
-  if (refusal.status === 503 && config.digest.cronSecret) logger.warn(`[RegSonar] ${refusal.error}; replace it with at least ${MIN_CRON_SECRET_LENGTH} random characters`);
-  res.status(refusal.status).json({ success: false, error: refusal.error });
+  // Why a job is turned off goes to the log only: the reply must not tell a
+  // caller without the secret that it is missing or short
+  if (refusal.status === 503) {
+    logger.warn(`[RegSonar] ${refusal.error}${config.digest.cronSecret ? `; replace it with at least ${MIN_CRON_SECRET_LENGTH} random characters` : ''}`);
+  }
+  res.status(refusal.status).json({ success: false, error: refusal.status === 503 ? 'Scheduled jobs are unavailable' : refusal.error });
   return false;
 }
 

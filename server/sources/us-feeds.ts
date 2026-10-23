@@ -4,6 +4,7 @@ import { fetchOrThrow, rssItems } from '../http.js';
 import type { NormalizedNotice } from '../notice.js';
 import { plainText, toIso, lastPathPart } from '../text.js';
 import { aiNotice, topicNotice } from './topics.js';
+import { SourceError } from '../errors.js';
 
 // RSS feeds of US agencies and states with AI rules. Their feeds cover all
 // their work, so only items about AI rules are kept (a regulator whose every
@@ -51,10 +52,10 @@ export async function fetchColoradoAiRulemaking(): Promise<NormalizedNotice[]> {
 // are left out of the feed as copies of the same document but stay in the history.
 export function parseColoradoAiRulemaking(pages: any): NormalizedNotice[] {
   // A page that moved or went would otherwise look like a quiet week
-  if (!Array.isArray(pages) || pages.length === 0) throw new Error('Rulemaking page not found');
+  if (!Array.isArray(pages) || pages.length === 0) throw new SourceError('Rulemaking page not found');
   const page = pages[0];
   const changedAt = toIso(`${page.modified_gmt}Z`);
-  if (!changedAt || !page.link) throw new Error('Rulemaking page has no date or link');
+  if (!changedAt || !page.link) throw new SourceError('Rulemaking page has no date or link');
   return [aiNotice({
     id: `coag-ai-rulemaking-${String(page.modified_gmt).replace(/\D/g, '')}`,
     ref: `Colorado AG rulemaking page, updated ${changedAt.slice(0, 10)}`,

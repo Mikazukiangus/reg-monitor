@@ -125,9 +125,13 @@ export function useFeedSync(onMessage: (message: string) => void) {
       if (status) {
         // Keep the last sync summary; status probes don't fetch notices
         setEndpoints(prev => status.map(ep => ({ ...ep, sync: prev.find(p => p.id === ep.id)?.sync })));
+      } else {
+        onMessage('Could not check the endpoints; the statuses shown are from the last check');
       }
     } catch (err) {
       browserLogger.warn('[RegSonar] Endpoint ping note:', err);
+      // Offline is already shown
+      if (navigator.onLine !== false) onMessage('Could not check the endpoints; the statuses shown are from the last check');
     } finally {
       setIsPinging(false);
     }

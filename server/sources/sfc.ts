@@ -1,6 +1,7 @@
 import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Hong Kong Securities and Futures Commission official RSS feeds (RSS 2.0)
 export const SFC_RSS = 'https://www.sfc.hk/en/RSS-Feeds';
@@ -21,7 +22,7 @@ async function fetchSfcRss(feed: SfcFeed, limit = feed.limit): Promise<Normalize
 export function parseSfcRss(xml: string, feed: SfcFeed, limit = feed.limit): NormalizedNotice[] {
   const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
-    throw new Error('Response was not an RSS feed');
+    throw new SourceError('Response was not an RSS feed');
   }
   const items = parsed.rss.channel.item || [];
 

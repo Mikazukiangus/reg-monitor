@@ -60,12 +60,14 @@ test('notices by id are asked for 50 at a time, and a failed batch stops after t
   assert.deepEqual(batches, [['a']]);
 });
 
-test('history search encodes the text and gives null when the server has no answer', async () => {
+test('history search encodes the text, and fails rather than finding nothing when the server has no answer', async () => {
   const calls = stubFetch(() => json({ notices: [notice('x')] }));
-  assert.deepEqual((await searchHistory('AI & data'))?.map(n => n.id), ['x']);
+  assert.deepEqual((await searchHistory('AI & data')).map(n => n.id), ['x']);
   assert.equal(calls[0].url, '/api/notices/search?q=AI%20%26%20data');
   stubFetch(() => new Response('', { status: 503 }));
-  assert.equal(await searchHistory('AI'), null);
+  await assert.rejects(searchHistory('AI'), /HTTP 503/);
+  stubFetch(() => json({ success: true }));
+  await assert.rejects(searchHistory('AI'), /no notices/);
 });
 
 test('scheduled checks fail when the server says it could not read them', async () => {
@@ -79,7 +81,7 @@ test('search and by-id replies are checked like the feed: notices that cannot be
   const replied = { notices: [notice('ok'), { id: 'bare' }, notice('js', { dossierUrl: 'javascript:alert(1)' })] };
   stubFetch(() => json(replied));
   const found = await searchHistory('capital');
-  assert.deepEqual(found?.map(n => [n.id, n.dossierUrl]), [['ok', 'https://www.mas.gov.sg/x'], ['js', undefined]]);
+  assert.deepEqual(found.map(n => [n.id, n.dossierUrl]), [['ok', 'https://www.mas.gov.sg/x'], ['js', undefined]]);
   stubFetch(() => json(replied));
   assert.deepEqual((await noticesById(['ok', 'bare', 'js'])).map(n => n.id), ['ok', 'js']);
 });

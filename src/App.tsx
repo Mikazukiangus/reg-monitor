@@ -69,7 +69,7 @@ export default function App() {
 
   // Bookmarks, older notices the history search found, and a notice named in the URL
   const { savedNotices, bookmarkedIds, toggleBookmark } = useBookmarks({ notices, hasSynced, onlySaved, onMessage: showToast });
-  const { historyMatches, historyMatchIds } = useHistorySearch(searchText, archive);
+  const { historyMatches, historyMatchIds } = useHistorySearch(searchText, archive, showToast);
   const { pendingNoticeId, setPendingNoticeId } = useLinkedNotice(initialView.noticeId, {
     notices, savedNotices, hasSynced, onFound: setActiveNoticeForDossier, onMessage: showToast
   });

@@ -2,7 +2,8 @@
 // reported as it was (HTTP status, firewall or maintenance pages, timeouts).
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
-import { politeFetch, httpStatusText, RateLimitedError, FETCH_TIMEOUT_MS } from './http.js';
+import { politeFetch, httpStatusText, RateLimitedError, describeError } from './http.js';
+import { publicError } from './errors.js';
 import { type EndpointDefinition, ENDPOINTS } from './sources/index.js';
 
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
@@ -48,10 +49,9 @@ async function probeEndpoint(ep: EndpointDefinition) {
     if (err instanceof RateLimitedError) {
       return { ...ep, status: 'Degraded' as EndpointStatus, statusCode: 429, pingMs: null, detail: logger.errorMessage(err) };
     }
-    const detail = err?.name === 'TimeoutError'
-      ? `Timed out after ${FETCH_TIMEOUT_MS / 1000}s`
-      : logger.errorMessage(err?.cause?.code || err);
-    return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail };
+    // Visitors see only a message written for them; the log has the detail
+    logger.info(`[RegSonar] Status check of ${ep.name} failed: ${describeError(err)}`);
+    return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail: publicError(err) };
   }
 }
 

@@ -3,6 +3,7 @@
 import { createHash } from 'crypto';
 import { htmlToText } from './extract.js';
 import type { NormalizedNotice } from './notice.js';
+import { SourceError } from './errors.js';
 
 export function toIso(dateString: string | undefined): string | undefined {
   if (!dateString) return undefined;
@@ -31,7 +32,7 @@ export function zonedToIso(local: string, timeZone: string): string | undefined 
 export function lastPathPart(url: string): string {
   const { pathname, search } = new URL(url);
   const part = pathname.split('/').filter(Boolean).pop()?.replace(/\.\w+$/, '') || search.slice(1).replace(/[^\w-]+/g, '-');
-  if (!part) throw new Error(`No path or query to name a notice by in ${url}`);
+  if (!part) throw new SourceError(`No path or query to name a notice by in ${url}`);
   return part;
 }
 

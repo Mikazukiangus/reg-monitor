@@ -85,11 +85,13 @@ export const MAX_SEARCH_LENGTH = 200;
 
 // Stored notices matching the search text (those that can be shown, with
 // only safe links); null when the server gave none
-export async function searchHistory(query: string, signal?: AbortSignal): Promise<RegulatoryNotice[] | null> {
+// Throws when the search fails, so a failure is not mistaken for no matches
+export async function searchHistory(query: string, signal?: AbortSignal): Promise<RegulatoryNotice[]> {
   const res = await fetch(`/api/notices/search?q=${encodeURIComponent(query.trim().slice(0, MAX_SEARCH_LENGTH))}`, { signal: within(WAIT_MS.read, signal) });
-  if (!res.ok) return null;
+  if (!res.ok) throw new Error(`History search returned HTTP ${res.status}`);
   const data = await res.json();
-  return Array.isArray(data.notices) ? shownNotices(data.notices) : null;
+  if (!Array.isArray(data.notices)) throw new Error('History search reply has no notices');
+  return shownNotices(data.notices);
 }
 
 // The server looks up at most this many notices per request

@@ -1,6 +1,7 @@
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor, formatOf } from '../notice.js';
 import { zonedToIso, stripHtml, sourceClosingDate } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Search the MAS website's search API (behind mas.gov.sg/news). It is
 // undocumented, and MAS serves a "Maintenance" page to non-browser user
@@ -14,7 +15,7 @@ async function searchMas(contentTypes: string[], limit: number): Promise<any> {
   params.append('wt', 'json');
   const res = await fetchOrThrow(`https://www.mas.gov.sg/api/v1/search?${params}`);
   if (!res.headers.get('content-type')?.includes('json')) {
-    throw new Error('MAS returned a non-JSON page (possibly maintenance or bot filtering)');
+    throw new SourceError('MAS returned a non-JSON page (possibly maintenance or bot filtering)');
   }
   return res.json();
 }

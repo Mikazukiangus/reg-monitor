@@ -6,7 +6,7 @@ import { noticesById, searchHistory } from '../api/client';
 import { RegulatoryNotice } from '../../shared/regulatory';
 import type { ArchiveStatus } from './useFeedSync';
 
-export function useHistorySearch(searchText: string, archive: ArchiveStatus) {
+export function useHistorySearch(searchText: string, archive: ArchiveStatus, onMessage: (message: string) => void) {
   // Older notices found by searching the history, by search text
   const [archiveResults, setArchiveResults] = useState<{ query: string; notices: RegulatoryNotice[] } | null>(null);
 
@@ -19,8 +19,8 @@ export function useHistorySearch(searchText: string, archive: ArchiveStatus) {
     const controller = new AbortController();
     const timer = setTimeout(() => {
       searchHistory(searchText, controller.signal)
-        .then(found => found && setArchiveResults({ query: searchText, notices: found }))
-        .catch(() => {});
+        .then(found => setArchiveResults({ query: searchText, notices: found }))
+        .catch(() => { if (!controller.signal.aborted) onMessage('History search failed; showing matches from the live feed only'); });
     }, 400);
     return () => {
       clearTimeout(timer);

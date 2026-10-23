@@ -1,6 +1,7 @@
 import { fetchOrThrow, xmlParser } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, toIso } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Routine market-operation releases that are not regulatory notices
 const HKMA_ROUTINE_RELEASE = /tender (results|information)|exchange fund (bills|notes)|government bonds?\b|institutional bonds|monetary statistics/i;
@@ -28,7 +29,7 @@ async function fetchHkmaRss(feed: HkmaFeed, limit = feed.limit): Promise<Normali
 export function parseHkmaRss(xml: string, feed: HkmaFeed, limit = feed.limit): NormalizedNotice[] {
   const parsed = xmlParser.parse(xml);
   if (!parsed.rss?.channel) {
-    throw new Error('Response was not an RSS feed');
+    throw new SourceError('Response was not an RSS feed');
   }
   const items = parsed.rss.channel.item || [];
 

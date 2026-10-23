@@ -57,8 +57,14 @@ export async function runScheduledCheck(store: StoreArg = openStore()) {
   const added = results.reduce((sum, r) => sum + r.added, 0);
   logger.info(`[RegSonar Poll] ${added} new notices from ${results.length} sources${failed.length ? `; could not read ${failed.map(f => f.name).join(', ')}` : ''}`);
   const warmed = await fetch(`${config.digest.siteUrl}/api/feeds/sync`, { signal: AbortSignal.timeout(config.polling.warmTimeoutMs) })
-    .then(r => r.ok)
-    .catch(() => false);
+    .then(r => {
+      if (!r.ok) logger.warn(`[RegSonar Poll] The feed was not refreshed: HTTP ${r.status}`);
+      return r.ok;
+    })
+    .catch((err: any) => {
+      logger.warn('[RegSonar Poll] The feed was not refreshed', err);
+      return false;
+    });
   return {
     added,
     pageDatesFound,

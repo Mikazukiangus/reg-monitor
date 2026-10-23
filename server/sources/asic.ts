@@ -1,6 +1,7 @@
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { zonedToIso, stripHtml } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // ASIC has no RSS feed. Its media releases page is filled in from this JSON
 // file on ASIC's own download server, which is read here in the same way.
@@ -13,7 +14,7 @@ export async function fetchAsicMediaReleases(limit = 4): Promise<NormalizedNotic
 // The newest `limit` releases in ASIC's JSON file
 export function parseAsicMediaReleases(items: unknown, limit = 4): NormalizedNotice[] {
   if (!Array.isArray(items)) {
-    throw new Error('ASIC media releases file was not a list');
+    throw new SourceError('ASIC media releases file was not a list');
   }
 
   return items

@@ -3,6 +3,7 @@ import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso, lastPathPart, sourceClosingDate, shortHash } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // ASX public consultations: a dated table on ASX's consultations page. Each
 // entry says what ASX published and, for consultations, when submissions close.
@@ -29,7 +30,7 @@ export function parseAsxConsultations(html: string): { date: string; text: strin
 
 export async function fetchAsxConsultations(limit = 3): Promise<NormalizedNotice[]> {
   const rows = parseAsxConsultations(await (await fetchOrThrow(ASX_CONSULTATIONS_PAGE)).text());
-  if (rows.length === 0) throw new Error('No consultation table found on the ASX page');
+  if (rows.length === 0) throw new SourceError('No consultation table found on the ASX page');
   return rows
     .filter(row => !/^On \w+day[^,]*,[^.]*\b(recording|webinar|briefing|forum)\b|^ASX has made available a recording/i.test(row.text))
     .slice(0, limit)

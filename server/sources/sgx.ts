@@ -2,6 +2,7 @@ import { htmlToText } from '../extract.js';
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor, formatOf } from '../notice.js';
 import { stripHtml, sourceClosingDate, singaporeDay } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Singapore Exchange Regulation (SGX RegCo). Its pages are filled in from SGX's
 // own content API, which the server reads directly: the lists of public
@@ -15,7 +16,7 @@ async function sgxQuery(name: string, variables: Record<string, unknown>): Promi
   const params = new URLSearchParams({ queryId: `${SGX_QUERY_ID}:${name}`, variables: JSON.stringify({ ...variables, lang: 'EN' }) });
   const res = await fetchOrThrow(`${SGX_CONTENT_API}?${params}`);
   const body = await res.json();
-  if (body.errors?.length) throw new Error(`SGX content API: ${String(body.errors[0].message).slice(0, 80)}`);
+  if (body.errors?.length) throw new SourceError(`SGX content API: ${String(body.errors[0].message).slice(0, 80)}`);
   return body.data;
 }
 

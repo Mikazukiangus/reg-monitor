@@ -1,6 +1,7 @@
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso, lastPathPart } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Bank Negara Malaysia: press releases, from the table on each year's press
 // release page. (BNM also has an Atom feed, but Cloudflare challenges
@@ -25,7 +26,7 @@ export async function fetchBnmPressReleases(limit = 4): Promise<NormalizedNotice
   if (releases.length < limit) {
     releases = releases.concat(parseBnmPressReleases(await (await fetchOrThrow(bnmYearPage(year - 1))).text()));
   }
-  if (releases.length === 0) throw new Error('No press releases found on the BNM page');
+  if (releases.length === 0) throw new SourceError('No press releases found on the BNM page');
   return releases.slice(0, limit).map(r => {
     const format = formatOf('', r.title);
     const sector = sectorOf(r.title);

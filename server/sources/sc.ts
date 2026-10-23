@@ -1,6 +1,7 @@
 import { fetchOrThrow } from '../http.js';
 import { type NormalizedNotice, formatOf, sectorOf, estimateImpact, getTypeColor, getRelativeTime, severityFor } from '../notice.js';
 import { stripHtml, zonedToIso, lastPathPart } from '../text.js';
+import { SourceError } from '../errors.js';
 
 // Securities Commission Malaysia: media releases. The page has no feed, but
 // carries its whole list as data (title, description, address, date), newest first.
@@ -28,7 +29,7 @@ export function parseScMediaReleases(html: string): { title: string; description
 
 export async function fetchScMediaReleases(limit = 4): Promise<NormalizedNotice[]> {
   const releases = parseScMediaReleases(await (await fetchOrThrow(SC_MEDIA_RELEASES)).text());
-  if (releases.length === 0) throw new Error('No media releases found on the SC page');
+  if (releases.length === 0) throw new SourceError('No media releases found on the SC page');
   return releases.slice(0, limit).map(r => {
     const format = formatOf('', r.title);
     const sector = sectorOf(`${r.title} ${r.description}`);

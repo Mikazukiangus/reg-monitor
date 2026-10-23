@@ -5,8 +5,10 @@
 // trial: if it works the circuit closes, if not it opens for another cooldown.
 // State is kept in memory, per server instance, like the rate limits.
 import { logger } from './logging.js';
+import { SourceError } from './errors.js';
 
-export class CircuitOpenError extends Error {}
+// Its message says which service, how it failed and when it is asked again
+export class CircuitOpenError extends SourceError {}
 
 // What a call's outcome says about the service: a failure (with its reason),
 // or undefined when it says nothing either way (an address we refused to
