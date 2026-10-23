@@ -107,7 +107,7 @@ test('bookmarks saved under a renamed sector are kept, under its new name', () =
 
 test('history endpoints retrieve archived IDs and report actual scheduled-check results', async () => {
   process.env.VERCEL = '1'; process.env.DATABASE_URL = 'pglite';
-  process.env.CRON_SECRET = 'monitoring-test-secret';
+  process.env.CRON_SECRET = 'monitoring-test-secret-of-32-chars-plus';
   const { getDb, saveNotices, storedNotices, saveScheduledCheck } = await import('../server/db.ts');
   const { createApp } = await import('../server.ts');
   const db = (await getDb())!;

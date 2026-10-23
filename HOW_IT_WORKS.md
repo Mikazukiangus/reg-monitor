@@ -99,7 +99,7 @@ These come from rules in the code, not from the regulators:
 
 A visit refreshes each source's newest 3 or 4 items, so a regulator that publishes more than that between visits, or a source added later, would otherwise have gaps. To close them:
 
-- **Scheduled check** (`/api/feeds/poll`): Vercel cron jobs call it every three hours (03:00, 06:00 … 21:00 UTC; the 00:00 digest does the same check). The Hobby plan allows each cron job to run once a day, so there are seven daily jobs at different hours, and Vercel may start each one up to an hour late. It needs `CRON_SECRET`, like the digest.
+- **Scheduled check** (`/api/feeds/poll`): Vercel cron jobs call it every three hours (03:00, 06:00 … 21:00 UTC; the 00:00 digest does the same check). The Hobby plan allows each cron job to run once a day, so there are seven daily jobs at different hours, and Vercel may start each one up to an hour late. It needs `CRON_SECRET`, like the digest: at least 32 characters (e.g. `openssl rand -hex 32`), compared in constant time; without one, or with a shorter one, both jobs are off (503, and a shorter one is logged as a warning) and the rest of the site is unaffected (`server/routes/cron.ts`, `tests/cron-auth.test.ts`).
 - It reads the newest 20 items of every source and saves them to the history. If none of those 20 is in the history yet (a new source, or more than 20 items published since the last check), it reads back 50.
 - It adds key points to up to 5 documents per source per run, newest first, so a backlog is worked through over the next few runs without hammering any site.
 - When it finishes it requests the public feed, so the copy Vercel's CDN serves visitors includes what it found.
