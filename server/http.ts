@@ -3,6 +3,7 @@
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { XMLParser } from 'fast-xml-parser';
+import { BlockedAddressError, publicOnly } from './ssrf.js';
 
 export const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -48,10 +49,16 @@ export async function politeFetch(url: string, post?: PostRequest): Promise<glob
     hostQueue.set(host, previous.then(() => new Promise<void>(resolve => setTimeout(resolve, spacing))));
     await previous;
   }
+  // Only public internet addresses, checked as each connection is made, every
+  // redirect included (server/ssrf.ts)
   const res = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     headers: { 'User-Agent': userAgentFor(url), ...(post ? { 'Content-Type': post.contentType } : {}) },
-    ...(post ? { method: post.method, body: post.body } : {})
+    ...(post ? { method: post.method, body: post.body } : {}),
+    dispatcher: publicOnly
+  } as RequestInit).catch((err: any) => {
+    // Say why, rather than fetch's own "fetch failed"
+    throw err?.cause instanceof BlockedAddressError ? err.cause : err;
   });
   if (res.url && new URL(res.url).protocol !== 'https:') {
     await res.body?.cancel().catch(() => {});
