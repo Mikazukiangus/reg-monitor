@@ -28,8 +28,17 @@ async function connect(url: string): Promise<Db> {
     db = { query: async (sql, params) => (await lite.query(sql, params as any[])).rows };
     await migrate({ exec: async sql => { await lite.exec(sql); }, query: db.query });
   } else {
-    // A small pool: each serverless instance handles a few requests at a time
-    const pool = new pg.Pool({ connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs });
+    // A small pool: each serverless instance handles a few requests at a time.
+    // Waiting for a connection (Neon may be waking up, or the pool busy) and for
+    // each query's answer are both limited, so a stuck database fails the
+    // request instead of holding it until the function's time runs out. The
+    // query limit is the client's: a query past it is reported as failed but
+    // runs on in Postgres (statement_timeout is not set, as Neon's connection
+    // pooler may refuse it as a connection setting).
+    const pool = new pg.Pool({
+      connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs,
+      connectionTimeoutMillis: config.database.connectTimeoutMs, query_timeout: config.database.queryTimeoutMs
+    });
     db = { query: async (sql, params) => (await pool.query(sql, params as any[])).rows };
     // The schema's changes (server/migrations.ts), on one connection of the pool
     const client = await pool.connect().catch(async err => { await pool.end().catch(() => {}); throw err; });

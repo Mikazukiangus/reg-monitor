@@ -7,9 +7,44 @@
 // - Notices: network first; offline, the last saved
 //   response is returned with an X-RegSonar-Saved header giving when it was saved.
 // - Google Fonts: the saved copy is used and refreshed in the background.
+// - Pages, public files and notices wait for the network at most WAIT_MS
+//   before the saved copy is used.
 const VERSION = 'regsonar-v2';
 const SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/favicon-32.png'];
 const SAVED_API = ['/api/feeds/sync'];
+// How long to wait for the network before answering with the saved copy. The
+// network request carries on, and a late answer still updates the saved copy;
+// with no saved copy the wait continues. The feed's limit is under the page's
+// own (60 seconds, src/api/client.ts), so a stalled refresh gets the saved
+// notices rather than an error.
+const WAIT_MS = { page: 10000, feed: 50000 };
+
+// The answer, or undefined once ms have passed without one
+function timeLimit(promise, ms) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => resolve(undefined), ms);
+    promise.then(
+      value => { clearTimeout(timer); resolve(value); },
+      err => { clearTimeout(timer); reject(err); }
+    );
+  });
+}
+
+// The network's answer within ms; otherwise, or when offline, the saved copy;
+// with neither, the network's answer whenever it comes (or its error)
+async function networkWithin(network, ms, cache, cacheKey) {
+  // A late failure after the saved copy was used is not an error worth reporting
+  network.catch(() => {});
+  try {
+    const response = await timeLimit(network, ms);
+    if (response) return response;
+  } catch (err) {
+    const saved = await cache.match(cacheKey);
+    if (saved) return saved;
+    throw err;
+  }
+  return (await cache.match(cacheKey)) || network;
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -25,23 +60,18 @@ self.addEventListener('activate', event => {
 
 async function networkFirst(request, cacheKey) {
   const cache = await caches.open(VERSION);
-  try {
-    const response = await fetch(request);
+  const network = fetch(request).then(async response => {
     if (response.ok) await cache.put(cacheKey, response.clone());
     return response;
-  } catch (err) {
-    const saved = await cache.match(cacheKey);
-    if (saved) return saved;
-    throw err;
-  }
+  });
+  return networkWithin(network, WAIT_MS.page, cache, cacheKey);
 }
 
 async function savedApiResponse(request, url) {
   const cache = await caches.open(VERSION);
   // One saved copy per path and query
   const cacheKey = url.pathname + url.search;
-  try {
-    const response = await fetch(request);
+  const network = fetch(request).then(async response => {
     if (response.ok) {
       const headers = new Headers(response.headers);
       headers.set('X-RegSonar-Saved', new Date().toISOString());
@@ -49,11 +79,8 @@ async function savedApiResponse(request, url) {
       await cache.put(cacheKey, new Response(body, { status: response.status, headers }));
     }
     return response;
-  } catch (err) {
-    const saved = await cache.match(cacheKey);
-    if (saved) return saved;
-    throw err;
-  }
+  });
+  return networkWithin(network, WAIT_MS.feed, cache, cacheKey);
 }
 
 async function staleWhileRevalidate(request) {

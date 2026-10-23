@@ -2,7 +2,7 @@
 // status checks, background refreshes, and the copy saved on
 // this device when offline. There is no sample data.
 import React, { useState } from 'react';
-import { fetchEndpointStatus, fetchFeed, type ArchiveStatus, type SourceSyncResult } from '../api/client';
+import { fetchEndpointStatus, fetchFeed, WAIT_MS, type ArchiveStatus, type SourceSyncResult } from '../api/client';
 import { ENDPOINT_CATALOG } from '../../shared/endpoints';
 import { browserLogger } from '../../shared/logging';
 import { sgtTime } from '../../shared/derived';
@@ -105,7 +105,9 @@ export function useFeedSync(onMessage: (message: string) => void) {
       setSyncError(`The feed server returned HTTP ${reply.status}.`);
     } catch (err) {
       browserLogger.warn('[RegSonar] Live feed sync note:', err);
-      setSyncError('The feed server could not be reached.');
+      setSyncError((err as Error)?.name === 'TimeoutError'
+        ? `The feed server did not answer within ${WAIT_MS.feed / 1000} seconds.`
+        : 'The feed server could not be reached.');
     } finally {
       setIsSyncing(false);
     }

@@ -105,7 +105,10 @@ export function createConfig(env: Environment) {
   });
   const config = {
     runtime: Object.freeze({ nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), port, host, disableHmr: boolean('DISABLE_HMR') }),
-    database: Object.freeze({ url: databaseUrl, poolMax: integer('DB_POOL_MAX', 3, 1, 100), idleTimeoutMs: integer('DB_IDLE_TIMEOUT_MS', 10_000) }),
+    database: Object.freeze({
+      url: databaseUrl, poolMax: integer('DB_POOL_MAX', 3, 1, 100), idleTimeoutMs: integer('DB_IDLE_TIMEOUT_MS', 10_000),
+      connectTimeoutMs: integer('DB_CONNECT_TIMEOUT_MS', 10_000), queryTimeoutMs: integer('DB_QUERY_TIMEOUT_MS', 30_000)
+    }),
     ingestion: Object.freeze({
       fetchTimeoutMs: integer('FETCH_TIMEOUT_MS', 8000),
       rateLimitPauseMs: integer('RATE_LIMIT_PAUSE_MS', 900_000),
