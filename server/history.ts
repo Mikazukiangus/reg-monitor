@@ -18,8 +18,9 @@ const ARCHIVE_FEED_LIMIT = config.archive.limit;
 // A stored notice as the site serves it. Document dates are worked out again
 // from the key points, so a rule change reaches the whole history; copies
 // stored before 21 October 2026 keep the regulator's date only as the label
-// they showed, which becomes sourceDates (shared/keyDate.ts).
-export const fromArchive = (stored: StoredNotice): NormalizedNotice => {
+// they showed, which becomes sourceDates (shared/keyDate.ts). The history's own
+// marks (server/store.ts) are left out.
+export const fromArchive = ({ pageDateTried: _tried, noKeyPoints: _none, ...stored }: StoredNotice): NormalizedNotice => {
   const n: NormalizedNotice = withoutLegacyDateFields({
     ...stored,
     // The current format, which tells a legacy closing date from the text from the regulator's

@@ -12,10 +12,12 @@ import type { NormalizedNotice } from './notice.js';
 
 // A notice as stored: without what is worked out when it is read back (the
 // history mark and related notices). pageDateTried marks a page read once for
-// a date it did not state.
-export type StoredNotice = Omit<NormalizedNotice, 'archived' | 'related'> & { pageDateTried?: boolean };
+// a date it did not state; noKeyPoints, a document read with too little text
+// to summarise, so it is not read again (documents don't change once published).
+export type Marks = { pageDateTried?: boolean; noKeyPoints?: boolean };
+export type StoredNotice = Omit<NormalizedNotice, 'archived' | 'related'> & Marks;
 
-export function toStored(notice: NormalizedNotice & { pageDateTried?: boolean }): StoredNotice {
+export function toStored(notice: NormalizedNotice & Marks): StoredNotice {
   const { archived: _archived, related: _related, ...stored } = notice;
   return stored;
 }
@@ -40,7 +42,7 @@ export type { ScheduledCheck, DateRow, JobRow, NewJob };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
-  save(notices: (NormalizedNotice & { pageDateTried?: boolean })[], sourceId?: string): Promise<void>;
+  save(notices: (NormalizedNotice & Marks)[], sourceId?: string): Promise<void>;
   // Merge these fields into a stored notice, keeping the rest as stored now
   patch(id: string, fields: Partial<StoredNotice>): Promise<void>;
   // Runs fn in one transaction, after anyone else holding the same lock has

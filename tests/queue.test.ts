@@ -13,6 +13,7 @@ const { getDb } = await import('../server/db.ts');
 const { openStore } = await import('../server/store.ts');
 const { drainQueue, keyPointJobs, digestJob } = await import('../server/queue.ts');
 const { refreshSource } = await import('../server/ingest.ts');
+const { enrichWithKeyPoints, keyPointsCache, keyPointsFor } = await import('../server/enrich.ts');
 const { runDigest } = await import('../server/services/digest.ts');
 type NormalizedNotice = import('../server/notice.ts').NormalizedNotice;
 
@@ -32,6 +33,9 @@ const ARTICLE = `<html><body><article><h1>Circular on liquidity risk</h1>${[
   'Banks should report their liquidity positions monthly and notify the Authority promptly of any shortfall against the minimum ratio.',
   'Comments on the proposed transition arrangements should be submitted by 30 November 2026 through the consultation portal.'
 ].map(p => `<p>${p}</p>`).join('')}</article></body></html>`;
+
+// A page with too little text to summarise
+const SHORT = '<html><body><article><h1>Circular</h1><p>See the attached notice.</p></article></body></html>';
 
 // Pages by address; anything else is a 404. Returns the addresses asked for.
 function sites(pages: Record<string, () => Response>) {
@@ -82,6 +86,36 @@ test('a refresh answers without reading documents; the queue reads them after an
   assert.equal(stored.title, 'Circular r1 on liquidity risk', 'the rest of the notice kept');
   assert.ok(asked.includes('https://www.mas.gov.sg/news/r1'));
   assert.deepEqual((await jobs()).filter(j => j.key === 'r1').map(j => j.status), ['done']);
+});
+
+test('a document with nothing to summarise is read once: marked in the history, then not queued or read again', async () => {
+  const store = (await openStore())!;
+  const asked = sites({ 'https://www.mas.gov.sg/news/short': html(SHORT) });
+  await store.save([notice('short')], 'mas-test');
+  await store.enqueue(keyPointJobs([notice('short')]));
+  const [outcome] = (await drainQueue(store, { until: Date.now() + 5000, kinds: ['key-points'] })).filter(o => o.key === 'short');
+  assert.deepEqual([outcome.ok, outcome.result], [true, 'no key points in the document']);
+  assert.equal((await store.byIds(['short'])).get('short')?.noKeyPoints, true);
+  // The source saving it again keeps the mark
+  await store.save([notice('short')], 'mas-test');
+  assert.equal((await store.byIds(['short'])).get('short')?.noKeyPoints, true);
+  // A new server instance, with nothing in memory: its refresh queues nothing,
+  // and a scheduled check's read of the source does not read the document
+  keyPointsCache.clear();
+  asked.length = 0;
+  await refreshSource({ id: 'mas-short', name: 'MAS short', fetch: async () => [notice('short')] } as any);
+  await enrichWithKeyPoints([notice('short')], { maxFetches: 5, until: Infinity }, store);
+  assert.deepEqual((await jobs()).filter(j => j.key === 'short').map(j => j.status), ['done']);
+  assert.deepEqual(asked, []);
+});
+
+test('a document read in the request with nothing to summarise is marked when saved, and not queued', async () => {
+  const store = (await openStore())!;
+  sites({ 'https://www.mas.gov.sg/news/short2': html(SHORT) });
+  assert.equal(await keyPointsFor(notice('short2')), null);
+  await refreshSource({ id: 'mas-short2', name: 'MAS short2', fetch: async () => [notice('short2')] } as any);
+  assert.equal((await store.byIds(['short2'])).get('short2')?.noKeyPoints, true);
+  assert.deepEqual((await jobs()).filter(j => j.key === 'short2'), []);
 });
 
 test('a document that cannot be read is tried again later, then given up', async () => {

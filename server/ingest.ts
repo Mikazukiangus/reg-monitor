@@ -36,7 +36,9 @@ async function archiveNotices(notices: NormalizedNotice[], sourceId: string, sto
   try {
     const store = await storeArg;
     if (!store) return;
-    await store.save(notices, sourceId);
+    // Documents read here with nothing to summarise are marked, so no other
+    // server instance reads them again
+    await store.save(notices.map(n => (!n.keyPoints && keyPointsCache.get(n.id) === null ? { ...n, noKeyPoints: true } : n)), sourceId);
     if (!relate) return;
     await saveDates(notices, store);
     await linkSaved(notices, store);

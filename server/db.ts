@@ -161,6 +161,10 @@ export async function saveNotices(db: Db, notices: StoredRow[], sourceId?: strin
            WHEN EXCLUDED.published_at IS NULL AND notices.published_at IS NOT NULL
              THEN jsonb_build_object('publishedAt', notices.data->>'publishedAt')
            ELSE '{}'::jsonb
+         END || CASE
+           WHEN notices.data ? 'noKeyPoints' AND NOT EXCLUDED.data ? 'keyPoints' AND NOT notices.data ? 'keyPoints'
+             THEN jsonb_build_object('noKeyPoints', true)
+           ELSE '{}'::jsonb
          END${sourceId ? `
        RETURNING id)
        INSERT INTO notice_sources (notice_id, source_id) SELECT id, $${values.length} FROM saved

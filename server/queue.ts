@@ -39,11 +39,15 @@ const KINDS: Record<string, Kind> = {
     run: async (job, store) => {
       const stored = (await store.byIds([job.key])).get(job.key);
       // Gone, without a document, or already done by another worker
-      if (!stored?.dossierUrl || stored.keyPoints) return 'nothing to do';
+      if (!stored?.dossierUrl || stored.keyPoints || stored.noKeyPoints) return 'nothing to do';
       const keyPoints = await keyPointsFor(stored as NormalizedNotice);
       if (!keyPoints) {
-        // Read, but too short to summarise; otherwise the read failed (logged)
-        if (keyPointsCache.has(stored.id)) return 'no key points in the document';
+        // Read, but too short to summarise: marked so it is not read again.
+        // Otherwise the read failed (logged).
+        if (keyPointsCache.has(stored.id)) {
+          await store.patch(stored.id, { noKeyPoints: true });
+          return 'no key points in the document';
+        }
         throw new Error('The document could not be read');
       }
       const updated = withKeyPoints(stored as NormalizedNotice, keyPoints);
@@ -72,9 +76,10 @@ const KINDS: Record<string, Kind> = {
 export const KEY_POINTS = 'key-points';
 export const DIGEST = 'digest';
 
-// Jobs to read the documents of these notices (saved already) for key points
+// Jobs to read the documents of these notices (saved already) for key points,
+// other than those already read with nothing to summarise
 export function keyPointJobs(notices: NormalizedNotice[]): NewJob[] {
-  return notices.filter(n => n.dossierUrl && !n.keyPoints)
+  return notices.filter(n => n.dossierUrl && !n.keyPoints && keyPointsCache.get(n.id) !== null)
     .map(n => ({ kind: KEY_POINTS, key: n.id, payload: {}, maxAttempts: KINDS[KEY_POINTS].maxAttempts }));
 }
 

@@ -96,10 +96,13 @@ export function withKeyPoints(notice: NormalizedNotice, keyPoints: KeyPoints): N
   return tagNotice(withKeyPointsUntagged(notice, keyPoints));
 }
 
+type Known = Map<string, { keyPoints?: KeyPoints; noKeyPoints?: boolean }>;
+
 // Key points already in the history, so documents are read once rather than
-// again by every new server instance. `known`: the stored copies, when the
-// caller has already read them.
-async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg, known?: Map<string, { keyPoints?: KeyPoints }>): Promise<Map<string, KeyPoints>> {
+// again by every new server instance. Documents stored as read with nothing
+// to summarise go into keyPointsCache as such. `known`: the stored copies,
+// when the caller has already read them.
+async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg, known?: Known): Promise<Map<string, KeyPoints>> {
   try {
     let stored = known;
     if (!stored) {
@@ -107,6 +110,7 @@ async function storedKeyPoints(notices: NormalizedNotice[], storeArg: StoreArg, 
       if (!store) return new Map();
       stored = await store.byIds(notices.map(n => n.id));
     }
+    for (const [id, n] of stored) if (n.noKeyPoints && !n.keyPoints && !keyPointsCache.has(id)) keyPointsCache.set(id, null);
     return new Map([...stored].flatMap(([id, n]) => (n.keyPoints ? [[id, n.keyPoints] as const] : [])));
   } catch (err: any) {
     logger.warn('[RegSonar History] Could not read stored key points', err);
@@ -124,7 +128,7 @@ export async function enrichWithKeyPoints(
   notices: NormalizedNotice[],
   budget: { maxFetches: number; until: number } = { maxFetches: Infinity, until: Infinity },
   store: StoreArg = openStore(),
-  known?: Map<string, { keyPoints?: KeyPoints }>
+  known?: Known
 ): Promise<NormalizedNotice[]> {
   const stored = await storedKeyPoints(notices, store, known);
   const enriched: NormalizedNotice[] = [];
