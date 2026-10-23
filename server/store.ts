@@ -6,7 +6,7 @@ import {
   getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
   type DateRow, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob,
-  readCache, writeCache, pruneCache
+  readCache, writeCache, pruneCache, countHit, pruneHits
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
@@ -86,6 +86,10 @@ export interface NoticeStore {
   cached(keys: string[], maxAgeMs: number): Promise<Map<string, { value: unknown; at: number }>>;
   cache(entries: [string, unknown][]): Promise<void>;
   pruneCache(): Promise<void>;
+  // Rate limits counted across instances (server/rate-limits.ts): count a
+  // request in the current window, and remove ended windows
+  countHit(key: string, windowMs: number): Promise<{ hits: number; resetInMs: number }>;
+  pruneHits(): Promise<void>;
 }
 
 export function noticeStore(db: Db): NoticeStore {
@@ -120,7 +124,9 @@ export function noticeStore(db: Db): NoticeStore {
     jobCounts: () => jobCounts(db),
     cached: (keys, maxAgeMs) => readCache(db, keys, maxAgeMs),
     cache: entries => writeCache(db, entries),
-    pruneCache: () => pruneCache(db)
+    pruneCache: () => pruneCache(db),
+    countHit: (key, windowMs) => countHit(db, key, windowMs),
+    pruneHits: () => pruneHits(db)
   };
   return store;
 }

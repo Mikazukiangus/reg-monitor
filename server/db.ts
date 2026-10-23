@@ -458,3 +458,23 @@ export async function writeCache(db: Db, entries: [string, unknown][]): Promise<
 export async function pruneCache(db: Db): Promise<void> {
   await db.query(`DELETE FROM cache WHERE stored_at < now() - interval '1 day'`);
 }
+
+// Count a request under key in the current window of windowMs (windows start
+// at multiples of windowMs since the epoch): the requests in it so far,
+// this one included, and the milliseconds until it ends. One statement, so
+// requests on different instances at the same moment are all counted.
+export async function countHit(db: Db, key: string, windowMs: number): Promise<{ hits: number; resetInMs: number }> {
+  const [row] = await db.query(
+    `INSERT INTO rate_limits (key, window_start, hits)
+     VALUES ($1, to_timestamp(floor(extract(epoch FROM now()) * 1000 / $2::double precision) * $2::double precision / 1000), 1)
+     ON CONFLICT (key, window_start) DO UPDATE SET hits = rate_limits.hits + 1
+     RETURNING hits, (extract(epoch FROM window_start) * 1000 + $2::double precision - extract(epoch FROM now()) * 1000)::float8 AS reset_in`,
+    [key, windowMs]
+  );
+  return { hits: Number(row.hits), resetInMs: Number(row.reset_in) };
+}
+
+// Windows that have ended (the longest limit is a minute)
+export async function pruneHits(db: Db): Promise<void> {
+  await db.query(`DELETE FROM rate_limits WHERE window_start < now() - interval '1 hour'`);
+}

@@ -202,6 +202,20 @@ CREATE TABLE cache (
   stored_at timestamptz NOT NULL DEFAULT now()
 );
 `
+  },
+  {
+    version: 8,
+    name: 'rate limits',
+    // Requests per visitor and limit in fixed windows, counted across server
+    // instances (server/rate-limits.ts). Keys hold a hash of the IP address.
+    sql: `
+CREATE TABLE rate_limits (
+  key text NOT NULL,
+  window_start timestamptz NOT NULL,
+  hits integer NOT NULL,
+  PRIMARY KEY (key, window_start)
+);
+`
   }
 ];
 

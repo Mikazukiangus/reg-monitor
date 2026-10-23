@@ -50,6 +50,8 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     cached: async () => new Map(),
     cache: async () => {},
     pruneCache: async () => {},
+    countHit: async () => ({ hits: 1, resetInMs: 60_000 }),
+    pruneHits: async () => {},
     ...overrides
   };
   return store;

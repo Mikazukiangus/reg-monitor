@@ -76,6 +76,7 @@ export async function runScheduledCheck(storeArg: StoreArg = openStore()) {
       const outcomes = await drainQueue(store, { until: started + CHECK_QUEUE_UNTIL_MS });
       await store.pruneJobs();
       await store.pruneCache();
+      await store.pruneHits();
       jobs = { ran: outcomes.length, failed: outcomes.filter(o => !o.ok).length };
       logger.info(`[RegSonar Queue] Ran ${jobs.ran} jobs${jobs.failed ? `, ${jobs.failed} failed` : ''}`);
     } catch (err: any) {
