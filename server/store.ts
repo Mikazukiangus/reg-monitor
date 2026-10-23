@@ -5,7 +5,8 @@
 import {
   getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
-  type DateRow, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob
+  type DateRow, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob,
+  readCache, writeCache, pruneCache
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
@@ -80,6 +81,11 @@ export interface NoticeStore {
   failJob(id: string, error: string, retryInMs: number | null): Promise<void>;
   pruneJobs(): Promise<void>;
   jobCounts(): Promise<{ waiting: number; failed: number }>;
+  // The shared cache (server/shared-cache.ts): entries stored less than
+  // maxAgeMs ago, storing entries, and removing old ones
+  cached(keys: string[], maxAgeMs: number): Promise<Map<string, { value: unknown; at: number }>>;
+  cache(entries: [string, unknown][]): Promise<void>;
+  pruneCache(): Promise<void>;
 }
 
 export function noticeStore(db: Db): NoticeStore {
@@ -111,7 +117,10 @@ export function noticeStore(db: Db): NoticeStore {
     finishJob: id => finishJob(db, id),
     failJob: (id, error, retryInMs) => failJob(db, id, error, retryInMs),
     pruneJobs: () => pruneJobs(db),
-    jobCounts: () => jobCounts(db)
+    jobCounts: () => jobCounts(db),
+    cached: (keys, maxAgeMs) => readCache(db, keys, maxAgeMs),
+    cache: entries => writeCache(db, entries),
+    pruneCache: () => pruneCache(db)
   };
   return store;
 }

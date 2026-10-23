@@ -12,6 +12,7 @@ import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints, NO_FE
 import { drainAfterResponse, keyPointJobs } from './queue.js';
 import { linkSaved, relinkAll } from './links.js';
 import { rebuildDates, saveDates } from './dates.js';
+import { readShared, writeShared } from './shared-cache.js';
 
 // Government APIs (HKMA in particular) rate-limit aggressively, so each
 // source is read again only once its notices are this old
@@ -96,6 +97,38 @@ export async function refreshSource(source: (typeof SOURCES)[number]): Promise<S
     await s.inFlight;
   }
   return state;
+}
+
+// A source's state as shared with other server instances (server/shared-cache.ts)
+type SharedSource = Pick<SourceState, 'notices' | 'lastSuccessAt' | 'error'>;
+const sharedName = (id: string) => `source/${id}`;
+
+// Refresh these sources (refreshSource). A source this instance has not read
+// for SOURCE_TTL_MS is taken from the shared cache when another instance read
+// it since; what this instance reads is shared in turn. Without a history,
+// each instance reads every source itself.
+export async function refreshSources(sources: (typeof SOURCES)[number][] = SOURCES, storeArg: StoreArg = openStore()): Promise<SourceState[]> {
+  const store = await Promise.resolve(storeArg).catch(() => null);
+  if (store) {
+    const due = sources.filter(s => {
+      const st = sourceState.get(s.name);
+      return !st?.inFlight && (!st || Date.now() - st.lastAttemptAt > SOURCE_TTL_MS);
+    });
+    const shared = await readShared<SharedSource>(store, due.map(s => sharedName(s.id)), SOURCE_TTL_MS);
+    for (const s of due) {
+      const hit = shared.get(sharedName(s.id));
+      if (hit) sourceState.set(s.name, { ...hit.value, lastAttemptAt: hit.at });
+    }
+  }
+  const attempted = sources.map(s => sourceState.get(s.name)?.lastAttemptAt);
+  const states = await Promise.all(sources.map(refreshSource));
+  if (store) {
+    await writeShared(store, sources.flatMap((s, i) => {
+      const { notices, lastSuccessAt, error } = states[i];
+      return states[i].lastAttemptAt === attempted[i] ? [] : [[sharedName(s.id), { notices, lastSuccessAt, error } satisfies SharedSource]];
+    }));
+  }
+  return states;
 }
 
 // A scheduled check reads this many items from each source's list, so a

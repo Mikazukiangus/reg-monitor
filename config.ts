@@ -104,7 +104,11 @@ export function createConfig(env: Environment) {
     staleSeconds: integer(stale, staleDefault, 0, 31_536_000)
   });
   const config = {
-    runtime: Object.freeze({ nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), port, host, disableHmr: boolean('DISABLE_HMR') }),
+    runtime: Object.freeze({
+      nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), port, host, disableHmr: boolean('DISABLE_HMR'),
+      // Set by Vercel for each deployment; keys the shared cache, so a new deployment reads afresh
+      deploymentId: text('VERCEL_DEPLOYMENT_ID') ?? 'local'
+    }),
     database: Object.freeze({
       url: databaseUrl, poolMax: integer('DB_POOL_MAX', 3, 1, 100), idleTimeoutMs: integer('DB_IDLE_TIMEOUT_MS', 10_000),
       connectTimeoutMs: integer('DB_CONNECT_TIMEOUT_MS', 10_000), queryTimeoutMs: integer('DB_QUERY_TIMEOUT_MS', 30_000)
@@ -143,7 +147,9 @@ export function createConfig(env: Environment) {
     cors: Object.freeze({ allowedOrigins: Object.freeze([...new Set(corsOrigins)]) }),
     cdn: Object.freeze({
       sync: cachePolicy('SYNC_CDN_TTL_SECONDS', 300, 'SYNC_CDN_STALE_SECONDS', 86_400),
-      search: cachePolicy('SEARCH_CDN_TTL_SECONDS', 300, 'SEARCH_CDN_STALE_SECONDS', 3600)
+      search: cachePolicy('SEARCH_CDN_TTL_SECONDS', 300, 'SEARCH_CDN_STALE_SECONDS', 3600),
+      status: cachePolicy('STATUS_CDN_TTL_SECONDS', 120, 'STATUS_CDN_STALE_SECONDS', 600),
+      checks: cachePolicy('CHECKS_CDN_TTL_SECONDS', 60, 'CHECKS_CDN_STALE_SECONDS', 300)
     })
   };
   // Never include input values: database URLs and tokens contain secrets.

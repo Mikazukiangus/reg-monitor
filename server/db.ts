@@ -431,3 +431,30 @@ export async function jobCounts(db: Db): Promise<{ waiting: number; failed: numb
     count(*) FILTER (WHERE status = 'failed' AND finished_at > now() - interval '7 days') AS failed FROM jobs`);
   return { waiting: Number(row?.waiting || 0), failed: Number(row?.failed || 0) };
 }
+
+// The shared cache (server/shared-cache.ts): entries stored less than
+// maxAgeMs ago, with when they were stored (ms since the epoch)
+export async function readCache(db: Db, keys: string[], maxAgeMs: number): Promise<Map<string, { value: unknown; at: number }>> {
+  if (keys.length === 0) return new Map();
+  const rows = await db.query(
+    `SELECT key, value, (extract(epoch FROM stored_at) * 1000)::float8 AS at FROM cache
+     WHERE key = ANY($1::text[]) AND stored_at > now() - make_interval(secs => $2::double precision / 1000)`,
+    [keys, maxAgeMs]
+  );
+  return new Map(rows.map(r => [r.key, { value: r.value, at: Number(r.at) }]));
+}
+
+// Store entries in one statement, replacing those under the same keys
+export async function writeCache(db: Db, entries: [string, unknown][]): Promise<void> {
+  if (entries.length === 0) return;
+  await db.query(
+    `INSERT INTO cache (key, value) SELECT * FROM unnest($1::text[], $2::jsonb[])
+     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, stored_at = now()`,
+    [entries.map(([key]) => key), entries.map(([, value]) => JSON.stringify(value))]
+  );
+}
+
+// Entries no instance will use again: older than any lifetime, or stored by an earlier deployment
+export async function pruneCache(db: Db): Promise<void> {
+  await db.query(`DELETE FROM cache WHERE stored_at < now() - interval '1 day'`);
+}

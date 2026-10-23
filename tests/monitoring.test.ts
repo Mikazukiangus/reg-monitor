@@ -131,7 +131,10 @@ test('history endpoints retrieve archived IDs and report actual scheduled-check 
     assert.equal(body.notices.length, 1); assert.equal(body.notices[0].id, notice.id); assert.equal(body.notices[0].archived, true);
     assert.equal((await fetch(`${base}/api/notices/by-id?ids=invalid`)).status, 400);
     assert.equal((await fetch(`${base}/api/notices/by-id?ids=${encodeURIComponent(JSON.stringify(Array(51).fill('x')))}`)).status, 400);
-    const checks = await (await fetch(`${base}/api/feeds/checks`)).json();
+    const checksReply = await fetch(`${base}/api/feeds/checks`);
+    // Kept by the CDN for a minute, so page loads do not each query the database
+    assert.equal(checksReply.headers.get('cache-control'), 'public, s-maxage=60, stale-while-revalidate=300');
+    const checks = await checksReply.json();
     assert.equal(checks.latest.status, 'running');
     assert.equal(checks.lastCompletedAt, '2026-10-10T09:01:00.000Z');
     assert.deepEqual(checks.dateBackfill, { pending: 1, unresolved: 1 });

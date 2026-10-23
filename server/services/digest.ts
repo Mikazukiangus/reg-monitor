@@ -6,8 +6,7 @@ import type { CustomAlertRule } from '../../shared/regulatory.js';
 import { DIGEST_RULES } from '../../digest-rules.js';
 import { dedupeByDocument } from '../../shared/dedupe.js';
 import type { NormalizedNotice } from '../notice.js';
-import { SOURCES } from '../sources/index.js';
-import { pollSources, refreshSource } from '../ingest.js';
+import { pollSources, refreshSources } from '../ingest.js';
 import { matchDigest, singaporeDate } from '../digest/match.js';
 import { renderDigest } from '../digest/email.js';
 import { sendWithResend } from '../mailer.js';
@@ -17,7 +16,7 @@ import { DIGEST, digestJob, drainQueue } from '../queue.js';
 export async function collectDigestNotices(): Promise<{ notices: NormalizedNotice[]; failed: string[] }> {
   // The feed's own refresh first, so the check reuses its key points instead
   // of reading the same documents again
-  const states = await Promise.all(SOURCES.map(refreshSource));
+  const states = await refreshSources();
   const { results, failed } = await pollSources();
   const byId = new Map<string, NormalizedNotice>();
   results.forEach(r => r.notices.forEach(n => byId.set(n.id, n)));

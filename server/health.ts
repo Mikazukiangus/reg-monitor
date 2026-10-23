@@ -5,6 +5,8 @@ import { config } from '../runtime-config.js';
 import { politeFetch, httpStatusText, RateLimitedError, describeError } from './http.js';
 import { publicError } from './errors.js';
 import { type EndpointDefinition, ENDPOINTS } from './sources/index.js';
+import { openStore } from './store.js';
+import { readShared, writeShared } from './shared-cache.js';
 
 type EndpointStatus = 'Operational' | 'Degraded' | 'Down';
 
@@ -56,14 +58,40 @@ async function probeEndpoint(ep: EndpointDefinition) {
 }
 
 // Government APIs (HKMA in particular) rate-limit aggressively, so probes are
-// cached rather than repeated on every client poll.
+// cached rather than repeated on every client poll: by this instance, and with
+// a history, for every instance (server/shared-cache.ts).
 const HEALTH_TTL_MS = config.ingestion.healthTtlMs;
 
-let healthCache: { at: number; results: Promise<Awaited<ReturnType<typeof probeEndpoint>>[]> } | null = null;
+type Probe = Awaited<ReturnType<typeof probeEndpoint>>;
+let healthCache: { at: number; results: Promise<Probe[]> } | null = null;
 
-export function getEndpointsHealth() {
+// The checks another instance made less than HEALTH_TTL_MS ago, or new ones,
+// shared in turn. `entry.at` becomes the time they were made.
+async function sharedOrProbed(entry: { at: number }): Promise<Probe[]> {
+  const store = await openStore().catch(() => null);
+  if (store) {
+    const hit = (await readShared<{ at: number; results: Probe[] }>(store, ['health'], HEALTH_TTL_MS)).get('health');
+    if (hit) {
+      entry.at = hit.value.at;
+      return hit.value.results;
+    }
+  }
+  const results = await Promise.all(ENDPOINTS.map(probeEndpoint));
+  if (store) await writeShared(store, [['health', { at: entry.at, results }]]);
+  return results;
+}
+
+export function getEndpointsHealth(): Promise<Probe[]> {
   if (!healthCache || Date.now() - healthCache.at > HEALTH_TTL_MS) {
-    healthCache = { at: Date.now(), results: Promise.all(ENDPOINTS.map(probeEndpoint)) };
+    const entry = { at: Date.now() } as { at: number; results: Promise<Probe[]> };
+    entry.results = sharedOrProbed(entry);
+    healthCache = entry;
   }
   return healthCache.results;
+}
+
+// When the endpoint checks now in use were made
+export async function endpointsCheckedAt(): Promise<string> {
+  await getEndpointsHealth();
+  return new Date(healthCache!.at).toISOString();
 }

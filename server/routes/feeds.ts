@@ -10,10 +10,14 @@ import { accepts } from '../validate.js';
 export function feedRoutes(): Router {
   const router = express.Router();
 
-  // API Route: Get connected endpoint status and latencies
+  // API Route: Get connected endpoint status and latencies. Served from
+  // Vercel's CDN cache for 2 minutes (then refreshed in the background), as
+  // every page load asks for it; lastChecked says when the checks were made.
   router.all('/api/feeds/status', accepts(['GET']), async (_req: Request, res: Response) => {
     try {
-      res.json({ success: true, ...await endpointStatus() });
+      const status = await endpointStatus();
+      res.set('Cache-Control', cdnCacheControl(config.cdn.status));
+      res.json({ success: true, ...status });
     } catch (error: any) {
       logger.error('[RegSonar] Endpoint status failed', error);
       res.status(500).json({ success: false, error: 'Endpoint status could not be loaded' });
@@ -36,10 +40,14 @@ export function feedRoutes(): Router {
   });
 
   // Persisted scheduled-check metadata; reading this never triggers a poll.
+  // Served from the CDN cache for a minute, so page loads do not each query
+  // (and wake) the database; it changes when a check or a job runs.
   router.all('/api/feeds/checks', accepts(['GET']), async (_req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
     try {
-      res.json(logger.redact({ success: true, ...await scheduledCheckStatus() }));
+      const status = await scheduledCheckStatus();
+      if (status.enabled) res.set('Cache-Control', cdnCacheControl(config.cdn.checks));
+      res.json(logger.redact({ success: true, ...status }));
     } catch (error) {
       logger.error('[RegSonar History] Scheduled-check status failed', error);
       res.status(503).json({ success: false, error: 'Scheduled check history is unavailable' });

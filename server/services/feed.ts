@@ -3,22 +3,20 @@ import { logger } from '../logging.js';
 import { config } from '../../runtime-config.js';
 import { reuseFor } from '../throttle.js';
 import { SOURCES } from '../sources/index.js';
-import { getEndpointsHealth } from '../health.js';
-import { pollSources, refreshSource } from '../ingest.js';
+import { endpointsCheckedAt, getEndpointsHealth } from '../health.js';
+import { pollSources, refreshSources } from '../ingest.js';
 import { withHistory } from '../history.js';
 import { enrichWithKeyPoints, NO_FETCHES } from '../enrich.js';
 import { drainQueue } from '../queue.js';
 import { openStore, type StoreArg } from '../store.js';
 
-// The feed: each source's latest notices (re-read at most every 10 minutes),
-// recent notices from the history, and how each source and endpoint is doing.
-// The history is opened once the sources are read.
+// The feed: each source's latest notices (re-read at most every 10 minutes,
+// by any server instance: server/shared-cache.ts), recent notices from the
+// history, and how each source and endpoint is doing.
 export async function buildFeed(store?: StoreArg) {
   logger.info('[RegSonar Feed Sentinel] Querying live regulatory sources...');
-  const [states, endpoints] = await Promise.all([
-    Promise.all(SOURCES.map(refreshSource)),
-    getEndpointsHealth()
-  ]);
+  const storeArg = store === undefined ? openStore() : store;
+  const [states, endpoints] = await Promise.all([refreshSources(SOURCES, storeArg), getEndpointsHealth()]);
   const sources = SOURCES.map((s, i) => ({
     endpointId: s.endpointId,
     name: s.name,
@@ -27,7 +25,6 @@ export async function buildFeed(store?: StoreArg) {
     lastSuccessAt: states[i].lastSuccessAt,
     error: states[i].error
   }));
-  const storeArg = store === undefined ? openStore() : store;
   // Key points stored since the sources were read, by background jobs
   const live = await enrichWithKeyPoints(states.flatMap(st => st.notices), NO_FETCHES, storeArg);
   const { notices, archive } = await withHistory(live, storeArg);
@@ -40,9 +37,10 @@ export async function buildFeed(store?: StoreArg) {
 export const currentFeed = reuseFor(config.ingestion.syncReuseMs, () => buildFeed());
 
 export async function endpointStatus() {
-  const metrics = await getEndpointsHealth();
+  const [metrics, lastChecked] = await Promise.all([getEndpointsHealth(), endpointsCheckedAt()]);
   return {
-    lastChecked: new Date().toISOString(),
+    // When the endpoints were checked, which may be up to HEALTH_TTL_MS ago
+    lastChecked,
     totalEndpoints: metrics.length,
     operationalCount: metrics.filter(m => m.status === 'Operational').length,
     endpoints: metrics
@@ -77,6 +75,7 @@ export async function runScheduledCheck(storeArg: StoreArg = openStore()) {
     try {
       const outcomes = await drainQueue(store, { until: started + CHECK_QUEUE_UNTIL_MS });
       await store.pruneJobs();
+      await store.pruneCache();
       jobs = { ran: outcomes.length, failed: outcomes.filter(o => !o.ok).length };
       logger.info(`[RegSonar Queue] Ran ${jobs.ran} jobs${jobs.failed ? `, ${jobs.failed} failed` : ''}`);
     } catch (err: any) {

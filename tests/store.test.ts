@@ -47,6 +47,9 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     failJob: async () => {},
     pruneJobs: async () => {},
     jobCounts: async () => ({ waiting: 0, failed: 0 }),
+    cached: async () => new Map(),
+    cache: async () => {},
+    pruneCache: async () => {},
     ...overrides
   };
   return store;

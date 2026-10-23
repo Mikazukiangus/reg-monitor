@@ -188,6 +188,20 @@ CREATE TABLE jobs (
 CREATE UNIQUE INDEX jobs_waiting_key_idx ON jobs (kind, key) WHERE status = 'queued';
 CREATE INDEX jobs_due_idx ON jobs (run_at) WHERE status = 'queued';
 `
+  },
+  {
+    version: 7,
+    name: 'shared cache',
+    // What one server instance read (each source's list, the endpoint
+    // checks), for the other instances to use until it is too old
+    // (server/shared-cache.ts)
+    sql: `
+CREATE TABLE cache (
+  key text PRIMARY KEY,
+  value jsonb NOT NULL,
+  stored_at timestamptz NOT NULL DEFAULT now()
+);
+`
   }
 ];
 
