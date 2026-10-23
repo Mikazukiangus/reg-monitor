@@ -92,7 +92,7 @@ test('the API refuses other sites by default and leaves cron-style requests alon
     const foreign = await fetch(`${base}/api/health`, { headers: { origin: 'https://evil.example.com' } });
     assert.equal(foreign.status, 403);
     await foreign.arrayBuffer();
-    for (const headers of [{}, { origin: `http://${host}` }]) {
+    for (const headers of [{}, { origin: `http://${host}` }] as Record<string, string>[]) {
       const res = await fetch(`${base}/api/health`, { headers });
       assert.equal(res.status, 200);
       assert.equal(res.headers.get('access-control-allow-origin'), null);
