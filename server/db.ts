@@ -7,12 +7,21 @@ import { config } from '../runtime-config.js';
 import { logger } from './logging.js';
 import type { CheckSummary } from '../shared/regulatory.js';
 import { migrate } from './migrations.js';
+import { CircuitBreaker, CircuitOpenError } from './breaker.js';
 
 export interface Db {
   query<T = any>(sql: string, params?: unknown[]): Promise<T[]>;
 }
 
 let dbPromise: Promise<Db | null> | null = null;
+
+// The database's circuit breaker (server/breaker.ts): after BREAKER_FAILURES
+// failed connections or queries in a row (time limits, broken or refused
+// connections), the history is treated as off for DB_BREAKER_COOLDOWN_MS
+// rather than every request waiting out the connection limit. An error the
+// database itself reports (bad SQL, a constraint) shows it is up.
+const databaseBreaker = new CircuitBreaker('The history database', config.breaker.failures, config.breaker.databaseCooldownMs);
+const databaseJudge = { error: (err: any) => (err instanceof pg.DatabaseError ? undefined : String(err?.code ?? err?.message ?? 'failed')) };
 
 export function databaseUrl(): string | undefined {
   return config.database.url;
@@ -39,7 +48,7 @@ async function connect(url: string): Promise<Db> {
       connectionString: url, max: config.database.poolMax, idleTimeoutMillis: config.database.idleTimeoutMs,
       connectionTimeoutMillis: config.database.connectTimeoutMs, query_timeout: config.database.queryTimeoutMs
     });
-    db = { query: async (sql, params) => (await pool.query(sql, params as any[])).rows };
+    db = { query: (sql, params) => databaseBreaker.run(async () => (await pool.query(sql, params as any[])).rows, databaseJudge) };
     // The schema's changes (server/migrations.ts), on one connection of the pool
     const client = await pool.connect().catch(async err => { await pool.end().catch(() => {}); throw err; });
     try {
@@ -59,8 +68,10 @@ export function getDb(): Promise<Db | null> {
   const url = databaseUrl();
   if (!url) return Promise.resolve(null);
   if (!dbPromise) {
-    dbPromise = connect(url).catch(err => {
-      logger.warn('[RegSonar History] Database unavailable', err);
+    const connecting = url.startsWith('pglite') ? connect(url) : databaseBreaker.run(() => connect(url), databaseJudge);
+    dbPromise = connecting.catch(err => {
+      // The breaker has already said why it is open
+      if (!(err instanceof CircuitOpenError)) logger.warn('[RegSonar History] Database unavailable', err);
       dbPromise = null;
       return null;
     });

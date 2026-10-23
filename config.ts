@@ -118,6 +118,13 @@ export function createConfig(env: Environment) {
     }),
     // Calls that failed for a passing reason are tried again (server/retry.ts)
     retry: Object.freeze({ attempts: integer('RETRY_ATTEMPTS', 3, 1, 5), baseDelayMs: integer('RETRY_BASE_DELAY_MS', 500, 1, 10_000) }),
+    // After this many failures in a row a site, or the database, is not asked
+    // again until its cooldown has passed (server/breaker.ts)
+    breaker: Object.freeze({
+      failures: integer('BREAKER_FAILURES', 3, 1, 100),
+      siteCooldownMs: integer('SITE_BREAKER_COOLDOWN_MS', 300_000, 1000, 86_400_000),
+      databaseCooldownMs: integer('DB_BREAKER_COOLDOWN_MS', 30_000, 1000, 86_400_000)
+    }),
     polling: Object.freeze({
       limit: pollLimit, backfillLimit,
       keyPointFetches: integer('POLL_KEY_POINT_FETCHES', 5, 0, 1000),

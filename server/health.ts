@@ -15,7 +15,8 @@ const FIREWALL_BLOCK_BODY = /your request has been blocked/i;
 async function probeEndpoint(ep: EndpointDefinition) {
   const start = Date.now();
   try {
-    const res = await politeFetch(ep.url);
+    // Asked even while the site's circuit breaker is open, so the status is current
+    const res = await politeFetch(ep.url, undefined, { probe: true });
     const body = await res.text();
     const pingMs = Date.now() - start;
     const pageTitle = body.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim();

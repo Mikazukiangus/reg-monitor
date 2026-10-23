@@ -5,6 +5,7 @@ import { config } from '../runtime-config.js';
 import { XMLParser } from 'fast-xml-parser';
 import { BlockedAddressError, publicOnly } from './ssrf.js';
 import { isPassingNetworkError, retryAfterMs, withRetry } from './retry.js';
+import { CircuitBreaker } from './breaker.js';
 
 export const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -41,21 +42,47 @@ export class InsecureUrlError extends Error {}
 // A site's gateway briefly unable to reach the site
 const PASSING_STATUSES = new Set([502, 503, 504]);
 
+// One circuit breaker per site (server/breaker.ts). A site that times out,
+// breaks connections or answers 5xx BREAKER_FAILURES times in a row is not
+// asked again for SITE_BREAKER_COOLDOWN_MS, so a site that is down costs one
+// request per refresh rather than one time limit for every document on it.
+// Any other answer, a 404 included, shows the site is up. A site's breaker
+// is dropped once it has nothing to remember.
+const siteBreakers = new Map<string, CircuitBreaker>();
+
+// A request that could not reach the site: our time limit, or a network error
+// (refused, reset, unknown name, certificate). Anything else (a request we
+// refused to make, the site's own rate limit) says nothing about the site.
+function siteFailure(err: any): string | undefined {
+  if (err instanceof InsecureUrlError || err instanceof BlockedAddressError || err instanceof RateLimitedError) return undefined;
+  if (err?.name === 'TimeoutError') return `timed out after ${FETCH_TIMEOUT_MS / 1000}s`;
+  const code = err?.cause?.code ?? err?.code;
+  return typeof code === 'string' ? code : undefined;
+}
+
 // A request to a regulator site. A read that fails for a passing reason (a
 // dropped connection, HTTP 502/503/504) is tried again after a short pause
 // (server/retry.ts); a POST that is not marked readOnly never is. A timeout
-// is not retried, so a slow site still costs one FETCH_TIMEOUT_MS per try.
-export async function politeFetch(url: string, post?: PostRequest): Promise<globalThis.Response> {
+// is not retried, so a slow site still costs one FETCH_TIMEOUT_MS per try,
+// until its circuit breaker opens. `probe`: an endpoint status check, which
+// asks the site even while its breaker is open.
+export async function politeFetch(url: string, post?: PostRequest, { probe = false } = {}): Promise<globalThis.Response> {
   if (new URL(url).protocol !== 'https:') throw new InsecureUrlError(`Refused a plain-HTTP address: ${url}`);
   const host = new URL(url).host;
   const safeToRepeat = !post || post.readOnly === true;
-  return withRetry(`Reading ${host}`, () => fetchOnce(url, host, post), {
-    judge: res => (safeToRepeat && PASSING_STATUSES.has(res.status)
-      ? { reason: `HTTP ${res.status}`, waitMs: retryAfterMs(res.headers.get('retry-after')) }
-      : undefined),
-    judgeError: (err: any) => (safeToRepeat && isPassingNetworkError(err) ? { reason: String(err?.cause?.code ?? err?.code) } : undefined),
-    discard: res => { res.body?.cancel().catch(() => {}); }
-  });
+  let breaker = siteBreakers.get(host);
+  if (!breaker) siteBreakers.set(host, breaker = new CircuitBreaker(host, config.breaker.failures, config.breaker.siteCooldownMs));
+  try {
+    return await breaker.run(() => withRetry(`Reading ${host}`, () => fetchOnce(url, host, post), {
+      judge: res => (safeToRepeat && PASSING_STATUSES.has(res.status)
+        ? { reason: `HTTP ${res.status}`, waitMs: retryAfterMs(res.headers.get('retry-after')) }
+        : undefined),
+      judgeError: (err: any) => (safeToRepeat && isPassingNetworkError(err) ? { reason: String(err?.cause?.code ?? err?.code) } : undefined),
+      discard: res => { res.body?.cancel().catch(() => {}); }
+    }), { result: res => (res.status >= 500 ? `HTTP ${res.status}` : undefined), error: siteFailure }, { probe });
+  } finally {
+    if (breaker.idle) siteBreakers.delete(host);
+  }
 }
 
 async function fetchOnce(url: string, host: string, post?: PostRequest): Promise<globalThis.Response> {
