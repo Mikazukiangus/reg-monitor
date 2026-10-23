@@ -4,6 +4,7 @@ import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { XMLParser } from 'fast-xml-parser';
 import { BlockedAddressError, publicOnly } from './ssrf.js';
+import { isPassingNetworkError, retryAfterMs, withRetry } from './retry.js';
 
 export const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -28,17 +29,36 @@ const hostPausedUntil = new Map<string, number>();
 
 export class RateLimitedError extends Error {}
 
-// A POST, for the one source (the ICO) whose page asks its search service that way
-type PostRequest = { method: 'POST'; body: string; contentType: string };
+// A POST, for the one source (the ICO) whose page asks its search service that
+// way. readOnly marks a POST that only reads, so it may be tried again like a GET.
+type PostRequest = { method: 'POST'; body: string; contentType: string; readOnly?: boolean };
 
 // Regulator sites are read over HTTPS only: a plain-HTTP address is refused,
 // and so is a reply that a redirect brought from one, so nothing is read that
 // could have been changed on the way
 export class InsecureUrlError extends Error {}
 
+// A site's gateway briefly unable to reach the site
+const PASSING_STATUSES = new Set([502, 503, 504]);
+
+// A request to a regulator site. A read that fails for a passing reason (a
+// dropped connection, HTTP 502/503/504) is tried again after a short pause
+// (server/retry.ts); a POST that is not marked readOnly never is. A timeout
+// is not retried, so a slow site still costs one FETCH_TIMEOUT_MS per try.
 export async function politeFetch(url: string, post?: PostRequest): Promise<globalThis.Response> {
   if (new URL(url).protocol !== 'https:') throw new InsecureUrlError(`Refused a plain-HTTP address: ${url}`);
   const host = new URL(url).host;
+  const safeToRepeat = !post || post.readOnly === true;
+  return withRetry(`Reading ${host}`, () => fetchOnce(url, host, post), {
+    judge: res => (safeToRepeat && PASSING_STATUSES.has(res.status)
+      ? { reason: `HTTP ${res.status}`, waitMs: retryAfterMs(res.headers.get('retry-after')) }
+      : undefined),
+    judgeError: (err: any) => (safeToRepeat && isPassingNetworkError(err) ? { reason: String(err?.cause?.code ?? err?.code) } : undefined),
+    discard: res => { res.body?.cancel().catch(() => {}); }
+  });
+}
+
+async function fetchOnce(url: string, host: string, post?: PostRequest): Promise<globalThis.Response> {
   const pausedUntil = hostPausedUntil.get(host) ?? 0;
   if (Date.now() < pausedUntil) {
     throw new RateLimitedError(`HTTP 429: rate limited by the site, not asking again until ${new Date(pausedUntil).toISOString().slice(11, 16)} UTC`);

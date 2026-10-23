@@ -116,6 +116,8 @@ export function createConfig(env: Environment) {
       sourceTtlMs: integer('SOURCE_TTL_MS', 600_000),
       syncReuseMs: integer('SYNC_REUSE_MS', 60_000)
     }),
+    // Calls that failed for a passing reason are tried again (server/retry.ts)
+    retry: Object.freeze({ attempts: integer('RETRY_ATTEMPTS', 3, 1, 5), baseDelayMs: integer('RETRY_BASE_DELAY_MS', 500, 1, 10_000) }),
     polling: Object.freeze({
       limit: pollLimit, backfillLimit,
       keyPointFetches: integer('POLL_KEY_POINT_FETCHES', 5, 0, 1000),

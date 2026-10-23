@@ -27,11 +27,12 @@ export function parseIcoNews(json: any): { id: string; title: string; date: stri
 
 export async function fetchIcoNews(limit = 4): Promise<NormalizedNotice[]> {
   const rows: ReturnType<typeof parseIcoNews> = [];
-  // 25 a page; the first page must load, later ones are skipped if they fail
+  // 25 a page; the first page must load, later ones are skipped if they fail.
+  // The search only reads, so a failed page may be tried again (readOnly).
   for (let page = 1; page <= pagesFor(limit, 20, 3); page++) {
     const body = JSON.stringify({ filters: [], pageNumber: page, order: 'newest', rootPageId: ICO_NEWS_PAGE_ID });
     try {
-      rows.push(...parseIcoNews(await (await fetchOrThrow(ICO_SEARCH, { method: 'POST', body, contentType: 'application/json' })).json()));
+      rows.push(...parseIcoNews(await (await fetchOrThrow(ICO_SEARCH, { method: 'POST', body, contentType: 'application/json', readOnly: true })).json()));
     } catch (err: any) {
       if (page === 1) throw err;
       logger.info(`[RegSonar Feed Sentinel] Skipped ICO news page ${page}: ${describeError(err)}`);
