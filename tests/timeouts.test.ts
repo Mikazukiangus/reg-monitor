@@ -14,6 +14,14 @@ import { pathToFileURL } from 'node:url';
 import { createConfig } from '../config.ts';
 import { WAIT_MS, fetchFeed, within } from '../src/api/client.ts';
 
+// AbortSignal.timeout's timer does not keep Node running on its own (on Node
+// 22 the test would end before it fires), so the waits below hold the
+// process open until they settle
+const awake = <T>(promise: Promise<T>): Promise<T> => {
+  const keep = setInterval(() => {}, 1000);
+  return promise.finally(() => clearInterval(keep));
+};
+
 test('database waits are limited by default and configurable', () => {
   const defaults = createConfig({}).database;
   assert.deepEqual([defaults.connectTimeoutMs, defaults.queryTimeoutMs], [10_000, 30_000]);
@@ -47,7 +55,7 @@ test('a database that accepts the connection but never answers is given up on', 
 test('the page waits a limited time for each reply, and stops sooner when the caller does', async () => {
   assert.deepEqual(WAIT_MS, { feed: 60_000, status: 30_000, read: 20_000 });
   const timedOut = within(30)!;
-  await new Promise(resolve => timedOut.addEventListener('abort', resolve));
+  await awake(new Promise(resolve => timedOut.addEventListener('abort', resolve)));
   assert.equal((timedOut.reason as Error).name, 'TimeoutError');
 
   const caller = new AbortController();
@@ -68,7 +76,7 @@ test('a feed request that never answers is abandoned with a TimeoutError', async
   const realTimeout = AbortSignal.timeout;
   AbortSignal.timeout = (ms: number) => realTimeout.call(AbortSignal, Math.min(ms, 30));
   try {
-    await assert.rejects(fetchFeed(false), (err: Error) => err.name === 'TimeoutError');
+    await assert.rejects(awake(fetchFeed(false)), (err: Error) => err.name === 'TimeoutError');
     assert.ok(signal?.aborted);
   } finally {
     globalThis.fetch = realFetch;
