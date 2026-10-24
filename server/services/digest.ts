@@ -24,7 +24,9 @@ export async function collectDigestNotices(): Promise<{ notices: NormalizedNotic
   return { notices: dedupeByDocument([...byId.values()]), failed: failed.map(f => f.name) };
 }
 
-export interface DigestSummary { day: string; checked: number; matched: number; failedSources: string[]; subject: string }
+// Unexpected errors recorded in the last 24 hours (server/error-tracking.ts)
+export interface ErrorCount { occurrences: number; kinds: number }
+export interface DigestSummary { day: string; checked: number; matched: number; failedSources: string[]; errors: ErrorCount | null; subject: string }
 
 // What a run did: returned the email without sending it (a dry run), found
 // nothing to send, could not send because Resend is not set up, or sent it
@@ -44,6 +46,23 @@ export interface DigestDeps {
   mail: { apiKey?: string; to: readonly string[]; from: string };
   // The history, whose queue sends the email; without one it is sent directly
   store?: () => Promise<NoticeStore | null>;
+  // Errors recorded lately, or null when they cannot be read
+  errors?: () => Promise<ErrorCount | null>;
+}
+
+const DAY = 86_400_000;
+
+// Unexpected errors in the last 24 hours, or null without the database
+export async function recentErrors(storeArg: () => Promise<NoticeStore | null> = openStore): Promise<ErrorCount | null> {
+  try {
+    const store = await storeArg();
+    if (!store) return null;
+    const kinds = await store.errorKinds(DAY, 200);
+    return { occurrences: kinds.reduce((sum, k) => sum + k.recent, 0), kinds: kinds.length };
+  } catch (err) {
+    logger.warn('[RegSonar Digest] Could not count recent errors', err);
+    return null;
+  }
 }
 
 const defaultDeps = (): DigestDeps => ({
@@ -52,7 +71,8 @@ const defaultDeps = (): DigestDeps => ({
   rules: DIGEST_RULES,
   siteUrl: config.digest.siteUrl,
   mail: config.digest,
-  store: openStore
+  store: openStore,
+  errors: recentErrors
 });
 
 // How long the digest run waits for the queued send before answering
@@ -63,8 +83,9 @@ export async function runDigest(options: { day?: string | null; dryRun?: boolean
   const day = options.day || singaporeDate(new Date(), 1);
   const { notices, failed } = await deps.collect();
   const matches = matchDigest(notices, deps.rules, day);
-  const email = renderDigest(matches, day, deps.siteUrl, failed);
-  const summary = { day, checked: notices.length, matched: matches.length, failedSources: failed, subject: email.subject };
+  const errors = (await deps.errors?.()) ?? null;
+  const email = renderDigest(matches, day, deps.siteUrl, failed, errors);
+  const summary = { day, checked: notices.length, matched: matches.length, failedSources: failed, errors, subject: email.subject };
   logger.info(`[RegSonar Digest] ${day}: ${matches.length} matching of ${notices.length} notices checked${failed.length ? `; could not read ${failed.join(', ')}` : ''}`);
 
   if (options.dryRun) {

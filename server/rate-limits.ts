@@ -37,12 +37,15 @@ export const LIMITS: readonly Limit[] = [
   // A refresh skips the CDN cache and may read every source
   { name: 'refresh', applies: (method, path) => path === '/api/feeds/sync' && method === 'POST',
     limit: config.refresh.limit, windowMs: config.refresh.windowMs, shared: true, message: wait => `Too many refreshes. Try again in ${wait} seconds.` },
-  // Scheduled jobs need the cron secret; this slows down guessing it
-  { name: 'scheduled', applies: (_m, path) => path === '/api/feeds/poll' || path === '/api/digest',
+  // Scheduled jobs and reading recorded errors need the cron secret; this
+  // slows down guessing it
+  { name: 'scheduled', applies: (method, path) => path === '/api/feeds/poll' || path === '/api/digest' || (path === '/api/errors' && method !== 'POST'),
     limit: 10, windowMs: MINUTE, shared: true, message: tooMany },
   // Database reads (search is debounced in the page; by-id takes 50 ids a request)
   { name: 'search', applies: (_m, path) => path === '/api/notices/search', limit: 30, windowMs: MINUTE, shared: true, message: tooMany },
   { name: 'by-id', applies: (_m, path) => path === '/api/notices/by-id', limit: 30, windowMs: MINUTE, shared: true, message: tooMany },
+  // Each error a browser reports is written to the database
+  { name: 'error-report', applies: (method, path) => path === '/api/errors' && method === 'POST', limit: 10, windowMs: MINUTE, shared: true, message: tooMany },
   // May check all regulator sites when the shared checks are over 5 minutes old
   { name: 'status', applies: (_m, path) => path === '/api/feeds/status', limit: 30, windowMs: MINUTE, shared: true, message: tooMany },
   // Everything else: the cached feed, health, checks, rules and unknown addresses

@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { logger } from '../logging.js';
+import { failRequest } from '../error-tracking.js';
 import { digestInfo, runDigest } from '../services/digest.js';
 import { cronAuthorized } from './cron.js';
 import { accepts, day, flag, queryOf } from '../validate.js';
@@ -36,9 +36,8 @@ export function digestRoutes(): Router {
         case 'queued':
           res.status(202).json({ success: true, sent: false, queued: true, reason: run.error ?? 'Waiting to be sent', ...run.summary });
       }
-    } catch (error: any) {
-      logger.error('[RegSonar Digest] Failed', error);
-      res.status(500).json({ success: false, error: 'Digest failed' });
+    } catch (error) {
+      failRequest(req, res, error, { message: 'Digest failed' });
     }
   });
 

@@ -146,7 +146,9 @@ test('the API and captured logs do not expose configured secrets or malformed re
       db.query = async () => { throw new Error('DB rejected ' + config.digest.apiKey); };
       const search = await fetch(base + '/api/notices/search?q=example');
       assert.equal(search.status, 500);
-      assert.deepEqual(await search.json(), { success: false, error: 'Search failed' });
+      const failed = await search.json();
+      assert.match(failed.reference, /^[0-9A-F]{10}$/);
+      assert.deepEqual(failed, { success: false, error: 'Search failed', reference: failed.reference });
       db.query = originalQuery;
       const invalid = await fetch(base + '/api/feeds/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"secret": "' + config.digest.cronSecret + '", not-valid-json}' });
       assert.equal(invalid.status, 400);

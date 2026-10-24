@@ -493,3 +493,77 @@ export async function countHit(db: Db, key: string, windowMs: number): Promise<{
 export async function pruneHits(db: Db): Promise<void> {
   await db.query(`DELETE FROM rate_limits WHERE window_start < now() - interval '1 hour'`);
 }
+
+// One occurrence of an error (server/error-tracking.ts), already redacted
+export interface ErrorRecord {
+  fingerprint: string;
+  source: 'server' | 'browser';
+  location: string;
+  name: string;
+  message: string;
+  stack: string | null;
+  reference: string;
+  context: Record<string, unknown>;
+}
+
+// Count the occurrence under its kind (added the first time) and keep it
+// under its reference, in one statement
+export async function recordError(db: Db, e: ErrorRecord): Promise<void> {
+  await db.query(
+    `WITH kind AS (
+       INSERT INTO errors (fingerprint, source, location, name, message, stack, occurrences)
+       VALUES ($1, $2, $3, $4, $5, $6, 1)
+       ON CONFLICT (fingerprint) DO UPDATE SET occurrences = errors.occurrences + 1, last_seen = now(),
+         message = EXCLUDED.message, stack = COALESCE(EXCLUDED.stack, errors.stack)
+       RETURNING fingerprint
+     )
+     INSERT INTO error_events (reference, fingerprint, context) SELECT $7, fingerprint, $8::jsonb FROM kind`,
+    [e.fingerprint, e.source, e.location, e.name, e.message, e.stack, e.reference, JSON.stringify(e.context)]
+  );
+}
+
+export interface ErrorKind {
+  fingerprint: string; source: string; location: string; name: string; message: string; stack: string | null;
+  occurrences: number; firstSeen: string; lastSeen: string;
+  // Recorded in the window asked for, and the latest references
+  recent: number; references: string[];
+}
+
+const ERROR_KIND = `e.fingerprint, e.source, e.location, e.name, e.message, e.stack, e.occurrences,
+  to_char(e.first_seen AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS "firstSeen",
+  to_char(e.last_seen AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS "lastSeen"`;
+
+// Kinds of error seen in the last sinceMs, most recently seen first, each
+// with how often it was recorded in that time and its latest references
+export async function errorKinds(db: Db, sinceMs: number, limit: number): Promise<ErrorKind[]> {
+  const rows = await db.query(
+    `SELECT ${ERROR_KIND}, recent.count AS recent, recent.refs AS "references"
+     FROM errors e
+     CROSS JOIN LATERAL (
+       SELECT count(*)::int AS count, (array_agg(reference ORDER BY at DESC))[1:5] AS refs FROM error_events
+       WHERE fingerprint = e.fingerprint AND at > now() - make_interval(secs => $1::double precision / 1000)
+     ) recent
+     WHERE e.last_seen > now() - make_interval(secs => $1::double precision / 1000)
+     ORDER BY e.last_seen DESC LIMIT $2`,
+    [sinceMs, limit]
+  );
+  return rows.map(r => ({ ...r, occurrences: Number(r.occurrences), recent: Number(r.recent), references: r.references ?? [] })) as ErrorKind[];
+}
+
+// The occurrence shown to a visitor under this reference, with its kind
+export async function errorEvent(db: Db, reference: string): Promise<{ at: string; context: unknown; kind: Omit<ErrorKind, 'recent' | 'references'> } | null> {
+  const [row] = await db.query(
+    `SELECT to_char(v.at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS at, v.context, ${ERROR_KIND}
+     FROM error_events v JOIN errors e USING (fingerprint) WHERE v.reference = $1`,
+    [reference]
+  );
+  if (!row) return null;
+  const { at, context, ...kind } = row;
+  return { at, context, kind: { ...kind, occurrences: Number(kind.occurrences) } as Omit<ErrorKind, 'recent' | 'references'> };
+}
+
+// Occurrences kept for 30 days; kinds not seen for 90 days are removed
+export async function pruneErrors(db: Db): Promise<void> {
+  await db.query(`DELETE FROM error_events WHERE at < now() - interval '30 days'`);
+  await db.query(`DELETE FROM errors WHERE last_seen < now() - interval '90 days'`);
+}

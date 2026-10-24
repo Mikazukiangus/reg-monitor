@@ -6,7 +6,8 @@ import {
   getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
   type DateRow, type SearchPosition, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob,
-  readCache, writeCache, pruneCache, countHit, pruneHits
+  readCache, writeCache, pruneCache, countHit, pruneHits, recordError, errorKinds, errorEvent, pruneErrors,
+  type ErrorRecord, type ErrorKind
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
 import type { NormalizedNotice } from './notice.js';
@@ -39,7 +40,7 @@ const LOCKS = { dates: 7_301_926_144, links: 7_301_926_145 } as const;
 export type StoreLock = keyof typeof LOCKS;
 
 export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
-export type { ScheduledCheck, DateRow, JobRow, NewJob, SearchPosition };
+export type { ScheduledCheck, DateRow, JobRow, NewJob, SearchPosition, ErrorRecord, ErrorKind };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
@@ -91,6 +92,12 @@ export interface NoticeStore {
   // request in the current window, and remove ended windows
   countHit(key: string, windowMs: number): Promise<{ hits: number; resetInMs: number }>;
   pruneHits(): Promise<void>;
+  // Error tracking (server/error-tracking.ts): record an occurrence, the
+  // kinds seen lately, one occurrence by its reference, and removing old ones
+  recordError(error: ErrorRecord): Promise<void>;
+  errorKinds(sinceMs: number, limit: number): Promise<ErrorKind[]>;
+  errorEvent(reference: string): ReturnType<typeof errorEvent>;
+  pruneErrors(): Promise<void>;
 }
 
 export function noticeStore(db: Db): NoticeStore {
@@ -130,7 +137,11 @@ export function noticeStore(db: Db): NoticeStore {
     cache: entries => writeCache(db, entries),
     pruneCache: () => pruneCache(db),
     countHit: (key, windowMs) => countHit(db, key, windowMs),
-    pruneHits: () => pruneHits(db)
+    pruneHits: () => pruneHits(db),
+    recordError: error => recordError(db, error),
+    errorKinds: (sinceMs, limit) => errorKinds(db, sinceMs, limit),
+    errorEvent: reference => errorEvent(db, reference),
+    pruneErrors: () => pruneErrors(db)
   };
   return store;
 }

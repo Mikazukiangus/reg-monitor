@@ -1,8 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { logger } from './logging.js';
+import { failRequest } from './error-tracking.js';
 import { feedRoutes } from './routes/feeds.js';
 import { digestRoutes } from './routes/digest.js';
 import { noticeRoutes } from './routes/notices.js';
+import { errorRoutes } from './routes/errors.js';
 import { accepts } from './validate.js';
 import { originPolicy } from './cors.js';
 import { apiRateLimits } from './rate-limits.js';
@@ -37,6 +39,7 @@ export function createApp() {
   app.use(feedRoutes());
   app.use(digestRoutes());
   app.use(noticeRoutes());
+  app.use(errorRoutes());
 
   // Any other API address
   app.use('/api', (_req: Request, res: Response) => {
@@ -44,13 +47,20 @@ export function createApp() {
   });
 
   // Express's default development error handler can echo parser messages and
-  // stacks (including request content). Always return a controlled JSON error.
-  app.use((error: any, _req: Request, res: Response, next: NextFunction) => {
+  // stacks (including request content). Always return a controlled JSON error;
+  // an unexpected one is captured (server/error-tracking.ts) and its
+  // reference returned.
+  app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = [400, 413, 415].includes(error?.status) ? error.status : 500;
-    if (status < 500) logger.warn('[RegSonar] Request rejected', { status });
-    else logger.error('[RegSonar] Request failed', error);
+    if (status >= 500) {
+      const sent = res.headersSent;
+      failRequest(req, res, error, { message: 'Internal server error' });
+      if (sent) next(new Error('Internal server error'));
+      return;
+    }
+    logger.warn('[RegSonar] Request rejected', { status });
     if (res.headersSent) { next(new Error('Internal server error')); return; }
-    res.status(status).json({ success: false, error: status === 400 ? 'Invalid request body' : status === 413 ? 'Request body too large' : status === 415 ? 'Unsupported request encoding' : 'Internal server error' });
+    res.status(status).json({ success: false, error: status === 400 ? 'Invalid request body' : status === 413 ? 'Request body too large' : 'Unsupported request encoding' });
   });
 
   return app;

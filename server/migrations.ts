@@ -216,6 +216,36 @@ CREATE TABLE rate_limits (
   PRIMARY KEY (key, window_start)
 );
 `
+  },
+  {
+    version: 9,
+    name: 'error tracking',
+    // Unexpected errors on the server and in visitors' browsers
+    // (server/error-tracking.ts): one row for each kind of error, and one for
+    // each time it was recorded, under the reference the visitor was shown.
+    // Messages, stacks and context are redacted before they are stored.
+    sql: `
+CREATE TABLE errors (
+  fingerprint text PRIMARY KEY,
+  source text NOT NULL,
+  location text NOT NULL,
+  name text NOT NULL,
+  message text NOT NULL,
+  stack text,
+  occurrences integer NOT NULL DEFAULT 0,
+  first_seen timestamptz NOT NULL DEFAULT now(),
+  last_seen timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX errors_last_seen ON errors (last_seen DESC);
+CREATE TABLE error_events (
+  reference text PRIMARY KEY,
+  fingerprint text NOT NULL REFERENCES errors ON DELETE CASCADE,
+  at timestamptz NOT NULL DEFAULT now(),
+  context jsonb NOT NULL
+);
+CREATE INDEX error_events_fingerprint_at ON error_events (fingerprint, at DESC);
+CREATE INDEX error_events_at ON error_events (at);
+`
   }
 ];
 

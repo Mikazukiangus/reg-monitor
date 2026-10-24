@@ -1,5 +1,5 @@
 // What each API route accepts, checked before the route runs: the method, no
-// body (no route reads one), and each query parameter, which must be one the
+// body (only a POST that reads JSON takes one), and each query parameter, which must be one the
 // route knows, given once, and valid. A request that fails is answered with a
 // 4xx and a fixed message; the values it sent are never repeated back.
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
@@ -21,7 +21,8 @@ const reject = (res: Response, status: number, error: string) => res.status(stat
 
 // A check for one route: the methods it answers (HEAD comes with GET) and its
 // query parameters. The parsed values are in res.locals.query (see queryOf).
-export function accepts<P extends Params>(methods: ('GET' | 'POST')[], params: P = {} as P): RequestHandler {
+// jsonBody: a POST may send a JSON body, which the route parses and checks
+export function accepts<P extends Params>(methods: ('GET' | 'POST')[], params: P = {} as P, options: { jsonBody?: boolean } = {}): RequestHandler {
   const allowed = new Set<string>(methods.includes('GET') ? [...methods, 'HEAD'] : methods);
   const allow = [...allowed].join(', ');
   return (req: Request, res: Response, next: NextFunction) => {
@@ -30,8 +31,13 @@ export function accepts<P extends Params>(methods: ('GET' | 'POST')[], params: P
       reject(res, 405, 'Method not allowed');
       return;
     }
-    if (Number(req.get('content-length') ?? 0) > 0 || req.get('transfer-encoding')) {
+    const hasBody = Number(req.get('content-length') ?? 0) > 0 || req.get('transfer-encoding');
+    if (hasBody && !(options.jsonBody && req.method === 'POST')) {
       reject(res, 400, 'This request takes no body');
+      return;
+    }
+    if (hasBody && !req.is('application/json')) {
+      reject(res, 415, 'The body must be JSON');
       return;
     }
     const query: Record<string, unknown> = {};

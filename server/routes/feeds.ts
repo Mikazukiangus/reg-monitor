@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import { logger } from '../logging.js';
+import { failRequest } from '../error-tracking.js';
 import { config } from '../../runtime-config.js';
 import { cdnCacheControl } from '../../config.js';
 import { currentFeed, endpointStatus, runScheduledCheck, scheduledCheckStatus } from '../services/feed.js';
@@ -13,14 +14,13 @@ export function feedRoutes(): Router {
   // API Route: Get connected endpoint status and latencies. Served from
   // Vercel's CDN cache for 2 minutes (then refreshed in the background), as
   // every page load asks for it; lastChecked says when the checks were made.
-  router.all('/api/feeds/status', accepts(['GET']), async (_req: Request, res: Response) => {
+  router.all('/api/feeds/status', accepts(['GET']), async (req: Request, res: Response) => {
     try {
       const status = await endpointStatus();
       res.set('Cache-Control', cdnCacheControl(config.cdn.status));
       res.json({ success: true, ...status });
-    } catch (error: any) {
-      logger.error('[RegSonar] Endpoint status failed', error);
-      res.status(500).json({ success: false, error: 'Endpoint status could not be loaded' });
+    } catch (error) {
+      failRequest(req, res, error, { message: 'Endpoint status could not be loaded' });
     }
   });
 
@@ -33,24 +33,22 @@ export function feedRoutes(): Router {
       const feed = await currentFeed();
       res.set('Cache-Control', req.method === 'GET' ? cdnCacheControl(config.cdn.sync) : 'no-store');
       res.json({ success: true, ...feed });
-    } catch (error: any) {
-      logger.error('[RegSonar Feed Sentinel] Sync failed', error);
-      res.status(500).json({ success: false, error: 'Feed sync failed' });
+    } catch (error) {
+      failRequest(req, res, error, { message: 'Feed sync failed' });
     }
   });
 
   // Persisted scheduled-check metadata; reading this never triggers a poll.
   // Served from the CDN cache for a minute, so page loads do not each query
   // (and wake) the database; it changes when a check or a job runs.
-  router.all('/api/feeds/checks', accepts(['GET']), async (_req: Request, res: Response) => {
+  router.all('/api/feeds/checks', accepts(['GET']), async (req: Request, res: Response) => {
     res.set('Cache-Control', 'no-store');
     try {
       const status = await scheduledCheckStatus();
       if (status.enabled) res.set('Cache-Control', cdnCacheControl(config.cdn.checks));
       res.json(logger.redact({ success: true, ...status }));
     } catch (error) {
-      logger.error('[RegSonar History] Scheduled-check status failed', error);
-      res.status(503).json({ success: false, error: 'Scheduled check history is unavailable' });
+      failRequest(req, res, error, { status: 503, message: 'Scheduled check history is unavailable' });
     }
   });
 
@@ -63,9 +61,8 @@ export function feedRoutes(): Router {
     if (!cronAuthorized(req, res, 'scheduled checks are')) return;
     try {
       res.json({ success: true, ...await runScheduledCheck() });
-    } catch (error: any) {
-      logger.error('[RegSonar Poll] Failed', error);
-      res.status(500).json({ success: false, error: 'Scheduled check failed' });
+    } catch (error) {
+      failRequest(req, res, error, { message: 'Scheduled check failed' });
     }
   });
 

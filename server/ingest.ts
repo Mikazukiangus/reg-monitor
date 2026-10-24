@@ -6,6 +6,7 @@ import { changedFields, openStore, type NoticeStore, type ScheduledCheck, type S
 import { randomUUID } from 'crypto';
 import { describeError } from './http.js';
 import { publicError } from './errors.js';
+import { explainError } from './error-tracking.js';
 import type { NormalizedNotice } from './notice.js';
 import { SOURCES } from './sources/index.js';
 import { enrichWithKeyPoints, keyPointsCache, keyPointsFor, withKeyPoints, NO_FETCHES } from './enrich.js';
@@ -88,7 +89,7 @@ export async function refreshSource(source: (typeof SOURCES)[number]): Promise<S
       })
       .catch((err) => {
         // Visitors see only a message written for them; the log has the detail
-        s.error = publicError(err);
+        s.error = explainError(err, { where: `Source ${source.name}` });
         logger.info(`[RegSonar Feed Sentinel] ${source.name} failed: ${describeError(err)}`);
       })
       .finally(() => {
@@ -231,7 +232,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
       Promise.allSettled(SOURCES.map(s => pollSource(s, until, store))),
       backfillPageDates(until, store).catch((err: any) => {
         logger.warn('[RegSonar History] Could not backfill page dates', err);
-        pageDateError = publicError(err);
+        pageDateError = explainError(err, { where: 'Page dates' });
         return 0;
       })
     ]);
@@ -241,7 +242,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
       if (r.status === 'fulfilled') results.push(r.value);
       else {
         logger.info(`[RegSonar Poll] ${SOURCES[i].name} failed: ${describeError(r.reason)}`);
-        failed.push({ name: SOURCES[i].name, error: publicError(r.reason) });
+        failed.push({ name: SOURCES[i].name, error: explainError(r.reason, { where: `Source ${SOURCES[i].name}` }) });
       }
     });
     if (pageDateError) failed.push({ name: 'Publication date backfill', error: pageDateError });
@@ -253,7 +254,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
         logger.info(`[RegSonar History] ${links} consultation links`);
       } catch (err: any) {
         logger.warn('[RegSonar History] Could not rebuild consultation links', err);
-        failed.push({ name: 'Consultation links', error: publicError(err) });
+        failed.push({ name: 'Consultation links', error: explainError(err, { where: 'Consultation links' }) });
       }
     }
     // Every notice's dates, worked out again over the whole history
@@ -264,7 +265,7 @@ export async function pollSources(storeArg: StoreArg = openStore()): Promise<{ r
         logger.info(`[RegSonar History] ${dates} notice dates`);
       } catch (err: any) {
         logger.warn('[RegSonar History] Could not rebuild notice dates', err);
-        failed.push({ name: 'Notice dates', error: publicError(err) });
+        failed.push({ name: 'Notice dates', error: explainError(err, { where: 'Notice dates' }) });
       }
     }
     // Documents this check had no time for are queued, not left to the next check

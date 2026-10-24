@@ -52,6 +52,10 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     pruneCache: async () => {},
     countHit: async () => ({ hits: 1, resetInMs: 60_000 }),
     pruneHits: async () => {},
+    recordError: async () => {},
+    errorKinds: async () => [],
+    errorEvent: async () => null,
+    pruneErrors: async () => {},
     ...overrides
   };
   return store;

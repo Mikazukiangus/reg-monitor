@@ -21,14 +21,16 @@ function sgtDate(iso: string): string {
 const escapeHtml = (text: string) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export function renderDigest(matches: DigestMatch[], day: string, siteUrl: string, failedSources: string[] = []) {
+export function renderDigest(matches: DigestMatch[], day: string, siteUrl: string, failedSources: string[] = [],
+  errors: { occurrences: number; kinds: number } | null = null) {
   const count = matches.length;
   const subject = `RegSonar: ${count} new notice${count === 1 ? '' : 's'} matching your rules (${longDate(day)})`;
   const footer = [
     `Notices published on ${longDate(day)}, Singapore time, that match the rules in digest-rules.ts.`,
     'Rules match the regulator, impact score and keywords in the title, summary and any key points already loaded; impact scores follow a fixed rubric of what the document does and the dates it states (see How It Works).',
     'Quotes are taken word for word from the source document. Check the document before relying on a date.',
-    ...(failedSources.length ? [`Could not be read for this email: ${failedSources.join(', ')}.`] : [])
+    ...(failedSources.length ? [`Could not be read for this email: ${failedSources.join(', ')}.`] : []),
+    ...(errors?.occurrences ? [`Unexpected errors in the last 24 hours: ${errors.occurrences} (${errors.kinds} kind${errors.kinds === 1 ? '' : 's'}). GET /api/errors with the cron secret lists them.`] : [])
   ];
 
   const text = [

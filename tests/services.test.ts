@@ -42,7 +42,7 @@ test('a dry run returns the email for the chosen day and sends nothing', async (
   const run = await runDigest({ day: '2026-10-06', dryRun: true }, deps);
   assert.equal(run.kind, 'dryRun');
   if (run.kind !== 'dryRun') return;
-  assert.deepEqual(run.summary, { day: '2026-10-06', checked: 2, matched: 1, failedSources: ['FINRA'], subject: run.summary.subject });
+  assert.deepEqual(run.summary, { day: '2026-10-06', checked: 2, matched: 1, failedSources: ['FINRA'], errors: null, subject: run.summary.subject });
   assert.match(run.summary.subject, /^RegSonar: 1 new notice matching your rules/);
   assert.deepEqual(run.matches, [{ id: 'a', title: 'SFC fines broker a', rules: ['SFC enforcement'] }]);
   assert.match(run.text, /Could not be read for this email: FINRA\./);

@@ -77,6 +77,7 @@ export async function runScheduledCheck(storeArg: StoreArg = openStore()) {
       await store.pruneJobs();
       await store.pruneCache();
       await store.pruneHits();
+      await store.pruneErrors();
       jobs = { ran: outcomes.length, failed: outcomes.filter(o => !o.ok).length };
       logger.info(`[RegSonar Queue] Ran ${jobs.ran} jobs${jobs.failed ? `, ${jobs.failed} failed` : ''}`);
     } catch (err: any) {

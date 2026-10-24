@@ -3,7 +3,7 @@
 import { logger } from './logging.js';
 import { config } from '../runtime-config.js';
 import { politeFetch, httpStatusText, RateLimitedError, describeError } from './http.js';
-import { publicError } from './errors.js';
+import { explainError } from './error-tracking.js';
 import { type EndpointDefinition, ENDPOINTS } from './sources/index.js';
 import { openStore } from './store.js';
 import { readShared, writeShared } from './shared-cache.js';
@@ -53,7 +53,7 @@ async function probeEndpoint(ep: EndpointDefinition) {
     }
     // Visitors see only a message written for them; the log has the detail
     logger.info(`[RegSonar] Status check of ${ep.name} failed: ${describeError(err)}`);
-    return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail: publicError(err) };
+    return { ...ep, status: 'Down' as EndpointStatus, statusCode: null, pingMs: null, detail: explainError(err, { where: `Status check of ${ep.name}` }) };
   }
 }
 

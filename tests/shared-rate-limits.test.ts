@@ -32,7 +32,7 @@ function instance(name: string, store: () => Promise<NoticeStore | null> = openS
 }
 
 test('the tighter limits are counted across instances', () => {
-  assert.deepEqual(LIMITS.filter(l => l.shared).map(l => l.name), ['refresh', 'scheduled', 'search', 'by-id', 'status']);
+  assert.deepEqual(LIMITS.filter(l => l.shared).map(l => l.name), ['refresh', 'scheduled', 'search', 'by-id', 'error-report', 'status']);
 });
 
 test('a visitor spreading requests over instances is held to one limit, and the database never holds the address', async () => {
