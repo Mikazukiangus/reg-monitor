@@ -2465,7 +2465,7 @@ This document records the full chronological instructions, technical requirement
     * The list, pruning, and the digest line.
   * `tests/error-reporting.test.ts` (3): a report is sent once, redacted, with the path only; at most 5 a page; the fallback shows the reference and never the error.
   * Updated tests: logging, migrations, services, shared limits and the store stub.
-  * 706 tests and type checking pass, and the build passes.
+  * 706 tests and type checking pass, and the build passes. CI run 40061260796 passed.
 * **Checked locally (`regsonar-history`, PGlite):**
   * A timer error and an unhandled rejection in the page each sent `POST /api/errors` and got 200, and the server logged both references.
   * `GET /api/errors` with the secret listed them (source `browser`, path `/`); without the secret it answered 401.
