@@ -5,7 +5,7 @@
 import {
   getDb, databaseUrl, saveNotices, patchNotice, recentNotices, searchNotices, linkCandidates, addLinks, replaceLinks, linksOf, undatedNotices,
   dateFields, replaceDates, archiveStats, storedNotices, saveScheduledCheck, scheduledCheckStatus, type Db, type ScheduledCheck,
-  type DateRow, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob,
+  type DateRow, type SearchPosition, enqueueJobs, claimJobs, finishJob, failJob, pruneJobs, jobCounts, type JobRow, type NewJob,
   readCache, writeCache, pruneCache, countHit, pruneHits
 } from './db.js';
 import type { LinkPair, RelatedCandidate } from '../shared/related.js';
@@ -39,7 +39,7 @@ const LOCKS = { dates: 7_301_926_144, links: 7_301_926_145 } as const;
 export type StoreLock = keyof typeof LOCKS;
 
 export type CheckStatus = Awaited<ReturnType<typeof scheduledCheckStatus>>;
-export type { ScheduledCheck, DateRow, JobRow, NewJob };
+export type { ScheduledCheck, DateRow, JobRow, NewJob, SearchPosition };
 
 export interface NoticeStore {
   // sourceId: the source that read them (left out when re-saving a stored copy)
@@ -54,8 +54,9 @@ export interface NoticeStore {
   byIds(ids: string[]): Promise<Map<string, StoredNotice>>;
   // Published in the last `days` days, newest first, other than excludeIds
   recent(days: number, limit: number, excludeIds?: string[]): Promise<StoredNotice[]>;
-  // Full-text search over titles, summaries and key points, best matches first
-  search(query: string, limit: number): Promise<StoredNotice[]>;
+  // Full-text search over titles, summaries and key points, best matches
+  // first, a page at a time: the page after `after`, and where it ended
+  search(query: string, limit: number, after?: SearchPosition): Promise<{ notices: StoredNotice[]; next: SearchPosition | null }>;
   // Every notice, or a few regulators', as matching consultations to outcomes needs them
   linkCandidates(regulators?: string[]): Promise<RelatedCandidate[]>;
   // Store links between consultations and outcomes: add these, or make the stored ones exactly these
@@ -105,7 +106,10 @@ export function noticeStore(db: Db): NoticeStore {
       : fn(store)),
     byIds: async ids => new Map([...(await storedNotices(db, ids))].map(([id, row]) => [id, fromRow(row)])),
     recent: async (days, limit, excludeIds) => (await recentNotices(db, days, limit, excludeIds)).map(fromRow),
-    search: async (query, limit) => (await searchNotices(db, query, limit)).map(fromRow),
+    search: async (query, limit, after) => {
+      const { rows, next } = await searchNotices(db, query, limit, after);
+      return { notices: rows.map(fromRow), next };
+    },
     linkCandidates: async regulators => (await linkCandidates(db, regulators)) as unknown as RelatedCandidate[],
     addLinks: links => addLinks(db, links),
     replaceLinks: links => replaceLinks(db, links),

@@ -24,6 +24,8 @@ interface Props {
   sync: FeedSync;
   filters: FeedFiltersState;
   pagination: Pagination;
+  // Older matches in the history beyond those loaded, and loading the next page of them
+  historySearch: { moreMatches: boolean; loadingMore: boolean; loadMoreMatches: () => void };
   // The notices the filters let through, in order
   filteredNotices: RegulatoryNotice[];
   previousVisit: PreviousVisit | null;
@@ -47,7 +49,7 @@ interface Props {
 }
 
 export function FeedScreen({
-  notices, sync, filters, pagination, filteredNotices, previousVisit, isNewNotice, bookmarkedIds, deadlines, upcomingDates,
+  notices, sync, filters, pagination, historySearch, filteredNotices, previousVisit, isNewNotice, bookmarkedIds, deadlines, upcomingDates,
   filterSidebarProps, monitoringControlsProps, onOpenFilters, onOpenEndpoints, onOpenExport, onSelectNoticeById, onOpenNotice,
   onOpenGapAnalysis, onToggleBookmark, onCopyNoticeLink, onAddToCalendar, onOpenRelated, onCopyViewLink
 }: Props) {
@@ -318,6 +320,20 @@ export function FeedScreen({
                     </div>
                   )}
                 </div>
+
+                {/* More history matches than loaded: the next page from the server */}
+                {historySearch.moreMatches && (
+                  <div className="p-3 bg-panel border border-line rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] text-ink-soft shadow-xs">
+                    <span>More older notices in the history match this search.</span>
+                    <button
+                      onClick={historySearch.loadMoreMatches}
+                      disabled={historySearch.loadingMore}
+                      className="px-3 min-h-9 sm:min-h-0 sm:py-1 rounded text-[11px] font-semibold bg-panel-raised text-ink border border-line hover:bg-wash disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {historySearch.loadingMore ? 'Loading…' : 'Load more matches'}
+                    </button>
+                  </div>
+                )}
 
                 {/* Pagination Ribbon */}
                 <div className="p-3 bg-panel border border-line rounded-lg flex flex-wrap items-center justify-between gap-2 text-[12px] text-ink-soft shadow-xs">

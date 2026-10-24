@@ -202,16 +202,31 @@ export async function recentNotices(db: Db, days: number, limit: number, exclude
   return rows.map(rowToNotice);
 }
 
-// Full-text search over titles, summaries and key points, best matches first
-export async function searchNotices(db: Db, query: string, limit: number): Promise<StoredRow[]> {
+// Where a page of search results ended: the last result's rank, date (or
+// -infinity without one) and id, as Postgres wrote them, so they compare
+// exactly when read back
+export interface SearchPosition { rank: string; publishedAt: string; id: string }
+
+// Full-text search over titles, summaries and key points, best matches first,
+// then newest, then by id, so every result has one place in the order. A page
+// starts after `after` (keyset pagination): results that arrive or move
+// meanwhile do not shift the pages after it. `next` is where this page ended,
+// or null when there are no more.
+export async function searchNotices(db: Db, query: string, limit: number, after?: SearchPosition): Promise<{ rows: StoredRow[]; next: SearchPosition | null }> {
   const rows = await db.query(
-    `SELECT data FROM notices
-     WHERE search @@ websearch_to_tsquery('english', $1)
-     ORDER BY ts_rank(search, websearch_to_tsquery('english', $1)) DESC, published_at DESC NULLS LAST
-     LIMIT $2`,
-    [query, limit]
+    `SELECT data, rank::text AS rank, pub::text AS pub, id FROM (
+       SELECT data, id, ts_rank(search, q) AS rank, COALESCE(published_at, '-infinity'::timestamptz) AS pub
+       FROM notices, websearch_to_tsquery('english', $1) AS q
+       WHERE search @@ q
+     ) matches
+     WHERE $3::real IS NULL OR (rank, pub, id) < ($3::real, $4::timestamptz, $5::text)
+     ORDER BY rank DESC, pub DESC, id DESC
+     LIMIT $2 + 1`,
+    [query, limit, after?.rank ?? null, after?.publishedAt ?? null, after?.id ?? null]
   );
-  return rows.map(rowToNotice);
+  const page = rows.slice(0, limit);
+  const last = page[page.length - 1];
+  return { rows: page.map(rowToNotice), next: rows.length > limit ? { rank: last.rank, publishedAt: last.pub, id: last.id } : null };
 }
 
 // Consultations and conclusions, for linking the two (titles and dates only)

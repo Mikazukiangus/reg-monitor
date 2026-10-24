@@ -3,6 +3,8 @@
 // route knows, given once, and valid. A request that fails is answered with a
 // 4xx and a fixed message; the values it sent are never repeated back.
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import { decodeCursor } from './cursor.js';
+import type { SearchPosition } from './store.js';
 
 export interface Param<T> {
   // The value, or undefined when the text is not a valid one
@@ -98,3 +100,15 @@ export const idList = (max: number, required = false): Param<string[]> => ({
   describe: `a JSON array of 1 to ${max} notice ids`,
   required
 });
+
+// A whole number from min to max
+export const integer = (min: number, max: number): Param<number> => ({
+  parse: raw => (/^\d{1,6}$/.test(raw) && Number(raw) >= min && Number(raw) <= max ? Number(raw) : undefined),
+  describe: `a whole number from ${min} to ${max}`
+});
+
+// A cursor from an earlier page's nextCursor (server/cursor.ts)
+export const cursor: Param<SearchPosition> = {
+  parse: decodeCursor,
+  describe: 'the nextCursor of an earlier page'
+};

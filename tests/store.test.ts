@@ -30,7 +30,7 @@ function memoryStore(rows: StoredNotice[], overrides: Partial<NoticeStore> = {})
     exclusive: (_lock, fn) => fn(store),
     byIds: async ids => new Map(ids.flatMap(id => (byId.has(id) ? [[id, byId.get(id)!] as const] : []))),
     recent: async () => [...byId.values()],
-    search: async () => [],
+    search: async () => ({ notices: [], next: null }),
     linkCandidates: async () => [],
     addLinks: async () => {},
     replaceLinks: async () => {},
@@ -105,7 +105,7 @@ test('the database store saves and reads back the same notice, without the read-
   assert.equal(back?.title, 'Circular round-trip on capital requirements');
   assert.deepEqual(back?.keyPoints?.points, ['Quoted.']);
   assert.equal(back && 'archived' in back, false);
-  assert.deepEqual((await store.search('capital', 5)).map(n => n.id), ['round-trip']);
+  assert.deepEqual((await store.search('capital', 5)).notices.map(n => n.id), ['round-trip']);
   assert.equal((await store.stats()).count, 1);
 
   // A new server instance reuses them: enrichment with the default store

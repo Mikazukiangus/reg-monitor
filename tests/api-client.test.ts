@@ -62,8 +62,13 @@ test('notices by id are asked for 50 at a time, and a failed batch stops after t
 
 test('history search encodes the text, and fails rather than finding nothing when the server has no answer', async () => {
   const calls = stubFetch(() => json({ notices: [notice('x')] }));
-  assert.deepEqual((await searchHistory('AI & data')).map(n => n.id), ['x']);
+  const first = await searchHistory('AI & data');
+  assert.deepEqual([first.notices.map(n => n.id), first.nextCursor], [['x'], null]);
   assert.equal(calls[0].url, '/api/notices/search?q=AI%20%26%20data');
+  // The next page: the cursor the last reply gave
+  const paged = stubFetch(() => json({ notices: [notice('y')], nextCursor: 'abc-_1' }));
+  assert.equal((await searchHistory('AI', undefined, 'abc-_1')).nextCursor, 'abc-_1');
+  assert.equal(paged[0].url, '/api/notices/search?q=AI&cursor=abc-_1');
   stubFetch(() => new Response('', { status: 503 }));
   await assert.rejects(searchHistory('AI'), /HTTP 503/);
   stubFetch(() => json({ success: true }));
@@ -80,7 +85,7 @@ test('scheduled checks fail when the server says it could not read them', async 
 test('search and by-id replies are checked like the feed: notices that cannot be shown are left out, unsafe links dropped', async () => {
   const replied = { notices: [notice('ok'), { id: 'bare' }, notice('js', { dossierUrl: 'javascript:alert(1)' })] };
   stubFetch(() => json(replied));
-  const found = await searchHistory('capital');
+  const found = (await searchHistory('capital')).notices;
   assert.deepEqual(found.map(n => [n.id, n.dossierUrl]), [['ok', 'https://www.mas.gov.sg/x'], ['js', undefined]]);
   stubFetch(() => json(replied));
   assert.deepEqual((await noticesById(['ok', 'bare', 'js'])).map(n => n.id), ['ok', 'js']);

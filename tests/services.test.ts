@@ -80,13 +80,14 @@ function store(overrides: Partial<NoticeStore>): NoticeStore {
 }
 
 test('history search and lookup say when no history is set up, and read stored notices back', async () => {
-  assert.deepEqual(await searchNotices('stablecoin', null), { enabled: false, notices: [] });
+  assert.deepEqual(await searchNotices('stablecoin', null), { enabled: false, notices: [], nextCursor: null });
   assert.deepEqual(await noticesByIds(['a'], null), { enabled: false, notices: [] });
   assert.deepEqual(await scheduledCheckStatus(null), { enabled: false });
 
   const rows = [toStored({ ...notice('a'), archived: true } as NormalizedNotice), toStored(notice('b'))];
-  const found = await searchNotices('broker', store({ search: async (q, limit) => (q === 'broker' && limit === 40 ? rows : []) }));
+  const found = await searchNotices('broker', store({ search: async (q, limit) => ({ notices: q === 'broker' && limit === 40 ? rows : [], next: null }) }));
   assert.equal(found.enabled, true);
+  assert.equal(found.nextCursor, null);
   assert.deepEqual(found.notices.map(n => n.id), ['a', 'b']);
   assert.ok(found.notices.every(n => n.archived), 'notices read from the history are marked as such');
 
