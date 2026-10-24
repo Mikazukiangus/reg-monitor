@@ -14,6 +14,7 @@ import { config } from '../runtime-config.js';
 import { describeError } from './http.js';
 import { afterResponse } from './after-response.js';
 import { explainError } from './error-tracking.js';
+import { withLogContext } from './log-context.js';
 import { changedFields, type JobRow, type NewJob, type NoticeStore } from './store.js';
 import { keyPointsCache, keyPointsFor, withKeyPoints } from './enrich.js';
 import { saveDates } from './dates.js';
@@ -113,7 +114,8 @@ async function runJob(job: JobRow, store: NoticeStore): Promise<JobOutcome> {
     return { ...outcome, ok: false, error: 'unknown kind' };
   }
   try {
-    const result = await kind.run(job, store);
+    // Log entries and captured errors while it runs say which job it is
+    const result = await withLogContext({ job: { id: job.id, kind: job.kind, target: job.key, attempt: job.attempts } }, () => kind.run(job, store));
     await store.finishJob(job.id);
     return { ...outcome, ok: true, result };
   } catch (err: any) {
@@ -122,7 +124,7 @@ async function runJob(job: JobRow, store: NoticeStore): Promise<JobOutcome> {
     logger.warn(`[RegSonar Queue] ${job.kind} ${job.key} failed (try ${job.attempts} of ${job.maxAttempts}): ${error}${retry ? '' : '; giving up'}`);
     // Given up on, for a bug or an error nobody expected rather than a site
     // that failed: captured, as no retry will fix it
-    if (!retry) explainError(err, { where: `Job ${job.kind}`, key: job.key, attempts: job.attempts });
+    if (!retry) explainError(err, { where: `Job ${job.kind}`, target: job.key, attempts: job.attempts });
     await store.failJob(job.id, error, retry ? kind.retryInMs(job.attempts) : null);
     return { ...outcome, ok: false, error };
   }

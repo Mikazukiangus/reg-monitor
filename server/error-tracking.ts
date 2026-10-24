@@ -19,6 +19,7 @@ import { publicError, UNEXPLAINED } from './errors.js';
 import { CircuitOpenError } from './breaker.js';
 import { rateLimit } from './throttle.js';
 import { afterResponse } from './after-response.js';
+import { logContext } from './log-context.js';
 import { openStore, type NoticeStore } from './store.js';
 
 export interface ErrorContext {
@@ -86,7 +87,9 @@ export function captureError(error: unknown, context: ErrorContext, options: Cap
       logger.warn(`[RegSonar Errors] Reference ${reference} not recorded: more than ${RECORDS_PER_MINUTE} a minute of this kind`);
       return reference;
     }
-    const contextValue = logger.redact({ ...details, deployment: config.runtime.deploymentId }) as Record<string, unknown>;
+    // The running request or job (server/log-context.ts), but not the visitor
+    const { request, job } = logContext() ?? {};
+    const contextValue = logger.redact({ ...details, ...(request ? { request } : {}), ...(job ? { job } : {}), deployment: config.runtime.deploymentId }) as Record<string, unknown>;
     const work = (async () => {
       const store = await (options.store ?? openStore)();
       if (!store) return;
@@ -123,11 +126,8 @@ export function explainError(error: unknown, context: ErrorContext): string {
 // Answer a request that failed unexpectedly: capture the error and reply
 // with a fixed message and the reference, never the error itself
 export function failRequest(req: Request, res: Response, error: unknown, reply: { status?: number; message: string }): void {
-  const reference = captureError(error, {
-    where: `${req.method} ${req.baseUrl + req.path}`,
-    // Vercel's id for the request, which finds it in the runtime logs
-    request: req.get('x-vercel-id')
-  });
+  // The request's id, method and path come with the log context
+  const reference = captureError(error, { where: `${req.method} ${req.baseUrl + req.path}` });
   if (res.headersSent) return;
   res.set('Cache-Control', 'no-store');
   res.status(reply.status ?? 500).json({ success: false, error: reply.message, reference });

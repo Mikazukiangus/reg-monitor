@@ -137,6 +137,16 @@ The database is connected to Production only. Branch preview deployments have no
 
 **What visitors are told when something fails.** Source errors in the feed, endpoint status details and the scheduled check's summary are public, so they carry only messages written for visitors (`server/errors.ts`): a site's HTTP status, "Timed out after 8s", "Network error: ECONNREFUSED", a reply that was not what the source expects (`SourceError`), and the app's own refusals (plain HTTP, a private address, a site's 429 pause, a circuit breaker). Any other error, such as a database error or a bug in a parser, is shown as "Failed (details in the server log)", and the full error goes to the log. API routes already answer with fixed messages. A scheduled job that is turned off answers "Scheduled jobs are unavailable", whether `CRON_SECRET` is missing or too short; the reason goes to the log only. On the page, a history search that fails, or an endpoint check that fails, says so, rather than looking like no matches or leaving the old statuses without a word. The scheduled check logs a warning when its request to refresh the public feed fails.
 
+**Structured logs.** The server writes each log entry as one line of JSON (`shared/logging.ts`; `LOG_FORMAT=text` gives the plain form for reading in a terminal). An entry has:
+- `time`, `level`, `scope` (Poll, History, Errors, …) and `msg`;
+- the deployment and the region the function runs in (`VERCEL_REGION`);
+- the request it was written for: its id, method and path;
+- the visitor's hashed key (the same key the rate limits use, never the address);
+- for a background job, the job's id, kind, target and attempt;
+- any error (name, message, code, cause) and data.
+
+Context is added without being passed along. Express sets it for each `/api` request (`server/request-context.ts`), and it is kept in `AsyncLocalStorage` (`server/log-context.ts`), so it follows the work through awaits, a parsed body and the work done after the response. Work shared between requests (one source read answering several refreshes) is logged under the request that started it. Everything, the context included, passes through the redactor, and query strings are never logged. Vercel's runtime logs show each line as it is; with a log drain, each line can be parsed as JSON.
+
 **Error tracking.** Unexpected errors are captured in one place, `server/error-tracking.ts`, and kept in the history database (migration 9). An error is unexpected when it has no message written for visitors (see above). That covers:
 - an API route that fails (each route's catch, and Express's last error handler);
 - a source, endpoint check, page-date or link rebuild that fails with "Failed (details in the server log)";
@@ -145,7 +155,7 @@ The database is connected to Production only. Branch preview deployments have no
 
 Each capture is logged as before and recorded under a reference of 10 letters and digits. The visitor gets the route's fixed message and that reference (`{"success": false, "error": "Search failed", "reference": "9B13A64CAA"}`), never the error.
 
-Occurrences of the same error are grouped into one kind (`errors`): the same place, name, message with its numbers, ids and addresses left out, and, on the server, the top stack frame without line numbers. Each kind has a count and first and last seen times. Each occurrence (`error_events`) keeps its reference, time and context: where it happened, the deployment, Vercel's request id (`x-vercel-id`, which finds it in the runtime logs) and, for the browser, the page's path. Messages, stacks (12 frames, paths relative to the project) and context pass through the log redactor before they are stored. Query strings, search text and request bodies are never kept.
+Occurrences of the same error are grouped into one kind (`errors`): the same place, name, message with its numbers, ids and addresses left out, and, on the server, the top stack frame without line numbers. Each kind has a count and first and last seen times. Each occurrence (`error_events`) keeps its reference, time and context: where it happened, the deployment, the request (its id, which is Vercel's `x-vercel-id` and finds it in the runtime logs, method and path) or job it happened in and, for the browser, the page's path. The visitor's key is not stored with it. Messages, stacks (12 frames, paths relative to the project) and context pass through the log redactor before they are stored. Query strings, search text and request bodies are never kept.
 
 Recording runs after the reply (`waitUntil`), never throws and never slows a request. Without the database the log still has the error. At most 10 occurrences of one kind are recorded a minute per instance; past that they are logged only. The scheduled check removes occurrences after 30 days and kinds not seen for 90.
 

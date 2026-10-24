@@ -40,6 +40,10 @@ export function createConfig(env: Environment) {
 
   const nodeEnv = text('NODE_ENV') ?? 'development';
   if (!['development', 'test', 'production'].includes(nodeEnv)) invalid('NODE_ENV', 'must be development, test or production');
+  // How the server writes its log: one JSON object a line (for Vercel's log
+  // search and log drains), or the values as given, for reading in a terminal
+  const logFormat = (text('LOG_FORMAT') ?? 'json') as 'json' | 'text';
+  if (!['json', 'text'].includes(logFormat)) invalid('LOG_FORMAT', 'must be json or text');
   const port = integer('PORT', 3000, 1, 65535);
   const host = text('HOST') ?? '0.0.0.0';
   if (!isIP(host) && (host.length > 253 || /^[\d.]+$/.test(host) || !host.split('.').every(label => /^[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?$/i.test(label)))) {
@@ -107,8 +111,11 @@ export function createConfig(env: Environment) {
     runtime: Object.freeze({
       nodeEnv, isProduction: nodeEnv === 'production', isVercel: boolean('VERCEL'), port, host, disableHmr: boolean('DISABLE_HMR'),
       // Set by Vercel for each deployment; keys the shared cache, so a new deployment reads afresh
-      deploymentId: text('VERCEL_DEPLOYMENT_ID') ?? 'local'
+      deploymentId: text('VERCEL_DEPLOYMENT_ID') ?? 'local',
+      // Set by Vercel: where the function runs
+      region: text('VERCEL_REGION')
     }),
+    logging: Object.freeze({ format: logFormat }),
     database: Object.freeze({
       url: databaseUrl, poolMax: integer('DB_POOL_MAX', 3, 1, 100), idleTimeoutMs: integer('DB_IDLE_TIMEOUT_MS', 10_000),
       connectTimeoutMs: integer('DB_CONNECT_TIMEOUT_MS', 10_000), queryTimeoutMs: integer('DB_QUERY_TIMEOUT_MS', 30_000)

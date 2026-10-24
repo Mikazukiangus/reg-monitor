@@ -56,6 +56,20 @@ try {
 }
 ```
 
+A route's unexpected failure should use `failRequest` from
+`server/error-tracking.ts` instead, which logs the error, records it and replies
+with a fixed message and a reference.
+
+Each entry is written as one line of JSON (`LOG_FORMAT=text` for the plain form):
+`time`, `level`, `scope` (from the `[RegSonar Scope]` prefix), `msg`, the
+deployment and region, then the context of the request or job it was written in,
+then `error` and `data` (the objects passed). The context is added automatically
+(`server/log-context.ts`): the request's id (Vercel's `x-vercel-id`), method and
+path, never its query string; the visitor's hashed key, never the IP address; and
+for a background job its id, kind, target and attempt. Use `withLogContext` to add
+fields for other work. Field names the redactor treats as sensitive (`key`,
+`token`, `secret`, …) are masked in the context too.
+
 The logger masks configured cron/API secrets, database URLs/passwords and private
 digest addresses. Its shared sanitizer also masks sensitive object fields, URL
 credentials/query values, Bearer/Basic credentials, common provider-token formats,

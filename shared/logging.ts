@@ -81,19 +81,69 @@ export function createRedactor(secrets: readonly string[] = []) {
 }
 
 type LogSink = Pick<Console, 'log' | 'warn' | 'error'>;
+type Level = 'info' | 'warn' | 'error';
+const SINK_METHOD = { info: 'log', warn: 'warn', error: 'error' } as const;
 
-export function createLogger(options: { secrets?: readonly string[]; sink?: LogSink } = {}) {
+export interface LoggerOptions {
+  secrets?: readonly string[];
+  sink?: LogSink;
+  // text: the values as given, for a console (the browser). json: one JSON
+  // object a line, for a log service (the server).
+  format?: 'text' | 'json';
+  // Fields added to every JSON entry: fixed ones (the deployment), and the
+  // current request's or job's (read when the entry is written)
+  base?: Record<string, unknown>;
+  context?: () => Record<string, unknown> | undefined;
+  now?: () => Date;
+}
+
+// One JSON entry from a log call's values: "[RegSonar Poll] 4 new notices"
+// gives scope "Poll" and msg "4 new notices"; the first Error becomes
+// `error`; objects and arrays become `data` (a list when there are several),
+// left for the redactor to read, so getters are never called; anything else
+// is added to msg.
+function jsonEntry(level: Level, values: unknown[], options: LoggerOptions): Record<string, unknown> {
+  const [first, ...rest] = typeof values[0] === 'string' ? values : ['', ...values];
+  const scope = /^\[([^\]]+)\]\s*/.exec(first as string);
+  const words = [scope ? (first as string).slice(scope[0].length) : first as string];
+  let error: unknown;
+  const objects: unknown[] = [];
+  for (const value of rest) {
+    if (value instanceof Error && error === undefined) error = value;
+    else if (value !== null && typeof value === 'object') objects.push(value);
+    else words.push(String(value));
+  }
+  const data = objects.length > 1 ? objects : objects[0];
+  return {
+    time: (options.now?.() ?? new Date()).toISOString(),
+    level,
+    scope: scope ? scope[1].replace(/^RegSonar\s*/, '') || 'app' : 'app',
+    msg: words.filter(Boolean).join(' '),
+    ...options.base,
+    ...options.context?.(),
+    ...(error !== undefined ? { error } : {}),
+    ...(data !== undefined ? { data } : {})
+  };
+}
+
+export function createLogger(options: LoggerOptions = {}) {
   const redactor = createRedactor(options.secrets);
   const sink = options.sink ?? console;
-  const write = (level: keyof LogSink, values: unknown[]) => {
+  const write = (level: Level, values: unknown[]) => {
     let safe: unknown[];
-    try { safe = values.map(redactor.value); }
-    catch { safe = ['[RegSonar] Log event omitted: sanitization failed']; }
+    try {
+      safe = options.format === 'json'
+        ? [JSON.stringify(redactor.value(jsonEntry(level, values, options)))]
+        : values.map(redactor.value);
+    } catch {
+      const omitted = '[RegSonar] Log event omitted: sanitization failed';
+      safe = [options.format === 'json' ? JSON.stringify({ time: new Date().toISOString(), level, scope: 'app', msg: omitted }) : omitted];
+    }
     // A failed formatter or sink must never fall back to the original values.
-    try { sink[level](...safe); } catch { /* logging failure must not crash a request */ }
+    try { sink[SINK_METHOD[level]](...safe); } catch { /* logging failure must not crash a request */ }
   };
   return Object.freeze({
-    info: (...values: unknown[]) => write('log', values),
+    info: (...values: unknown[]) => write('info', values),
     warn: (...values: unknown[]) => write('warn', values),
     error: (...values: unknown[]) => write('error', values),
     errorMessage: redactor.errorMessage,
