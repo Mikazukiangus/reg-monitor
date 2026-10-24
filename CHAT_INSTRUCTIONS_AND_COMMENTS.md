@@ -2522,7 +2522,7 @@ This document records the full chronological instructions, technical requirement
   * The context survives a JSON body and the work done after the response.
   * Job fields stack on a request's, and nothing leaks outside.
 
-  712 tests and type checking pass, and the build passes.
+  712 tests and type checking pass, and the build passes. CI run 40074875674 passed.
 * **Checked locally (`regsonar-history`):** every server line was JSON.
   * Source reads during `GET /api/feeds/sync` carried that request's id and visitor.
   * The migration report carried the `/api/feeds/checks` request that first opened the database.
